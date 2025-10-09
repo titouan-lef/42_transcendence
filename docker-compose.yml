@@ -1,0 +1,32 @@
+services:
+  backend:
+    build: ./backend
+    container_name: pong-backend
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    networks:
+      - trandcendence
+    restart: "no"   # dev: fail fast, do not restart
+
+  frontend:
+    build: ./frontend
+    container_name: pong-frontend
+    env_file:
+      - .env
+    ports:
+      - "3030:80"
+    depends_on:
+      - backend
+    networks:
+      - trandcendence
+    volumes: # mount local source code for dev
+    - ./frontend/src:/app/src
+    - ./frontend/public:/app/public
+    restart: "no"   # dev: fail fast, do not restart
+
+networks:
+  trandcendence:
+    name: trandcendence
+    driver: bridge

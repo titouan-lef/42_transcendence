@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset some defaults */
+* {
+  @apply m-0 p-0 box-border;
+}
+
+/* Body */
+body {
+  @apply font-sans flex flex-col min-h-screen text-white;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+
+/* Header */
+header {
+  @apply text-center p-8 bg-black/30 backdrop-blur-md;
+}
+
+header h1 {
+  @apply text-4xl text-[#f9d342];
+}
+
+/* Main */
+main {
+  @apply flex-1 flex justify-center items-start p-8;
+}
+
+.card {
+  @apply bg-white/10 p-8 rounded-2xl w-96 shadow-[0_8px_20px_rgba(0,0,0,0.5)];
+}
+
+.card h2 {
+  @apply mb-4 text-2xl text-[#f9d342];
+}
+
+.card p {
+  @apply mb-4 text-gray-300;
+}
+
+/* Glassy button with gradient edges */
+.btn {
+  @apply relative px-6 py-3 font-bold rounded-md text-white bg-transparent cursor-pointer transition-transform duration-200;
+
+  /* Create gradient border effect */
+  border: 2px solid transparent;
+  background-image: radial-gradient(circle, rgba(255,255,255,0), rgba(255,255,255,0.2));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* Hover: grow */
+.btn:hover {
+  @apply scale-110;
+}
+
+/* Active: shrink and subtle background */
+.btn:active {
+  @apply scale-95;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Response box */
+.response-box {
+  @apply mt-4 p-4 bg-white/15 rounded-md font-mono text-gray-100 whitespace-pre-wrap;
+}
+
+/* Footer */
+footer {
+  @apply text-center p-4 text-sm bg-black/30;
+}
