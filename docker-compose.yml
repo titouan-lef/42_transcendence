@@ -8,6 +8,8 @@ services:
       - "3000:3000"
     networks:
       - trandcendence
+    volumes: # mount local source code for dev
+    - ./backend/src:/app/src
     restart: "no"   # dev: fail fast, do not restart
 
   frontend:
