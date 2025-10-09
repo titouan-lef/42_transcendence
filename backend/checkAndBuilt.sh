@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+
+npm run format:check
+
+npm run build
+
+exec "$@"
