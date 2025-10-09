@@ -38,6 +38,11 @@
    * [HTML](#html)
    * [CSS](#css)
    * [Solidity](#solidity)
+ * [Compiling and Running the Project](#compiling-and-running-the-project)
+   * [Build and run containers](#build-and-run-containers)
+   * [Development mode](#development-mode)
+   * [Full rebuild](#full-rebuild)
+   *                                                                                                                                                                                       [Full rebuild](#full-rebuild)
 * [Git Organisation](#git-organisation-)
    * [Start Project](#start-project)
    * [Commit Rules](#commit-rules)
@@ -413,6 +418,45 @@ CONSTANT_CASE | global constant values, including enum values
 
 - Names must not start or end with `_`.
 - Braces are alone on their own line for conditions and functions (can be on the same line for the rest).
+
+## Compiling and Running the Project
+
+You can use make commands to build, run, and manage your front-end and back-end containers, as well as to recompile source files during development.
+
+### 1. Build and run containers
+```bash
+make
+```
+or,
+```bash
+make up
+```
+Both commands will build the front-end and back-end containers and start them.
+
+### 2. Development mode
+You can also use:
+```bahs
+make dev
+```
+Use this during development. It recompiles all TypeScript (`.ts`) and CSS (`.css`) files from `src` (for both front-end and back-end) and `public` (front-end only) directories without rebuilding the containers.
+
+> The containers will stay attached to your terminal. Press `Ctrl+C` to stop them.
+
+### 3. Full rebuild
+```bahs
+make re
+```
+This runs:
+	`make fclean` – removes all built containers and compiled files.
+	`make up` – rebuilds and starts the containers from scratch.
+
+### 4. Retry running in dev mode
+```bahs
+make retry
+```
+This runs:
+	`make down` – stops and removes running containers.
+	`make dev` – restarts the containers in development mode and recompiles source files.
 
 ## Git Organisation 📜
 
