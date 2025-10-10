@@ -1,7 +1,7 @@
 import { Game } from "./game.js";
 import { GameSettings } from "./gameSettings.js";
 
-const SETTINGS: GameSettings = new GameSettings();
+const SETTINGS: GameSettings = new GameSettings("default", "random", false, false);
 
 const BUTTON = createButton();
 const CANVAS = createCanvas();

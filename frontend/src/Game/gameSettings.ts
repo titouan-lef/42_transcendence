@@ -1,9 +1,17 @@
-export class GameSettings {
-	private map: string[] = ["Default", "Random", "Volcano", "Windy", "Frozen", "Rainy"];
-	private balls: string[] = ["Default", "Random", "Invisible", "Tricky", "Heavy", "Snake"];
-	private rotatingPlayer = false;
-	private effects = false;
-	//private jump = false;
+export type MapOption = "default" | "random" | "volcano" | "windy" | "frozen" | "rainy";
+export type BallOption = "default" | "random" | "invisible" | "tricky" | "heavy" | "snake";
 
-	constructor() {}
+export class GameSettings {
+	readonly map: MapOption;
+	readonly ball: BallOption;
+	readonly rotatingPlayer:  boolean;
+	readonly effects:  boolean;
+	//readonly jump:  true | false;
+
+	constructor(map:  MapOption, ball: BallOption, rotatingPlayer: boolean, effects: boolean) {
+		this.map = map;
+		this.ball = ball;
+		this.rotatingPlayer = rotatingPlayer;
+		this.effects = effects;
+	}
 }
