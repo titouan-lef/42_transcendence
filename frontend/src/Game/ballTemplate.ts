@@ -2,10 +2,19 @@ import { BallOption } from "./gameSettings.js";
 
 export class BallTemplate {
 	readonly mesh: BABYLON.Mesh;
-	readonly type: BallOption = "default";
+	readonly type: string = "balltemplate";
 
 	constructor(scene: BABYLON.Scene, name: string) {
 		this.mesh = BABYLON.MeshBuilder.CreateSphere(name, {diameter: 2, segments: 32}, scene);
+		this.mesh.position.y = 1;
+	}
+}
+
+export class DefaultBall extends BallTemplate {
+	readonly type: BallOption = "default";
+
+	constructor(scene: BABYLON.Scene) {
+		super(scene, "default");
 	}
 }
 
