@@ -3,6 +3,7 @@ import { firstEvents } from "../pages/events/first_events.js";
 import { apiEvents } from "../pages/events/API_events.js";
 import { themeEvents } from "../pages/events/theme_events.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
+import { userEvents } from "../pages/events/User_events.js";
 
 interface Handler{
 	elem: HTMLElement;
@@ -39,6 +40,10 @@ function loadEvent(id: PageID): void {
 		}
 		case PageID.THEME: {
 			themeEvents();
+			break;
+		}
+		case PageID.USER: {
+			userEvents();
 			break;
 		}
 		default: {
