@@ -39,6 +39,15 @@ export default [
 			},
 			{
 				selector: "property",
+				modifiers: ["requiresQuotes"],
+				format: null
+			},
+			{
+				selector: ["objectLiteralProperty", "typeProperty"],
+				format: null
+			},
+			{
+				selector: "property",
 				modifiers: ["static", "readonly"],
 				format: ["UPPER_CASE"],
 				leadingUnderscore: "forbid",
