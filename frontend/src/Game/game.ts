@@ -33,12 +33,14 @@ export class Game {
 	private createScene(): BABYLON.Scene{
 
 		const scene = new BABYLON.Scene(this.engine);
-		this.setCamera();
-		this.setLight();
+		// Have to make a class scene manager to destroy and rebuild the meshes of every classes
+		this.createCamera();
+		this.createLight();
 		
+		this.createMap(this.settings.map);
+
 		this.createBall(this.settings.ball);
 
-		this.createMap(this.settings.map);
 		
 		// let alpha = 0;
 		// scene.onBeforeRenderObservable.add( () => {
@@ -48,52 +50,66 @@ export class Game {
 		return scene;
 	};
 
-	private setCamera(): void{
+	private createCamera(): void{
 		const camera = new BABYLON.ArcRotateCamera("camera", 
 			BABYLON.Tools.ToRadians(0), BABYLON.Tools.ToRadians(57.3), 10, BABYLON.Vector3.Zero(), this.scene);
 		camera.setTarget(BABYLON.Vector3.Zero());
 		camera.attachControl(this.canvas, true);
 	}
 
-	private setLight(): void {
+	private createLight(): void {
 		const light = new BABYLON.HemisphericLight("light", 
 			new BABYLON.Vector3(0, 1, 0), this.scene);
 		light.intensity = 0.7;
 	}
 
 	private createBall(ball: BallOption): void {
-		const ballList: Record<string, typeof BallTemplate> = {
-			"default": DefaultBall,
-			"invisible": InvisibleBall,
-			"tricky": TrickyBall,
-			"heavy": HeavyBall,
-			"snake": SnakeBall
-		};
-		const ballArray: Array<typeof BallTemplate> = [DefaultBall, InvisibleBall, TrickyBall, HeavyBall, SnakeBall];
-		let ballClass: typeof BallTemplate;
+		const ballList: BallOption[] = ["default", "invisible", "tricky", "heavy", "snake"];
 		if (ball === "random"){
-			ballClass = ballArray[Math.floor(Math.random() * 5)];
-		} else{
-			ballClass =  ballList[ball];
+			ball = ballList[Math.floor(Math.random() * 5)];
 		}
-		new ballClass(this.scene, ball);
+		switch (ball){
+			case "default":
+				new DefaultBall(this.scene);
+				break;
+			case "invisible":
+				new InvisibleBall(this.scene);
+				break;
+			case "tricky":
+				new TrickyBall(this.scene);
+				break;
+			case "heavy":
+				new HeavyBall(this.scene);
+				break;
+			case "snake":
+				new SnakeBall(this.scene);
+				break;
+			default: ;
+		}
 	}
 
 	private createMap(map: MapOption): void {
-		const mapList: Record<string, typeof MapTemplate> = {
-			"default": DefaultMap,
-			"volcano": VolcanoMap,
-			"windy": WindyMap,
-			"frozen": FrozenMap,
-			"rainy": RainyMap
-		};
-		const mapArray: Array<typeof MapTemplate> = [DefaultMap, VolcanoMap, WindyMap, FrozenMap, RainyMap];
-		let mapClass: typeof MapTemplate;
+		const mapList: MapOption[] = ["default", "volcano", "windy", "frozen", "rainy"];
 		if (map === "random"){
-			mapClass = mapArray[Math.floor(Math.random() * 5)];
-		} else{
-			mapClass =  mapList[map];
+			map = mapList[Math.floor(Math.random() * 5)];
 		}
-		new mapClass(this.scene, map);
+		switch (map){
+			case "default":
+				new DefaultMap(this.scene);
+				break;
+			case "volcano":
+				new VolcanoMap(this.scene);
+				break;
+			case "windy":
+				new WindyMap(this.scene);
+				break;
+			case "frozen":
+				new FrozenMap(this.scene);
+				break;
+			case "rainy":
+				new RainyMap(this.scene);
+				break;
+			default: ;
+		}
 	}
 }
