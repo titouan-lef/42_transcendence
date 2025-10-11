@@ -7,18 +7,29 @@ const USER_PAGE = `
     <section class="card">
       <h2>Create new account</h2>
       <form class="form">
-        <label for="user_id">Account name:</label>
-        <input id="user_id" type="text"/>
-        <label for="user_pseudo">Pseudo:</label>
-        <input id="user_pseudo" type="text"/>
-        <label for="user_password">Password:</label>
-        <input id="user_password" type="password"/>
-        <label for="conf_password">Confirm password:</label>
-        <input id="conf_password" type="password"/>
-        <input id="new_user" type="button" value="Create new user" class="btn new_user"/>
+        <label for="create_user_id">Account name:</label>
+        <input id="create_user_id" type="text"/>
+        <label for="create_user_pseudo">Pseudo:</label>
+        <input id="create_user_pseudo" type="text"/>
+        <label for="create_user_password">Password:</label>
+        <input id="create_user_password" type="password"/>
+        <label for="create_conf_password">Confirm password:</label>
+        <input id="create_conf_password" type="password"/>
+        <input id="create_new_user" type="button" value="Create new user"/>
       </form>
-      <div id="print-content" class="response-box"></div>
     </section>
+    <section class="card">
+      <h2>Login</h2>
+      <form class="form">
+        <label for="login_user_id">Account name:</label>
+        <input id="login_user_id" type="text"/>
+        <label for="login_user_password">Password:</label>
+        <input id="login_user_password" type="password"/>
+        <input id="login" type="button" value="Connect"/>
+      </form>
+    </section>
+    <br>
+    <div id="print-content" class="response-box"></div>
   </main>
 
   <footer>
