@@ -1,5 +1,6 @@
 import { GameSettings, MapOption, BallOption } from "./gameSettings.js";
-import { BallTemplate, HeavyBall, InvisibleBall, SnakeBall, TrickyBall } from "./ballTemplate.js";
+import { BallTemplate, DefaultBall, HeavyBall, InvisibleBall, SnakeBall, TrickyBall } from "./ballTemplate.js";
+import { MapTemplate, DefaultMap, VolcanoMap, WindyMap, FrozenMap, RainyMap} from "./mapTemplate.js";
 
 export class Game {
 	private readonly canvas: HTMLCanvasElement;
@@ -37,8 +38,7 @@ export class Game {
 		
 		this.createBall(this.settings.ball);
 
-		const ground = BABYLON.MeshBuilder.CreateGround("ground", 
-			{width: 6, height: 6}, scene);
+		this.createMap(this.settings.map);
 		
 		// let alpha = 0;
 		// scene.onBeforeRenderObservable.add( () => {
@@ -62,21 +62,38 @@ export class Game {
 	}
 
 	private createBall(ball: BallOption): void {
-		const ballMap: Record<string, typeof BallTemplate> = {
-			"default": BallTemplate,
+		const ballList: Record<string, typeof BallTemplate> = {
+			"default": DefaultBall,
 			"invisible": InvisibleBall,
 			"tricky": TrickyBall,
 			"heavy": HeavyBall,
 			"snake": SnakeBall
 		};
-		const ballArray: Array<typeof BallTemplate> = [BallTemplate, InvisibleBall, TrickyBall, HeavyBall, SnakeBall];
+		const ballArray: Array<typeof BallTemplate> = [DefaultBall, InvisibleBall, TrickyBall, HeavyBall, SnakeBall];
 		let ballClass: typeof BallTemplate;
 		if (ball === "random"){
 			ballClass = ballArray[Math.floor(Math.random() * 5)];
-			ball = "default";
 		} else{
-			ballClass =  ballMap[ball];
+			ballClass =  ballList[ball];
 		}
 		new ballClass(this.scene, ball);
-	};
+	}
+
+	private createMap(map: MapOption): void {
+		const mapList: Record<string, typeof MapTemplate> = {
+			"default": DefaultMap,
+			"volcano": VolcanoMap,
+			"windy": WindyMap,
+			"frozen": FrozenMap,
+			"rainy": RainyMap
+		};
+		const mapArray: Array<typeof MapTemplate> = [DefaultMap, VolcanoMap, WindyMap, FrozenMap, RainyMap];
+		let mapClass: typeof MapTemplate;
+		if (map === "random"){
+			mapClass = mapArray[Math.floor(Math.random() * 5)];
+		} else{
+			mapClass =  mapList[map];
+		}
+		new mapClass(this.scene, map);
+	}
 }
