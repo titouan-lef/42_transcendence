@@ -42,6 +42,7 @@ export class DefaultMap extends MapTemplate {
 		let newMesh;
 		for (let i = 0; i < 4; i++){
 			newMesh = BABYLON.CreateBox("wall", {width: 10, height: 10, depth: 10}, scene);
+			newMesh.position.x = 50;
 			limits.push(newMesh);
 		}
 		return limits;

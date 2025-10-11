@@ -1,17 +1,20 @@
 import { GameSettings, MapOption, BallOption } from "./gameSettings.js";
 import { BallTemplate, DefaultBall, HeavyBall, InvisibleBall, SnakeBall, TrickyBall } from "./ballTemplate.js";
 import { MapTemplate, DefaultMap, VolcanoMap, WindyMap, FrozenMap, RainyMap} from "./mapTemplate.js";
+import { SceneManager } from "./sceneManager.js";
 
 export class Game {
 	private readonly canvas: HTMLCanvasElement;
 	private readonly engine: BABYLON.Engine;
 	private readonly scene: BABYLON.Scene;
+	private readonly sceneManager: SceneManager;
 	private readonly settings: GameSettings;
 
 	constructor (canvas: HTMLCanvasElement, settings: GameSettings) {
 		this.engine = new BABYLON.Engine(canvas, true);
 		this.canvas = canvas;
 		this.settings = settings;
+		this.sceneManager = new SceneManager();
 		this.scene = this.createScene();
 		window.addEventListener("resize", () => this.engine.resize());
 	}
@@ -33,20 +36,29 @@ export class Game {
 	private createScene(): BABYLON.Scene{
 
 		const scene = new BABYLON.Scene(this.engine);
-		// Have to make a class scene manager to destroy and rebuild the meshes of every classes
 		this.createCamera();
-		this.createLight();
-		
-		this.createMap(this.settings.map);
+		this.createLight(); // maybe light should be in Map
+		//this.createPlayers(this.settings)
 
+		//
 		this.createBall(this.settings.ball);
+		this.createMap(this.settings.map);
+		//
+
 
 		
-		// let alpha = 0;
-		// scene.onBeforeRenderObservable.add( () => {
-		// 	sphere.scaling.y = Math.cos(alpha);
-		// 	alpha += 0.01;
-		// });
+		let alpha = 0;
+		scene.onBeforeRenderObservable.add( () => {
+			this.sceneManager.balls.forEach(ball => ball.testfunction(alpha));
+			alpha += 0.01;
+			if (alpha > 1){
+				alpha = 0;
+				this.sceneManager.destroyAll();
+				this.createBall(this.settings.ball);
+				this.createMap(this.settings.map);
+			}
+		});
+		//HERE if an goal occurs, rebuild the scene => scene manager has to dispose classes
 		return scene;
 	};
 
@@ -70,19 +82,19 @@ export class Game {
 		}
 		switch (ball){
 			case "default":
-				new DefaultBall(this.scene);
+				this.sceneManager.addBall(new DefaultBall(this.scene));
 				break;
 			case "invisible":
-				new InvisibleBall(this.scene);
+				this.sceneManager.addBall(new InvisibleBall(this.scene));
 				break;
 			case "tricky":
-				new TrickyBall(this.scene);
+				this.sceneManager.addBall(new TrickyBall(this.scene));
 				break;
 			case "heavy":
-				new HeavyBall(this.scene);
+				this.sceneManager.addBall(new HeavyBall(this.scene));
 				break;
 			case "snake":
-				new SnakeBall(this.scene);
+				this.sceneManager.addBall(new SnakeBall(this.scene));
 				break;
 			default: ;
 		}
@@ -95,19 +107,19 @@ export class Game {
 		}
 		switch (map){
 			case "default":
-				new DefaultMap(this.scene);
+				this.sceneManager.addMap(new DefaultMap(this.scene));
 				break;
 			case "volcano":
-				new VolcanoMap(this.scene);
+				this.sceneManager.addMap(new VolcanoMap(this.scene));
 				break;
 			case "windy":
-				new WindyMap(this.scene);
+				this.sceneManager.addMap(new WindyMap(this.scene));
 				break;
 			case "frozen":
-				new FrozenMap(this.scene);
+				this.sceneManager.addMap(new FrozenMap(this.scene));
 				break;
 			case "rainy":
-				new RainyMap(this.scene);
+				this.sceneManager.addMap(new RainyMap(this.scene));
 				break;
 			default: ;
 		}
