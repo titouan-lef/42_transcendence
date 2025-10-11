@@ -12,6 +12,10 @@ export abstract class BallTemplate {
 
 	abstract activateEffet(): void;
 
+	testfunction(value: number): void{
+		this.mesh.scaling.y = value;
+	}
+
 	destroy(): void {
 		this.mesh.dispose();
 	}
@@ -20,6 +24,9 @@ export abstract class BallTemplate {
 export class DefaultBall extends BallTemplate {
 	constructor(scene: BABYLON.Scene) {
 		super(scene, "default");
+		const material = new BABYLON.StandardMaterial('color', scene);
+		material.diffuseColor = new BABYLON.Color3(0, 1, 0);
+		this.mesh.material = material;
 	}
 
 	activateEffet(): void {
