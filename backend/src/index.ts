@@ -2,6 +2,7 @@ import fastify, { FastifyRequest, FastifyReply } from "fastify";
 import fastifyCors from "@fastify/cors";
 import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
+import { connectUser } from "./user_management/connect_user.js";
 
 const APP = fastify();
 
@@ -16,6 +17,7 @@ APP.register(fastifyCors, { origin: "*" });
 
 // --- Route handlers ---
 APP.post("/api/user/new_user", addNewUser);
+APP.post("/api/user/login", connectUser);
 
 // --- Start server ---
 async function start(): Promise<void> {

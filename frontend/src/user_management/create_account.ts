@@ -3,10 +3,10 @@ import {sendRequestToBack} from "../api_requests.js";
 
 export function newUser(): void {
 
-	const userId: HTMLInputElement | null = getInput("user_id");
-	const userPseudo: HTMLInputElement | null = getInput("user_pseudo");
-	const userPassword: HTMLInputElement | null = getInput("user_password");
-	const confPassword: HTMLInputElement | null = getInput("conf_password");
+	const userId: HTMLInputElement | null = getInput("create_user_id");
+	const userPseudo: HTMLInputElement | null = getInput("create_user_pseudo");
+	const userPassword: HTMLInputElement | null = getInput("create_user_password");
+	const confPassword: HTMLInputElement | null = getInput("create_conf_password");
 	const container: HTMLElement | null = document.getElementById("print-content");
 
 	if (!userId || !userPseudo || !userPassword || !confPassword) {
