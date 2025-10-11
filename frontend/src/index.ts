@@ -24,14 +24,10 @@ APP.register(fastifyStatic, {
 	index: ["index.html"]
 });
 
-/** @todo clean code */
 // --- Routes ---
-// APP.get('/', (req: FastifyRequest, reply: FastifyReply) => {
-// 	reply.sendFile('index.html');
-// });
 
 function consoleLinks(): void {
-	console.log(`Server running at:`);
+	console.log(`Frontend running at:`);
 	console.log(` - Local:   http://localhost:${PORT}`);
 	console.log(` - Network: http://${IP}:${PORT}`);
 }

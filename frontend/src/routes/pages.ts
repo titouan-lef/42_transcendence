@@ -1,6 +1,7 @@
 import { FIRST_PAGE } from "../pages/content/first_page.js";
 import { API_PAGE } from "../pages/content/API_page.js";
 import { SELECT_THEME } from "../pages/content/theme_page.js";
+import { USER_PAGE } from "../pages/content/User_page.js";
 import { loadEvent } from "./events.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 
@@ -8,12 +9,14 @@ enum PageID {
 	FIRST = "first_page",
 	API = "api_page",
 	THEME = "select_theme",
+	USER = "user_page",
 }
 
 const PAGE_CONTENT: Record<PageID, string> = {
 	[PageID.FIRST]: FIRST_PAGE,
 	[PageID.API]: API_PAGE,
 	[PageID.THEME]: SELECT_THEME,
+	[PageID.USER]: USER_PAGE,
 };
 
 let currentPage = PageID.FIRST;
