@@ -28,6 +28,13 @@ const USER_PAGE = `
         <input id="login" type="button" value="Connect"/>
       </form>
     </section>
+    <section class="card">
+      <h2>Who am i ??</h2>
+      <form class="form">
+        <div id="feedback_id" class="response-box"></div>
+        <input id="logout" type="button" value="Log out"/>
+      </form>
+    </section>
     <br>
     <div id="print-content" class="response-box"></div>
   </main>
