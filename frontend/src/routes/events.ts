@@ -4,6 +4,7 @@ import { apiEvents } from "../pages/events/API_events.js";
 import { themeEvents } from "../pages/events/theme_events.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 import { userEvents } from "../pages/events/User_events.js";
+import { whoami } from "../user_management/login.js";
 
 interface Handler{
 	elem: HTMLElement;
@@ -44,6 +45,7 @@ function loadEvent(id: PageID): void {
 		}
 		case PageID.USER: {
 			userEvents();
+			whoami();
 			break;
 		}
 		default: {

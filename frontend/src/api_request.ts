@@ -9,17 +9,18 @@ interface ServerRes {
 	message: string;
 }
 
-function sendRequestToBack(endpoint: string, content: string) : void {
+function sendRequestToBack(endpoint: string, content: string, divToprint: string) : void {
 	fetch(`${API_URL}/${endpoint}`, {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
-		body: content
+		body: content,
+		credentials: "include" // necessary for cookies to work
 	})
 		.then(async (res) => {
 			const result: ServerRes = await res.json();
 
 			const message = result.message || "Unknown response";
-			const container = document.getElementById("print-content");
+			const container = document.getElementById(divToprint);
 			if (container)
 				container.innerHTML = `<p>${message}</p>`;
 			return result;

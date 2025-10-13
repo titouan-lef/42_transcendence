@@ -4,7 +4,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "lint:ts": "eslint . --ext .ts --max-warnings=0",
+    "lint:ts": "eslint ./src --ext .ts --max-warnings=0",
     "format:check": "npm run lint:ts",
     "build:ts": "tsc",
     "build": "npm run build:ts",
@@ -13,9 +13,12 @@
   "dependencies": {
     "fastify": "5.6.1",
     "@fastify/cors": "11.1.0",
+    "@fastify/cookie": "11.0.2",
     "@types/node": "24.7.0",
     "sqlite": "5.1.1",
-    "sqlite3": "5.1.6"
+    "sqlite3": "5.1.6",
+    "jsonwebtoken": "9.0.2",
+    "@types/jsonwebtoken": "9.0.10"
   },
   "devDependencies": {
     "typescript": "5.9.3",
