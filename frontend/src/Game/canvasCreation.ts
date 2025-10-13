@@ -1,7 +1,8 @@
 import { Game } from "./game.js";
 import { GameSettings } from "./gameSettings.js";
 
-const SETTINGS: GameSettings = new GameSettings("default", "random", false, false);
+//this will change when checking options
+const SETTINGS: GameSettings = new GameSettings("default", "random", false, false, ["KeyA", "KeyD", "KeyW", "KeyS"], ["KeyJ", "KeyL", "KeyI", "KeyK"]);
 
 const BUTTON = createButton();
 const CANVAS = createCanvas();
@@ -34,17 +35,17 @@ function createCanvas(): HTMLCanvasElement {
 	return canvas;
 }
 
-function showCanvas(): void {
+async function showCanvas(): Promise<void> {
 	if (!canvasVisibility){
 		CANVAS.style.visibility = "visible";
 		canvasVisibility = true;
 		if (!game){
-			game = new Game(CANVAS, SETTINGS);
+			game = await Game.create(CANVAS, SETTINGS);
 		}
-		game.start();
+		game.show();
 	} else {
 		if (game){
-			game.pause();
+			game.hide();
 		}
 		CANVAS.style.visibility = "hidden";
 		canvasVisibility = false;

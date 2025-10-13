@@ -1,3 +1,6 @@
+//import { Scene, Engine, ArcRotateCamera, HemisphericLight, Tools, Vector3} from "@babylonjs/core/Legacy/legacy.js";
+// import * as materials from 'babylonjs-materials';
+// import * as babylon from 'babylonjs';
 import { BallOption } from "./gameSettings.js";
 
 export abstract class BallTemplate {
@@ -6,6 +9,9 @@ export abstract class BallTemplate {
 
 	constructor(scene: BABYLON.Scene, type: BallOption) {
 		this.mesh = BABYLON.MeshBuilder.CreateSphere(type + "ball", {diameter: 2, segments: 32}, scene);
+		//TEST
+		//const sphereAggregate = new BABYLON.PhysicsAggregate(this.mesh, BABYLON.PhysicsShapeType.SPHERE, { mass: 1, restitution:0.75}, scene);
+		//
 		this.mesh.position.y = 1;
 		this.type = type;
 	}
