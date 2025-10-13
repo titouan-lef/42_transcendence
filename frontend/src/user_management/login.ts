@@ -22,5 +22,13 @@ export function connectUser(): void {
 		password: userPassword.value,
 	};
 
-	sendRequestToBack("api/user/login", JSON.stringify(data));
+	sendRequestToBack("api/user/login", JSON.stringify(data), "print-content");
+}
+
+export function disconnectUser(): void {
+	sendRequestToBack("api/user/logout", "{}", "print-content");
+}
+
+export function whoami(): void {
+	sendRequestToBack("api/user/whoami", "{}", "feedback_id");
 }

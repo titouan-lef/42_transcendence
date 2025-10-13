@@ -34,5 +34,5 @@ export function newUser(): void {
 		ppLink: "/pictures/users/avatar.jpg" /** @TODO */
 	};
 
-	sendRequestToBack("api/user/new_user", JSON.stringify(data));
+	sendRequestToBack("api/user/new_user", JSON.stringify(data), "print-content");
 }

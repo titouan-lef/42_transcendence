@@ -1,8 +1,9 @@
 import fastify, { FastifyRequest, FastifyReply } from "fastify";
 import fastifyCors from "@fastify/cors";
+import fastifyCookies from "@fastify/cookie";
 import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
-import { connectUser } from "./user_management/connect_user.js";
+import { connectUser, disconnectUser, whoami } from "./user_management/connect_user.js";
 
 const APP = fastify();
 
@@ -13,11 +14,18 @@ const APP = fastify();
 * Without CORS, a browser would block frontend apps from calling the backend.
 */
 
-APP.register(fastifyCors, { origin: "*" });
+// APP.register(fastifyCors, { origin: "*", credentials: true }); the "*" is messing up the cookies
+APP.register(fastifyCors, {
+	origin: (origin, cb) => cb(null, true), // allow all origins dynamically
+	credentials: true, // allow cookies
+});
+APP.register(fastifyCookies);
 
 // --- Route handlers ---
 APP.post("/api/user/new_user", addNewUser);
 APP.post("/api/user/login", connectUser);
+APP.post("/api/user/logout", disconnectUser);
+APP.post("/api/user/whoami", whoami);
 
 // --- Start server ---
 async function start(): Promise<void> {
