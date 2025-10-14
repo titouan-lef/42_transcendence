@@ -1,10 +1,8 @@
-import { BallTemplate, DefaultBall, HeavyBall, InvisibleBall, SnakeBall, TrickyBall } from "./ballTemplate.js";
-import { MapTemplate, DefaultMap, VolcanoMap, WindyMap, FrozenMap, RainyMap} from "./mapTemplate.js";
-import { GameSettings, MapOption, BallOption } from "./gameSettings.js";
+import { BallTemplate} from "./ballTemplate.js";
+import { MapTemplate} from "./mapTemplate.js";
 import { Player } from "./player.js";
 
 
-//DO we keep arrays so we can readonly on map ?
 export class SceneManager {
 	readonly balls: BallTemplate[] = [];
 	readonly maps: MapTemplate[] = [];

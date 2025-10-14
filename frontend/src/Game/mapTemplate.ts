@@ -1,7 +1,3 @@
-//import { Mesh, MeshBuilder, Scene, Vector3, CreateBox} from "@babylonjs/core/Legacy/legacy.js";
-// import * as materials from 'babylonjs-materials';
-// import * as babylon from 'babylonjs';
-import { Material } from "babylonjs";
 import { MapOption } from "./gameSettings.js";
 
 export abstract class MapTemplate{
@@ -34,7 +30,7 @@ export class DefaultMap extends MapTemplate {
 	wallMaterial: BABYLON.StandardMaterial;
 	constructor(scene: BABYLON.Scene) {
 		super(scene, "default");
-		this.wallMaterial = this.createGradientMaterial(scene);
+		this.wallMaterial = this.createMaterial(scene);
 		this.limits.forEach(limit => {
 			limit.material = this.wallMaterial; 
 		});
@@ -43,9 +39,6 @@ export class DefaultMap extends MapTemplate {
 	createGround(scene: BABYLON.Scene): BABYLON.Mesh {
 		const ground = BABYLON.MeshBuilder.CreateGround("defaultground", 
 			{width: 75, height: 75}, scene);
-		//TEST
-		//const groundAggregate = new BABYLON.PhysicsAggregate(ground, BABYLON.PhysicsShapeType.BOX, { mass: 0 }, scene);
-		//
 		return ground;
 	}
 
@@ -65,10 +58,8 @@ export class DefaultMap extends MapTemplate {
 		return newMesh;
 	}
 
-	private createGradientMaterial(scene: BABYLON.Scene): BABYLON.StandardMaterial {
-		//const texture: BABYLON.DynamicTexture = this.createTexture(scene);
+	private createMaterial(scene: BABYLON.Scene): BABYLON.StandardMaterial {
 		const mat = new BABYLON.StandardMaterial("mat", scene);
-		//mat.diffuseTexture = texture;
 		return mat;
 	}
 

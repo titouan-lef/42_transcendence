@@ -1,7 +1,3 @@
-//import { Scene, Engine, ArcRotateCamera, HemisphericLight, Tools, Vector3} from "@babylonjs/core/Legacy/legacy.js";
-// import HavokPhysics from "@babylonjs/havok";
-// import * as materials from 'babylonjs-materials';
-// import * as babylon from 'babylonjs';
 import { GameSettings, MapOption, BallOption } from "./gameSettings.js";
 import { DefaultBall, HeavyBall, InvisibleBall, SnakeBall, TrickyBall } from "./ballTemplate.js";
 import { DefaultMap, VolcanoMap, WindyMap, FrozenMap, RainyMap} from "./mapTemplate.js";
@@ -20,10 +16,6 @@ export class Game {
 		this.canvas = canvas;
 		this.settings = settings;
 		this.sceneManager = new SceneManager();
-		// this.createScene().then((scene) => {
-		// 	this.scene = scene;
-		// })
-		//this.scene = this.createScene();
 		this.scene = scene;
 		window.addEventListener("resize", () => this.engine.resize());
 		this.setScene();
@@ -37,11 +29,7 @@ export class Game {
 
 	private static async initScene(engine: BABYLON.Engine): Promise<BABYLON.Scene>{
 		const scene = new BABYLON.Scene(engine);
-		// TEST
-		// const havokInstance = await HavokPhysics();
-		// const havokPlugin = new BABYLON.HavokPlugin(true, havokInstance);
-		// scene.enablePhysics(new BABYLON.Vector3(0, -9.81, 0), havokPlugin);
-		//
+		/**@todo havok initialisation */
 		return scene;
 	};
 
@@ -63,37 +51,12 @@ export class Game {
 		this.createCamera();
 		this.createLight(); // maybe light should be in Map
 
-		//TEST
-		// const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", {size:150}, this.scene);
-		// const skyboxMaterial = new BABYLON.StandardMaterial("skyBox", this.scene);
-		// skyboxMaterial.backFaceCulling = false;
-		// skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/skybox", this.scene);
-		// skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-		// skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
-		// skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-		// skybox.material = skyboxMaterial;
-		//
-		//
 		this.createPlayers(this.settings);
 		this.createBall(this.settings.ball);
 		this.createMap(this.settings.map);
-		//
 
-		//test
-		// const glow = new BABYLON.GlowLayer("glow", scene);
-		// glow.intensity = 0.9;
-		//
-
-		//let alpha = 0;
 		this.scene.onBeforeRenderObservable.add( () => {
-			//this.sceneManager.players.forEach(player => player.move());
-			// this.sceneManager.balls.forEach(ball => ball.testfunction(alpha));
-			// alpha += 0.01;
-			// if (alpha > 1){
-			// 	alpha = 0;
-			// 	this.sceneManager.destroyBalls();
-			// 	this.createBall(this.settings.ball);
-			// }
+			/** @todo fonction to test insertion of data in the db with this.sceneManager.balls.forEach(ball => ball.activateEffet());*/
 		});
 		//HERE if an goal occurs, rebuild the scene => scene manager has to dispose classes
 	}
