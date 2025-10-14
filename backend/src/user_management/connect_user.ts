@@ -9,6 +9,10 @@ declare module 'fastify' {
 	}
 }
 
+interface JwtToken {
+	id: string;
+}
+
 interface NewUserBody {
 	id: string;
 	pseudo: string;
@@ -61,9 +65,9 @@ export function authenticate(req: FastifyRequest, reply: FastifyReply): void {
 	}
 
 	try {
+		const payload = jwt.verify(token, SECRET);
 		// eslint-disable-next-line
-		const payload = jwt.verify(token, SECRET) as { id: string }; /** @todo: remove assertion if possible */
-		req.user = payload.id;
+		req.user = (payload as JwtToken).id; // payload will always be this format because it's how it is created.
 	} catch {
 		reply.code(201).send({ success: false, message: "Invalid token" });
 	}
