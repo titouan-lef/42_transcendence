@@ -417,7 +417,7 @@ CONSTANT_CASE | global constant values, including enum values
 
 You can use make commands to build, run, and manage your front-end and back-end containers, as well as to recompile source files during development.
 
-### 1. Build and run containers
+### Build and run containers
 ```bash
 make
 ```
@@ -427,16 +427,17 @@ make up
 ```
 Both commands will build the front-end and back-end containers and start them.
 
-### 2. Development mode
+### Development mode
 You can also use:
 ```bahs
 make dev
 ```
 Use this during development. It recompiles all TypeScript (`.ts`) and CSS (`.css`) files from `src` (for both front-end and back-end) and `public` (front-end only) directories without rebuilding the containers.
 
+> [!TIP]
 > The containers will stay attached to your terminal. Press `Ctrl+C` to stop them.
 
-### 3. Full rebuild
+### Full rebuild
 ```bahs
 make re
 ```
@@ -444,7 +445,7 @@ This runs:
 	`make fclean` – removes all built containers and compiled files.
 	`make up` – rebuilds and starts the containers from scratch.
 
-### 4. Retry running in dev mode
+### Retry running in dev mode
 ```bahs
 make retry
 ```
