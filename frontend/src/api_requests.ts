@@ -26,8 +26,3 @@ export function test(): void {
 		})
 		.catch((err) => console.error(err));
 }
-
-// document.addEventListener("DOMContentLoaded", () => {
-// 	document.getElementById("btn-hello")?.addEventListener("click", hello);
-// 	document.getElementById("btn-test")?.addEventListener("click", test);
-// });
