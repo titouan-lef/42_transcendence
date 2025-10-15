@@ -1,10 +1,14 @@
 import { hello, test } from "./api_requests.js";
 import { goTo } from "./navigate.js";
+import { pizzaTheme, gameOverTheme, sugarRushTheme } from "./theme.js";
 
 const EVENTS = new Map<string, () => void>([
 	["first_page", (): void => goTo("test")],
 	["btn-hello", hello],
-	["btn-test", test]
+	["btn-test", test],
+	["btn-pizza", pizzaTheme],
+	["btn-gameover", gameOverTheme],
+	["btn-sugarrush", sugarRushTheme]
 ]);
 
 document.addEventListener("click", (event) => {
@@ -19,7 +23,7 @@ document.addEventListener("click", (event) => {
 	}
 });
 
-window.addEventListener("popstate", (event) => {
-	const page = (event.state?.page) || "init";
-	goTo(page);
-});
+// window.addEventListener("popstate", (event) => {
+// 	const page = (event.state?.page) || "init";
+// 	goTo(page);
+// });
