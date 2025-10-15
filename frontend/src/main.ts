@@ -24,7 +24,6 @@ APP.register(fastifyStatic, {
 	index: ["index.html"]
 });
 
-
 // --- Routes ---
 // APP.get('/', (req: FastifyRequest, reply: FastifyReply) => {
 // 	reply.sendFile('index.html');

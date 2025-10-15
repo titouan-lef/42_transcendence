@@ -4,7 +4,8 @@ interface HelloResponse {
 
 declare const API_URL: string; // just telling the compiler that API_URL will exists during execution
 
-function hello(): void {
+export function hello(): void {
+	console.log("coucou hello");
 	fetch(`${API_URL}/api/hello`)
 		.then((res) => res.json())
 		.then((data: HelloResponse) => {
@@ -15,7 +16,7 @@ function hello(): void {
 		.catch((err) => console.error(err));
 }
 
-function test(): void {
+export function test(): void {
 	fetch(`${API_URL}/api/test`)
 		.then((res) => res.json())
 		.then((data: HelloResponse) => {
@@ -26,7 +27,7 @@ function test(): void {
 		.catch((err) => console.error(err));
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-	document.getElementById("btn-hello")?.addEventListener("click", hello);
-	document.getElementById("btn-test")?.addEventListener("click", test);
-});
+// document.addEventListener("DOMContentLoaded", () => {
+// 	document.getElementById("btn-hello")?.addEventListener("click", hello);
+// 	document.getElementById("btn-test")?.addEventListener("click", test);
+// });
