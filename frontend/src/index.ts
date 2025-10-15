@@ -24,6 +24,12 @@ APP.register(fastifyStatic, {
 	index: ["index.html"]
 });
 
+APP.register(fastifyStatic, {
+	root: path.join("/app/node_modules/@babylonjs/core/"),
+	prefix: "/babylonjs/",
+	decorateReply: false
+});
+
 // --- Routes ---
 
 function consoleLinks(): void {

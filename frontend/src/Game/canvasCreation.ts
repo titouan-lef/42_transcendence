@@ -2,13 +2,15 @@ import { Game } from "./game.js";
 import { GameSettings } from "./gameSettings.js";
 
 //this will change when checking options
-const SETTINGS: GameSettings = new GameSettings("default", "random", false, false, ["KeyA", "KeyD", "KeyW", "KeyS"], ["KeyJ", "KeyL", "KeyI", "KeyK"]);
+/**@todo will move keys to thr "session"'s settings */
+const SETTINGS: GameSettings = new GameSettings("random", "random", false, false, ["KeyA", "KeyD", "KeyW", "KeyS"], ["KeyJ", "KeyL", "KeyI", "KeyK"]);
 
 const BUTTON = createButton();
 const CANVAS = createCanvas();
 let game: Game;
 let canvasVisibility = false;
 
+/**@todo just to test */
 function createButton(): HTMLElement {
 	const button = document.createElement("button");
 	button.textContent = "LaunchGame";
@@ -22,6 +24,7 @@ function createButton(): HTMLElement {
 	return button;
 }
 
+/** @todo just to test */
 function createCanvas(): HTMLCanvasElement {
 	const canvas: HTMLCanvasElement = document.createElement("canvas");
 	canvas.style.position = "Absolute";
@@ -35,26 +38,26 @@ function createCanvas(): HTMLCanvasElement {
 	return canvas;
 }
 
+/**@todo will see how we pop the game */
 async function showCanvas(): Promise<void> {
-	if (!canvasVisibility){
+	if (!canvasVisibility) {
 		CANVAS.style.visibility = "visible";
 		canvasVisibility = true;
-		if (!game){
+		if (!game) {
 			game = await Game.create(CANVAS, SETTINGS);
 		}
 		game.show();
 	} else {
-		if (game){
+		if (game) {
 			game.hide();
 		}
 		CANVAS.style.visibility = "hidden";
 		canvasVisibility = false;
 	}
 }
-
-try{
+try {
 	BUTTON.addEventListener("click", () => showCanvas());
-} catch(e){
+} catch(e) {
 	console.log(e);
 }
 
