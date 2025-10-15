@@ -1,4 +1,4 @@
-const API_TESTPAGE =
+export const API_TESTPAGE =
 `
   <header>
     <h1> Welcome to PONG</h1>
