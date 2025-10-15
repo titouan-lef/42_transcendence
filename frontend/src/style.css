@@ -6,13 +6,39 @@
 
 /* Lists all our defaults variables */
 @theme {
-	--color-red-main:	#A93639;
-	--color-red-light:	#F95A53;
-	--color-red-dark:	#741D1F;
-	--color-orange:		#FF9B3D;
-	--color-beige:		#FED4A4;
-
 	--font-jaro: "Jaro", sans-serif;
+}
+
+:root {
+	--color-primary:	#A93639;
+	--color-light:		#F95A53;
+	--color-dark:		#741D1F;
+	--color-variant:	#FF9B3D;
+	--color-secondary:	#FED4A4;
+}
+
+[data-theme="pizza"] {
+	--color-primary:	#A93639;
+	--color-light:		#F95A53;
+	--color-dark:		#741D1F;
+	--color-variant:	#FF9B3D;
+	--color-secondary:	#FED4A4;
+}
+
+[data-theme="game-over"] {
+	--color-primary:	#9A0103;
+	--color-light:		#F80500;
+	--color-dark:		#190101;
+	--color-variant:	#FFA602;
+	--color-secondary:	#FEE203;
+}
+
+[data-theme="sugar-rush"] {
+	--color-primary:	#FF4EA4;
+	--color-light:		#FA7DB7;
+	--color-dark:		#8E1B51;
+	--color-variant:	#02A7C3;
+	--color-secondary:	#DBD54F;
 }
 
 /* Reset some defaults */
@@ -23,7 +49,7 @@
 /* Body */
 body {
   @apply font-sans flex flex-col min-h-screen text-white;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background: var(--color-primary);
 }
 
 /* Header */
