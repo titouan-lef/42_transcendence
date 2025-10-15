@@ -1,6 +1,6 @@
 export const FIRST_PAGE =
 `
-<div class="
+<div id="first_page" class="
 	font-jaro
 	text-beige
 	text-[150px]
