@@ -1,4 +1,4 @@
-const FIRST_PAGE =
+export const FIRST_PAGE =
 `
 <div class="
 	font-jaro
