@@ -9,7 +9,8 @@ function hello(): void {
 		.then((res) => res.json())
 		.then((data: HelloResponse) => {
 			const container = document.getElementById(`print-content`);
-			if (container) container.innerHTML = `<p>Backend says: ${data.msg}</p>`;
+			if (container)
+				container.innerHTML = `<p>Backend says: ${data.msg}</p>`;
 		})
 		.catch((err) => console.error(err));
 }
@@ -19,7 +20,8 @@ function test(): void {
 		.then((res) => res.json())
 		.then((data: HelloResponse) => {
 			const container = document.getElementById(`print-content`);
-			if (container) container.innerHTML = `<p>Backend says: ${data.msg}</p>`;
+			if (container)
+				container.innerHTML = `<p>Backend says: ${data.msg}</p>`;
 		})
 		.catch((err) => console.error(err));
 }
