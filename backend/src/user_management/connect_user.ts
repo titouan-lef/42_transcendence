@@ -22,13 +22,13 @@ interface NewUserBody {
 
 const SECRET = "blablablou";
 const COOKIES_OPTIONS: CookieSerializeOptions = {
-	httpOnly: true,
+	httpOnly: true,		// httpOnly prevent js on client to read teh cookies and so protect again XSS attacks
 	sameSite: "lax",	// or "none" if cross-site
 	secure: false,		// must be true if you're using HTTPS
 	path: "/",
 };
 
-export async function connectUser(req: FastifyRequest<{ Body: NewUserBody }>, reply: FastifyReply): Promise<void> {
+export async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
 	const { id, password } = req.body;
 
 	const realPassword: string = await findUserPassword(id);
@@ -37,7 +37,7 @@ export async function connectUser(req: FastifyRequest<{ Body: NewUserBody }>, re
 	if (realPassword === password) {
 		const token = jwt.sign({id}, SECRET);
 		reply
-			.setCookie("token", token, COOKIES_OPTIONS) // httpOnly prevent js on client to read teh cookies and so protect again XSS attacks
+			.setCookie("token", token, COOKIES_OPTIONS)
 			.code(201)
 			.send({ success: true, message: "Successfuly loged in" });
 	} else {
