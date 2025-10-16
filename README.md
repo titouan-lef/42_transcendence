@@ -497,6 +497,13 @@ Other | `WIP`<br>`DOCS`<br>`TEST` | Work In Progress.<br>Add or update documenta
 - Assign a pull request for the base branch and create it for the specific branch.
 
 ## Links
+### Documentation
+- TypeScript : https://www.typescriptlang.org/docs/
+- HTMLint : https://htmlhint.com/
+- ESLint : https://eslint.org/docs/latest/
+- ESLint Parser : https://typescript-eslint.io/packages/parser/
+- ESLint Stylistic : https://eslint.style/
+
 ### Convention
 - TypeScript : https://ts.dev/style/
 - SQLite : https://nodejs.org/api/sqlite.html
