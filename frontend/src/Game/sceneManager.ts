@@ -1,4 +1,4 @@
-import * as babylon from "/babylonjs/index.js";
+import * as babylon from "/babylonjs/core/index.js";
 import { BallTemplate } from "./Balls/ballTemplate.js";
 import { DefaultBall } from "./Balls/defaultBall.js";
 import { InvisibleBall } from "./Balls/invisibleBall.js";

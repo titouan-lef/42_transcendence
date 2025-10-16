@@ -5,6 +5,9 @@ import stylistic from "@stylistic/eslint-plugin";			// Plugin for styling rules
 
 export default [
 	{
+		ignores: ["src/types/babylonjs.d.ts"],
+	},
+	{
 		files: ["src/**/*.ts"],	// check all .ts files from src directory only, to not include futures config files in .ts format
 		languageOptions: {
 			parser: tsparser,
@@ -32,7 +35,7 @@ export default [
 				trailingUnderscore: "forbid",
 			},
 			{
-				selector: ["variable", "parameter", "function", "method", "property", "parameterProperty", "import", "accessor"],
+				selector: ["variable", "parameter", "function", "method", "property", "parameterProperty", "accessor"],
 				format: ["camelCase"],
 				leadingUnderscore: "forbid",
 				trailingUnderscore: "forbid",

@@ -1,4 +1,4 @@
-import * as babylon from "/babylonjs/index.js";
+import * as babylon from "/babylonjs/core/index.js";
 import { GameSettings } from "./gameSettings.js";
 import { PlayerKeys } from "./gameSettings.js";
 import { PLAYER_DIMENSION, COLORS } from "./values.js";

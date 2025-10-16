@@ -17,7 +17,8 @@
     "@fastify/static": "8.2.0",
     "@types/node": "24.7.0",
     "tailwindcss": "4.1.14",
-	  "@babylonjs/core": "8.31.2"
+	  "@babylonjs/core": "8.31.2",
+    "@babylonjs/havok": "1.3.10"
   },
   "devDependencies": {
     "typescript": "5.9.3",

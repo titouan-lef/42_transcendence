@@ -1,4 +1,4 @@
-import * as babylon from "/babylonjs/index.js";
+import * as babylon from "/babylonjs/core/index.js";
 
 const WHITE: babylon.Color3					= new babylon.Color3(1,1,1);
 const BLACK: babylon.Color3					= new babylon.Color3(0,0,0);
@@ -49,12 +49,6 @@ export const COLORS: Record<string, babylon.Color3> = {
 	sunColorDefault: SUNCOLOR_DEFAULT,
 	lightColorDefault: LIGHTCOLOR_DEFAULT
 };
-
-// export const COLORS: Record<ColorKey, BABYLON.Color3> = {
-// 	WHITE, BLACK, RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, GREY,
-// 	DARK_GREY, LIGHT_GREY, ORANGE, PURPLE, PINK, BROWN, LIME, NAVY, TEAL, OLIVE,
-// 	SUNCOLOR_DEFAULT, LIGHTCOLOR_DEFAULT
-// };
 
 export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(75, 75, 75);
 export const WALL_WIDTH = 3;

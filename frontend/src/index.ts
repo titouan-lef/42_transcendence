@@ -25,7 +25,7 @@ APP.register(fastifyStatic, {
 });
 
 APP.register(fastifyStatic, {
-	root: path.join("/app/node_modules/@babylonjs/core/"),
+	root: path.join("/app/node_modules/@babylonjs/"),
 	prefix: "/babylonjs/",
 	decorateReply: false
 });
