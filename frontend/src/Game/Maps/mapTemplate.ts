@@ -1,4 +1,4 @@
-import * as babylon from "/babylonjs/index.js";
+import * as babylon from "/babylonjs/core/index.js";
 import { MapOption } from "../gameSettings.js";
 
 export abstract class MapTemplate {

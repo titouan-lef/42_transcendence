@@ -1,4 +1,4 @@
-import * as babylon from "/babylonjs/index.js";
+import * as babylon from "/babylonjs/core/index.js";
 import { MapTemplate } from "./mapTemplate.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS } from "../values.js";
 

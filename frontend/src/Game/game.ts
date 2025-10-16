@@ -1,7 +1,9 @@
-import * as babylon from "/babylonjs/index.js";
+import * as babylon from "/babylonjs/core/index.js";
 import { SceneManager } from "./sceneManager.js";
 import { GameSettings } from "./gameSettings.js";
 import { GLOW_INTENSITY } from "./values.js";
+import { HavokPlugin } from "/babylonjs/core/Physics/index.js"; // CA MARCHE
+import havokPhysics from "/babylonjs/havok/lib/esm/HavokPhysics_es.js";
 
 export class Game {
 	private readonly canvas: HTMLCanvasElement;
@@ -32,6 +34,9 @@ export class Game {
 	/**@todo const havokInstance = await HavokPhysics(); const havokPlugin = new BABYLON.HavokPlugin(true, havokInstance); scene.enablePhysics(new BABYLON.Vector3(0, -9.81, 0), havokPlugin); */
 	private static async initScene(engine: babylon.Engine): Promise<babylon.Scene> {
 		const scene = new babylon.Scene(engine);
+		const havokInstance = await havokPhysics();
+		const havokPlugin = new HavokPlugin(true, havokInstance);
+		scene.enablePhysics(new babylon.Vector3(0, -9.81, 0), havokPlugin);
 		return scene;
 	};
 
@@ -57,6 +62,9 @@ export class Game {
 		this.sceneManager.setEnvironnement(this.scene, this.settings);
 		/**@todo game loop */
 		let alpha = 0;
+
+		/**@todo text*/
+
 		this.scene.onBeforeRenderObservable.add( () => {
 			this.sceneManager.balls.forEach(ball => ball.testfunction(alpha));
 			alpha += 0.01;

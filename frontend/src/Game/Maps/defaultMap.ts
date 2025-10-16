@@ -1,4 +1,4 @@
-import * as babylon from "/babylonjs/index.js";
+import * as babylon from "/babylonjs/core/index.js";
 import { MapTemplate } from "./mapTemplate.js";
 import { MAP_SIZE, SUN_DIAMETER, WALL_HEIGHT, WALL_WIDTH, PARTICLE_NUMBER, COLORS } from "../values.js";
 
@@ -6,15 +6,18 @@ export class DefaultMap extends MapTemplate {
 	wallMaterial: babylon.StandardMaterial;
 	bars: babylon.Mesh[];
 	particles: babylon.ParticleSystem;
+	wallHighlight: babylon.HighlightLayer;
 
 	constructor(scene: babylon.Scene) {
 		super(scene, "default");
 		this.wallMaterial = this.createMaterial(scene);
 		this.limits.forEach(limit => {
-			limit.material = this.wallMaterial; 
+			limit.material = this.wallMaterial;
 		});
 		this.bars = this.createBars(scene);
 		this.particles = this.createParticules(scene);
+		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
+		this.limits.forEach(limit => this.wallHighlight.addMesh(limit, COLORS.red));
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
@@ -99,13 +102,15 @@ export class DefaultMap extends MapTemplate {
 	
 	private createMaterial(scene: babylon.Scene): babylon.StandardMaterial {
 		const material = new babylon.StandardMaterial('wallcolor', scene);
-		material.diffuseColor =  COLORS.darkGrey;
+		material.diffuseColor =  COLORS.black;
 		return material;
 	}
 	
 	destroyRest(): void {
+		this.wallMaterial.dispose();
 		this.bars.forEach(bar => bar.dispose());
 		this.particles.stop();
 		this.particles.dispose();
+		this.wallHighlight.dispose();
 	}
 }
