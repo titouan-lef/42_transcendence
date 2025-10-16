@@ -1,10 +1,11 @@
 import tseslint from "@typescript-eslint/eslint-plugin";
 import tsparser from "@typescript-eslint/parser";
 import tsimport from "eslint-plugin-import";
+import stylistic from "@stylistic/eslint-plugin";
 
 export default [
 	{
-		files: ["**/*.ts"],
+		files: ["src/**/*.ts"],
 		languageOptions: {
 			parser: tsparser,
 			parserOptions: {
@@ -16,11 +17,12 @@ export default [
 		plugins: {
 			"@typescript-eslint": tseslint,
 			"import": tsimport,
+			"@stylistic": stylistic,
 		},
 		rules: {
 			// --- General format ---
-			"indent": ["error", "tab", { "SwitchCase": 1 }],
-			"no-mixed-spaces-and-tabs": ["error", "smart-tabs"],
+			"@stylistic/indent": ["error", "tab", { "SwitchCase": 1 }],
+			"@stylistic/no-mixed-spaces-and-tabs": ["error"],
 
 			// --- Naming conventions ---
 			"@typescript-eslint/naming-convention": [ "error", {
@@ -69,9 +71,10 @@ export default [
 			"no-throw-literal": "error",
 
 			// --- Code style & braces ---
-			"curly": ["error", "multi-line"],
-			"brace-style": ["error", "1tbs", { "allowSingleLine": false }],
-			"semi": ["error", "always"],
+			"@stylistic/curly-newline": ["error"],
+			"@stylistic/nonblock-statement-body-position": ["error", "below"],
+			"@stylistic/brace-style": ["error"],
+			"@stylistic/semi": ["error", "always"],
 
 			// --- Switch cases ---
 			"default-case": ["error", { "commentPattern": "^no default$" }],
