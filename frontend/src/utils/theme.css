@@ -1,0 +1,119 @@
+[data-theme="pizza_lulu"] {
+	--color-primary:	#A93639;
+	--color-light:		#F95A53;
+	--color-dark:		#741D1F;
+	--color-variant:	#FF9B3D;
+	--color-secondary:	#FED4A4;
+	--color-tx-prim:	#FED4A4;
+	--color-tx-sec:		#FF9B3D;
+}
+
+[data-theme="over_titouan"] {
+	--color-primary:	#9A0103;
+	--color-light:		#F80500;
+	--color-dark:		#190101;
+	--color-variant:	#FFA602;
+	--color-secondary:	#FEE203;
+	--color-tx-prim:	#FEE203;
+	--color-tx-sec:		#FFA602;
+}
+
+[data-theme="sugar_rushtman"] {
+	--color-primary:	#db488f;
+	--color-light:		#FA7DB7;
+	--color-dark:		#8E1B51;
+	--color-variant:	#02A7C3;
+	--color-secondary:	#DBD54F;
+	--color-tx-prim:	#DBD54F;
+	--color-tx-sec:		#02A7C3;
+}
+
+[data-theme="polybius"] {
+	--color-primary:	#000000;
+	--color-light:		#4bb475;
+	--color-dark:		#246940;
+	--color-variant:	#00F1DF;
+	--color-secondary:	#BAFFDA;
+	--color-tx-prim:	#BAFFDA;
+	--color-tx-sec:		#00F1DF;
+}
+
+[data-theme="neon_hearts"] {
+	--color-primary:	#6E007B;
+	--color-light:		#A5017A;
+	--color-dark:		#33037A;
+	--color-variant:	#E1007A;
+	--color-secondary:	#FD0273;
+	--color-tx-prim:	#FD0273;
+	--color-tx-sec:		#E1007A;
+}
+
+[data-theme="lazer_tim"] {
+	--color-primary:	#354737;
+	--color-light:		#E6FCFD;
+	--color-dark:		#34B84A;
+	--color-variant:	#8edf38;
+	--color-secondary:	#CFE454;
+	--color-tx-prim:	#CFE454;
+	--color-tx-sec:		#8edf38;
+}
+
+[data-theme="claw_machine"] {
+	--color-primary:	#30C3C3;
+	--color-light:		#E6FCFD;
+	--color-dark:		#4556FC;
+	--color-variant:	#C174FB;
+	--color-secondary:	#3A3440;
+	--color-tx-prim:	#3A3440;
+	--color-tx-sec:		#C174FB;
+}
+
+[data-theme="electronic_eclypse"] {
+	--color-primary:	#6922AD;
+	--color-light:		#9968CD;
+	--color-dark:		#3D0F70;
+	--color-variant:	#EBCA41;
+	--color-secondary:	#FDFED3;
+	--color-tx-prim:	#FDFED3;
+	--color-tx-sec:		#EBCA41;
+}
+
+[data-theme="please_insert_25c"] {
+	--color-primary:	#73504C;
+	--color-light:		#B88E8F;
+	--color-dark:		#572421;
+	--color-variant:	#756A68;
+	--color-secondary:	#969696;
+	--color-tx-prim:	#473534;
+	--color-tx-sec:		#756A68;
+}
+
+[data-theme="ticket_muncher"] {
+	--color-primary:	#A42483;
+	--color-light:		#E04F78;
+	--color-dark:		#301547;
+	--color-variant:	#FB4F58;
+	--color-secondary:	#EB9C75;
+	--color-tx-prim:	#EB9C75;
+	--color-tx-sec:		#FB4F58;
+}
+
+[data-theme="electric_pl"] {
+	--color-primary:	#4a7aff;
+	--color-light:		#84a4fc;
+	--color-dark:		#375bbd;
+	--color-variant:	#ffcf32;
+	--color-secondary:	#e6b04e;
+	--color-tx-prim:	#e6b04e;
+	--color-tx-sec:		#ffcf32;
+}
+
+[data-theme="monq"] {
+	--color-primary:	#ffe5b5;
+	--color-light:		#fff8ec;
+	--color-dark:		#eec882;
+	--color-variant:	#eea113;
+	--color-secondary:	#60267a;
+	--color-tx-prim:	#60267a;
+	--color-tx-sec:		#eea113;
+}
