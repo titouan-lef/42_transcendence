@@ -1,7 +1,7 @@
-import tseslint from "@typescript-eslint/eslint-plugin";
-import tsparser from "@typescript-eslint/parser";
-import tsimport from "eslint-plugin-import";
-import stylistic from "@stylistic/eslint-plugin";
+import tseslint from "@typescript-eslint/eslint-plugin";	// Import linter
+import tsparser from "@typescript-eslint/parser";			// Import parser
+import tsimport from "eslint-plugin-import";				// Prevent issues with misspelling of file paths and import names
+import stylistic from "@stylistic/eslint-plugin";			// Plugin for styling rules
 
 export default [
 	{
@@ -21,8 +21,8 @@ export default [
 		},
 		rules: {
 			// --- General format ---
-			"@stylistic/indent": ["error", "tab", { "SwitchCase": 1 }],
-			"@stylistic/no-mixed-spaces-and-tabs": ["error"],
+			"@stylistic/indent": ["error", "tab", { "SwitchCase": 1 }], // Enforces tabs for indentation even for cases inside switchs
+			"@stylistic/no-mixed-spaces-and-tabs": ["error"], // Forbids mixing spaces and tab
 
 			// --- Naming conventions ---
 			"@typescript-eslint/naming-convention": [ "error", {
@@ -59,59 +59,59 @@ export default [
 			}],
 
 			// --- Class & instantiation rules ---
-			"new-parens": "error", // Enforce parentheses on all constructor calls
-			"no-new-wrappers": "error", // Enforce use of primitive literals
+			"new-parens": "error",					// Enforce parentheses on all constructor calls
+			"no-new-wrappers": "error",				// Enforce use of primitive literals
 			"no-array-constructor": "error",
 
 			// --- Variable declaration rules ---
-			"no-var": "error", //  Always use `const` or `let` to declare variables
-			"prefer-const": "error",
+			"no-var": "error",						// Always use `const` or `let` to declare variables
+			"prefer-const": "error",				// Suggest using `const` where possible
 
 			// --- Exception handling ---
-			"no-throw-literal": "error",
+			"no-throw-literal": "error",			// Enforce `throw new Error()` instead of throwing plain strings or numbers
 
 			// --- Code style & braces ---
-			"@stylistic/curly-newline": ["error"],
-			"@stylistic/nonblock-statement-body-position": ["error", "below"],
-			"@stylistic/brace-style": ["error"],
-			"@stylistic/semi": ["error", "always"],
+			"@stylistic/curly-newline": ["error"],	// Require braces for blocks (if, else, while, for, ...)
+			"@stylistic/nonblock-statement-body-position": ["error", "below"],	// There can be a single statement instead of a block on a new line
+			"@stylistic/brace-style": ["error"],	// Enfore `one true brace style` (1tbs)
+			"@stylistic/semi": ["error", "always"],	// Always require semicolons
 
 			// --- Switch cases ---
-			"default-case": ["error", { "commentPattern": "^no default$" }],
-			"no-fallthrough": ["error", { "allowEmptyCase": true }],
+			"default-case": ["error"],				// Must include a default case into switch cases
+			"no-fallthrough": ["error", { "allowEmptyCase": true }],	// Prevents letting one case “fall through” to the next, except if he is empty
 
 			// --- Equality ---
-			"eqeqeq": ["error", "smart"],
+			"eqeqeq": ["error"],					// Forces use of === and !==
 
 			// --- Function style ---
-			"func-style": ["error", "declaration", { "allowArrowFunctions": false }],
-			"prefer-arrow-callback": ["error", { "allowNamedFunctions": false }],
-			"arrow-body-style": ["error", "as-needed"],
+			"func-style": ["error", "declaration"], // Requires the use of function declarations instead of function expressions
+			"prefer-arrow-callback": ["error", { "allowNamedFunctions": false }],	// Prefer arrow functions for callbacks
+			"arrow-body-style": ["error", "as-needed"],	// Only use {} in arrow functions if necessary
 
 			// --- TypeScript strictness ---
-			"@typescript-eslint/consistent-type-assertions": [ "error", { "assertionStyle": "never" }],
-			"@typescript-eslint/no-non-null-assertion": "error",
+			"@typescript-eslint/consistent-type-assertions": [ "error", { "assertionStyle": "never" }],	// Forbids as Type assertions
+			"@typescript-eslint/no-non-null-assertion": "error",	//	Forbids ! non-null assertions
 
 			// --- Enums ---
-			"no-restricted-syntax": ["error", {
+			"no-restricted-syntax": ["error", {		// Forbis const enums
 					selector: "TSEnumDeclaration[const=true]",
 					message: "Avoid using const enums.",
 				},
 			],
 
 			// --- Source Organization ---
-			"@typescript-eslint/no-namespace": "error",
-			"@typescript-eslint/no-require-imports": "error",
+			"@typescript-eslint/no-namespace": "error",	// Disallows namespace (use ES modules instead)
+			"@typescript-eslint/no-require-imports": "error",	// Disallows require() imports (use import syntax)
 
 			// --- Imports / Exports ---
-			"import/no-default-export": "error",
+			"import/no-default-export": "error",	// Forbis export default
 
 			// --- Type system ---
 			"@typescript-eslint/no-inferrable-types": "error",
-			"@typescript-eslint/explicit-function-return-type": "error",
-			"@typescript-eslint/no-explicit-any": "error",
-			"@typescript-eslint/consistent-type-definitions": ["error", "interface"],
-			"@typescript-eslint/array-type": ["error", {
+			"@typescript-eslint/explicit-function-return-type": "error",	// Always require return type annotations for functions and methods
+			"@typescript-eslint/no-explicit-any": "error",	// Forbids any → must use concrete or generic types
+			"@typescript-eslint/consistent-type-definitions": ["error", "interface"],	// Always use interface instead of type for objects
+			"@typescript-eslint/array-type": ["error", {	// Enforces simple array types → string[] instead of Array<string>
 					default: "array-simple",
 					readonly: "array-simple"
 				}
