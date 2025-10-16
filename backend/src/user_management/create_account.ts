@@ -8,7 +8,7 @@ interface NewUserBody {
 	ppLink: string;
 }
 
-export async function addNewUser(req: FastifyRequest<{ Body: NewUserBody }>, reply: FastifyReply): Promise<void> {
+export async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
 	try {
 		const { id, pseudo, password, ppLink } = req.body;
 
