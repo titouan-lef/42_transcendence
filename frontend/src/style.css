@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap');
 @import "tailwindcss";
 @import "tailwindcss/preflight";
+@import "./utils/theme.css";
 
 @tailwind utilities;
 
@@ -10,35 +11,11 @@
 }
 
 :root {
-	--color-primary:	#A93639;
-	--color-light:		#F95A53;
-	--color-dark:		#741D1F;
-	--color-variant:	#FF9B3D;
-	--color-secondary:	#FED4A4;
-}
-
-[data-theme="pizza"] {
-	--color-primary:	#A93639;
-	--color-light:		#F95A53;
-	--color-dark:		#741D1F;
-	--color-variant:	#FF9B3D;
-	--color-secondary:	#FED4A4;
-}
-
-[data-theme="game-over"] {
-	--color-primary:	#9A0103;
-	--color-light:		#F80500;
-	--color-dark:		#190101;
-	--color-variant:	#FFA602;
-	--color-secondary:	#FEE203;
-}
-
-[data-theme="sugar-rush"] {
-	--color-primary:	#FF4EA4;
-	--color-light:		#FA7DB7;
-	--color-dark:		#8E1B51;
-	--color-variant:	#02A7C3;
-	--color-secondary:	#DBD54F;
+	--color-primary:	#313835;
+	--color-light:		#677c78;
+	--color-dark:		#0f1111;
+	--color-variant:	#996e47;
+	--color-secondary:	#eeeceb;
 }
 
 /* Reset some defaults */
@@ -50,11 +27,6 @@
 body {
   @apply font-sans flex flex-col min-h-screen text-white;
   background: var(--color-primary);
-}
-
-/* Header */
-header {
-  @apply text-center p-8 bg-black/30 backdrop-blur-md;
 }
 
 header h1 {
