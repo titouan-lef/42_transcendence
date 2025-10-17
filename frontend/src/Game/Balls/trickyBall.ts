@@ -3,17 +3,19 @@ import { BallTemplate } from "./ballTemplate.js";
 import { COLORS } from "../values.js";
 
 export class TrickyBall extends BallTemplate {
-	private readonly material: babylon.StandardMaterial;
-		
 	constructor(scene: babylon.Scene) {
 		super(scene, "tricky");
-		this.material = new babylon.StandardMaterial('ballcolor', scene);
-		this.material.emissiveColor =  COLORS.purple;
-		this.mesh.material = this.material;
+		this.setMaterial(scene);
+	}
+
+	setMaterial(scene: babylon.Scene): void {
+		const material = new babylon.StandardMaterial('ballcolor', scene);
+		material.emissiveColor = COLORS.purple;
+		this.mesh.material = material;
 	}
 
 	destroyRest(): void {
-		this.material.dispose();
+		
 	}
 
 	/**@todo changes direction every 5sec */

@@ -3,17 +3,12 @@ import { MapTemplate } from "./mapTemplate.js";
 import { MAP_SIZE, SUN_DIAMETER, WALL_HEIGHT, WALL_WIDTH, PARTICLE_NUMBER, COLORS } from "../values.js";
 
 export class DefaultMap extends MapTemplate {
-	wallMaterial: babylon.StandardMaterial;
-	bars: babylon.Mesh[];
-	particles: babylon.ParticleSystem;
-	wallHighlight: babylon.HighlightLayer;
+	private readonly bars: babylon.Mesh[];
+	private readonly particles: babylon.ParticleSystem;
+	private readonly wallHighlight: babylon.HighlightLayer;
 
 	constructor(scene: babylon.Scene) {
 		super(scene, "default");
-		this.wallMaterial = this.createMaterial(scene);
-		this.limits.forEach(limit => {
-			limit.material = this.wallMaterial;
-		});
 		this.bars = this.createBars(scene);
 		this.particles = this.createParticules(scene);
 		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
@@ -26,22 +21,39 @@ export class DefaultMap extends MapTemplate {
 		const material = new babylon.StandardMaterial('groundcolor', scene);
 		material.diffuseColor =  COLORS.black;
 		ground.material = material;
-		/**@todo const groundAggregate = new BABYLON.PhysicsAggregate(ground, BABYLON.PhysicsShapeType.BOX, { mass: 0 }, scene); */
 		return ground;
 	}
 
-	createLimits(scene: babylon.Scene): babylon.Mesh[] {// vertical --> z - x  = -(-z + x) -vertical
+	createLimits(scene: babylon.Scene): babylon.Mesh[] {
+		const material = new babylon.StandardMaterial('wallcolor', scene);
+		material.diffuseColor =  COLORS.lime;
 		const limits: babylon.Mesh[] = [];
-		limits.push(this.createLimit(scene, new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH), new babylon.Vector3(0, WALL_HEIGHT/2, (-MAP_SIZE.z/2 + WALL_WIDTH/2))));
-		limits.push(this.createLimit(scene, new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH), new babylon.Vector3(0, WALL_HEIGHT/2, (MAP_SIZE.z/2 - WALL_WIDTH/2))));
-		limits.push(this.createLimit(scene, new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z), new babylon.Vector3((-MAP_SIZE.x/2 + WALL_WIDTH/2), WALL_HEIGHT/2, 0)));
-		limits.push(this.createLimit(scene, new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z), new babylon.Vector3((MAP_SIZE.x/2 - WALL_WIDTH/2), WALL_HEIGHT/2, 0)));
+		limits.push(this.createLimit(
+			scene,
+			new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH),
+			new babylon.Vector3(0, WALL_HEIGHT/2, (-MAP_SIZE.z/2 + WALL_WIDTH/2)),
+			material));
+		limits.push(this.createLimit(
+			scene,
+			new babylon.Vector3(MAP_SIZE.x,WALL_HEIGHT, WALL_WIDTH),
+			new babylon.Vector3(0, WALL_HEIGHT/2, (MAP_SIZE.z/2 - WALL_WIDTH/2)),
+			material));
+		limits.push(this.createLimit(
+			scene,
+			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z),
+			new babylon.Vector3((-MAP_SIZE.x/2 + WALL_WIDTH/2), WALL_HEIGHT/2, 0),
+			material));
+		limits.push(this.createLimit(
+			scene,
+			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z),
+			new babylon.Vector3((MAP_SIZE.x/2 - WALL_WIDTH/2), WALL_HEIGHT/2, 0),
+			material));
 		return limits;
 	}
 
-	createLimit(scene: babylon.Scene, dimension: babylon.Vector3, position: babylon.Vector3): babylon.Mesh {
+	createLimit(scene: babylon.Scene, dimension: babylon.Vector3, position: babylon.Vector3, material: babylon.StandardMaterial): babylon.Mesh {
 		const newMesh = babylon.CreateBox("wall", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
-		newMesh.material = this.wallMaterial;
+		newMesh.material = material;
 		newMesh.position = position;
 		return newMesh;
 	}
@@ -100,14 +112,7 @@ export class DefaultMap extends MapTemplate {
 		return light;
 	}
 	
-	private createMaterial(scene: babylon.Scene): babylon.StandardMaterial {
-		const material = new babylon.StandardMaterial('wallcolor', scene);
-		material.diffuseColor =  COLORS.black;
-		return material;
-	}
-	
 	destroyRest(): void {
-		this.wallMaterial.dispose();
 		this.bars.forEach(bar => bar.dispose());
 		this.particles.stop();
 		this.particles.dispose();
