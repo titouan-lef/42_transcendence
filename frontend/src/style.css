@@ -10,7 +10,7 @@
 	--font-jaro: "Jaro", sans-serif;
 }
 
-:root {
+:root { /* default theme (unused) */
 	--color-primary:	#313835;
 	--color-light:		#677c78;
 	--color-dark:		#0f1111;

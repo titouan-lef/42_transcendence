@@ -7,18 +7,10 @@
 </head>
 <body data-theme="root">
 
-  <header id="select_theme" class="flex gap-4 flex-wrap justify-center"></header>
-
-  <div id="navigate"></div>
-
-  <div>
-    <div class="font-jaro bg-[var(--color-dark)] text-[var(--color-primary)] text-5xl text-center">Dark</div>
-    <div class="font-jaro bg-[var(--color-light)] text-[var(--color-primary)] text-5xl text-center">Light</div>
-    <div class="font-jaro bg-[var(--color-variant)] text-[var(--color-primary)] text-5xl text-center">Variant</div>
-    <div class="font-jaro bg-[var(--color-secondary)] text-[var(--color-primary)] text-5xl text-center">Secondary</div>
-  </div>
+  <div id="entrypoint"></div>
 
   <script type="module" src="/config.js"></script>
+  <script type="module" src="/dist/pages/pages.js"></script>
   <script type="module" src="/dist/events.js"></script>
   <script type="module" src="/dist/modules/select_theme.js"></script>
 </body>

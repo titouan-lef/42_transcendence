@@ -1,7 +1,10 @@
-export const API_TESTPAGE =
+export const API_PAGE =
 `
   <header>
     <h1> Welcome to PONG</h1>
+
+    <div id="select_theme" class="flex gap-4 flex-wrap justify-center"></div>
+
   </header>
 
   <main>
