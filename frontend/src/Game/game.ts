@@ -2,7 +2,7 @@ import * as babylon from "/babylonjs/core/index.js";
 import { SceneManager } from "./sceneManager.js";
 import { GameSettings } from "./gameSettings.js";
 import { GLOW_INTENSITY } from "./values.js";
-import { HavokPlugin } from "/babylonjs/core/Physics/index.js"; // CA MARCHE
+import { HavokPlugin } from "/babylonjs/core/Physics/index.js";
 import havokPhysics from "/babylonjs/havok/lib/esm/HavokPhysics_es.js";
 
 export class Game {
@@ -31,7 +31,6 @@ export class Game {
 		return new Game(canvas, settings, scene, engine);
 	}
 
-	/**@todo const havokInstance = await HavokPhysics(); const havokPlugin = new BABYLON.HavokPlugin(true, havokInstance); scene.enablePhysics(new BABYLON.Vector3(0, -9.81, 0), havokPlugin); */
 	private static async initScene(engine: babylon.Engine): Promise<babylon.Scene> {
 		const scene = new babylon.Scene(engine);
 		const havokInstance = await havokPhysics();
@@ -60,20 +59,19 @@ export class Game {
 		const glow = new babylon.GlowLayer("glow", this.scene);
 		glow.intensity = GLOW_INTENSITY;
 		this.sceneManager.setEnvironnement(this.scene, this.settings);
-		/**@todo game loop */
-		let alpha = 0;
 
 		/**@todo text*/
 
-		this.scene.onBeforeRenderObservable.add( () => {
-			this.sceneManager.balls.forEach(ball => ball.testfunction(alpha));
-			alpha += 0.01;
-			if (alpha > 1) {
-				alpha = 0;
-				this.sceneManager.destroyEnvironnement();
-				this.sceneManager.setEnvironnement(this.scene, this.settings);
-			}
-		});
+		/**@todo just to make the ball move*/
+		const sceneManager = this.sceneManager;
+		this.scene.onPointerDown = (): void => {
+			sceneManager.balls.forEach(ball => ball.testMove());
+		};
+
+		/**@todo game loop */
+		//this.scene.onBeforeRenderObservable.add(() => {});
+		// this.scene.onAfterRenderObservable.add(() => {});
+		// this.scene.onReadyObservable.add(() => {});
 	}
 
 	/**@todo see if camera can be moved via mouse or keyboard or none */

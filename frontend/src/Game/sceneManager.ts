@@ -47,7 +47,6 @@ export class SceneManager {
 		}
 	}
 
-	/**@todo Enum here is kinda hard to use because each class is different */
 	createMap(scene: babylon.Scene, map: MapOption): void {
 		const mapList: MapOption[] = ["default", "volcano", "windy", "frozen", "rainy"];
 		if (map === "random") {
@@ -74,10 +73,11 @@ export class SceneManager {
 	}
 
 	createPlayers(scene: babylon.Scene, settings: GameSettings): void {
-		const player1 = new Player(scene, settings, settings.player1Keys);
-		player1.mesh.position.x = MAP_SIZE.x / 2 - (PLAYER_DIMENSION.x * 2 + WALL_WIDTH);
-		const player2 = new Player(scene, settings, settings.player2Keys);
-		player2.mesh.position.x = (PLAYER_DIMENSION.x * 2 + WALL_WIDTH) -(MAP_SIZE.x / 2);
+		const player1PosX = MAP_SIZE.x / 2 - (PLAYER_DIMENSION.x * 2 + WALL_WIDTH);
+		const player2PosX = (PLAYER_DIMENSION.x * 2 + WALL_WIDTH) -(MAP_SIZE.x / 2);
+		const playersPoxY = PLAYER_DIMENSION.y / 2;
+		const player1 = new Player(scene, new babylon.Vector2(player1PosX, playersPoxY), settings, settings.player1Keys);
+		const player2 = new Player(scene, new babylon.Vector2(player2PosX, playersPoxY), settings, settings.player2Keys);
 		this.players.push(player1);
 		this.players.push(player2);
 	}
@@ -88,10 +88,18 @@ export class SceneManager {
 		this.createMap(scene, settings.map);
 	}
 
-	destroyEnvironnement(): void {
+	destroyEnvironnement(scene: babylon.Scene): void {
 		this.destroyBalls();
 		this.destroyMaps();
 		this.destroyPlayers();
+		while(this.balls.length > 0) {
+			this.balls.pop();
+		}
+		this.maps.pop();
+		while(this.players.length > 0) {
+			this.players.pop();
+		}
+		scene.materials.forEach(mat => mat.dispose());
 	}
 
 	destroyBalls(): void {

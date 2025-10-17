@@ -3,17 +3,19 @@ import { BallTemplate } from "./ballTemplate.js";
 import { COLORS } from "../values.js";
 
 export class SnakeBall extends BallTemplate {
-	private readonly material: babylon.StandardMaterial;
-		
 	constructor(scene: babylon.Scene) {
 		super(scene, "snake");
-		this.material = new babylon.StandardMaterial('ballcolor', scene);
-		this.material.emissiveColor =  COLORS.green;
-		this.mesh.material = this.material;
+		this.setMaterial(scene);
+	}
+
+	setMaterial(scene: babylon.Scene): void {
+		const material = new babylon.StandardMaterial('ballcolor', scene);
+		material.emissiveColor = COLORS.green;
+		this.mesh.material = material;
 	}
 
 	destroyRest(): void {
-		this.material.dispose();
+		
 	}
 
 	/**@todo gain a impulse on a side then on an other, ect */
