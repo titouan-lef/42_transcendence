@@ -1,20 +1,21 @@
 import { FIRST_PAGE } from "./content/first_page.js";
 import { API_PAGE } from "./content/API_page.js";
+import { loadEvent } from "./events.js";
 
-export enum PAGE_ID {
+export enum PageID {
 	FIRST = "first_page",
 	API = "api_page",
 }
 
-const PAGE_CONTENT: Record<PAGE_ID, string> = {
-	[PAGE_ID.FIRST]: FIRST_PAGE,
-	[PAGE_ID.API]: API_PAGE,
+const PAGE_CONTENT: Record<PageID, string> = {
+	[PageID.FIRST]: FIRST_PAGE,
+	[PageID.API]: API_PAGE,
 };
 
 init();
-loadPage(PAGE_ID.FIRST);
+loadPage(PageID.FIRST);
 
-function loadPage(id: PAGE_ID): void {
+function loadPage(id: PageID): void {
 	const element = document.getElementById(id);
 
 	if (!(element instanceof HTMLElement)) {
@@ -25,7 +26,7 @@ function loadPage(id: PAGE_ID): void {
 	loadEvent(id);
 };
 
-function erasePage(id: PAGE_ID): void {
+function erasePage(id: PageID): void { /** @todo remove events? */
 	const element = document.getElementById(id);
 
 	if (!(element instanceof HTMLElement)) {
@@ -33,9 +34,10 @@ function erasePage(id: PAGE_ID): void {
 	}
 
 	element.innerHTML = "";
+	//document.removeEventListener("click");
 };
 
-export function navigate(currentID: PAGE_ID, nextID: PAGE_ID) : void {
+export function navigate(currentID: PageID, nextID: PageID) : void {
 	erasePage(currentID);
 	loadPage(nextID);
 	history.pushState({ nextID }, nextID, `/${nextID}`); /** @todo ne fonctionne pas, a retravailler avec l'update */
@@ -55,6 +57,8 @@ function init(): void {
 
 	let setupPages = "";
 
-	Object.values(PAGE_ID).forEach(element => { setupPages += `<div id="${element}"></div>`; });
+	Object.values(PageID).forEach(element => {
+		setupPages += `<div id="${element}"></div>`;
+	});
 	elem.innerHTML = setupPages;
 };
