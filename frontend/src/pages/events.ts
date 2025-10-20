@@ -1,23 +1,48 @@
-// import { navigate } from "./pages/navigate.js";
-
-// import { loadThemeSelector } from "./content/select_theme.js";
 import { PageID } from "./page.js";
-import { firstPageEvent } from "./events/first_events.js";
-import { handleAPIEvent } from "./events/API_events.js";
-import { handleTheme } from "./events/theme_events.js";
+import { firstEvents } from "./events/first_events.js";
+import { apiEvents } from "./events/API_events.js";
+import { themeEvents } from "./events/theme_events.js";
+
+interface Handler{
+	elem: HTMLElement;
+	type: string;
+	func: EventListener;
+}
+
+let activeHandlers: Handler[] = [];
+
+export function addHandler(id: string, type: string, func: EventListener): void {
+	const elem = document.getElementById(id);
+
+	if (!(elem instanceof HTMLElement)) {
+		throw new Error("cannot find id " + id);
+	}
+	elem.addEventListener(type, func);
+	activeHandlers.push({elem, type, func});
+}
+
+function clearHandlers(): void {
+	activeHandlers.forEach((handler) => {
+		handler.elem.removeEventListener(handler.type, handler.func);
+	});
+	activeHandlers = [];
+}
+
 
 export function loadEvent(id: PageID): void {
+	clearHandlers();
+
 	switch (id) {
 		case PageID.FIRST: {
-			firstPageEvent();
+			firstEvents();
 			break;
 		}
 		case PageID.API: {
-			handleAPIEvent();
+			apiEvents();
 			break;
 		}
 		case PageID.THEME: {
-			handleTheme();
+			themeEvents();
 			break;
 		}
 		default: break;
