@@ -9,8 +9,17 @@ interface Handler{
 	func: EventListener;
 }
 
+/**
+ * stores all handlers in an array.
+ */
 let activeHandlers: Handler[] = [];
 
+/**
+ * adds a handler to Handler array
+ * @param id PageID of the page you want to add an handler
+ * @param type event type (i.e.: "click")
+ * @param func listener function
+ */
 export function addHandler(id: string, type: string, func: EventListener): void {
 	const elem = document.getElementById(id);
 
@@ -21,6 +30,9 @@ export function addHandler(id: string, type: string, func: EventListener): void 
 	activeHandlers.push({elem, type, func});
 }
 
+/**
+ * clear the Handler array, so we can avoid listener functions added and never removed (leaks)
+ */
 function clearHandlers(): void {
 	activeHandlers.forEach((handler) => {
 		handler.elem.removeEventListener(handler.type, handler.func);
@@ -28,6 +40,9 @@ function clearHandlers(): void {
 	activeHandlers = [];
 }
 
+/**
+ * lauches event depending on the PageID
+ */
 export function loadEvent(id: PageID): void {
 	clearHandlers();
 
