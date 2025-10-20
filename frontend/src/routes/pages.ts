@@ -20,6 +20,9 @@ let currentPage = PageID.FIRST;
 init();
 loadPage(currentPage);
 
+/**
+ * opens a page based on pageID, please use erasePage(PageID) before you load a page
+ */
 function loadPage(id: PageID): void {
 	const element = document.getElementById(id);
 
@@ -32,7 +35,10 @@ function loadPage(id: PageID): void {
 	currentPage = id;
 };
 
-function erasePage(id: PageID): void { /** @todo remove events? */
+/**
+ * replaces page content by "".
+ */
+function erasePage(id: PageID): void {
 	const element = document.getElementById(id);
 
 	if (!(element instanceof HTMLElement)) {
@@ -42,14 +48,19 @@ function erasePage(id: PageID): void { /** @todo remove events? */
 	element.innerHTML = "";
 };
 
-export function navigate(currentID: PageID, nextID: PageID) : void {
+/**
+ * Changes page from currentID to nextID and manages back and forward button.
+ * @param currentID the page we want to clear
+ * @param nextID the page we want to go
+ */
+export function navigate(currentID: PageID, nextID: PageID): void {
 	if (nextID === currentID) {
 		return ;
 	}
 
-	loadPage(nextID);
 	erasePage(currentID);
-	history.pushState({ page: nextID }, ""); // add state to save navigation for back and forward buttons
+	loadPage(nextID);
+	history.pushState({ page: nextID }, ""); // adding the page to history
 }
 
 /**
@@ -61,6 +72,9 @@ window.addEventListener("popstate", (event) => {
 	loadPage(page);
 });
 
+/**
+ * fills the <div id="entrypoint"></div> in the html file to prepare all pages.
+ */
 function init(): void {
 	const elem = document.getElementById("entrypoint");
 
@@ -74,5 +88,5 @@ function init(): void {
 		setupPages += `<div id="${element}"></div>`;
 	});
 	elem.innerHTML = setupPages;
-	history.replaceState({page: currentPage}, ""); //init statement to setup back and forward button
+	history.replaceState({page: currentPage}, ""); //clears statement to setup back and forward button
 };
