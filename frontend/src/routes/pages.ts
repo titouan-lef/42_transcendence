@@ -15,8 +15,10 @@ const PAGE_CONTENT: Record<PageID, string> = {
 	[PageID.THEME]: selectTheme,
 };
 
+let currentPage = PageID.FIRST;
+
 init();
-loadPage(PageID.FIRST);
+loadPage(currentPage);
 
 function loadPage(id: PageID): void {
 	const element = document.getElementById(id);
@@ -27,6 +29,7 @@ function loadPage(id: PageID): void {
 
 	element.innerHTML = PAGE_CONTENT[id];
 	loadEvent(id);
+	currentPage = id;
 };
 
 function erasePage(id: PageID): void { /** @todo remove events? */
@@ -40,15 +43,23 @@ function erasePage(id: PageID): void { /** @todo remove events? */
 };
 
 export function navigate(currentID: PageID, nextID: PageID) : void {
+	if (nextID === currentID) {
+		return ;
+	}
+
 	loadPage(nextID);
 	erasePage(currentID);
-	// history.pushState({ nextID }, nextID, `/${nextID}`); /** @todo ne fonctionne pas, a retravailler avec l'update */
+	history.pushState({ page: nextID }, ""); // add state to save navigation for back and forward buttons
 }
 
-// window.addEventListener("popstate", (event) => {
-// 	const page = (event.state?.page) || "init";
-// 	navigate(event.state.currentPage, page.id);
-// }); /** @todo ne fonctionne pas, a retravailler avec l'update */
+/**
+ * manage navigation for back and forward button
+ */
+window.addEventListener("popstate", (event) => {
+	const page = (event.state?.page) || PageID.FIRST;
+	erasePage(currentPage);
+	loadPage(page);
+});
 
 function init(): void {
 	const elem = document.getElementById("entrypoint");
@@ -63,4 +74,5 @@ function init(): void {
 		setupPages += `<div id="${element}"></div>`;
 	});
 	elem.innerHTML = setupPages;
+	history.replaceState({page: currentPage}, ""); //init statement to setup back and forward button
 };

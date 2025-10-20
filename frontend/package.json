@@ -7,7 +7,7 @@
     "lint:ts": "eslint . --ext .ts --max-warnings=0",
     "lint:html": "htmlhint '**/*.html'",
     "format:check": "npm run lint:html && npm run lint:ts",
-    "build:css": "npx @tailwindcss/cli -i ./src/style.css -o ./dist/style.css --minify",
+    "build:css": "npx @tailwindcss/cli -i ./src/assets/style.css -o ./dist/assets/style.css --minify",
     "build:ts": "tsc",
     "build": "npm run build:css && npm run build:ts",
     "start": "node dist/main.js"
