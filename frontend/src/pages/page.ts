@@ -37,19 +37,18 @@ function erasePage(id: PageID): void { /** @todo remove events? */
 	}
 
 	element.innerHTML = "";
-	// clearEvent(id);
 };
 
 export function navigate(currentID: PageID, nextID: PageID) : void {
-	erasePage(currentID);
 	loadPage(nextID);
-	history.pushState({ nextID }, nextID, `/${nextID}`); /** @todo ne fonctionne pas, a retravailler avec l'update */
+	erasePage(currentID);
+	// history.pushState({ nextID }, nextID, `/${nextID}`); /** @todo ne fonctionne pas, a retravailler avec l'update */
 }
 
-window.addEventListener("popstate", (event) => {
-	const page = (event.state?.page) || "init";
-	navigate(event.state.currentPage, page.id);
-}); /** @todo ne fonctionne pas, a retravailler avec l'update */
+// window.addEventListener("popstate", (event) => {
+// 	const page = (event.state?.page) || "init";
+// 	navigate(event.state.currentPage, page.id);
+// }); /** @todo ne fonctionne pas, a retravailler avec l'update */
 
 function init(): void {
 	const elem = document.getElementById("entrypoint");

@@ -1,3 +1,4 @@
+import { addHandler } from "../events.js";
 import { PageID, navigate } from "../page.js";
 
 interface HelloResponse {
@@ -29,27 +30,8 @@ function test(): void {
 		.catch((err) => console.error(err));
 }
 
-export function handleAPIEvent(): void {
-	document.addEventListener("click", (event) => {
-		const target = event.target;
-
-		if (!target) {
-			return ;
-		} else if (target instanceof HTMLElement) {
-			switch (target.id) {
-				case "btn-hello":
-					hello();
-					break;
-				case "btn-test":
-					test();
-					break;
-				case "btn-theme":
-					navigate(PageID.API, PageID.THEME);
-					break;
-				default: break;
-			}
-		} else {
-			console.log("problem with HTMLElement");
-		}
-	});
+export function apiEvents(): void {
+	addHandler("btn-hello", "click", () => hello());
+	addHandler("btn-test", "click", () => test());
+	addHandler("btn-theme", "click", () => navigate(PageID.API, PageID.THEME));
 }
