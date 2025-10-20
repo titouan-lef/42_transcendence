@@ -8,8 +8,6 @@ RUN npm install --loglevel=error
 
 COPY . .
 
-ENV NODE_OPTIONS="--max-old-space-size=8192"
-
 RUN npm run format:check
 RUN npm run build
 
