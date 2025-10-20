@@ -70,18 +70,23 @@ export class Game {
 
 		/**@todo game loop */
 		this.scene.onAfterRenderObservable.add(() => {
-			this.sceneManager.balls.forEach(ball => {
-				if (ball.isInGoalp1 || ball.isInGoalp2) {
-					/**@todo inscrire goal */
-					if (ball.isInGoalp1) {
-						console.log("player 2 goaled");
-					} else{
-						console.log("player 1 goaled");
-					}
-					this.sceneManager.destroyEnvironnement(this.scene);
-					this.sceneManager.setEnvironnement(this.scene, this.settings);
+			this.checkBallCollision();
+		});
+	}
+
+	/**check collision for each balls */
+	private checkBallCollision(): void {
+		this.sceneManager.balls.forEach(ball => {
+			if (ball.isInGoalp1 || ball.isInGoalp2) {
+				/**@todo inscrire goal */
+				if (ball.isInGoalp1) {
+					console.log("player 2 goaled");
+				} else{
+					console.log("player 1 goaled");
 				}
-			});
+				this.sceneManager.destroyEnvironnement(this.scene);
+				this.sceneManager.setEnvironnement(this.scene, this.settings);
+			}
 		});
 	}
 
