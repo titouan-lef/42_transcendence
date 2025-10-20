@@ -1,4 +1,4 @@
-import { PageID, navigate } from "../pages.js";
+import { PageID, navigate } from "../page.js";
 
 export function firstPageEvent(): void {
 	document.addEventListener("click", (event) => {

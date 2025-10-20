@@ -1,3 +1,5 @@
+import { PageID, navigate } from "../page.js";
+
 interface HelloResponse {
 	msg: string;
 }
@@ -40,6 +42,9 @@ export function handleAPIEvent(): void {
 					break;
 				case "btn-test":
 					test();
+					break;
+				case "btn-theme":
+					navigate(PageID.API, PageID.THEME);
 					break;
 				default: break;
 			}

@@ -1,15 +1,18 @@
 import { FIRST_PAGE } from "./content/first_page.js";
 import { API_PAGE } from "./content/API_page.js";
+import { selectTheme } from "./content/theme_page.js";
 import { loadEvent } from "./events.js";
 
 export enum PageID {
 	FIRST = "first_page",
 	API = "api_page",
+	THEME = "select_theme",
 }
 
 const PAGE_CONTENT: Record<PageID, string> = {
 	[PageID.FIRST]: FIRST_PAGE,
 	[PageID.API]: API_PAGE,
+	[PageID.THEME]: selectTheme,
 };
 
 init();
@@ -34,7 +37,7 @@ function erasePage(id: PageID): void { /** @todo remove events? */
 	}
 
 	element.innerHTML = "";
-	//document.removeEventListener("click");
+	// clearEvent(id);
 };
 
 export function navigate(currentID: PageID, nextID: PageID) : void {
