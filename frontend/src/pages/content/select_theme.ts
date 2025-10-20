@@ -1,10 +1,10 @@
-import { THEMES } from "../../theme.js";
+import { Themes } from "../../theme.js";
 
 let selectTheme = "";
 
 const CLASS_CSS = "rounded-2xl bg-[var(--color-light)] text-[var(--color-tx-prim)] text-3xl text-center px-10";
 
-Object.values(THEMES).forEach(element => {
+Object.values(Themes).forEach(element => {
 	selectTheme += `<div id="btn-${element}" class="${CLASS_CSS}">${element}</div>`;
 });
 
