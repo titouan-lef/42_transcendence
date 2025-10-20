@@ -1,16 +1,16 @@
 import {getDb} from "./init.js";
 import { Database } from "sqlite";
 
-export async function findUserPassword(id: string): Promise<string> {
+export async function findUserPassword(username: string): Promise<string> {
 	const db: Database = await getDb();
 
 	try {
 		const row = await db.get(
-			`SELECT hashedPassword FROM users
-			WHERE id = ?;`,
-			id
+			`SELECT hashed_password FROM user
+			WHERE username = ?;`,
+			username
 		);
-		if (row) return row.hashedPassword ;
+		if (row) return row.hashed_password ;
 	} catch (err){
 		console.error("DB error:", err);
 	} finally {
