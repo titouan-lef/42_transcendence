@@ -33,7 +33,7 @@ async function start(): Promise<void> {
 		await initDB(); // initialize DB before server
 		await APP.listen({ port: 3000, host: "0.0.0.0" });
 	} catch (err) {
-		APP.log.error(err);
+		console.error(err);
 		process.exit(1);
 	}
 };
