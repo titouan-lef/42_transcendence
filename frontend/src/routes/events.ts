@@ -1,7 +1,7 @@
-import { PageID } from "./page.js";
-import { firstEvents } from "./events/first_events.js";
-import { apiEvents } from "./events/API_events.js";
-import { themeEvents } from "./events/theme_events.js";
+import { PageID } from "./pages.js";
+import { firstEvents } from "../pages/events/first_events.js";
+import { apiEvents } from "../pages/events/API_events.js";
+import { themeEvents } from "../pages/events/theme_events.js";
 
 interface Handler{
 	elem: HTMLElement;
@@ -28,7 +28,6 @@ function clearHandlers(): void {
 	activeHandlers = [];
 }
 
-
 export function loadEvent(id: PageID): void {
 	clearHandlers();
 
@@ -45,6 +44,9 @@ export function loadEvent(id: PageID): void {
 			themeEvents();
 			break;
 		}
-		default: break;
+		default: {
+			console.log("id not found");
+			break;
+		}
 	}
 }

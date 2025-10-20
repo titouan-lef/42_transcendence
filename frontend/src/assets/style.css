@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap');
 @import "tailwindcss";
 @import "tailwindcss/preflight";
-@import "./themes/theme.css";
+@import "./theme.css";
 
 @tailwind utilities;
 
@@ -10,7 +10,7 @@
 	--font-jaro: "Jaro", sans-serif;
 }
 
-:root { /* default theme (unused) */
+:root { /* default variables (unused) */
 	--color-primary:	#6e6e6e;
 	--color-light:		#c7c7c7;
 	--color-dark:		#313131;

@@ -1,6 +1,6 @@
-import { FIRST_PAGE } from "./content/first_page.js";
-import { API_PAGE } from "./content/API_page.js";
-import { selectTheme } from "./content/theme_page.js";
+import { FIRST_PAGE } from "../pages/content/first_page.js";
+import { API_PAGE } from "../pages/content/API_page.js";
+import { selectTheme } from "../pages/content/theme_page.js";
 import { loadEvent } from "./events.js";
 
 export enum PageID {

@@ -1,5 +1,5 @@
-import { addHandler } from "../events.js";
-import { PageID, navigate } from "../page.js";
+import { addHandler } from "../../routes/events.js";
+import { PageID, navigate } from "../../routes/pages.js";
 
 interface HelloResponse {
 	msg: string;
@@ -8,7 +8,6 @@ interface HelloResponse {
 declare const API_URL: string; // just telling the compiler that API_URL will exists during execution
 
 function hello(): void {
-	console.log("coucou hello");
 	fetch(`${API_URL}/api/hello`)
 		.then((res) => res.json())
 		.then((data: HelloResponse) => {
