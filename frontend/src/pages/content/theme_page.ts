@@ -1,4 +1,4 @@
-import { Themes } from "../../themes/theme.js";
+import { Themes } from "../../assets/themes/theme.js";
 
 let selectTheme = `<div class="flex gap-4 flex-wrap justify-center">`;
 

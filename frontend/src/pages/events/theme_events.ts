@@ -1,5 +1,5 @@
-import { setTheme, Themes } from "../../themes/theme.js";
-import { addHandler } from "../events.js";
+import { setTheme, Themes } from "../../assets/themes/theme.js";
+import { addHandler } from "../../routes/events.js";
 
 const THEME_EVENTS = new Map<string, () => void>();
 
