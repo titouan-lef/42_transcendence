@@ -3,7 +3,7 @@ import { GameSettings } from "./gameSettings.js";
 
 //this will change when checking options
 /**@todo will move keys to thr "session"'s settings */
-const SETTINGS: GameSettings = new GameSettings("default", "default", false, false, ["KeyA", "KeyD", "KeyW", "KeyS"], ["KeyJ", "KeyL", "KeyI", "KeyK"]);
+const SETTINGS: GameSettings = new GameSettings("random", "random", true, false, ["KeyA", "KeyD", "KeyW", "KeyS"], ["KeyJ", "KeyL", "KeyI", "KeyK"]);
 
 const BUTTON = createButton();
 const CANVAS = createCanvas();

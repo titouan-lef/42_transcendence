@@ -73,8 +73,8 @@ export class SceneManager {
 	}
 
 	createPlayers(scene: babylon.Scene, settings: GameSettings): void {
-		const player1PosX = MAP_SIZE.x / 2 - (PLAYER_DIMENSION.x * 2 + WALL_WIDTH);
-		const player2PosX = (PLAYER_DIMENSION.x * 2 + WALL_WIDTH) -(MAP_SIZE.x / 2);
+		const player1PosX = MAP_SIZE.x / 2 - (PLAYER_DIMENSION.z + WALL_WIDTH);
+		const player2PosX = (PLAYER_DIMENSION.z + WALL_WIDTH) -(MAP_SIZE.x / 2);
 		const playersPoxY = PLAYER_DIMENSION.y / 2;
 		const player1 = new Player(scene, new babylon.Vector2(player1PosX, playersPoxY), settings, settings.player1Keys);
 		const player2 = new Player(scene, new babylon.Vector2(player2PosX, playersPoxY), settings, settings.player2Keys);
