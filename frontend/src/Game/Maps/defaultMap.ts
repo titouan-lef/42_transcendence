@@ -24,40 +24,7 @@ export class DefaultMap extends MapTemplate {
 		return ground;
 	}
 
-	createLimits(scene: babylon.Scene): babylon.Mesh[] {
-		const material = new babylon.StandardMaterial('wallcolor', scene);
-		material.diffuseColor =  COLORS.lime;
-		const limits: babylon.Mesh[] = [];
-		limits.push(this.createLimit(
-			scene,
-			new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH),
-			new babylon.Vector3(0, WALL_HEIGHT/2, (-MAP_SIZE.z/2 + WALL_WIDTH/2)),
-			material));
-		limits.push(this.createLimit(
-			scene,
-			new babylon.Vector3(MAP_SIZE.x,WALL_HEIGHT, WALL_WIDTH),
-			new babylon.Vector3(0, WALL_HEIGHT/2, (MAP_SIZE.z/2 - WALL_WIDTH/2)),
-			material));
-		limits.push(this.createLimit(
-			scene,
-			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z),
-			new babylon.Vector3((-MAP_SIZE.x/2 + WALL_WIDTH/2), WALL_HEIGHT/2, 0),
-			material));
-		limits.push(this.createLimit(
-			scene,
-			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z),
-			new babylon.Vector3((MAP_SIZE.x/2 - WALL_WIDTH/2), WALL_HEIGHT/2, 0),
-			material));
-		return limits;
-	}
-
-	createLimit(scene: babylon.Scene, dimension: babylon.Vector3, position: babylon.Vector3, material: babylon.StandardMaterial): babylon.Mesh {
-		const newMesh = babylon.CreateBox("wall", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
-		newMesh.material = material;
-		newMesh.position = position;
-		return newMesh;
-	}
-
+	/** These are the things that delimit the sides of each map, only on the default map for now */
 	private createBars(scene: babylon.Scene): babylon.Mesh[] {
 		const bars: babylon.Mesh[] = [];
 		let bar: babylon.Mesh;
@@ -77,6 +44,7 @@ export class DefaultMap extends MapTemplate {
 		return bars;
 	}
 
+	/** the stars in the background, will maybe move to abstract in template depending of the other maps's design */
 	private createParticules(scene: babylon.Scene): babylon.ParticleSystem {
 		scene.clearColor = new babylon.Color4(0, 0, 0, 1);
 		const particles = new babylon.ParticleSystem("stars", PARTICLE_NUMBER, scene);

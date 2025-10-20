@@ -50,11 +50,36 @@ export const COLORS: Record<string, babylon.Color3> = {
 	lightColorDefault: LIGHTCOLOR_DEFAULT
 };
 
-export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(75, 75, 75);
+/**@todo cant create every material here because we need scene, but i let it here for now in case i find a solution */
+// function initDiffuseMaterials(scene: babylon.Scene): void{
+// 	for(const key in COLORS){
+// 		const material = new babylon.StandardMaterial('color', scene);
+// 		material.diffuseColor = COLORS.value;
+// 		this.diffuseMaterials["diffuse" + key] = material;
+// 	}
+// }
+
+// function initEmissiveMaterials(scene: babylon.Scene): void{
+// 	for(const key in COLORS){
+// 		const material = new babylon.StandardMaterial('color', scene);
+// 		material.emissiveColor = COLORS.value;
+// 		this.emissiveMaterials["emissive" + key] = material;
+// 	}
+// 	console.log(this.emissiveMaterials);
+// }
+
+
+export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100);
 export const WALL_WIDTH = 3;
 export const WALL_HEIGHT = 5;
 export const BALL_DIAMETER = 2;
-export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 10);
+export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x
 export const PARTICLE_NUMBER = 500;
 export const GLOW_INTENSITY = 0.6;
 export const SUN_DIAMETER = 20;
+export const PLAYER_MOVEMENT_IMPULSE = MAP_SIZE.z * 6;
+export const PLAYER_ROTATION_IMPULSE = MAP_SIZE.x * 3;
+
+/** @todo goal */
+/** @todo score incrementation */
+/** @todo end of game */

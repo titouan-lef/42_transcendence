@@ -14,17 +14,6 @@ export class FrozenMap extends MapTemplate {
 		return ground;
 	}
 
-	createLimits(scene: babylon.Scene): babylon.Mesh[] {
-		const limits: babylon.Mesh[] = [];
-		let newMesh;
-		for (let i = 0; i < 4; i++) {
-			newMesh = babylon.CreateBox("wall", { width: 10, height: 10, depth: 10 }, scene);
-			newMesh.position = new babylon.Vector3(0, 100, 0);
-			limits.push(newMesh);
-		}
-		return limits;
-	}
-
 	/**@todo to configure */
 	createSun(scene: babylon.Scene): babylon.Mesh {
 		const sun = babylon.MeshBuilder.CreateSphere("sun", { diameter: SUN_DIAMETER }, scene);

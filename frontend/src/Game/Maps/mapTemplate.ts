@@ -1,5 +1,6 @@
 import * as babylon from "/babylonjs/core/index.js";
 import { MapOption } from "../gameSettings.js";
+import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, COLORS } from "../values.js";
 
 export abstract class MapTemplate {
 	protected readonly ground: babylon.Mesh;
@@ -23,13 +24,42 @@ export abstract class MapTemplate {
 	}
 
 	setLimitPhysic(scene: babylon.Scene, limit: babylon.Mesh): void {
-		const limitPhysic = new babylon.PhysicsAggregate(limit, babylon.PhysicsShapeType.BOX, { mass: 0, restitution: 1 }, scene);
+		const limitPhysic = new babylon.PhysicsAggregate(limit, babylon.PhysicsShapeType.BOX, { mass: 0 }, scene);
 		this.limitsPhysic.push(limitPhysic);
 	}
 
-	abstract createGround(scene: babylon.Scene): babylon.Mesh;
+	/**creates limit with goalplayer being the goal of each player and limit being a simple wall */
+	private createLimits(scene: babylon.Scene): babylon.Mesh[] {
+		const material = new babylon.StandardMaterial('wallcolor', scene);
+		material.diffuseColor =  COLORS.lime;
+		const limits: babylon.Mesh[] = [];
+		limits.push(this.createLimit(scene,
+			new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH),
+			new babylon.Vector3(0, WALL_HEIGHT/2, (WALL_WIDTH/2 - MAP_SIZE.z/2)),
+			material, "limit"));
+		limits.push(this.createLimit(scene,
+			new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH),
+			new babylon.Vector3(0, WALL_HEIGHT/2, (MAP_SIZE.z/2 - WALL_WIDTH/2)),
+			material, "limit"));
+		limits.push(this.createLimit(scene,
+			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z),
+			new babylon.Vector3((-MAP_SIZE.x/2 + WALL_WIDTH/2), WALL_HEIGHT/2, 0),
+			material, "goalplayer2"));
+		limits.push(this.createLimit(scene,
+			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z),
+			new babylon.Vector3((MAP_SIZE.x/2 - WALL_WIDTH/2), WALL_HEIGHT/2, 0),
+			material, "goalplayer1"));
+		return limits;
+	}
 
-	abstract createLimits(scene: babylon.Scene): babylon.Mesh[];
+	private createLimit(scene: babylon.Scene, dimension: babylon.Vector3, position: babylon.Vector3, material: babylon.StandardMaterial, name: string): babylon.Mesh {
+		const newMesh = babylon.CreateBox(name, { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
+		newMesh.material = material;
+		newMesh.position = position;
+		return newMesh;
+	}
+
+	abstract createGround(scene: babylon.Scene): babylon.Mesh;
 
 	abstract createLight(scene: babylon.Scene): babylon.DirectionalLight;
 

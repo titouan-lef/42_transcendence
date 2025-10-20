@@ -69,9 +69,20 @@ export class Game {
 		};
 
 		/**@todo game loop */
-		//this.scene.onBeforeRenderObservable.add(() => {});
-		// this.scene.onAfterRenderObservable.add(() => {});
-		// this.scene.onReadyObservable.add(() => {});
+		this.scene.onAfterRenderObservable.add(() => {
+			this.sceneManager.balls.forEach(ball => {
+				if (ball.isInGoalp1 || ball.isInGoalp2) {
+					/**@todo inscrire goal */
+					if (ball.isInGoalp1) {
+						console.log("player 2 goaled");
+					} else{
+						console.log("player 1 goaled");
+					}
+					this.sceneManager.destroyEnvironnement(this.scene);
+					this.sceneManager.setEnvironnement(this.scene, this.settings);
+				}
+			});
+		});
 	}
 
 	/**@todo see if camera can be moved via mouse or keyboard or none */
