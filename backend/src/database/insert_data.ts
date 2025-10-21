@@ -6,7 +6,7 @@ export async function insertUser(username: string, pseudo: string, hashedPasswor
 	const creationDate = new Date().toISOString();
 
 	await db.run(
-		`INSERT INTO user (username, pseudo, created_at, hashed_password, pp_link) VALUES (?, ?, ?, ?, ?);`,
+		`INSERT INTO User (username, pseudo, created_at, hashed_password, pp_link) VALUES (?, ?, ?, ?, ?);`,
 		username,
 		pseudo,
 		creationDate,
