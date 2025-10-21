@@ -1,15 +1,15 @@
 import sqlite3 from "sqlite3";
 import { open, Database } from "sqlite";
 
-export async function getDb(): Promise<Database> {
+async function getDB(): Promise<Database> {
 	return open({
 		filename: "./database.db",
 		driver: sqlite3.Database,
 	});
 }
 
-export async function initDB(): Promise<void> {
-	const db = await getDb();
+async function initDB(): Promise<void> {
+	const db = await getDB();
 
 	await db.exec(`
 		CREATE TABLE IF NOT EXISTS Theme (
@@ -32,7 +32,7 @@ export async function initDB(): Promise<void> {
 			username TEXT PRIMARY KEY,
 			friend_name TEXT NOT NULL
 		);
-	`);
+	`);void
 	await db.exec(`
 		CREATE TABLE IF NOT EXISTS Season (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -96,3 +96,5 @@ export async function initDB(): Promise<void> {
 	`);
 	await db.close();
 }
+
+export { getDB, initDB };

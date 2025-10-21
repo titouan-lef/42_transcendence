@@ -1,7 +1,7 @@
 import { getInput } from "../interface_interation.js";
 import { sendRequestToBack } from "../api_request.js";
 
-export function connectUser(): void {
+function connectUser(): void {
 
 	const userId: HTMLInputElement | null = getInput("login_user_id");
 	const userPassword: HTMLInputElement | null = getInput("login_user_password");
@@ -26,10 +26,12 @@ export function connectUser(): void {
 	sendRequestToBack("api/user/login", JSON.stringify(data), "print-content");
 }
 
-export function disconnectUser(): void {
+function disconnectUser(): void {
 	sendRequestToBack("api/user/logout", "{}", "print-content");
 }
 
-export function whoami(): void {
+function whoami(): void {
 	sendRequestToBack("api/user/whoami", "{}", "feedback_id");
 }
+
+export { connectUser, disconnectUser, whoami };

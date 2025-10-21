@@ -1,12 +1,13 @@
-import { getDb } from "./init.js";
+import { getDB } from "./init.js";
 import { Database } from "sqlite";
 
-export async function findUserPassword(username: string): Promise<string> {
-	const db: Database = await getDb();
+async function findUserPassword(username: string): Promise<string> {
+	const db: Database = await getDB();
 
 	try {
 		const row = await db.get(
-			`SELECT hashed_password FROM User
+			`SELECT hashed_password
+			FROM User
 			WHERE username = ?;`,
 			username
 		);
@@ -19,3 +20,5 @@ export async function findUserPassword(username: string): Promise<string> {
 	}
 	return "";
 }
+
+export { findUserPassword };
