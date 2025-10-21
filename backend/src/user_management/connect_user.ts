@@ -35,7 +35,7 @@ export async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, 
 
 	/** @todo hash the password */
 	if (realPassword === password) {
-		const token = jwt.sign({id}, SECRET);
+		const token = jwt.sign({ id }, SECRET);
 		reply
 			.setCookie("token", token, COOKIES_OPTIONS)
 			.code(201)
