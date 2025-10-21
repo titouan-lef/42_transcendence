@@ -1,4 +1,4 @@
-import {getDb} from "./init.js";
+import { getDb } from "./init.js";
 import { Database } from "sqlite";
 
 export async function findUserPassword(username: string): Promise<string> {
@@ -12,7 +12,7 @@ export async function findUserPassword(username: string): Promise<string> {
 		);
 		if (row)
 			return row.hashedPassword ;
-	} catch (err){
+	} catch (err) {
 		console.error("DB error:", err);
 	} finally {
 		await db.close();

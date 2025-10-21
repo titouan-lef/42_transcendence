@@ -20,7 +20,7 @@ interface NewUserBody {
 	ppLink: string;
 }
 
-const SECRET = "blablablou";
+const SECRET = "blablablou"; /** @todo: put in the .env file and import it from .env -> remove the literal from the readable code */
 const COOKIES_OPTIONS: CookieSerializeOptions = {
 	httpOnly: true,		// httpOnly prevent js on client to read teh cookies and so protect again XSS attacks
 	sameSite: "lax",	// or "none" if cross-site
