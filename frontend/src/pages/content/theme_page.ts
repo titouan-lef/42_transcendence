@@ -19,6 +19,6 @@ function generateThemeButtons(): void {
 		selectTheme += `<div id="btn-${element}" class="${CLASS_CSS}">${element}</div>`;
 	});
 	selectTheme += `</div>`;
-} // Generates all buttons to change theme
+}
 
 export { selectTheme };
