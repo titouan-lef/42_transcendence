@@ -7,8 +7,10 @@ Object.values(Themes).forEach(theme => {
 	THEME_EVENTS.set("btn-" + theme, (): void => setTheme(theme));
 });
 
-export function themeEvents(): void {
+function themeEvents(): void {
 	THEME_EVENTS.forEach((func, key) => {
 		addHandler(key, "click", func);
 	});
 }
+
+export { themeEvents };

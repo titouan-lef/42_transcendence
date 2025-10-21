@@ -1,4 +1,4 @@
-export const API_PAGE = `
+const API_PAGE = `
   <header>
     <h1> Welcome to PONG</h1>
   </header>
@@ -18,3 +18,5 @@ export const API_PAGE = `
     <p>Made with ❤️ at 42</p>
   </footer>
 `;
+
+export { API_PAGE };
