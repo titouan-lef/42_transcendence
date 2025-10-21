@@ -3,8 +3,8 @@ import { addHandler } from "../../routes/events.js";
 
 const THEME_EVENTS = new Map<string, () => void>();
 
-Object.values(Themes).forEach(element => {
-	THEME_EVENTS.set("btn-" + element, (): void => setTheme(element));
+Object.values(Themes).forEach(theme => {
+	THEME_EVENTS.set("btn-" + theme, (): void => setTheme(theme));
 });
 
 export function themeEvents(): void {
