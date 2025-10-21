@@ -32,7 +32,6 @@ export class FrozenMap extends MapTemplate {
 		light.diffuse = COLORS.blue;
 		return light;
 	}
-	//
 
 	destroyRest(): void {
 		

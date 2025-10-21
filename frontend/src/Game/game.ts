@@ -68,18 +68,19 @@ export class Game {
 			sceneManager.balls.forEach(ball => ball.testMove());
 		};
 
-		/**@todo game loop */
-		this.scene.onAfterRenderObservable.add(() => {
+		const sceneObserver = this.scene.onAfterRenderObservable.add(() => {
 			this.checkBallCollision();
 		});
+		/**@todo fin du jeu = this.scene.onAfterRenderObservable.remove(sceneObserver); */
 	}
 
 	/**check collision for each balls */
 	private checkBallCollision(): void {
 		this.sceneManager.balls.forEach(ball => {
-			if (ball.isInGoalp1 || ball.isInGoalp2) {
+			const getGoal = ball.getGoal();
+			if (getGoal !== null) {
 				/**@todo inscrire goal */
-				if (ball.isInGoalp1) {
+				if (getGoal === "player2") {
 					console.log("player 2 goaled");
 				} else{
 					console.log("player 1 goaled");

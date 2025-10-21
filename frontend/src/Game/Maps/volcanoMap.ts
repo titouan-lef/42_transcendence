@@ -32,7 +32,6 @@ export class VolcanoMap extends MapTemplate {
 		light.diffuse = COLORS.orange;
 		return light;
 	}
-	//
 
 	destroyRest(): void {
 		
