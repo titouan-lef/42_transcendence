@@ -1,16 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap');
 @import "tailwindcss";
-@import "tailwindcss/preflight";
 @import "./themes/theme.css";
 
 @tailwind utilities;
 
-/* Lists all our defaults variables */
-@theme {
-	--font-jaro: "Jaro", sans-serif;
+/* fonts */
+@font-face {
+	font-family: "Jaro", sans-serif;
+	src: url("./fonts/Jaro.ttf") format("truetype");
+	font-display: swap;
 }
 
-:root { /* default variables (unused) */
+/* Lists all our defaults variables */
+@theme {
+	--font-jaro:		"Jaro", sans-serif;
 	--color-primary:	#6e6e6e;
 	--color-light:		#c7c7c7;
 	--color-dark:		#313131;
