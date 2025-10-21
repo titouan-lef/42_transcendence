@@ -46,16 +46,15 @@ function erasePage(id: PageID): void {
 };
 
 /**
- * Changes page from currentID to nextID and manages back and forward button.
- * @param currentID the page we want to clear
+ * Changes page from current to nextID and manages back and forward button.
  * @param nextID the page we want to go
  */
-export function navigate(currentID: PageID, nextID: PageID): void {
-	if (nextID === currentID) {
+export function navigate(nextID: PageID): void {
+	if (nextID === currentPage) {
 		return ;
 	}
 
-	erasePage(currentID);
+	erasePage(currentPage);
 	loadPage(nextID);
 	history.pushState({ page: nextID }, ""); // Adding the page to history
 }
@@ -70,7 +69,7 @@ window.addEventListener("popstate", (event) => {
 });
 
 /**
- * fills the <div id="entrypoint"></div> in the html file to prepare all pages.
+ * Fills the <div id="entrypoint"></div> in the html file to prepare all pages.
  */
 function init(): void {
 	const elem = document.getElementById("entrypoint");
@@ -85,5 +84,5 @@ function init(): void {
 		setupPages += `<div id="${id}"></div>`;
 	});
 	elem.innerHTML = setupPages;
-	history.replaceState({page: currentPage}, ""); //clears statement to setup back and forward button
+	history.replaceState({page: currentPage}, ""); // Clears statement to setup back and forward button
 };
