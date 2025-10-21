@@ -21,31 +21,28 @@ init();
 loadPage(currentPage);
 
 /**
- * opens a page based on pageID, please use erasePage(PageID) before you load a page
+ * @warning please use erasePage(PageID) before you load a page
  */
 function loadPage(id: PageID): void {
-	const element = document.getElementById(id);
+	const elem = document.getElementById(id);
 
-	if (!(element instanceof HTMLElement)) {
+	if (!elem) {
 		throw new Error("cannot find id " + id);
 	}
 
-	element.innerHTML = PAGE_CONTENT[id];
+	elem.innerHTML = PAGE_CONTENT[id];
 	loadEvent(id);
 	currentPage = id;
 };
 
-/**
- * replaces page content by "".
- */
 function erasePage(id: PageID): void {
-	const element = document.getElementById(id);
+	const elem = document.getElementById(id);
 
-	if (!(element instanceof HTMLElement)) {
+	if (!elem) {
 		throw new Error("cannot find id " + id);
 	}
 
-	element.innerHTML = "";
+	elem.innerHTML = "";
 };
 
 /**
@@ -60,7 +57,7 @@ export function navigate(currentID: PageID, nextID: PageID): void {
 
 	erasePage(currentID);
 	loadPage(nextID);
-	history.pushState({ page: nextID }, ""); // adding the page to history
+	history.pushState({ page: nextID }, ""); // Adding the page to history
 }
 
 /**
@@ -78,14 +75,14 @@ window.addEventListener("popstate", (event) => {
 function init(): void {
 	const elem = document.getElementById("entrypoint");
 
-	if (!(elem instanceof HTMLElement)) {
+	if (!elem) {
 		throw new Error("id \"entrypoint\" not found");
 	}
 
 	let setupPages = "";
 
-	Object.values(PageID).forEach(element => {
-		setupPages += `<div id="${element}"></div>`;
+	Object.values(PageID).forEach(id => {
+		setupPages += `<div id="${id}"></div>`;
 	});
 	elem.innerHTML = setupPages;
 	history.replaceState({page: currentPage}, ""); //clears statement to setup back and forward button

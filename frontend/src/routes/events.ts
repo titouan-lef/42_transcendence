@@ -9,9 +9,6 @@ interface Handler{
 	func: EventListener;
 }
 
-/**
- * stores all handlers in an array.
- */
 let activeHandlers: Handler[] = [];
 
 /**
@@ -23,26 +20,13 @@ let activeHandlers: Handler[] = [];
 export function addHandler(id: string, type: string, func: EventListener): void {
 	const elem = document.getElementById(id);
 
-	if (!(elem instanceof HTMLElement)) {
+	if (!elem) {
 		throw new Error("cannot find id " + id);
 	}
 	elem.addEventListener(type, func);
 	activeHandlers.push({elem, type, func});
 }
 
-/**
- * clear the Handler array, so we can avoid listener functions added and never removed (leaks)
- */
-function clearHandlers(): void {
-	activeHandlers.forEach((handler) => {
-		handler.elem.removeEventListener(handler.type, handler.func);
-	});
-	activeHandlers = [];
-}
-
-/**
- * lauches event depending on the PageID
- */
 export function loadEvent(id: PageID): void {
 	clearHandlers();
 
@@ -64,4 +48,11 @@ export function loadEvent(id: PageID): void {
 			break;
 		}
 	}
+}
+
+function clearHandlers(): void {
+	activeHandlers.forEach((handler) => {
+		handler.elem.removeEventListener(handler.type, handler.func);
+	});
+	activeHandlers = [];
 }
