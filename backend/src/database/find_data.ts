@@ -6,12 +6,12 @@ export async function findUserPassword(username: string): Promise<string> {
 
 	try {
 		const row = await db.get(
-			`SELECT hashed_password FROM user
+			`SELECT hashed_password FROM User
 			WHERE username = ?;`,
 			username
 		);
 		if (row)
-			return row.hashedPassword ;
+			return row.hashed_password ;
 	} catch (err) {
 		console.error("DB error:", err);
 	} finally {
