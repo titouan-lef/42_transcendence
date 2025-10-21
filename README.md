@@ -188,6 +188,7 @@ UpperCamelCase | class / interface / type / enum / decorator / type / parameters
 lowerCamelCase | variable / parameter / function / method / property / module alias
 CONSTANT_CASE | global constant values, including enum values and static readonly property of a class
 
+- Add tab size 4 for indentation and never use the spaces.
 - Names must not start or end with `_`.
 
 #### Visibility
@@ -264,29 +265,30 @@ CONSTANT_CASE | global constant values, including enum values and static readonl
 - Code must not use `require` for imports.
 
 #### Exports
-- Do not use `default exports`.
+- Do not use `export default`.
 - Always use `export` at the end.
 - `export` variables first, functions after.
-##### Example
-```ts
-// Don't do
-export const var1 = 1;
-export const var2 = 2;
 
-export func(): number {
-	return 3;
-}
-
-// But do
-const var1 = 1;
-const var2 = 2;
-
-func(): number {
-	return 3;
-}
-
-export { var1, var2, func };
-```
+> [!TIP]
+> ```ts
+> // Don't do
+> export const var1 = 1;
+> export const var2 = 2;
+>
+> export func(): number {
+> 	return 3;
+> }
+>
+> // But do
+> const var1 = 1;
+> const var2 = 2;
+>
+> func(): number {
+> 	return 3;
+> }
+>
+> export { var1, var2, func };
+> ```
 
 #### Imports
 Import type | Example | Use for
@@ -417,6 +419,7 @@ const <prepared_statement_cmd> = db.prepare('<PREPARED_STATEMENT_CMD> <CMD_BODY>
 - Comments that span more than one line, should be written with `<!--` and `-->` without comments.
 
 ### CSS
+- Add tab size 4 for indentation and never use the spaces.
 
 ```css
 <tag> {
