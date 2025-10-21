@@ -1,7 +1,7 @@
 import { getInput } from "../interface_interation.js";
 import { sendRequestToBack } from "../api_request.js";
 
-export function newUser(): void {
+function newUser(): void {
 
 	const userId: HTMLInputElement | null = getInput("create_user_id");
 	const userPseudo: HTMLInputElement | null = getInput("create_user_pseudo");
@@ -37,3 +37,5 @@ export function newUser(): void {
 
 	sendRequestToBack("api/user/new_user", JSON.stringify(data), "print-content");
 }
+
+export { newUser };
