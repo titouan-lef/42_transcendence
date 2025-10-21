@@ -32,5 +32,5 @@ function test(): void {
 export function apiEvents(): void {
 	addHandler("btn-hello", "click", () => hello());
 	addHandler("btn-test", "click", () => test());
-	addHandler("btn-theme", "click", () => navigate(PageID.API, PageID.THEME));
+	addHandler("btn-theme", "click", () => navigate(PageID.THEME));
 }
