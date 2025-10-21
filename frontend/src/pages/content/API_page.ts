@@ -1,5 +1,4 @@
-export const API_PAGE =
-`
+export const API_PAGE = `
   <header>
     <h1> Welcome to PONG</h1>
   </header>
