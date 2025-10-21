@@ -13,17 +13,14 @@ export enum Themes {
 	MONQ = "monq",
 }
 
+initTheme();
+
 export function setTheme(theme: Themes): void {
-	if (Object.values(Themes).includes(theme)) {
-		document.body.dataset.theme = theme;
-	}
+	document.body.dataset.theme = theme;
 }
 
 function initTheme(): void {
-	const randomTheme = Object.values(Themes);
+	const themeList = Object.values(Themes);
 	const randomIndex = Math.floor(Math.random() * Object.values(Themes).length);
-	document.body.dataset.theme = randomTheme[randomIndex];
+	document.body.dataset.theme = themeList[randomIndex];
 }
-
-initTheme();
-// setInterval(initTheme, 100);
