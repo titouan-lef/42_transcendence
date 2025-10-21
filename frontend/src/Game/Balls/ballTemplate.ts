@@ -1,13 +1,15 @@
 import * as babylon from "/babylonjs/core/index.js";
 import { BallOption } from "../gameSettings.js";
-import { BALL_DIAMETER } from "../values.js";
+import { BALL_DIAMETER, TRAIL_CREATION_INTERVAL } from "../values.js";
+import { BallTrail } from "./ballTrail.js";
 
 export abstract class BallTemplate {
 	protected readonly mesh: babylon.Mesh;
-	private readonly type: BallOption;
 	protected readonly physic: babylon.PhysicsAggregate;
-	isInGoalp1 = false;
-	isInGoalp2 = false;
+	private readonly type: BallOption;
+	private readonly ballTrails: BallTrail[] = [];
+	private readonly observable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
+	private isInGoal: "player1" | "player2" | null = null;
 
 	constructor(scene: babylon.Scene, type: BallOption) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
@@ -16,10 +18,10 @@ export abstract class BallTemplate {
 		this.physic.body.setCollisionCallbackEnabled(true);
 		this.mesh.renderingGroupId = 1;
 		this.type = type;
-		this.checkIfBallIsInGoal();
+		this.observable = this.checkIfBallIsInGoal();
 	}
 
-	setPhysic(scene: babylon.Scene): babylon.PhysicsAggregate {
+	private setPhysic(scene: babylon.Scene): babylon.PhysicsAggregate {
 		const physic = new babylon.PhysicsAggregate(this.mesh, babylon.PhysicsShapeType.SPHERE, {
 			mass: 1,
 			restitution: 1 // rebond
@@ -27,16 +29,31 @@ export abstract class BallTemplate {
 		return physic;
 	}
 
-	private checkIfBallIsInGoal(): void {
+	protected setTrail(scene: babylon.Scene, color: babylon.Color3): ReturnType<typeof setInterval> {
+		const trailIntervalId = setInterval(() => {
+			this.ballTrails.push(new BallTrail(scene, this.mesh.absolutePosition, color));
+			while (this.ballTrails.length && this.ballTrails[0].hasDisappeared()) {
+				this.ballTrails.splice(0, 1);
+			}
+		}, TRAIL_CREATION_INTERVAL);
+		return trailIntervalId;
+	}
+
+	private checkIfBallIsInGoal(): babylon.Observable<babylon.IPhysicsCollisionEvent> {
 		const observable = this.physic.body.getCollisionObservable();
-		const observer = observable.add((collisionEvent) => {
+		observable.add((collisionEvent) => {
 			if (collisionEvent.collidedAgainst.transformNode.name === "goalplayer1") {
-				this.isInGoalp1 = true;
+				this.isInGoal = "player2";
 			}
 			if (collisionEvent.collidedAgainst.transformNode.name === "goalplayer2") {
-				this.isInGoalp2 = true;
+				this.isInGoal = "player1";
 			}
 		});
+		return observable;
+	}
+
+	getGoal(): "player1" | "player2" | null {
+		return this.isInGoal;
 	}
 
 	/**@todo remove */
@@ -49,11 +66,16 @@ export abstract class BallTemplate {
 
 	destroy(): void {
 		this.destroyRest();
+		while (this.ballTrails.length) {
+			this.ballTrails[0].destroy();
+			this.ballTrails.splice(0, 1);
+		}
+		this.observable.clear();
 		this.physic.dispose();
 		this.mesh.dispose();
 	}
 
-	abstract setMaterial(scene: babylon.Scene): void;
+	abstract setMaterial(scene: babylon.Scene, color: babylon.Color3): void;
 
 	abstract activateEffet(): void;
 	

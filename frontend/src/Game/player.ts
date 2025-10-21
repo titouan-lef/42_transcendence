@@ -1,10 +1,11 @@
 import * as babylon from "/babylonjs/core/index.js";
 import { GameSettings } from "./gameSettings.js";
 import { PlayerKeys } from "./gameSettings.js";
-import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, WALL_HEIGHT, PLAYER_MOVEMENT_IMPULSE, PLAYER_ROTATION_IMPULSE } from "./values.js";
+import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MOVEMENT_IMPULSE, PLAYER_ROTATION_IMPULSE, PLAYER_MASS } from "./values.js";
 
 export class Player {
 	readonly mesh: babylon.Mesh;
+	private readonly color: babylon.Color3 = COLORS.white;
 	private readonly physic: babylon.PhysicsAggregate;
 	private readonly controls: PlayerKeys;
 	private readonly rotatingPlayer: boolean;
@@ -18,21 +19,27 @@ export class Player {
 	private readonly distanceConstraint: babylon.Physics6DoFConstraint;
 	private readonly movementConstraint: babylon.Physics6DoFConstraint | null;
 	/**@todo private readonly jump: boolean; ??*/
+	/**@todo blocking XY axe */
+	// private readonly sceneObservable: babylon.Observable<babylon.Scene>;
+	// private readonly positionObserver: babylon.Observer<babylon.Scene>;
+	// private readonly originalPosXY: babylon.Vector2;
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, settings: GameSettings, controls: PlayerKeys) {
 		this.mesh = this.setPlayer(scene, position);
-		this.physic = new babylon.PhysicsAggregate(this.mesh, babylon.PhysicsShapeType.BOX, { mass: 20 }, scene);
+		this.physic = new babylon.PhysicsAggregate(this.mesh, babylon.PhysicsShapeType.BOX, { mass: PLAYER_MASS }, scene);
+		//this.originalPosXY = new babylon.Vector2(position.x, this.mesh.position.y);
 		this.physic.body.setLinearDamping(2); // freinage
-		this.physic.body.setAngularDamping(2);
-		this.setMaterial(scene);
+		this.physic.body.setAngularDamping(5);
+		this.setMaterial(scene, this.color);
 		this.rotatingPlayer = settings.rotatingPlayer;
 
 		this.axeZ = this.setAxeZ(scene, position);
 		this.axeZPhysic = new babylon.PhysicsAggregate(this.axeZ, babylon.PhysicsShapeType.BOX, { mass: 0 }, scene);
+		this.axeZPhysic = new babylon.PhysicsAggregate(this.axeZ, babylon.PhysicsShapeType.BOX, { mass: 0 }, scene);
 
 		if (this.rotatingPlayer) {
 			this.rotater = this.setRotater(scene, position);
-			this.rotaterPhysic = new babylon.PhysicsAggregate(this.rotater, babylon.PhysicsShapeType.BOX, { mass: 20 }, scene);
+			this.rotaterPhysic = new babylon.PhysicsAggregate(this.rotater, babylon.PhysicsShapeType.BOX, { mass: PLAYER_MASS }, scene);
 		} else{
 			this.rotater = null;
 			this.rotaterPhysic = null;
@@ -45,6 +52,9 @@ export class Player {
 		this.controls = controls;
 
 		/**@todo this.jump = settings.jump; ??*/
+
+		// this.sceneObservable = scene.onBeforeRenderObservable;
+		// this.positionObserver = this.observeXY();
 
 		window.addEventListener("keydown", this.handleKeyDown);
 		window.addEventListener("keyup", this.handleKeyUp);
@@ -59,9 +69,9 @@ export class Player {
 		return player;
 	}
 
-	private setMaterial(scene: babylon.Scene): void {
+	private setMaterial(scene: babylon.Scene, color: babylon.Color3): void {
 		const material = new babylon.StandardMaterial('ballcolor', scene);
-		material.emissiveColor =  COLORS.white;
+		material.emissiveColor = color;
 		this.mesh.material = material;
 	}
 
@@ -209,6 +219,19 @@ export class Player {
 		}
 	}
 
+	/**@todo test */
+	// private observeXY(): babylon.Observer<babylon.Scene>{
+	// 	const positionObserver = this.sceneObservable.add(() => {
+	// 		this.mesh.position.x = this.originalPosXY.x;
+	// 		this.mesh.position.y = this.originalPosXY.y;
+	// 		if (this.rotater){
+	// 			this.rotater.position.x = this.originalPosXY.x;
+	// 			this.rotater.position.y = this.originalPosXY.y;
+	// 		}
+	// 	});
+	// 	return positionObserver;
+	// } 
+
 	destroy(): void {
 		this.zConstraint.dispose();
 		this.distanceConstraint.dispose();
@@ -223,6 +246,9 @@ export class Player {
 		if (this.rotater) {
 			this.rotater.dispose();
 		}
+		/**@todo block XY */
+		//this.sceneObservable.remove(this.positionObserver);
+		//
 		this.physic.dispose();
 		this.mesh.dispose();
 		window.removeEventListener("keydown", this.handleKeyDown);

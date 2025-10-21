@@ -32,7 +32,6 @@ export class RainyMap extends MapTemplate {
 		light.diffuse = COLORS.grey;
 		return light;
 	}
-	//
 
 	destroyRest(): void {
 		

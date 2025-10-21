@@ -3,19 +3,23 @@ import { BallTemplate } from "./ballTemplate.js";
 import { COLORS } from "../values.js";
 
 export class DefaultBall extends BallTemplate {
+	protected trailIntervalId: ReturnType<typeof setInterval>;
+	private readonly color: babylon.Color3 = COLORS.white;
+
 	constructor(scene: babylon.Scene) {
 		super(scene, "default");
-		this.setMaterial(scene);
+		this.setMaterial(scene, this.color);
+		this.trailIntervalId = this.setTrail(scene, this.color);
 	}
 	
-	setMaterial(scene: babylon.Scene): void {
+	setMaterial(scene: babylon.Scene, color: babylon.Color3): void {
 		const material = new babylon.StandardMaterial('ballcolor', scene);
-		material.emissiveColor = COLORS.white;
+		material.emissiveColor = color;
 		this.mesh.material = material;
 	}
 
 	destroyRest(): void {
-
+		clearInterval(this.trailIntervalId);
 	}
 
 	/**@description no effect */

@@ -32,7 +32,6 @@ export class WindyMap extends MapTemplate {
 		light.diffuse = COLORS.green;
 		return light;
 	}
-	//
 
 	destroyRest(): void {
 		

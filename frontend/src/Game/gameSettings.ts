@@ -2,6 +2,7 @@ export type MapOption = "default" | "random" | "volcano" | "windy" | "frozen" | 
 export type BallOption = "default" | "random" | "invisible" | "tricky" | "heavy" | "snake";
 export type PlayerKeys = [KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"]];
 
+ 
 export class GameSettings {
 	readonly map: MapOption;
 	readonly ball: BallOption;
