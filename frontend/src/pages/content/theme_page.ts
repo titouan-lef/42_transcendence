@@ -6,19 +6,19 @@
 
 import { Themes } from "../../assets/themes/theme.js";
 
-const CLASS_CSS = `rounded-2xl bg-[var(--color-light)] text-[var(--color-tx-prim)] text-3xl text-center px-10`;
+const SELECT_THEME = generateThemeButtons();
 
-let selectTheme: string;
+function generateThemeButtons(): string {
+	const style = `rounded-2xl bg-[var(--color-light)] text-[var(--color-tx-prim)] text-3xl text-center px-10`;
 
-generateThemeButtons();
-
-function generateThemeButtons(): void {
-	selectTheme = `<div class="flex gap-4 flex-wrap justify-center">`;
+	let selectButtons = `<div class="flex gap-4 flex-wrap justify-center">`;
 
 	Object.values(Themes).forEach(element => {
-		selectTheme += `<div id="btn-${element}" class="${CLASS_CSS}">${element}</div>`;
+		selectButtons += `<div id="btn-${element}" class="${style}">${element}</div>`;
 	});
-	selectTheme += `</div>`;
+	selectButtons += `</div>`;
+
+	return selectButtons;
 }
 
-export { selectTheme };
+export { SELECT_THEME };

@@ -1,4 +1,4 @@
-export enum Themes {
+enum Themes {
 	PIZZA_LULU = "pizza_lulu",
 	OVER_TITOUAN = "over_titouan",
 	SUGAR_RUSHTMAN = "sugar_rushtman",
@@ -13,14 +13,16 @@ export enum Themes {
 	MONQ = "monq",
 }
 
-initTheme();
-
-export function setTheme(theme: Themes): void {
-	document.body.dataset.theme = theme;
-}
-
 function initTheme(): void {
 	const themeList = Object.values(Themes);
 	const randomIndex = Math.floor(Math.random() * Object.values(Themes).length);
 	document.body.dataset.theme = themeList[randomIndex];
 }
+
+function setTheme(theme: Themes): void {
+	document.body.dataset.theme = theme;
+}
+
+initTheme();
+
+export { Themes, setTheme };

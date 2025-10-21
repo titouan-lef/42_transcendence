@@ -29,8 +29,10 @@ function test(): void {
 		.catch((err) => console.error(err));
 }
 
-export function apiEvents(): void {
+function apiEvents(): void {
 	addHandler("btn-hello", "click", () => hello());
 	addHandler("btn-test", "click", () => test());
 	addHandler("btn-theme", "click", () => navigate(PageID.THEME));
 }
+
+export { apiEvents };

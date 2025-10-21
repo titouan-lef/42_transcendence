@@ -265,6 +265,28 @@ CONSTANT_CASE | global constant values, including enum values and static readonl
 
 #### Exports
 - Do not use `default exports`.
+- Always use `export` at the end.
+- `export` variables first, functions after.
+##### Example
+```ts
+// Don't do
+export const var1 = 1;
+export const var2 = 2;
+
+export func(): number {
+	return 3;
+}
+
+// But do
+const var1 = 1;
+const var2 = 2;
+
+func(): number {
+	return 3;
+}
+
+export { var1, var2, func };
+```
 
 #### Imports
 Import type | Example | Use for
@@ -294,7 +316,7 @@ interface Person {
   name: string;
   age: number;
 }
- 
+
 function greet(person: Person): string {
   const start = "Hello ";
 

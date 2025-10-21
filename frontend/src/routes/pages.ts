@@ -1,9 +1,10 @@
 import { FIRST_PAGE } from "../pages/content/first_page.js";
 import { API_PAGE } from "../pages/content/API_page.js";
-import { selectTheme } from "../pages/content/theme_page.js";
+import { SELECT_THEME } from "../pages/content/theme_page.js";
 import { loadEvent } from "./events.js";
+import { getSafeElement } from "../utils/getSafeElement.js";
 
-export enum PageID {
+enum PageID {
 	FIRST = "first_page",
 	API = "api_page",
 	THEME = "select_theme",
@@ -12,23 +13,16 @@ export enum PageID {
 const PAGE_CONTENT: Record<PageID, string> = {
 	[PageID.FIRST]: FIRST_PAGE,
 	[PageID.API]: API_PAGE,
-	[PageID.THEME]: selectTheme,
+	[PageID.THEME]: SELECT_THEME,
 };
 
 let currentPage = PageID.FIRST;
-
-init();
-loadPage(currentPage);
 
 /**
  * @warning please use erasePage(PageID) before you load a page
  */
 function loadPage(id: PageID): void {
-	const elem = document.getElementById(id);
-
-	if (!elem) {
-		throw new Error("cannot find id " + id);
-	}
+	const elem = getSafeElement(id);
 
 	elem.innerHTML = PAGE_CONTENT[id];
 	loadEvent(id);
@@ -36,11 +30,7 @@ function loadPage(id: PageID): void {
 };
 
 function erasePage(id: PageID): void {
-	const elem = document.getElementById(id);
-
-	if (!elem) {
-		throw new Error("cannot find id " + id);
-	}
+	const elem = getSafeElement(id);
 
 	elem.innerHTML = "";
 };
@@ -49,7 +39,7 @@ function erasePage(id: PageID): void {
  * Changes page from current to nextID and manages back and forward button.
  * @param nextID the page we want to go
  */
-export function navigate(nextID: PageID): void {
+function navigate(nextID: PageID): void {
 	if (nextID === currentPage) {
 		return ;
 	}
@@ -69,15 +59,12 @@ window.addEventListener("popstate", (event) => {
 });
 
 /**
- * Fills the <div id="entrypoint"></div> in the html file to prepare all pages.
+ * Fills the div with ep id in the html file to prepare all pages.
  */
 function init(): void {
-	const elem = document.getElementById("entrypoint");
+	const ep = "entrypoint";
 
-	if (!elem) {
-		throw new Error("id \"entrypoint\" not found");
-	}
-
+	const elem = getSafeElement(ep);
 	let setupPages = "";
 
 	Object.values(PageID).forEach(id => {
@@ -86,3 +73,8 @@ function init(): void {
 	elem.innerHTML = setupPages;
 	history.replaceState({page: currentPage}, ""); // Clears statement to setup back and forward button
 };
+
+init();
+loadPage(currentPage);
+
+export { PageID, navigate };
