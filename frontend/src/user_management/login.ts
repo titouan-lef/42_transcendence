@@ -1,5 +1,5 @@
-import {getInput} from "../interface_interation.js";
-import {sendRequestToBack} from "../api_request.js";
+import { getInput } from "../interface_interation.js";
+import { sendRequestToBack } from "../api_request.js";
 
 export function connectUser(): void {
 

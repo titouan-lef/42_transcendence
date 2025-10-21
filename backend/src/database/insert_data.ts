@@ -1,4 +1,4 @@
-import {getDb} from "./init.js";
+import { getDb } from "./init.js";
 import { Database } from "sqlite";
 
 export async function insertUser(username: string, pseudo: string, hashedPassword: string, ppLink: string): Promise<void> {
