@@ -40,9 +40,8 @@ function erasePage(id: PageID): void {
  * @param nextID the page we want to go
  */
 function navigate(nextID: PageID): void {
-	if (nextID === currentPage) {
+	if (nextID === currentPage)
 		return ;
-	}
 
 	erasePage(currentPage);
 	loadPage(nextID);
