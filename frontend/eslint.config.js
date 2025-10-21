@@ -81,6 +81,8 @@ export default [
 
 			// --- Code style & braces ---
 			"@stylistic/curly-newline": ["error"],	// Require braces for blocks (if, else, while, for, ...)
+			"@stylistic/object-curly-spacing": ["error", "always"],	// Require a space before and after brackets
+			"@stylistic/space-before-blocks": ["error", "always"],	// Require a space before blocks
 			"@stylistic/nonblock-statement-body-position": ["error", "below"],	// There can be a single statement instead of a block on a new line
 			"@stylistic/brace-style": ["error"],	// Enfore `one true brace style` (1tbs)
 			"@stylistic/semi": ["error", "always"],	// Always require semicolons
