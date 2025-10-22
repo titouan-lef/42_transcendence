@@ -74,9 +74,7 @@ function init(): void {
 	});
 	elem.innerHTML = setupPages;
 	history.replaceState({ page: currentPage }, ""); // Clears statement to setup back and forward button
+	loadPage(currentPage);
 };
 
-init();
-loadPage(currentPage);
-
-export { PageID, navigate };
+export { PageID,init, navigate };
