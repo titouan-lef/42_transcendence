@@ -7,12 +7,12 @@ import havokPhysics from "/babylonjs/havok/lib/esm/HavokPhysics_es.js";
 import { POINTS_TO_WIN } from "./values.js";
 
 export class Game {
-	private readonly canvas: HTMLCanvasElement;
 	private readonly engine: babylon.Engine;
 	private readonly scene: babylon.Scene;
 	private readonly sceneManager: SceneManager;
 	private readonly settings: GameSettings;
 	private readonly camera: babylon.ArcRotateCamera;
+	private canvas: HTMLCanvasElement;
 	private score: babylon.Vector2;
 
 	constructor (canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
@@ -30,10 +30,23 @@ export class Game {
 	/** 
 	 * returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start
 	 */
-	static async create(canvas: HTMLCanvasElement, settings: GameSettings): Promise<Game> {
+	static async create(settings: GameSettings): Promise<Game> {
+		const canvas = Game.createCanvas();
 		const engine = new babylon.Engine(canvas, true);
 		const scene = await Game.initScene(engine);
 		return new Game(canvas, settings, scene, engine);
+	}
+
+	/** creating the canvas here because each time a game is created, a new canvas should also be created */
+	private static createCanvas(): HTMLCanvasElement {
+		const canvas: HTMLCanvasElement = document.createElement("canvas");
+		canvas.style.position = "Absolute";
+		canvas.style.top = "10%";
+		canvas.style.left = "10%";
+		canvas.style.width = "80%";
+		canvas.style.height = "80%";
+		document.body.appendChild(canvas);
+		return canvas;
 	}
 
 	private static async initScene(engine: babylon.Engine): Promise<babylon.Scene> {
@@ -48,6 +61,7 @@ export class Game {
 		this.engine.runRenderLoop(() => this.scene.render());
 	}
 
+	/**@todo usefull ? */
 	hide(): void {
 		this.engine.stopRenderLoop();
 	}
@@ -59,6 +73,7 @@ export class Game {
 		this.camera.dispose();
 		this.scene.dispose();
 		this.engine.dispose();
+		this.canvas.remove();
 	}
 
 	private setScene(): void {
