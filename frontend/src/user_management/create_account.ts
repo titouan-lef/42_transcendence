@@ -1,4 +1,4 @@
-import { getInput } from "../interface_interation.js";
+import { getInput, isOneStringEmtpy } from "../interface_interation.js";
 import { sendRequestToBack } from "../api_request.js";
 
 function newUser(): void {
@@ -9,19 +9,19 @@ function newUser(): void {
 	const confPassword: HTMLInputElement | null = getInput("create_conf_password");
 	const container: HTMLElement | null = document.getElementById("print-content");
 
-	if (!userId || !userPseudo || !userPassword || !confPassword) {
+	if (!userId || !userPseudo || !userPassword || !confPassword) { // will no longer exist after merger with new front
 		console.error("User creation form is incomplete");
 		return;
 	}
 
-	if (!userId.value || !userPseudo.value || !userPassword.value || !confPassword.value) {
-		if (container)
-			container.innerHTML = `<p>Form is incomplete.</p>`;
+	if (isOneStringEmtpy(userId.value, userPseudo.value, userPassword.value, confPassword.value)) {
+		if (container) // will no longer exist after merger with new front
+			container.innerHTML = `<p>Form is incomplete.</p>`; /**@todo use translate tool */
 		return;
 	}
 
-	if (userPassword.value !== confPassword.value && container) {
-		container.innerHTML = `<p>The password and confirm password differs</p>`;
+	if (userPassword.value !== confPassword.value && container) { //the container check will no longer exist after merger with new front
+		container.innerHTML = `<p>The password and confirm password differs</p>`; /**@todo use translate tool */
 		userPassword.value = "";
 		confPassword.value = "";
 		userPassword.focus();
