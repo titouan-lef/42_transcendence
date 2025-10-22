@@ -5,10 +5,9 @@ import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, COLORS, PLAYER_DIMENSION } from "../
 export abstract class MapTemplate {
 	protected readonly ground: babylon.Mesh;
 	protected readonly groundPhysic: babylon.PhysicsAggregate;
-	/**@todo test */
+	/**Ceiling is an invisible ceiling that deny the player from rotating in the air */
 	protected readonly ceiling: babylon.Mesh;
 	protected readonly ceilingPhysic: babylon.PhysicsAggregate;
-	//
 	protected readonly limits: babylon.Mesh[];
 	protected readonly limitsPhysic: babylon.PhysicsAggregate[] = [];
 	protected readonly sun: babylon.Mesh;
@@ -19,12 +18,10 @@ export abstract class MapTemplate {
 		this.type = type;
 		this.ground = this.createGround(scene);
 		this.groundPhysic = new babylon.PhysicsAggregate(this.ground, babylon.PhysicsShapeType.BOX, { mass: 0 }, scene);
-		/**@todo test */
 		this.ceiling = babylon.MeshBuilder.CreateGround("ceiling", { width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
 		this.ceiling.position.y = PLAYER_DIMENSION.y + 0.1;
 		this.ceiling.visibility = 0;
 		this.ceilingPhysic = new babylon.PhysicsAggregate(this.ceiling, babylon.PhysicsShapeType.BOX, { mass: 0 }, scene);
-		//
 		this.ground.renderingGroupId = 1;
 		this.limits = this.createLimits(scene);
 		this.limits.forEach(limit => limit.renderingGroupId = 1);
@@ -80,16 +77,18 @@ export abstract class MapTemplate {
 	destroy(): void {
 		this.destroyRest();
 		this.groundPhysic.dispose();
+		this.ground.material?.dispose();
 		this.ground.dispose();
-		/**@todo test */
 		this.ceilingPhysic.dispose();
 		this.ceiling.dispose();
-		//
 		for (let i = 0; i < this.limits.length; i++) {
 			this.limitsPhysic[i].dispose();
+			this.limits[i].material?.dispose();
 			this.limits[i].dispose();
 		}
+		this.sun.material?.dispose();
 		this.sun.dispose();
+		this.light.dispose();
 		this.light.dispose();
 	}
 }

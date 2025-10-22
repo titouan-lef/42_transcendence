@@ -10,7 +10,6 @@ export class GameSettings {
 	readonly effects:  boolean;
 	readonly player1Keys: PlayerKeys;
 	readonly player2Keys: PlayerKeys;
-	/**@todo readonly jump:  true | false; ?? */
 
 	constructor(map:  MapOption, ball: BallOption, rotatingPlayer: boolean, effects: boolean, 
 		player1Keys: PlayerKeys, player2Keys: PlayerKeys) {
@@ -20,6 +19,5 @@ export class GameSettings {
 		this.effects = effects;
 		this.player1Keys = player1Keys;
 		this.player2Keys = player2Keys;
-		/**@todo this.jump = jump;  ?? */
 	}
 }

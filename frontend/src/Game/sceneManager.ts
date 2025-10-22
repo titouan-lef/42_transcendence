@@ -17,9 +17,14 @@ import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "./values.js";
 
 
 export class SceneManager {
-	readonly balls: BallTemplate[] = [];
-	readonly maps: MapTemplate[] = [];
-	readonly players: Player[] = [];
+	private readonly balls: BallTemplate[] = [];
+	private readonly maps: MapTemplate[] = [];
+	private readonly players: Player[] = [];
+
+	/**@todo will be removed */
+	getBalls(): BallTemplate[] {
+		return this.balls;
+	}
 
 	/**@todo Enum here is kinda hard to use because each class is different */
 	createBall(scene: babylon.Scene, ball: BallOption): void {
@@ -82,6 +87,16 @@ export class SceneManager {
 		this.players.push(player2);
 	}
 
+	checkGoal(): "player1" | "player2" | null {
+		for (const ball of this.balls) {
+			const goal = ball.getGoal();
+			if (goal !== null) {
+				return goal;
+			}
+		};
+		return null;
+	}
+
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
 		this.createPlayers(scene, settings);
 		this.createBall(scene, settings.ball);
@@ -99,7 +114,16 @@ export class SceneManager {
 		while(this.players.length > 0) {
 			this.players.pop();
 		}
-		scene.materials.forEach(mat => mat.dispose());
+		scene.materials.forEach(mat => mat.dispose()); // these are the defualt materials, not sure if i have to dispose them since they are created auto
+		/**@todo Debugging logs */
+		// console.log("meshes : " + scene.meshes);
+		// scene.materials.forEach(mat => {
+		// 	console.log("mat name : " + mat.name);
+		// });
+		// scene.textures.forEach(texture => {
+		// 	console.log("texture name : " + texture.name);
+		// });
+		// console.log("lights : " + scene.lights);
 	}
 
 	destroyBalls(): void {

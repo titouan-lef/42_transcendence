@@ -18,8 +18,8 @@ export class Player {
 	private readonly zConstraint: babylon.PrismaticConstraint;
 	private readonly distanceConstraint: babylon.Physics6DoFConstraint;
 	private readonly movementConstraint: babylon.Physics6DoFConstraint | null;
-	/**@todo private readonly jump: boolean; ??*/
-	/**@todo blocking XY axe */
+
+	/**@todo in case we want to Lock player on Z axe */
 	// private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	// private readonly positionObserver: babylon.Observer<babylon.Scene>;
 	// private readonly originalPosXY: babylon.Vector2;
@@ -27,6 +27,7 @@ export class Player {
 	constructor(scene: babylon.Scene, position: babylon.Vector2, settings: GameSettings, controls: PlayerKeys) {
 		this.mesh = this.setPlayer(scene, position);
 		this.physic = new babylon.PhysicsAggregate(this.mesh, babylon.PhysicsShapeType.BOX, { mass: PLAYER_MASS }, scene);
+		/**@todo in case we want to Lock player on Z axe */
 		//this.originalPosXY = new babylon.Vector2(position.x, this.mesh.position.y);
 		this.physic.body.setLinearDamping(2); // freinage
 		this.physic.body.setAngularDamping(5);
@@ -51,8 +52,7 @@ export class Player {
 
 		this.controls = controls;
 
-		/**@todo this.jump = settings.jump; ??*/
-
+		/**@todo in case we want to Lock player on Z axe */
 		// this.sceneObservable = scene.onBeforeRenderObservable;
 		// this.positionObserver = this.observeXY();
 
@@ -75,6 +75,7 @@ export class Player {
 		this.mesh.material = material;
 	}
 
+	/**Le truc qui retient le rotater de toucher le mur ou de trop sortir de l axe Z avec Zconstraint et distanceConstraint */
 	private setAxeZ(scene: babylon.Scene, position: babylon.Vector2): babylon.Mesh {
 		const distanceFromGround = position.y + 10; //10 seems to be a good value
 		const axeZ = babylon.MeshBuilder.CreateBox("contraint", { width: 1, height: 1, depth: 1 }, scene);
@@ -85,6 +86,7 @@ export class Player {
 		return axeZ;
 	}
 
+	/**Le truc qui retient le joueur de bouger avec movementConstraint */
 	private setRotater(scene: babylon.Scene, position: babylon.Vector2): babylon.Mesh {
 		const rotater = babylon.MeshBuilder.CreateBox("rotater", { width: 1, height: 1, depth: PLAYER_DIMENSION.x }, scene);
 		rotater.position.x = position.x;
@@ -219,15 +221,15 @@ export class Player {
 		}
 	}
 
-	/**@todo test */
+	/**@todo in case we want to Lock player on Z axe */
 	// private observeXY(): babylon.Observer<babylon.Scene>{
 	// 	const positionObserver = this.sceneObservable.add(() => {
 	// 		this.mesh.position.x = this.originalPosXY.x;
 	// 		this.mesh.position.y = this.originalPosXY.y;
-	// 		if (this.rotater){
-	// 			this.rotater.position.x = this.originalPosXY.x;
-	// 			this.rotater.position.y = this.originalPosXY.y;
-	// 		}
+	// if (this.rotater){
+	// 	this.rotater.position.x = this.originalPosXY.x;
+	// 	this.rotater.position.y = this.originalPosXY.y;
+	// }
 	// 	});
 	// 	return positionObserver;
 	// } 
@@ -246,10 +248,11 @@ export class Player {
 		if (this.rotater) {
 			this.rotater.dispose();
 		}
-		/**@todo block XY */
+		/**@todo in case we want to Lock player on Z axe */
 		//this.sceneObservable.remove(this.positionObserver);
 		//
 		this.physic.dispose();
+		this.mesh.material?.dispose();
 		this.mesh.dispose();
 		window.removeEventListener("keydown", this.handleKeyDown);
 		window.removeEventListener("keyup", this.handleKeyUp);
