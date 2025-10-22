@@ -27,26 +27,27 @@ export class SceneManager {
 	}
 
 	/**@todo Enum here is kinda hard to use because each class is different */
-	createBall(scene: babylon.Scene, ball: BallOption): void {
+	createBall(scene: babylon.Scene, settings: GameSettings): void {
 		const ballList: BallOption[] = ["default", "invisible", "tricky", "heavy", "snake"];
-		if (ball === "random") {
+		let ball = settings.ball;
+		if (settings.ball === "random") {
 			ball = ballList[Math.floor(Math.random() * 5)];
 		}
 		switch (ball) {
 			case "default":
-				this.balls.push(new DefaultBall(scene));
+				this.balls.push(new DefaultBall(scene, settings));
 				break;
 			case "invisible":
-				this.balls.push(new InvisibleBall(scene));
+				this.balls.push(new InvisibleBall(scene, settings));
 				break;
 			case "tricky":
-				this.balls.push(new TrickyBall(scene));
+				this.balls.push(new TrickyBall(scene, settings));
 				break;
 			case "heavy":
-				this.balls.push(new HeavyBall(scene));
+				this.balls.push(new HeavyBall(scene, settings));
 				break;
 			case "snake":
-				this.balls.push(new SnakeBall(scene));
+				this.balls.push(new SnakeBall(scene, settings));
 				break;
 			default: ;
 		}
@@ -99,7 +100,7 @@ export class SceneManager {
 
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
 		this.createPlayers(scene, settings);
-		this.createBall(scene, settings.ball);
+		this.createBall(scene, settings);
 		this.createMap(scene, settings.map);
 	}
 
@@ -117,9 +118,11 @@ export class SceneManager {
 		scene.materials.forEach(mat => mat.dispose()); // these are the defualt materials, not sure if i have to dispose them since they are created auto
 		/**@todo Debugging logs */
 		// console.log("meshes : " + scene.meshes);
+		// console.log("materials : " + scene.materials);
 		// scene.materials.forEach(mat => {
 		// 	console.log("mat name : " + mat.name);
 		// });
+		// console.log("textures : " + scene.textures);
 		// scene.textures.forEach(texture => {
 		// 	console.log("texture name : " + texture.name);
 		// });
