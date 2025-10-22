@@ -30,15 +30,15 @@ async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: 
 	const realPassword: string = await findUserPassword(id);
 
 	/** @todo hash the password */
-	if (realPassword === password) {
-		const token = jwt.sign({ id }, SECRET);
-		reply
-			.setCookie("token", token, COOKIES_OPTIONS)
-			.code(201)
-			.send({ success: true, message: "Successfuly loged in" });
-	} else {
+	if (realPassword !== password) {
 		reply.code(201).send({ success: false, message: "Wrong id or password" });
+		return;
 	}
+	const token = jwt.sign({ id }, SECRET);
+	reply
+		.setCookie("token", token, COOKIES_OPTIONS)
+		.code(201)
+		.send({ success: true, message: "Successfuly loged in" });
 }
 
 async function disconnectUser(req: FastifyRequest, reply: FastifyReply): Promise<void> {
