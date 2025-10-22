@@ -1,8 +1,9 @@
 import * as babylon from "/babylonjs/core/index.js";
 import { MapOption } from "../gameSettings.js";
-import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, COLORS, PLAYER_DIMENSION } from "../values.js";
+import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, COLORS, PLAYER_DIMENSION, GLOW_INTENSITY } from "../values.js";
 
 export abstract class MapTemplate {
+	protected glow: babylon.GlowLayer;
 	protected readonly ground: babylon.Mesh;
 	protected readonly groundPhysic: babylon.PhysicsAggregate;
 	/**Ceiling is an invisible ceiling that deny the player from rotating in the air */
@@ -28,6 +29,8 @@ export abstract class MapTemplate {
 		this.limits.forEach(limit => this.setLimitPhysic(scene, limit));
 		this.sun = this.createSun(scene);
 		this.light = this.createLight(scene);
+		this.glow = new babylon.GlowLayer("glow", scene);
+		this.glow.intensity = GLOW_INTENSITY;
 	}
 
 	setLimitPhysic(scene: babylon.Scene, limit: babylon.Mesh): void {
@@ -90,5 +93,6 @@ export abstract class MapTemplate {
 		this.sun.dispose();
 		this.light.dispose();
 		this.light.dispose();
+		this.glow.dispose();
 	}
 }
