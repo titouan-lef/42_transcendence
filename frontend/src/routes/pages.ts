@@ -73,7 +73,7 @@ function init(): void {
 		setupPages += `<div id="${id}"></div>`;
 	});
 	elem.innerHTML = setupPages;
-	history.replaceState({page: currentPage}, ""); // Clears statement to setup back and forward button
+	history.replaceState({ page: currentPage }, ""); // Clears statement to setup back and forward button
 };
 
 init();
