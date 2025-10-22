@@ -1,6 +1,6 @@
 import * as babylon from "/babylonjs/core/index.js";
 import { MapTemplate } from "./mapTemplate.js";
-import { MAP_SIZE, SUN_DIAMETER, WALL_HEIGHT, WALL_WIDTH, PARTICLE_NUMBER, COLORS } from "../values.js";
+import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, PARTICLE_NUMBER, COLORS } from "../values.js";
 
 export class DefaultMap extends MapTemplate {
 	private readonly bars: babylon.Mesh[];
