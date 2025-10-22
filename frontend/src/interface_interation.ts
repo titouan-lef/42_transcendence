@@ -5,4 +5,12 @@ function getInput(id: string): HTMLInputElement | null {
 	return null;
 }
 
-export { getInput };
+function isOneStringEmtpy(...args: string[]): boolean {
+	for (const arg of args) {
+		if (!arg)
+			return true;
+	}
+	return false;
+}
+
+export { getInput, isOneStringEmtpy };

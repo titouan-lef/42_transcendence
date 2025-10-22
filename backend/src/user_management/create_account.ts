@@ -8,6 +8,10 @@ interface NewUserBody {
 	ppLink: string;
 }
 
+function isSQLConstraintError(err: unknown) : boolean {
+	return (typeof err === "object" && err !== null && "code" in err && err.code === "SQLITE_CONSTRAINT");
+}
+
 async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
 	try {
 		const { id, pseudo, password, ppLink } = req.body;
@@ -17,7 +21,7 @@ async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: F
 		reply.code(201).send({ success: true, message: "User created" });
 
 	} catch (err: unknown) {
-		if ( typeof err === "object" && err !== null && "code" in err && err.code === "SQLITE_CONSTRAINT") {
+		if (isSQLConstraintError(err)) {
 			reply.code(201).send({ success: false, message: "ID already taken" });
 		} else {
 			reply.code(500).send({ success: false, message: "Internal server error" });
