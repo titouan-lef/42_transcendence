@@ -4,6 +4,7 @@ import { GameSettings } from "./gameSettings.js";
 import { GLOW_INTENSITY } from "./values.js";
 import { HavokPlugin } from "/babylonjs/core/Physics/index.js";
 import havokPhysics from "/babylonjs/havok/lib/esm/HavokPhysics_es.js";
+import { POINTS_TO_WIN } from "./values.js";
 
 export class Game {
 	private readonly canvas: HTMLCanvasElement;
@@ -11,6 +12,8 @@ export class Game {
 	private readonly scene: babylon.Scene;
 	private readonly sceneManager: SceneManager;
 	private readonly settings: GameSettings;
+	private readonly camera: babylon.ArcRotateCamera;
+	private score: babylon.Vector2;
 
 	constructor (canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.engine = engine;
@@ -20,6 +23,8 @@ export class Game {
 		this.scene = scene;
 		window.addEventListener("resize", () => this.engine.resize());
 		this.setScene();
+		this.camera = this.createCamera();
+		this.score = new babylon.Vector2(0, 0);
 	}
 
 	/** 
@@ -48,16 +53,15 @@ export class Game {
 	}
 
 	stop(): void {
+		this.sceneManager.destroyEnvironnement(this.scene);
 		this.engine.stopRenderLoop();
+		this.scene.onAfterRenderObservable.clear();
+		this.camera.dispose();
 		this.scene.dispose();
 		this.engine.dispose();
 	}
 
 	private setScene(): void {
-		this.createCamera();
-		/**@todo glow should be in map too ? depends of if i use it for different things or not*/
-		const glow = new babylon.GlowLayer("glow", this.scene);
-		glow.intensity = GLOW_INTENSITY;
 		this.sceneManager.setEnvironnement(this.scene, this.settings);
 
 		/**@todo text?*/
@@ -80,21 +84,28 @@ export class Game {
 		if (goal !== null) {
 			/**@todo inscrire goal */
 			if (goal === "player2") {
+				this.score.x += 1;
 				console.log("player 2 goaled");
 			} else{
+				this.score.y += 1;
 				console.log("player 1 goaled");
 			}
-			this.sceneManager.destroyEnvironnement(this.scene);
-			this.sceneManager.setEnvironnement(this.scene, this.settings);
+			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
+				this.stop();
+			} else{
+				this.sceneManager.destroyEnvironnement(this.scene);
+				this.sceneManager.setEnvironnement(this.scene, this.settings);
+			}
 		}
 	}
 
 	/**@todo see if camera can be moved via mouse or keyboard or none */
-	private createCamera(): void {
+	private createCamera(): babylon.ArcRotateCamera {
 		const camera = new babylon.ArcRotateCamera("camera",
 			babylon.Tools.ToRadians(0), babylon.Tools.ToRadians(57.3), 10, babylon.Vector3.Zero(), this.scene);
 		camera.setTarget(babylon.Vector3.Zero());
 		camera.attachControl(this.canvas, true);
 		camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
+		return camera;
 	}
 }

@@ -43,14 +43,15 @@ async function showCanvas(): Promise<void> {
 	if (!canvasVisibility) {
 		CANVAS.style.visibility = "visible";
 		canvasVisibility = true;
-		if (!game) {
-			game = await Game.create(CANVAS, SETTINGS);
-		}
+		/**@todo for now it just creates an other game each time you click */
+		//if (!game){
+		game = await Game.create(CANVAS, SETTINGS);
+		//}
 		game.show();
 	} else {
-		if (game) {
-			game.hide();
-		}
+		//if (game){
+		game.stop();
+		//}
 		CANVAS.style.visibility = "hidden";
 		canvasVisibility = false;
 	}

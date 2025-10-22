@@ -62,6 +62,7 @@ export const PLAYER_MASS = 20;
 export const PLAYER_MOVEMENT_IMPULSE = MAP_SIZE.z * PLAYER_MASS * 0.8;
 export const PLAYER_ROTATION_IMPULSE = MAP_SIZE.x * PLAYER_MASS * 0.4;
 export const TRAIL_CREATION_INTERVAL = 15;
+export const POINTS_TO_WIN = 5;
 
 /** @todo reajust posX */
 /** @todo score incrementation */
