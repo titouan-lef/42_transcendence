@@ -1,10 +1,9 @@
 import * as babylon from "/babylonjs/core/index.js";
 import { SceneManager } from "./sceneManager.js";
 import { GameSettings } from "./gameSettings.js";
-import { GLOW_INTENSITY } from "./values.js";
 import { HavokPlugin } from "/babylonjs/core/Physics/index.js";
 import havokPhysics from "/babylonjs/havok/lib/esm/HavokPhysics_es.js";
-import { POINTS_TO_WIN } from "./values.js";
+import { MAP_SIZE, POINTS_TO_WIN } from "./values.js";
 
 export class Game {
 	private readonly engine: babylon.Engine;
@@ -27,9 +26,7 @@ export class Game {
 		this.score = new babylon.Vector2(0, 0);
 	}
 
-	/** 
-	 * returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start
-	 */
+	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
 	static async create(settings: GameSettings): Promise<Game> {
 		const canvas = Game.createCanvas();
 		const engine = new babylon.Engine(canvas, true);
@@ -78,19 +75,17 @@ export class Game {
 
 	private setScene(): void {
 		this.sceneManager.setEnvironnement(this.scene, this.settings);
-
-		/**@todo text?*/
-
+		/**@todo text GOAL?*/
+		
 		/**@todo just to make the ball move, will be removed*/
 		const sceneManager = this.sceneManager;
 		this.scene.onPointerDown = (): void => {
 			sceneManager.getBalls().forEach(ball => ball.testMove());
 		};
 
-		const sceneObserver = this.scene.onAfterRenderObservable.add(() => {
+		this.scene.onAfterRenderObservable.add(() => {
 			this.checkEndOfPoint();
 		});
-		/**@todo fin du jeu = this.scene.onAfterRenderObservable.remove(sceneObserver);  */
 	}
 
 	/**check collision for each balls */
@@ -117,8 +112,9 @@ export class Game {
 	/**@todo see if camera can be moved via mouse or keyboard or none */
 	private createCamera(): babylon.ArcRotateCamera {
 		const camera = new babylon.ArcRotateCamera("camera",
-			babylon.Tools.ToRadians(0), babylon.Tools.ToRadians(57.3), 10, babylon.Vector3.Zero(), this.scene);
-		camera.setTarget(babylon.Vector3.Zero());
+			babylon.Tools.ToRadians(0), babylon.Tools.ToRadians(57.3),
+			MAP_SIZE.x * 1.4, babylon.Vector3.Zero(), this.scene);
+		/**@todo will be removed, wont be able to move the camera */
 		camera.attachControl(this.canvas, true);
 		camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
 		return camera;
