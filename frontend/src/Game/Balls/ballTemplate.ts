@@ -72,6 +72,7 @@ export abstract class BallTemplate {
 		}
 		this.observable.clear();
 		this.physic.dispose();
+		this.mesh.material?.dispose();
 		this.mesh.dispose();
 	}
 

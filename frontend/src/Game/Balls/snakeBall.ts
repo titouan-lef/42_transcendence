@@ -5,7 +5,7 @@ import { COLORS } from "../values.js";
 export class SnakeBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
 	private readonly color: babylon.Color3 = COLORS.green;
-		
+
 	constructor(scene: babylon.Scene) {
 		super(scene, "snake");
 		this.setMaterial(scene, this.color);

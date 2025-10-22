@@ -60,35 +60,33 @@ export class Game {
 		glow.intensity = GLOW_INTENSITY;
 		this.sceneManager.setEnvironnement(this.scene, this.settings);
 
-		/**@todo text*/
+		/**@todo text?*/
 
-		/**@todo just to make the ball move*/
+		/**@todo just to make the ball move, will be removed*/
 		const sceneManager = this.sceneManager;
 		this.scene.onPointerDown = (): void => {
-			sceneManager.balls.forEach(ball => ball.testMove());
+			sceneManager.getBalls().forEach(ball => ball.testMove());
 		};
 
 		const sceneObserver = this.scene.onAfterRenderObservable.add(() => {
-			this.checkBallCollision();
+			this.checkEndOfPoint();
 		});
-		/**@todo fin du jeu = this.scene.onAfterRenderObservable.remove(sceneObserver); */
+		/**@todo fin du jeu = this.scene.onAfterRenderObservable.remove(sceneObserver);  */
 	}
 
 	/**check collision for each balls */
-	private checkBallCollision(): void {
-		this.sceneManager.balls.forEach(ball => {
-			const getGoal = ball.getGoal();
-			if (getGoal !== null) {
-				/**@todo inscrire goal */
-				if (getGoal === "player2") {
-					console.log("player 2 goaled");
-				} else{
-					console.log("player 1 goaled");
-				}
-				this.sceneManager.destroyEnvironnement(this.scene);
-				this.sceneManager.setEnvironnement(this.scene, this.settings);
+	checkEndOfPoint(): void {
+		const goal = this.sceneManager.checkGoal();
+		if (goal !== null) {
+			/**@todo inscrire goal */
+			if (goal === "player2") {
+				console.log("player 2 goaled");
+			} else{
+				console.log("player 1 goaled");
 			}
-		});
+			this.sceneManager.destroyEnvironnement(this.scene);
+			this.sceneManager.setEnvironnement(this.scene, this.settings);
+		}
 	}
 
 	/**@todo see if camera can be moved via mouse or keyboard or none */

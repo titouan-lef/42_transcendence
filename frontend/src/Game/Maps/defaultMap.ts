@@ -35,7 +35,7 @@ export class DefaultMap extends MapTemplate {
 			bar = babylon.CreateBox("bar", { width: 0.5, height: 0.1, depth: steps }, scene);
 			bar.position = new babylon.Vector3(0, 0, startPositionZ);
 			startPositionZ += steps * 2;
-			const mat: babylon.StandardMaterial = new babylon.StandardMaterial("barmat", scene);
+			const mat = new babylon.StandardMaterial("barmat", scene);
 			mat.emissiveColor = COLORS.white;
 			bar.material = mat;
 			bar.renderingGroupId = 1;
@@ -46,9 +46,9 @@ export class DefaultMap extends MapTemplate {
 
 	/** the stars in the background, will maybe move to abstract in template depending of the other maps's design */
 	private createParticules(scene: babylon.Scene): babylon.ParticleSystem {
-		scene.clearColor = new babylon.Color4(0, 0, 0, 1);
+		scene.clearColor = new babylon.Color4(0, 0, 0, 1); // sky
 		const particles = new babylon.ParticleSystem("stars", PARTICLE_NUMBER, scene);
-		particles.particleTexture = new babylon.Texture("textures/particle.png", scene);
+		particles.particleTexture = new babylon.Texture("textures/particle.png", scene); // free ici
 		particles.emitter = new babylon.Vector3(0, 0, 0);
 		particles.minEmitBox = new babylon.Vector3(-MAP_SIZE.x * 1.4, -MAP_SIZE.y * 1.4, -MAP_SIZE.z * 1.4);
 		particles.maxEmitBox = new babylon.Vector3(MAP_SIZE.x * 1.4, MAP_SIZE.y * 1.4, MAP_SIZE.y * 1.4);
@@ -81,7 +81,10 @@ export class DefaultMap extends MapTemplate {
 	}
 	
 	destroyRest(): void {
-		this.bars.forEach(bar => bar.dispose());
+		this.bars.forEach(bar => {
+			bar.material?.dispose();
+			bar.dispose();
+		});
 		this.particles.stop();
 		this.particles.dispose();
 		this.wallHighlight.dispose();

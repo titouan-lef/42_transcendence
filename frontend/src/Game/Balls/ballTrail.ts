@@ -15,7 +15,6 @@ export class BallTrail {
 		this.intervalId = this.fadeOut();
 	}
 
-
 	private setMaterial(scene: babylon.Scene, color: babylon.Color3): void {
 		const material = new babylon.StandardMaterial('ballcolor', scene);
 		material.emissiveColor = color;
@@ -35,6 +34,7 @@ export class BallTrail {
 
 	destroy(): void {
 		clearInterval(this.intervalId);
+		this.mesh.material?.dispose();
 		this.mesh.dispose();
 	}
 
