@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { findUserPassword } from "../database/find_data.js";
+import { isValidUser, findUserPassword } from "../database/find_data.js";
 import { CookieSerializeOptions } from '@fastify/cookie';
 import jwt, { JwtPayload } from "jsonwebtoken";
 
@@ -49,24 +49,34 @@ async function disconnectUser(req: FastifyRequest, reply: FastifyReply): Promise
 }
 
 async function whoami(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-	authenticate(req, reply);
 	reply.code(200).send({ success: true, message: req.user });
 }
 
-function authenticate(req: FastifyRequest, reply: FastifyReply): void {
+async function verifyAuth(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const token = req.cookies?.token;
 	if (!token) {
-		reply.code(201).send({ success: false, message: "Not logged in" });
-		return;
+		return reply
+			.code(201)
+			.send({ success: false, message: "Not logged in" });
 	}
 
 	try {
-		const payload = jwt.verify(token, SECRET);
 		// eslint-disable-next-line
-		req.user = (payload as JwtPayload).id; // payload will always be this format because it's how it is created.
+		const payload: JwtPayload = jwt.verify(token, SECRET) as JwtPayload; // payload will always be this format because it's how it is created.
+		const exists = await isValidUser(payload.id);
+		if (!exists) {
+			return reply
+				.clearCookie("token", COOKIES_OPTIONS)
+				.code(401)
+				.send({ success: false, message: "User does not exist" });
+		}
+		req.user = payload.id;
 	} catch {
-		reply.code(201).send({ success: false, message: "Invalid token" });
+		return reply
+			.clearCookie("token", COOKIES_OPTIONS)
+			.code(201)
+			.send({ success: false, message: "Invalid token" });
 	}
 }
 
-export { connectUser, disconnectUser, whoami, authenticate };
+export { connectUser, disconnectUser, whoami, verifyAuth };

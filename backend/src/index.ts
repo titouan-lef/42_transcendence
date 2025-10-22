@@ -3,7 +3,7 @@ import fastifyCors from "@fastify/cors";
 import fastifyCookies from "@fastify/cookie";
 import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
-import { connectUser, disconnectUser, whoami } from "./user_management/connect_user.js";
+import { connectUser, disconnectUser, whoami, verifyAuth } from "./user_management/connect_user.js";
 
 const APP = fastify();
 
@@ -24,8 +24,8 @@ APP.register(fastifyCookies);
 // --- Route handlers ---
 APP.post("/api/user/new_user", addNewUser);
 APP.post("/api/user/login", connectUser);
-APP.post("/api/user/logout", disconnectUser);
-APP.post("/api/user/whoami", whoami);
+APP.post("/api/user/logout", { preHandler: verifyAuth }, disconnectUser);
+APP.post("/api/user/whoami", { preHandler: verifyAuth }, whoami);
 
 // --- Start server ---
 async function start(): Promise<void> {

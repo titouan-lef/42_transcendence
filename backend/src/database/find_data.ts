@@ -1,6 +1,26 @@
 import { getDB } from "./init.js";
 import { Database } from "sqlite";
 
+async function isValidUser(username: string): Promise<boolean> {
+	const db: Database = await getDB();
+
+	try {
+		const row = await db.get(
+			`SELECT username
+			FROM User
+			WHERE username = ?;`,
+			username
+		);
+		if (row)
+			return true;
+	} catch (err) {
+		console.error("DB error:", err);
+	} finally {
+		await db.close();
+	}
+	return false;
+}
+
 async function findUserPassword(username: string): Promise<string> {
 	const db: Database = await getDB();
 
@@ -21,4 +41,4 @@ async function findUserPassword(username: string): Promise<string> {
 	return "";
 }
 
-export { findUserPassword };
+export { isValidUser, findUserPassword };
