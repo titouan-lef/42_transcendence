@@ -11,6 +11,9 @@ export abstract class BallTemplate {
 	private readonly observable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
 	private isInGoal: "player1" | "player2" | null = null;
 
+	protected justCollided = false;
+	protected realDirection: babylon.Vector3;
+
 	constructor(scene: babylon.Scene, type: BallOption) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.mesh.position.y = BALL_DIAMETER / 2;
@@ -18,7 +21,11 @@ export abstract class BallTemplate {
 		this.physic.body.setCollisionCallbackEnabled(true);
 		this.mesh.renderingGroupId = 1;
 		this.type = type;
+		this.mesh.metadata = { type: "collider" };
 		this.observable = this.checkIfBallIsInGoal();
+
+		this.physic.body.setLinearVelocity(new babylon.Vector3((Math.random()  * 2 - 1) * 30, 0, (Math.random()  * 2 - 1) * 30));
+		this.realDirection = this.physic.body.getLinearVelocity();
 	}
 
 	private setPhysic(scene: babylon.Scene): babylon.PhysicsAggregate {
@@ -45,11 +52,17 @@ export abstract class BallTemplate {
 			const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
 			if (!metadata)
 				return;
-			if (metadata.type === "goal") {
+			if (metadata.type === "goal")
 				this.isInGoal = metadata.player === 1 ? "player1" : "player2";
-			}
+			if (metadata.type === "collider")
+				this.justCollided = true;
 		});
 		return observable;
+	}
+
+	/**@todo To remove */
+	setJustCollide(): void {
+		this.justCollided = true;
 	}
 
 	getGoal(): "player1" | "player2" | null {

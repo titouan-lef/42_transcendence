@@ -12,9 +12,6 @@ export class SnakeBall extends BallTemplate {
 	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private force = SNAKE_BALL_S_FORCE;
 	private	forceDirection = -1;
-
-	private justCollided = false;
-	private realDirection: babylon.Vector3;
 	//
 
 	constructor(scene: babylon.Scene) {
@@ -23,8 +20,7 @@ export class SnakeBall extends BallTemplate {
 		this.trailIntervalId = this.setTrail(scene, this.color);
 		// this.effectIntervalId = this.activateEffet();
 		
-		this.physic.body.setLinearVelocity(new babylon.Vector3((Math.random()  * 2 - 1) * 30, 0, (Math.random()  * 2 - 1) * 30));
-		this.realDirection = this.physic.body.getLinearVelocity();
+		
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.sceneObserver = this.move();
 	}
@@ -61,6 +57,7 @@ export class SnakeBall extends BallTemplate {
 			if (this.justCollided) {
 				this.realDirection = this.physic.body.getLinearVelocity();
 				this.justCollided = false;
+				this.force = SNAKE_BALL_S_FORCE;
 			}
 
 			if (this.force >= SNAKE_BALL_S_FORCE || this.force <= 0) {

@@ -80,7 +80,10 @@ export class Game {
 		/**@todo just to make the ball move, will be removed*/
 		const sceneManager = this.sceneManager;
 		this.scene.onPointerDown = (): void => {
-			sceneManager.getBalls().forEach(ball => ball.testMove());
+			sceneManager.getBalls().forEach(ball => {
+				ball.testMove();
+				ball.setJustCollide();
+			});
 		};
 
 		this.scene.onAfterRenderObservable.add(() => {

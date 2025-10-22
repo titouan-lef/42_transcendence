@@ -66,6 +66,7 @@ export class Player {
 		player.position.x = position.x;
 		player.position.y = position.y;
 		player.renderingGroupId = 1;
+		player.metadata = { type: "collider" };
 		return player;
 	}
 
