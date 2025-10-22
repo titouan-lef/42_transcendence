@@ -67,6 +67,8 @@ export const POINTS_TO_WIN = 5;
 /** BALL SETTINGS */
 export const INVISIBLE_BALL_FADING_INTERVAL = 50;
 export const INVISIBLE_BALL_INVISIBILITY_INTERVAL = 1200;
+export const TRICKY_BALL_EFFECT_INTERVAL = 2500;
+export const TRICKY_BALL_EFFECT_FORCE = 50;
 
 /** @todo reajust posX */
 /** @todo score incrementation */
