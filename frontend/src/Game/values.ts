@@ -71,7 +71,7 @@ export const TRICKY_BALL_EFFECT_INTERVAL = 2500;
 export const TRICKY_BALL_EFFECT_FORCE = 50;
 export const SNAKE_BALL_EFFECT_INTERVAL = 10;
 export const SNAKE_BALL_S_FORCE = 2;
-export const SNAKE_BALL_S_INTERVAL = 100;
+export const SNAKE_BALL_S_INTERVAL = 75;
 
 /** @todo reajust posX */
 /** @todo score incrementation */
