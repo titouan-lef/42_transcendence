@@ -40,32 +40,40 @@ export abstract class MapTemplate {
 
 	/**creates limit with goalplayer being the goal of each player and limit being a simple wall */
 	private createLimits(scene: babylon.Scene): babylon.Mesh[] {
-		const material = new babylon.StandardMaterial('wallcolor', scene);
-		material.diffuseColor =  COLORS.lime;
 		const limits: babylon.Mesh[] = [];
-		limits.push(this.createLimit(scene,
-			new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH),
-			new babylon.Vector3(0, WALL_HEIGHT/2, (WALL_WIDTH/2 - MAP_SIZE.z/2)),
-			material, "limit"));
-		limits.push(this.createLimit(scene,
-			new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH),
-			new babylon.Vector3(0, WALL_HEIGHT/2, (MAP_SIZE.z/2 - WALL_WIDTH/2)),
-			material, "limit"));
-		limits.push(this.createLimit(scene,
-			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z),
-			new babylon.Vector3((-MAP_SIZE.x/2 + WALL_WIDTH/2), WALL_HEIGHT/2, 0),
-			material, "goalplayer2"));
-		limits.push(this.createLimit(scene,
-			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z),
-			new babylon.Vector3((MAP_SIZE.x/2 - WALL_WIDTH/2), WALL_HEIGHT/2, 0),
-			material, "goalplayer1"));
+
+		let newLimit: babylon.Mesh;
+		newLimit = this.createLimit(scene, new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH));
+		newLimit.position = new babylon.Vector3(0, WALL_HEIGHT/2, (WALL_WIDTH/2 - MAP_SIZE.z/2));
+		newLimit.metadata = { type: "collider" };
+		limits.push(newLimit);
+
+		newLimit = this.createLimit(scene,
+			new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH));
+		newLimit.position = new babylon.Vector3(0, WALL_HEIGHT/2, (MAP_SIZE.z/2 - WALL_WIDTH/2));
+		newLimit.metadata = { type: "collider" };
+		limits.push(newLimit);
+
+		newLimit = this.createLimit(scene,
+			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z));
+		newLimit.position = new babylon.Vector3((-MAP_SIZE.x/2 + WALL_WIDTH/2), WALL_HEIGHT/2, 0);
+		newLimit.metadata = { type: "goal", player: 1 };
+		limits.push(newLimit);
+
+		newLimit = this.createLimit(scene,
+			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z));
+		newLimit.position = new babylon.Vector3((MAP_SIZE.x/2 - WALL_WIDTH/2), WALL_HEIGHT/2, 0);
+		newLimit.metadata = { type: "goal", player: 2 };
+		limits.push(newLimit);
+
 		return limits;
 	}
 
-	private createLimit(scene: babylon.Scene, dimension: babylon.Vector3, position: babylon.Vector3, material: babylon.StandardMaterial, name: string): babylon.Mesh {
-		const newMesh = babylon.CreateBox(name, { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
+	private createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
+		const newMesh = babylon.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
+		const material = new babylon.StandardMaterial('wallcolor', scene);
+		material.diffuseColor =  COLORS.lime;
 		newMesh.material = material;
-		newMesh.position = position;
 		return newMesh;
 	}
 

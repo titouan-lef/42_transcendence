@@ -42,11 +42,11 @@ export abstract class BallTemplate {
 	private checkIfBallIsInGoal(): babylon.Observable<babylon.IPhysicsCollisionEvent> {
 		const observable = this.physic.body.getCollisionObservable();
 		observable.add((collisionEvent) => {
-			if (collisionEvent.collidedAgainst.transformNode.name === "goalplayer1") {
-				this.isInGoal = "player2";
-			}
-			if (collisionEvent.collidedAgainst.transformNode.name === "goalplayer2") {
-				this.isInGoal = "player1";
+			const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
+			if (!metadata)
+				return;
+			if (metadata.type === "goal") {
+				this.isInGoal = metadata.player === 1 ? "player1" : "player2";
 			}
 		});
 		return observable;
