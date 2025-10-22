@@ -1,6 +1,6 @@
-import { isOneStringEmtpy } from "../utils/strings.js";
+import { isOneStringEmtpy } from "../../utils/strings.js";
 import { sendRequestToBack } from "../api_request.js";
-import { getSafeElement, getSafeInput } from "../utils/getSafeElement.js";
+import { getSafeElement, getSafeInput } from "../../utils/getSafeElement.js";
 
 function connectUser(): void {
 
