@@ -6,7 +6,7 @@ import { getSafeElement } from "../utils/getSafeElement.js";
 import { userEvents } from "../pages/events/User_events.js";
 import { whoami } from "../user_management/login.js";
 
-interface Handler{
+interface Handler {
 	elem: HTMLElement;
 	type: string;
 	func: EventListener;
@@ -24,7 +24,7 @@ function addHandler(id: string, type: string, func: EventListener): void {
 	const elem = getSafeElement(id);
 
 	elem.addEventListener(type, func);
-	activeHandlers.push({elem, type, func});
+	activeHandlers.push({ elem, type, func });
 }
 
 function loadEvent(id: PageID): void {

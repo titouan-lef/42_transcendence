@@ -5,4 +5,13 @@ function getSafeElement(id: string): HTMLElement {
 	return (elem);
 }
 
-export { getSafeElement };
+function getSafeInput(id: string): HTMLInputElement {
+	const elem = document.getElementById(id);
+	if (!elem)
+		throw new Error("cannot find id " + id);
+	if (elem instanceof HTMLInputElement)
+		return (elem);
+	throw new Error(id + "is not an input");
+}
+
+export { getSafeElement, getSafeInput };
