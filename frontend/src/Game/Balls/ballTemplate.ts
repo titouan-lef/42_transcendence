@@ -1,5 +1,5 @@
 import * as babylon from "/babylonjs/core/index.js";
-import { BallOption } from "../gameSettings.js";
+import { BallOption, GameSettings } from "../gameSettings.js";
 import { BALL_DIAMETER, TRAIL_CREATION_INTERVAL } from "../values.js";
 import { BallTrail } from "./ballTrail.js";
 
@@ -8,24 +8,33 @@ export abstract class BallTemplate {
 	protected readonly physic: babylon.PhysicsAggregate;
 	private readonly type: BallOption;
 	protected readonly ballTrails: BallTrail[] = [];
-	private readonly observable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
+	private readonly collisionObservable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
+	private readonly collisionObserver: babylon.Observer<babylon.IPhysicsCollisionEvent>;
 	private isInGoal: "player1" | "player2" | null = null;
-
 	protected justCollided = false;
 	protected realDirection: babylon.Vector3;
+	private readonly spin;
+	protected readonly sceneObservable: babylon.Observable<babylon.Scene>;
+	protected readonly sceneObserver: babylon.Observer<babylon.Scene>;
 
-	constructor(scene: babylon.Scene, type: BallOption) {
+	constructor(scene: babylon.Scene, type: BallOption, spin: boolean) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
+		this.spin = spin;
 		this.mesh.position.y = BALL_DIAMETER / 2;
 		this.physic = this.setPhysic(scene);
 		this.physic.body.setCollisionCallbackEnabled(true);
 		this.mesh.renderingGroupId = 1;
 		this.type = type;
+
 		this.mesh.metadata = { type: "collider" };
-		this.observable = this.checkIfBallIsInGoal();
+		this.collisionObservable = this.physic.body.getCollisionObservable();
+		this.collisionObserver = this.checkIfBallIsInGoal();
 
 		this.physic.body.setLinearVelocity(new babylon.Vector3((Math.random()  * 2 - 1) * 30, 0, (Math.random()  * 2 - 1) * 30));
 		this.realDirection = this.physic.body.getLinearVelocity();
+
+		this.sceneObservable = scene.onBeforeRenderObservable;
+		this.sceneObserver = this.applyMovementChanges();
 	}
 
 	private setPhysic(scene: babylon.Scene): babylon.PhysicsAggregate {
@@ -46,9 +55,16 @@ export abstract class BallTemplate {
 		return trailIntervalId;
 	}
 
-	private checkIfBallIsInGoal(): babylon.Observable<babylon.IPhysicsCollisionEvent> {
-		const observable = this.physic.body.getCollisionObservable();
-		observable.add((collisionEvent) => {
+	/** Spin doesn't apply to snake ball for obvious reasons */
+	protected applyMovementChanges(): babylon.Observer<babylon.Scene> {
+		const sceneObserver = this.sceneObservable.add(() => {
+			/**@todo Spin Effect */
+		});
+		return sceneObserver;
+	}
+
+	private checkIfBallIsInGoal(): babylon.Observer<babylon.IPhysicsCollisionEvent> {
+		const collisionObserver = this.collisionObservable.add((collisionEvent) => {
 			const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
 			if (!metadata)
 				return;
@@ -57,7 +73,7 @@ export abstract class BallTemplate {
 			if (metadata.type === "collider")
 				this.justCollided = true;
 		});
-		return observable;
+		return collisionObserver;
 	}
 
 	/**@todo To remove */
@@ -83,7 +99,8 @@ export abstract class BallTemplate {
 			this.ballTrails[0].destroy();
 			this.ballTrails.splice(0, 1);
 		}
-		this.observable.clear();
+		this.collisionObservable.remove(this.collisionObserver);
+		this.sceneObservable.remove(this.sceneObserver);
 		this.physic.dispose();
 		this.mesh.material?.dispose();
 		this.mesh.dispose();

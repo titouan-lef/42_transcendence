@@ -7,7 +7,7 @@ export class GameSettings {
 	readonly map: MapOption;
 	readonly ball: BallOption;
 	readonly rotatingPlayer:  boolean;
-	readonly effects:  boolean;
+	readonly spin:  boolean;
 	readonly player1Keys: PlayerKeys;
 	readonly player2Keys: PlayerKeys;
 
@@ -16,7 +16,7 @@ export class GameSettings {
 		this.map = map;
 		this.ball = ball;
 		this.rotatingPlayer = rotatingPlayer;
-		this.effects = effects;
+		this.spin = effects;
 		this.player1Keys = player1Keys;
 		this.player2Keys = player2Keys;
 	}
