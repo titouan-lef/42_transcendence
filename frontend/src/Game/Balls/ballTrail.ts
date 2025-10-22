@@ -6,12 +6,13 @@ export class BallTrail {
 	private readonly intervalId: ReturnType<typeof setInterval>;
 	private isFaded = false;
 
-	constructor(scene: babylon.Scene, position: babylon.Vector3, color: babylon.Color3) {
+	constructor(scene: babylon.Scene, position: babylon.Vector3, color: babylon.Color3, visibility?: number) {
 		this.mesh = babylon.MeshBuilder.CreateSphere("ballTrail", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.mesh.position = position;
 		this.mesh.renderingGroupId = 1;
 		this.setMaterial(scene, color);
-		this.mesh.visibility = 0.3;
+		this.mesh.visibility = visibility ?? 1;
+		this.mesh.visibility *= 0.35;
 		this.intervalId = this.fadeOut();
 	}
 

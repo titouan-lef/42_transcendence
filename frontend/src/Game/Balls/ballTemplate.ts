@@ -7,7 +7,7 @@ export abstract class BallTemplate {
 	protected readonly mesh: babylon.Mesh;
 	protected readonly physic: babylon.PhysicsAggregate;
 	private readonly type: BallOption;
-	private readonly ballTrails: BallTrail[] = [];
+	protected readonly ballTrails: BallTrail[] = [];
 	private readonly observable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
 	private isInGoal: "player1" | "player2" | null = null;
 
