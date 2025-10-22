@@ -2,13 +2,14 @@ import { Game } from "./game.js";
 import { GameSettings } from "./gameSettings.js";
 
 //this will change when checking options
-/**@todo will move keys to thr "session"'s settings */
+/**@todo will move keys to the "session"'s settings */
 const SETTINGS: GameSettings = new GameSettings("random", "random", true, false, ["KeyA", "KeyD", "KeyW", "KeyS"], ["KeyJ", "KeyL", "KeyI", "KeyK"]);
 
 const BUTTON = createButton();
-const CANVAS = createCanvas();
+let isPressed = false;
+
+/**@todo not sure about this, do we loose reference at the end ? */
 let game: Game;
-let canvasVisibility = false;
 
 /**@todo just to test */
 function createButton(): HTMLElement {
@@ -24,38 +25,19 @@ function createButton(): HTMLElement {
 	return button;
 }
 
-/** @todo just to test */
-function createCanvas(): HTMLCanvasElement {
-	const canvas: HTMLCanvasElement = document.createElement("canvas");
-	canvas.style.position = "Absolute";
-	canvas.style.top = "10%";
-	canvas.style.left = "10%";
-	canvas.style.width = "80%";
-	canvas.style.height = "80%";
-	canvas.style.visibility = "hidden";
-	document.body.appendChild(canvas);
-
-	return canvas;
-}
-
 /**@todo will see how we pop the game */
 async function showCanvas(): Promise<void> {
-	if (!canvasVisibility) {
-		CANVAS.style.visibility = "visible";
-		canvasVisibility = true;
-		/**@todo for now it just creates an other game each time you click */
-		//if (!game){
-		game = await Game.create(CANVAS, SETTINGS);
-		//}
+	if (!isPressed) {
+		isPressed = true;
+		game = await Game.create(SETTINGS);
 		game.show();
+		/**@todo if the game ends, we have to click 2 times on the button to show it again, which is normal, and will probably change in the future */
 	} else {
-		//if (game){
+		isPressed = false;
 		game.stop();
-		//}
-		CANVAS.style.visibility = "hidden";
-		canvasVisibility = false;
 	}
 }
+
 try {
 	BUTTON.addEventListener("click", () => showCanvas());
 } catch(e) {
