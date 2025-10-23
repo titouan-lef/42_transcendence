@@ -45,7 +45,7 @@ export abstract class BallTemplate {
 	private setPhysic(scene: babylon.Scene): babylon.PhysicsAggregate {
 		const physic = new babylon.PhysicsAggregate(this.mesh, babylon.PhysicsShapeType.SPHERE, {
 			mass: 1,
-			restitution: 1 // rebond
+			restitution: 1 // rebound
 		}, scene);
 		return physic;
 	}
