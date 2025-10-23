@@ -77,8 +77,6 @@ export const BALL_ANGULAR_FORCE = 2;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const BALL_ANGULAR_INTERVAL = 45;
 
-/** @todo space closing game XD */
-/** @todo Ball is jumping sometimes for obscure reasons */
 /** @todo reajust posX ? */
 /** @todo animation when goal and end of game ? */
 /** @todo balls */
