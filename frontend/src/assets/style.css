@@ -32,7 +32,7 @@ body {
 }
 
 header h1 {
-  @apply text-4xl text-[#f9d342];
+  @apply text-4xl text-center text-[#f9d342];
 }
 
 /* Main */
