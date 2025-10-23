@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { isValidUser, findUserPassword } from "../database/find_data.js";
 import { CookieSerializeOptions } from '@fastify/cookie';
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { sendReply } from "../utils/reply.js";
 import { isValidPassword } from "../utils/hash_string.js";
 
 declare module 'fastify' {
@@ -31,51 +32,40 @@ async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: 
 	const hashPassword: string = await findUserPassword(id);
 
 	if (!isValidPassword(password, hashPassword)) {
-		reply.code(201).send({ success: false, message: "Wrong id or password" });
+		sendReply(reply, 201, false, "Wrong id or password");
 		return;
 	}
 	const token = jwt.sign({ id }, SECRET);
-	reply
-		.setCookie("token", token, COOKIES_OPTIONS)
-		.code(201)
-		.send({ success: true, message: "Successfuly loged in" });
+	reply.setCookie("token", token, COOKIES_OPTIONS);
+	sendReply(reply, 201, true, "Successfuly loged in");
 }
 
 async function disconnectUser(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-	reply
-		.clearCookie("token", COOKIES_OPTIONS)
-		.code(200)
-		.send({ success: true, message: "Logged out" });
+	reply.clearCookie("token", COOKIES_OPTIONS);
+	sendReply(reply, 200, true, "Logged out");
 }
 
 async function whoami(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-	reply.code(200).send({ success: true, message: req.user });
+	sendReply(reply, 200, true, req.user);
 }
 
 async function verifyAuth(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const token = req.cookies?.token;
-	if (!token) {
-		return reply
-			.code(201)
-			.send({ success: false, message: "Not logged in" });
-	}
+	if (!token)
+		return sendReply(reply, 201, false, "Not logged in");
 
 	try {
 		// eslint-disable-next-line
 		const payload: JwtPayload = jwt.verify(token, SECRET) as JwtPayload; // payload will always be this format because it's how it is created.
 		const exists = await isValidUser(payload.id);
 		if (!exists) {
-			return reply
-				.clearCookie("token", COOKIES_OPTIONS)
-				.code(401)
-				.send({ success: false, message: "User does not exist" });
+			reply.clearCookie("token", COOKIES_OPTIONS);
+			return sendReply(reply, 401, false, "User does not exist");
 		}
 		req.user = payload.id;
 	} catch {
-		return reply
-			.clearCookie("token", COOKIES_OPTIONS)
-			.code(201)
-			.send({ success: false, message: "Invalid token" });
+		reply.clearCookie("token", COOKIES_OPTIONS);
+		return sendReply(reply, 201, false, "Invalid token");
 	}
 }
 
