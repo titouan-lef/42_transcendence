@@ -151,7 +151,7 @@ export abstract class BallTemplate {
 
 	abstract setMaterial(scene: babylon.Scene, color: babylon.Color3): void;
 
-	abstract activateEffet(): void;
+	abstract activateEffect(): void;
 	
 	abstract destroyRest(): void;
 }

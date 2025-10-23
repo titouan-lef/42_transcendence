@@ -25,7 +25,7 @@ export class SnakeBall extends BallTemplate {
 	}
 
 	/**@todo nothing */
-	activateEffet(): void {};
+	activateEffect(): void {};
 
 	/** Redefine MovementChanges since spin doesn4t apply to snake ball */
 	applyMovementChanges(): babylon.Observer<babylon.Scene> {

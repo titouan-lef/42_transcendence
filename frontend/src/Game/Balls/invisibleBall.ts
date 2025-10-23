@@ -14,7 +14,7 @@ export class InvisibleBall extends BallTemplate {
 		super(scene, "invisible", settings.spin);
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);
-		this.effectIntervalId = this.activateEffet();
+		this.effectIntervalId = this.activateEffect();
 	}
 	
 	setMaterial(scene: babylon.Scene, color: babylon.Color3): void {
@@ -35,11 +35,11 @@ export class InvisibleBall extends BallTemplate {
 	}
 	
 	/**@todo disappears gradually every 5sec for 1.2sec */
-	activateEffet(): ReturnType<typeof setInterval> {
+	activateEffect(): ReturnType<typeof setInterval> {
 		const effectIntervalId = setInterval(() => {
-			if (this.mesh.visibility > 0 && this.effectTimeOutId === null) {
-				this.mesh.visibility -= 0.01;
-			} else {
+			if (this.mesh.visibility > 0 && this.effectTimeOutId === null)
+				this.mesh.visibility -= 0.01; 
+			else {
 				if (this.effectTimeOutId === null) {
 					this.effectTimeOutId = setTimeout(() => {
 						this.mesh.visibility = 1;

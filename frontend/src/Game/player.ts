@@ -79,9 +79,10 @@ export class Player {
 		this.mesh.material = material;
 	}
 
-	/**Le truc qui retient le rotater de toucher le mur ou de trop sortir de l axe Z avec Zconstraint et distanceConstraint */
+	/** the thing that prevents the rotater from touching the wall or leaving the Z axe thanks to Zconstraint and distanceConstraint*/
 	private setAxeZ(scene: babylon.Scene, position: babylon.Vector2): babylon.Mesh {
-		const distanceFromGround = position.y + 10; //10 seems to be a good value
+		const posYOffset = 10; //10 seems to be a good value
+		const distanceFromGround = position.y + posYOffset;
 		const axeZ = babylon.MeshBuilder.CreateBox("contraint", { width: 1, height: 1, depth: 1 }, scene);
 		axeZ.position.x = position.x;
 		axeZ.position.y = distanceFromGround;
@@ -90,7 +91,7 @@ export class Player {
 		return axeZ;
 	}
 
-	/**Le truc qui retient le joueur de bouger avec movementConstraint */
+	/** The thing that prevents the player from moving thanks to movementConstraint */
 	private setRotater(scene: babylon.Scene, position: babylon.Vector2): babylon.Mesh {
 		const rotater = babylon.MeshBuilder.CreateBox("rotater", { width: 1, height: 1, depth: PLAYER_DIMENSION.x }, scene);
 		rotater.position.x = position.x;
@@ -100,9 +101,7 @@ export class Player {
 		return rotater;
 	}
 
-	/** 
-	 * Empeche le Rotater de bouger sur un autre axe que Z
-	 */
+	/** Prevents the rotater from moving on a different axe than Z */
 	private setZConstraint(scene: babylon.Scene): babylon.PrismaticConstraint {
 		const zConstraint = new babylon.PrismaticConstraint(
 			new babylon.Vector3(0, 0, 0),
@@ -119,9 +118,7 @@ export class Player {
 		return zConstraint;
 	}
 
-	/** 
-	 * Empeche le Rotater d'atteindre les bords de map
-	 */
+	/** Prevents the rotater to reach the edge of the map */
 	private setDistanceConstraint(scene: babylon.Scene): babylon.Physics6DoFConstraint {
 		const distanceFromEdge = (MAP_SIZE.z / 2) - (WALL_WIDTH * 2) - (PLAYER_DIMENSION.z / 2);
 		const distanceConstraint = new babylon.Physics6DoFConstraint({
@@ -140,9 +137,7 @@ export class Player {
 		return distanceConstraint;
 	}
 
-	/** 
-	 * Attache le Player au Rotater, tout en autorisant la rotation en X
-	 */
+	/** Stick the center of the Player to the center of the Rotater, preventing movement but alloying rotation */
 	private setMovementConstraint(scene: babylon.Scene): babylon.Physics6DoFConstraint | null {
 		if (this.rotatingPlayer) {
 			const movementConstraint = new babylon.Physics6DoFConstraint({
@@ -164,7 +159,7 @@ export class Player {
 
 	private handleKeyDown = (event: KeyboardEvent): void => {
 		/**@todo a enlever avec serverside */
-		event.preventDefault(); // empêche l’action par défaut du navigateur
+		event.preventDefault(); // prevent the action from the navigator (ex: space)
 		for (let i = 0; i < this.controls.length; i++) {
 			if (event.code === this.controls[i] && !this.keyPressed[i]) {
 				this.handleAction(event.code);
@@ -175,7 +170,7 @@ export class Player {
 
 	private handleKeyUp = (event: KeyboardEvent): void => {
 		/**@todo a enlever avec serverside */
-		event.preventDefault(); // empêche l’action par défaut du navigateur
+		event.preventDefault(); // prevent the action from the navigator (ex: space)
 		for (let i = 0; i < this.controls.length; i++) {
 			if (event.code === this.controls[i] && this.keyPressed[i]) {
 				//console.log(this.controls[i] + "up");

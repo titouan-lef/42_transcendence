@@ -24,7 +24,7 @@ export class HeavyBall extends BallTemplate {
 	}
 
 	/**@description no effect */
-	activateEffet(): void {
+	activateEffect(): void {
 		return;
 	}
 }
