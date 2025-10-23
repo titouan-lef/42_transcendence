@@ -14,7 +14,8 @@ const APP = fastify();
 * Without CORS, a browser would block frontend apps from calling the backend.
 */
 
-// APP.register(fastifyCors, { origin: "*", credentials: true }); the "*" is messing up the cookies
+// Since we are now using cookies the line `APP.register(fastifyCors, { origin: "*", credentials: true });` is no more valid
+// because the "*" is messing up the cookies so it is now dynamicly allowed
 APP.register(fastifyCors, {
 	origin: (origin, cb) => cb(null, true), // allow all origins dynamically
 	credentials: true, // allow cookies
