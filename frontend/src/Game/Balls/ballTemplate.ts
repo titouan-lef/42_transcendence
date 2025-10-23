@@ -1,6 +1,6 @@
 import * as babylon from "/babylonjs/core/index.js";
-import { BallOption, GameSettings } from "../gameSettings.js";
-import { BALL_DIAMETER, TRAIL_CREATION_INTERVAL } from "../values.js";
+import { BallOption } from "../gameSettings.js";
+import { BALL_DIAMETER, TRAIL_CREATION_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL } from "../values.js";
 import { BallTrail } from "./ballTrail.js";
 
 export abstract class BallTemplate {
@@ -13,13 +13,18 @@ export abstract class BallTemplate {
 	private isInGoal: "player1" | "player2" | null = null;
 	protected justCollided = false;
 	protected realDirection: babylon.Vector3;
-	private readonly spin;
+
+	private readonly canSpin;
+	private spinningLeft = false;
+	private spinningRight = false;
+	protected force = BALL_ANGULAR_FORCE;
+	protected forceDirection = -1;
 	protected readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	protected readonly sceneObserver: babylon.Observer<babylon.Scene>;
 
 	constructor(scene: babylon.Scene, type: BallOption, spin: boolean) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
-		this.spin = spin;
+		this.canSpin = spin;
 		this.mesh.position.y = BALL_DIAMETER / 2;
 		this.physic = this.setPhysic(scene);
 		this.physic.body.setCollisionCallbackEnabled(true);
@@ -28,7 +33,7 @@ export abstract class BallTemplate {
 
 		this.mesh.metadata = { type: "collider" };
 		this.collisionObservable = this.physic.body.getCollisionObservable();
-		this.collisionObserver = this.checkIfBallIsInGoal();
+		this.collisionObserver = this.checkBallCollision();
 
 		this.physic.body.setLinearVelocity(new babylon.Vector3((Math.random()  * 2 - 1) * 30, 0, (Math.random()  * 2 - 1) * 30));
 		this.realDirection = this.physic.body.getLinearVelocity();
@@ -58,20 +63,58 @@ export abstract class BallTemplate {
 	/** Spin doesn't apply to snake ball for obvious reasons */
 	protected applyMovementChanges(): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
-			/**@todo Spin Effect */
+			if (this.justCollided) {
+				this.realDirection = this.physic.body.getLinearVelocity();
+				this.justCollided = false;
+				this.forceDirection = -1;
+				this.force = BALL_ANGULAR_FORCE;
+			}
+			if (this.force <= 0)
+				this.forceDirection *= -1;
+			this.force -= (BALL_ANGULAR_FORCE / BALL_ANGULAR_INTERVAL) * this.forceDirection; // Angular interval is the number of step it will take to reach maximum value
+			this.force = Math.max(this.force, BALL_ANGULAR_FORCE); // to deny force to go higher than BALL_ANGULAR_FORCE
+			if (this.spinningLeft) {
+				this.physic.body.applyForce(
+					new babylon.Vector3(this.realDirection.z * this.force, 0, -this.realDirection.x * this.force),
+					this.mesh.position
+				);
+			} else if (this.spinningRight) {
+				this.physic.body.applyForce(
+					new babylon.Vector3(-this.realDirection.z * this.force, 0, this.realDirection.x * this.force),
+					this.mesh.position
+				);
+			}
 		});
 		return sceneObserver;
 	}
 
-	private checkIfBallIsInGoal(): babylon.Observer<babylon.IPhysicsCollisionEvent> {
+	private checkBallCollision(): babylon.Observer<babylon.IPhysicsCollisionEvent> {
 		const collisionObserver = this.collisionObservable.add((collisionEvent) => {
 			const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
 			if (!metadata)
 				return;
 			if (metadata.type === "goal")
 				this.isInGoal = metadata.player === 1 ? "player1" : "player2";
-			if (metadata.type === "collider")
+			if (metadata.type === "collider") {
 				this.justCollided = true;
+				if (metadata?.playerSpinning) {
+					const collisionPoint = collisionEvent.point?.z;
+					if (!collisionPoint) // forced to do that because point can be null, but cant happen here
+						return;
+					switch (collisionPoint - collisionEvent.collidedAgainst.transformNode.position.z <= 0) { // colliding right or left of the player
+						case (true):
+							this.spinningLeft = true;
+							break;
+						case (false):
+							this.spinningRight = true;
+							break;
+						default: ;
+					}
+				} else{
+					this.spinningLeft = false;
+					this.spinningRight = false;
+				}
+			}
 		});
 		return collisionObserver;
 	}
