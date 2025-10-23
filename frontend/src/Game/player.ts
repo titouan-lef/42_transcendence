@@ -9,7 +9,7 @@ export class Player {
 	private readonly physic: babylon.PhysicsAggregate;
 	private readonly controls: PlayerKeys;
 	private readonly rotatingPlayer: boolean;
-	private readonly keyPressed: boolean[] = [false, false, false, false];
+	private readonly keyPressed: boolean[] = [false, false, false, false, false];
 	
 	private readonly axeZ: babylon.Mesh;
 	private readonly axeZPhysic: babylon.PhysicsAggregate;
@@ -18,6 +18,8 @@ export class Player {
 	private readonly zConstraint: babylon.PrismaticConstraint;
 	private readonly distanceConstraint: babylon.Physics6DoFConstraint;
 	private readonly movementConstraint: babylon.Physics6DoFConstraint | null;
+
+	private readonly applyingSpin;
 
 	/**@todo in case we want to Lock player on Z axe */
 	// private readonly sceneObservable: babylon.Observable<babylon.Scene>;
@@ -33,6 +35,7 @@ export class Player {
 		this.physic.body.setAngularDamping(5);
 		this.setMaterial(scene, this.color);
 		this.rotatingPlayer = settings.rotatingPlayer;
+		this.applyingSpin = settings.spin;
 
 		this.axeZ = this.setAxeZ(scene, position);
 		this.axeZPhysic = new babylon.PhysicsAggregate(this.axeZ, babylon.PhysicsShapeType.BOX, { mass: 0 }, scene);
@@ -66,7 +69,7 @@ export class Player {
 		player.position.x = position.x;
 		player.position.y = position.y;
 		player.renderingGroupId = 1;
-		player.metadata = { type: "collider" };
+		player.metadata = { type: "collider", playerSpinning: false };
 		return player;
 	}
 
@@ -160,6 +163,8 @@ export class Player {
 	}
 
 	private handleKeyDown = (event: KeyboardEvent): void => {
+		/**@todo a enlever avec serverside */
+		event.preventDefault(); // empêche l’action par défaut du navigateur
 		for (let i = 0; i < this.controls.length; i++) {
 			if (event.code === this.controls[i] && !this.keyPressed[i]) {
 				this.handleAction(event.code);
@@ -169,9 +174,11 @@ export class Player {
 	};
 
 	private handleKeyUp = (event: KeyboardEvent): void => {
+		/**@todo a enlever avec serverside */
+		event.preventDefault(); // empêche l’action par défaut du navigateur
 		for (let i = 0; i < this.controls.length; i++) {
 			if (event.code === this.controls[i] && this.keyPressed[i]) {
-				console.log(this.controls[i] + "up");
+				//console.log(this.controls[i] + "up");
 				this.keyPressed[i] = false;
 			}
 		}
@@ -202,6 +209,12 @@ export class Player {
 						new babylon.Vector3(this.mesh.absolutePosition.x, this.mesh.absolutePosition.y,
 							this.mesh.absolutePosition.z + (PLAYER_DIMENSION.z / 2))
 					);
+				}
+				break;
+			case this.controls[4]:
+				if (this.applyingSpin) {
+					this.mesh.metadata.playerSpinning = this.mesh.metadata.playerSpinning ? false : true;
+					/**@todo make a visual effect to show if effect is activated or not */
 				}
 				break;
 			default: ;

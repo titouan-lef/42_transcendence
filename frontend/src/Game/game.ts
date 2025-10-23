@@ -98,10 +98,10 @@ export class Game {
 			/**@todo inscrire goal */
 			if (goal === "player2") {
 				this.score.x += 1;
-				console.log("player 2 goaled");
+				//console.log("player 2 goaled");
 			} else{
 				this.score.y += 1;
-				console.log("player 1 goaled");
+				//console.log("player 1 goaled");
 			}
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
 				this.stop();

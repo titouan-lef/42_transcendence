@@ -70,12 +70,17 @@ export const INVISIBLE_BALL_INVISIBILITY_INTERVAL = 1200;
 export const TRICKY_BALL_EFFECT_INTERVAL = 2500;
 export const TRICKY_BALL_EFFECT_FORCE = 50;
 export const SNAKE_BALL_EFFECT_INTERVAL = 10;
-export const SNAKE_BALL_S_FORCE = 2;
-export const SNAKE_BALL_S_INTERVAL = 75;
+export const SNAKE_BALL_ANGULAR_FORCE = 2;
+/** Angular interval is the number of step it will take to reach max/min value */
+export const SNAKE_BALL_ANGULAR_INTERVAL = 75;
+export const BALL_ANGULAR_FORCE = 2;
+/** Angular interval is the number of step it will take to reach max/min value */
+export const BALL_ANGULAR_INTERVAL = 45;
 
-/** @todo reajust posX */
-/** @todo score incrementation */
-/** @todo end of game */
+/** @todo space closing game XD */
+/** @todo Ball is jumping sometimes for obscure reasons */
+/** @todo reajust posX ? */
+/** @todo animation when goal and end of game ? */
 /** @todo effects */
 /** @todo balls */
 /** @todo maps */
