@@ -81,6 +81,5 @@ export const BALL_ANGULAR_INTERVAL = 45;
 /** @todo Ball is jumping sometimes for obscure reasons */
 /** @todo reajust posX ? */
 /** @todo animation when goal and end of game ? */
-/** @todo effects */
 /** @todo balls */
 /** @todo maps */

@@ -12,7 +12,7 @@ export class TrickyBall extends BallTemplate {
 		super(scene, "tricky", settings.spin);
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);
-		this.effectIntervalId = this.activateEffet();
+		this.effectIntervalId = this.activateEffect();
 	}
 	
 	setMaterial(scene: babylon.Scene, color: babylon.Color3): void {
@@ -27,7 +27,7 @@ export class TrickyBall extends BallTemplate {
 	}
 
 	/**@todo changes direction every 5sec */
-	activateEffet(): ReturnType<typeof setInterval> {
+	activateEffect(): ReturnType<typeof setInterval> {
 		const effectIntervalId = setInterval(() => {
 			const randomDirX = Math.random() * 2 - 1;
 			const randomDirZ = Math.random() * 2 - 1;
