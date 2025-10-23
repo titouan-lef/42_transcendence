@@ -49,7 +49,7 @@ export class SceneManager {
 			case "snake":
 				this.balls.push(new SnakeBall(scene, settings));
 				break;
-			default: ;
+			default: throw new Error("switch ball fail");
 		}
 	}
 
@@ -74,7 +74,7 @@ export class SceneManager {
 			case "rainy":
 				this.maps.push(new RainyMap(scene));
 				break;
-			default: ;
+			default: throw new Error("switch map fail");
 		}
 	}
 
