@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { insertUser } from "../database/insert_data.js";
 import { hashString } from "../utils/hash_string.js";
+import { sendReply } from "../utils/reply.js";
 
 interface NewUserBody {
 	id: string;
@@ -18,13 +19,13 @@ async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: F
 		const { id, pseudo, password, ppLink } = req.body;
 
 		await insertUser(id, pseudo, hashString(password), ppLink);
-		reply.code(201).send({ success: true, message: "User created" });
+		sendReply(reply, 201, true, "User created");
 
 	} catch (err: unknown) {
 		if (isSQLConstraintError(err)) {
-			reply.code(201).send({ success: false, message: "ID already taken" });
+			sendReply(reply, 201, false, "ID already taken");
 		} else {
-			reply.code(500).send({ success: false, message: "Internal server error" });
+			sendReply(reply, 500, false, "Internal server error");
 		}
 	}
 }
