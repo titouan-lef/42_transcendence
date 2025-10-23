@@ -63,6 +63,7 @@ export abstract class BallTemplate {
 	/** Spin doesn't apply to snake ball for obvious reasons */
 	protected applyMovementChanges(): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
+			this.mesh.position.y = BALL_DIAMETER / 2;
 			if (this.justCollided) {
 				this.realDirection = this.physic.body.getLinearVelocity();
 				this.justCollided = false;
