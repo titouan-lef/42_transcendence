@@ -8,7 +8,7 @@ const APP = fastify();
 
 APP.get("/config.js", (req: FastifyRequest, reply: FastifyReply) => {
 	const apiUrl =`https://${IP}`;
-	reply.type("application/javascript").send(`window.API_URL = "${apiUrl}";`);
+	reply.type("application/javascript").send(`window.API_URL = "${apiUrl}:8888";`);
 });
 
 // Serve static files
