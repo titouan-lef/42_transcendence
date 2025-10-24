@@ -26,7 +26,7 @@ export class InvisibleBall extends BallTemplate {
 	/** redefining setTrail to specify the visibility of the current ball */
 	protected setTrail(scene: babylon.Scene, color: babylon.Color3): ReturnType<typeof setInterval> {
 		const trailIntervalId = setInterval(() => {
-			this.ballTrails.push(new BallTrail(scene, this.mesh.absolutePosition, color, this.mesh.visibility));
+			this.ballTrails.push(new BallTrail(scene, this.mesh.position, color, this.mesh.visibility));
 			while (this.ballTrails.length && this.ballTrails[0].hasDisappeared()) {
 				this.ballTrails.splice(0, 1);
 			}
