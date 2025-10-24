@@ -30,18 +30,10 @@ APP.register(fastifyStatic, {
 	decorateReply: false
 });
 
-// --- Routes ---
-
-function consoleLinks(): void {
-	console.log(`Frontend running at:`);
-	console.log(` - Local:   https://localhost`);
-	console.log(` - Network: https://${IP}`);
-}
-
 // --- Start server ---
 async function start(): Promise<void> {
 	try {
-		consoleLinks();
+		console.log(`Frontend running !`);
 		await APP.listen({ port: 3030, host: "0.0.0.0" });
 	} catch (err) {
 		console.error(err);

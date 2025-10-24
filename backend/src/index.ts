@@ -31,6 +31,7 @@ APP.post("/api/user/whoami", { preHandler: verifyAuth }, whoami);
 // --- Start server ---
 async function start(): Promise<void> {
 	try {
+		console.log(`Backend running !`);
 		await initDB(); // initialize DB before server
 		await APP.listen({ port: 3000, host: "0.0.0.0" });
 	} catch (err) {

@@ -28,8 +28,8 @@ services:
     build: ./nginx
     container_name: pong-nginx
     ports:
-      - "443:443"  # HTTPS
-      - "80:80"    # optional: redirect HTTP → HTTPS
+      - "8888:443"  # Using 8888 because 42 computer are not allowed to bind 443. But with 443 on another computer or a VM will work
+      # - "80:80"    # optional: redirect HTTP → HTTPS  -->> will be reactivated on a VM port 80 cannot be bind at 42
     depends_on:
       - backend
       - frontend

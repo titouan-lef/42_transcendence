@@ -22,7 +22,7 @@ $(UP_TRACKER)	: docker-compose.yml
 		sed -i '/^IP=/d' .env
 		echo "IP=$$(hostname -I | awk '{print $$1}')" >> .env
 		docker compose -f docker-compose.yml up -d
-		echo "You can acces the website trougth:\n https://$$(hostname -I | awk '{print $$1}')"
+		echo "You can acces the website trougth:\n https://$$(hostname -I | awk '{print $$1}'):8888"
 		touch $(UP_TRACKER)
 
 up		: $(UP_TRACKER)
