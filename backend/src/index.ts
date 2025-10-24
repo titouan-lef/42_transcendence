@@ -1,4 +1,4 @@
-import fastify, { FastifyRequest, FastifyReply } from "fastify";
+import fastify from "fastify";
 import fastifyCors from "@fastify/cors";
 import fastifyCookies from "@fastify/cookie";
 import { initDB } from "./database/init.js";

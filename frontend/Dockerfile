@@ -13,6 +13,4 @@ RUN npm run build
 
 ENTRYPOINT ["/app/check_and_build.sh"]
 
-EXPOSE 80
-
 CMD ["npm", "start"]

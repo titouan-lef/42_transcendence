@@ -4,10 +4,8 @@ services:
     container_name: pong-backend
     env_file:
       - .env
-    ports:
-      - "3000:3000"
     networks:
-      - trandcendence
+      - transcendence
     volumes: # mount local source code for dev
     - ./backend/src:/app/src
     restart: "no"   # dev: fail fast, do not restart
@@ -17,18 +15,29 @@ services:
     container_name: pong-frontend
     env_file:
       - .env
-    ports:
-      - "3030:80"
     depends_on:
       - backend
     networks:
-      - trandcendence
+      - transcendence
     volumes: # mount local source code for dev
     - ./frontend/src:/app/src
     - ./frontend/public:/app/public
     restart: "no"   # dev: fail fast, do not restart
 
+  nginx:
+    build: ./nginx
+    container_name: pong-nginx
+    ports:
+      - "443:443"  # HTTPS
+      - "80:80"    # optional: redirect HTTP → HTTPS
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - transcendence
+    restart: "on-failure"
+
 networks:
-  trandcendence:
-    name: trandcendence
+  transcendence:
+    name: transcendence
     driver: bridge
