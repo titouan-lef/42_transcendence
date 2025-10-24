@@ -50,7 +50,7 @@ export const COLORS: Record<string, babylon.Color3> = {
 	lightColorDefault: LIGHTCOLOR_DEFAULT
 };
 
-export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100);
+export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 50, 100);
 export const WALL_WIDTH = 3;
 export const WALL_HEIGHT = 5;
 export const BALL_DIAMETER = 2; //has to be smaller than the player
@@ -77,7 +77,8 @@ export const BALL_ANGULAR_FORCE = 2;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const BALL_ANGULAR_INTERVAL = 45;
 
-/** @todo reajust posX ? */
+/** @todo player color when effect */
+/** @todo ball not going under a certain speed */
 /** @todo animation when goal and end of game ? */
 /** @todo balls */
 /** @todo maps */

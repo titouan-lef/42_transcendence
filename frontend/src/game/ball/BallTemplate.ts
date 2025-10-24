@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { BallOption } from "../GameSettings.js";
-import { BALL_DIAMETER, TRAIL_CREATION_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL } from "../values.js";
+import { BALL_DIAMETER, TRAIL_CREATION_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, TRICKY_BALL_EFFECT_FORCE } from "../values.js";
 import { BallTrail } from "./BallTrail.js";
 
 export abstract class BallTemplate {
@@ -21,6 +21,8 @@ export abstract class BallTemplate {
 	protected forceDirection = -1;
 	protected readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	protected readonly sceneObserver: babylon.Observer<babylon.Scene>;
+
+	private readonly hitPoints: number[] = [];
 
 	constructor(scene: babylon.Scene, type: BallOption, spin: boolean) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
@@ -45,8 +47,8 @@ export abstract class BallTemplate {
 	private setPhysic(scene: babylon.Scene): babylon.PhysicsAggregate {
 		const physic = new babylon.PhysicsAggregate(this.mesh, babylon.PhysicsShapeType.SPHERE, {
 			mass: 1,
-			restitution: 0,
-			friction: 0.3 // 0 so it always take the restitution of the object it hits
+			restitution: 0, // 0 so it always take the restitution of the object it hits
+			friction: 0 
 		}, scene);
 		return physic;
 	}
@@ -90,6 +92,7 @@ export abstract class BallTemplate {
 		return sceneObserver;
 	}
 
+	/**@todo refacto */
 	private checkBallCollision(): babylon.Observer<babylon.IPhysicsCollisionEvent> {
 		const collisionObserver = this.collisionObservable.add((collisionEvent) => {
 			const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
@@ -99,11 +102,12 @@ export abstract class BallTemplate {
 				this.isInGoal = metadata.player === 1 ? "player1" : "player2";
 			if (metadata.type === "collider") {
 				this.justCollided = true;
+				/** Effect */
 				if (metadata?.playerSpinning) {
-					const collisionPoint = collisionEvent.point?.z;
-					if (collisionPoint === undefined) // forced to do that because point can be null, but cant happen here
+					const collisionPointZ = collisionEvent.point?.z;
+					if (collisionPointZ === undefined ) // forced to do that because point can be null, but cant happen here
 						return;
-					switch (collisionPoint - collisionEvent.collidedAgainst.transformNode.position.z <= 0) { // colliding right or left of the player
+					switch (collisionPointZ - collisionEvent.collidedAgainst.transformNode.position.z <= 0) { // colliding right or left of the player
 						case (true):
 							this.spinningLeft = true;
 							break;
@@ -116,6 +120,7 @@ export abstract class BallTemplate {
 					this.spinningLeft = false;
 					this.spinningRight = false;
 				}
+				//
 			}
 		});
 		return collisionObserver;
@@ -133,7 +138,7 @@ export abstract class BallTemplate {
 	/**@todo remove */
 	testMove(): void {
 		this.physic.body.applyImpulse(
-			new babylon.Vector3(30, 0, 0),
+			new babylon.Vector3(25, 0, 0),
 			this.mesh.position
 		);
 	}
@@ -143,6 +148,9 @@ export abstract class BallTemplate {
 		while (this.ballTrails.length) {
 			this.ballTrails[0].destroy();
 			this.ballTrails.splice(0, 1);
+		}
+		while (this.hitPoints.length) {
+			this.hitPoints.splice(0, 1);
 		}
 		this.collisionObservable.remove(this.collisionObserver);
 		this.sceneObservable.remove(this.sceneObserver);
