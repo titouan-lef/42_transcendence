@@ -19,24 +19,23 @@ CYAN			:=	\e[36m
 all		: up
 
 $(UP_TRACKER)	: docker-compose.yml
-		echo "IP=$$(hostname -I | awk '{print $$1}')" > .env
-		echo "API_URL=http://$$(hostname -I | awk '{print $$1}'):3000" >> .env
+		sed -i '/^IP=/d' .env
+		echo "IP=$$(hostname -I | awk '{print $$1}')" >> .env
 		docker compose -f docker-compose.yml up -d
-		echo "You can acces the website trougth:\n http://$$(hostname -I | awk '{print $$1}'):3030"
+		echo "You can acces the website trougth:\n https://$$(hostname -I | awk '{print $$1}')"
 		touch $(UP_TRACKER)
 
 up		: $(UP_TRACKER)
 
 dev		:
-		echo "IP=$$(hostname -I | awk '{print $$1}')" > .env
-		echo "API_URL=http://$$(hostname -I | awk '{print $$1}'):3000" >> .env
+		sed -i '/^IP=/d' .env
+		echo "IP=$$(hostname -I | awk '{print $$1}')" >> .env
 		docker compose -f docker-compose.yml up
 
 down	:
 		printf "\n $(GREEN)Containers down$(RESET) \n"
 		docker compose -f docker-compose.yml down -v
 		sed -i '/^IP=/d' .env
-		sed -i '/^API_URL=/d' .env
 		rm -f $(UP_TRACKER)
 
 clean	: down
