@@ -15,7 +15,7 @@ export abstract class MapTemplate {
 	constructor(scene: babylon.Scene, type: MapOption) {
 		this.type = type;
 		this.ground = this.createGround(scene);
-		this.groundPhysic = new babylon.PhysicsAggregate(this.ground, babylon.PhysicsShapeType.BOX, { mass: 0, restitution: 0, friction: 0.2 }, scene);
+		this.groundPhysic = new babylon.PhysicsAggregate(this.ground, babylon.PhysicsShapeType.BOX, { mass: 0, restitution: 0, friction: 1 }, scene);
 		this.ground.renderingGroupId = 1;
 		this.limits = this.createLimits(scene);
 		this.limits.forEach(limit => limit.renderingGroupId = 1);
