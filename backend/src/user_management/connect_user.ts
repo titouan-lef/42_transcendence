@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { isValidUser, findUserPassword } from "../database/find_data.js";
 import { CookieSerializeOptions } from '@fastify/cookie';
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { verifyPassword } from "../utils/hashword.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -30,7 +31,7 @@ async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: 
 	const realPassword: string = await findUserPassword(id);
 
 	/** @todo hash the password */
-	if (realPassword !== password) {
+	if (!verifyPassword(password, realPassword)) {
 		reply.code(201).send({ success: false, message: "Wrong id or password" });
 		return;
 	}

@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { insertUser } from "../database/insert_data.js";
+import { hashword } from "../utils/hashword.js";
 
 interface NewUserBody {
 	id: string;
@@ -17,7 +18,7 @@ async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: F
 		const { id, pseudo, password, ppLink } = req.body;
 
 		/** @todo hash the password */
-		await insertUser(id, pseudo, password, ppLink);
+		await insertUser(id, pseudo, hashword(password), ppLink);
 		reply.code(201).send({ success: true, message: "User created" });
 
 	} catch (err: unknown) {
