@@ -27,7 +27,7 @@ export abstract class MapTemplate {
 	}
 
 	setLimitPhysic(scene: babylon.Scene, limit: babylon.Mesh): void {
-		const limitPhysic = new babylon.PhysicsAggregate(limit, babylon.PhysicsShapeType.BOX, { mass: 0, restitution: 1, friction: 0.2 }, scene);
+		const limitPhysic = new babylon.PhysicsAggregate(limit, babylon.PhysicsShapeType.BOX, { mass: 0, restitution: 1, friction: 0 }, scene);
 		this.limitsPhysic.push(limitPhysic);
 	}
 
@@ -38,13 +38,13 @@ export abstract class MapTemplate {
 		let newLimit: babylon.Mesh;
 		newLimit = this.createLimit(scene, new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH));
 		newLimit.position = new babylon.Vector3(0, WALL_HEIGHT/2, (WALL_WIDTH/2 - MAP_SIZE.z/2));
-		newLimit.metadata = { type: "collider" };
+		newLimit.metadata = { type: "collider", nature: "environnement" };
 		limits.push(newLimit);
 
 		newLimit = this.createLimit(scene,
 			new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH));
 		newLimit.position = new babylon.Vector3(0, WALL_HEIGHT/2, (MAP_SIZE.z/2 - WALL_WIDTH/2));
-		newLimit.metadata = { type: "collider" };
+		newLimit.metadata = { type: "collider", nature: "environnement" };
 		limits.push(newLimit);
 
 		newLimit = this.createLimit(scene,

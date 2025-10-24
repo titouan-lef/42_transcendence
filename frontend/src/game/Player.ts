@@ -26,7 +26,7 @@ export class Player {
 		});
 		this.body.shape = new babylon.PhysicsShapeBox(babylon.Vector3.Zero(), babylon.Quaternion.Identity(),
 			PLAYER_DIMENSION, scene);
-		this.body.shape.material = { restitution: 0.5, friction: 0.2 };
+		this.body.shape.material = { restitution: 0.5, friction: 0 };
 		this.setMaterial(scene, this.color);
 		this.rotatingPlayer = settings.rotatingPlayer;
 		this.applyingSpin = settings.spin;
