@@ -6,9 +6,6 @@ export abstract class MapTemplate {
 	protected glow: babylon.GlowLayer;
 	protected readonly ground: babylon.Mesh;
 	protected readonly groundPhysic: babylon.PhysicsAggregate;
-	/**Ceiling is an invisible ceiling that deny the player from rotating in the air */
-	protected readonly ceiling: babylon.Mesh;
-	protected readonly ceilingPhysic: babylon.PhysicsAggregate;
 	protected readonly limits: babylon.Mesh[];
 	protected readonly limitsPhysic: babylon.PhysicsAggregate[] = [];
 	protected readonly sun: babylon.Mesh;
@@ -18,11 +15,7 @@ export abstract class MapTemplate {
 	constructor(scene: babylon.Scene, type: MapOption) {
 		this.type = type;
 		this.ground = this.createGround(scene);
-		this.groundPhysic = new babylon.PhysicsAggregate(this.ground, babylon.PhysicsShapeType.BOX, { mass: 0 }, scene);
-		this.ceiling = babylon.MeshBuilder.CreateGround("ceiling", { width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
-		this.ceiling.position.y = PLAYER_DIMENSION.y + 0.1;
-		this.ceiling.visibility = 0;
-		this.ceilingPhysic = new babylon.PhysicsAggregate(this.ceiling, babylon.PhysicsShapeType.BOX, { mass: 0 }, scene);
+		this.groundPhysic = new babylon.PhysicsAggregate(this.ground, babylon.PhysicsShapeType.BOX, { mass: 0, restitution: 0, friction: 0.2 }, scene);
 		this.ground.renderingGroupId = 1;
 		this.limits = this.createLimits(scene);
 		this.limits.forEach(limit => limit.renderingGroupId = 1);
@@ -34,11 +27,11 @@ export abstract class MapTemplate {
 	}
 
 	setLimitPhysic(scene: babylon.Scene, limit: babylon.Mesh): void {
-		const limitPhysic = new babylon.PhysicsAggregate(limit, babylon.PhysicsShapeType.BOX, { mass: 0 }, scene);
+		const limitPhysic = new babylon.PhysicsAggregate(limit, babylon.PhysicsShapeType.BOX, { mass: 0, restitution: 1, friction: 0.2 }, scene);
 		this.limitsPhysic.push(limitPhysic);
 	}
 
-	/**creates limit with goalplayer being the goal of each player and limit being a simple wall */
+	/**creates limit with type: goal being the goal of each player and limit being a simple wall */
 	private createLimits(scene: babylon.Scene): babylon.Mesh[] {
 		const limits: babylon.Mesh[] = [];
 
@@ -90,8 +83,6 @@ export abstract class MapTemplate {
 		this.groundPhysic.dispose();
 		this.ground.material?.dispose();
 		this.ground.dispose();
-		this.ceilingPhysic.dispose();
-		this.ceiling.dispose();
 		for (let i = 0; i < this.limits.length; i++) {
 			this.limitsPhysic[i].dispose();
 			this.limits[i].material?.dispose();

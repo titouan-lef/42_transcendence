@@ -35,7 +35,7 @@ export abstract class BallTemplate {
 		this.collisionObservable = this.physic.body.getCollisionObservable();
 		this.collisionObserver = this.checkBallCollision();
 
-		this.physic.body.setLinearVelocity(new babylon.Vector3((Math.random()  * 2 - 1) * 30, 0, (Math.random()  * 2 - 1) * 30));
+		//this.physic.body.setLinearVelocity(new babylon.Vector3((Math.random()  * 2 - 1) * 30, 0, (Math.random()  * 2 - 1) * 30));
 		this.realDirection = this.physic.body.getLinearVelocity();
 
 		this.sceneObservable = scene.onBeforeRenderObservable;
@@ -45,14 +45,15 @@ export abstract class BallTemplate {
 	private setPhysic(scene: babylon.Scene): babylon.PhysicsAggregate {
 		const physic = new babylon.PhysicsAggregate(this.mesh, babylon.PhysicsShapeType.SPHERE, {
 			mass: 1,
-			restitution: 1 // rebound
+			restitution: 0,
+			friction: 0.3 // 0 so it always take the restitution of the object it hits
 		}, scene);
 		return physic;
 	}
 
 	protected setTrail(scene: babylon.Scene, color: babylon.Color3): ReturnType<typeof setInterval> {
 		const trailIntervalId = setInterval(() => {
-			this.ballTrails.push(new BallTrail(scene, this.mesh.absolutePosition, color));
+			this.ballTrails.push(new BallTrail(scene, this.mesh.position, color));
 			while (this.ballTrails.length && this.ballTrails[0].hasDisappeared()) {
 				this.ballTrails.splice(0, 1);
 			}
@@ -100,7 +101,7 @@ export abstract class BallTemplate {
 				this.justCollided = true;
 				if (metadata?.playerSpinning) {
 					const collisionPoint = collisionEvent.point?.z;
-					if (!collisionPoint) // forced to do that because point can be null, but cant happen here
+					if (collisionPoint === undefined) // forced to do that because point can be null, but cant happen here
 						return;
 					switch (collisionPoint - collisionEvent.collidedAgainst.transformNode.position.z <= 0) { // colliding right or left of the player
 						case (true):
@@ -132,8 +133,8 @@ export abstract class BallTemplate {
 	/**@todo remove */
 	testMove(): void {
 		this.physic.body.applyImpulse(
-			new babylon.Vector3(30, 0, 30),
-			this.mesh.absolutePosition
+			new babylon.Vector3(30, 0, 0),
+			this.mesh.position
 		);
 	}
 

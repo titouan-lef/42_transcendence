@@ -6,58 +6,35 @@ import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MOVEMENT_IMPULSE
 export class Player {
 	readonly mesh: babylon.Mesh;
 	private readonly color: babylon.Color3 = COLORS.white;
-	private readonly physic: babylon.PhysicsAggregate;
 	private readonly controls: PlayerKeys;
-	private readonly rotatingPlayer: boolean;
 	private readonly keyPressed: boolean[] = [false, false, false, false, false];
-
-	private readonly axeZ: babylon.Mesh;
-	private readonly axeZPhysic: babylon.PhysicsAggregate;
-	private readonly rotater: babylon.Mesh | null;
-	private readonly rotaterPhysic: babylon.PhysicsAggregate | null;
-	private readonly zConstraint: babylon.PrismaticConstraint;
-	private readonly distanceConstraint: babylon.Physics6DoFConstraint;
-	private readonly movementConstraint: babylon.Physics6DoFConstraint | null;
-
+	private readonly rotatingPlayer: boolean;
 	private readonly applyingSpin;
 
-	/**@todo in case we want to Lock player on Z axe */
-	// private readonly sceneObservable: babylon.Observable<babylon.Scene>;
-	// private readonly positionObserver: babylon.Observer<babylon.Scene>;
-	// private readonly originalPosXY: babylon.Vector2;
+	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
+	private readonly positionObserver: babylon.Observer<babylon.Scene>;
+	private readonly body: babylon.PhysicsBody;
+	private linearVelocityZ = 0;
+	private angularVelocityY = 0;
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, settings: GameSettings, controls: PlayerKeys) {
 		this.mesh = this.setPlayer(scene, position);
-		this.physic = new babylon.PhysicsAggregate(this.mesh, babylon.PhysicsShapeType.BOX, { mass: PLAYER_MASS }, scene);
-		/**@todo in case we want to Lock player on Z axe */
-		//this.originalPosXY = new babylon.Vector2(position.x, this.mesh.position.y);
-		this.physic.body.setLinearDamping(2); // freinage
-		this.physic.body.setAngularDamping(5);
+		this.body = new babylon.PhysicsBody(this.mesh, babylon.PhysicsMotionType.ANIMATED, false, scene);
+		this.body.setMassProperties({
+			mass: 1,
+			centerOfMass: babylon.Vector3.Zero()
+		});
+		this.body.shape = new babylon.PhysicsShapeBox(babylon.Vector3.Zero(), babylon.Quaternion.Identity(),
+			PLAYER_DIMENSION, scene);
+		this.body.shape.material = { restitution: 0.5, friction: 0.2 };
 		this.setMaterial(scene, this.color);
 		this.rotatingPlayer = settings.rotatingPlayer;
 		this.applyingSpin = settings.spin;
-
-		this.axeZ = this.setAxeZ(scene, position);
-		this.axeZPhysic = new babylon.PhysicsAggregate(this.axeZ, babylon.PhysicsShapeType.BOX, { mass: 0 }, scene);
-		this.axeZPhysic = new babylon.PhysicsAggregate(this.axeZ, babylon.PhysicsShapeType.BOX, { mass: 0 }, scene);
-
-		if (this.rotatingPlayer) {
-			this.rotater = this.setRotater(scene, position);
-			this.rotaterPhysic = new babylon.PhysicsAggregate(this.rotater, babylon.PhysicsShapeType.BOX, { mass: PLAYER_MASS }, scene);
-		} else{
-			this.rotater = null;
-			this.rotaterPhysic = null;
-		}
-
-		this.zConstraint = this.setZConstraint(scene);
-		this.distanceConstraint = this.setDistanceConstraint(scene);
-		this.movementConstraint = this.setMovementConstraint(scene);
-
+		
 		this.controls = controls;
-
-		/**@todo in case we want to Lock player on Z axe */
-		// this.sceneObservable = scene.onBeforeRenderObservable;
-		// this.positionObserver = this.observeXY();
+		
+		this.sceneObservable = scene.onBeforeRenderObservable;
+		this.positionObserver = this.playerObserver();
 
 		window.addEventListener("keydown", this.handleKeyDown);
 		window.addEventListener("keyup", this.handleKeyUp);
@@ -79,84 +56,6 @@ export class Player {
 		this.mesh.material = material;
 	}
 
-	/** the thing that prevents the rotater from touching the wall or leaving the Z axe thanks to Zconstraint and distanceConstraint*/
-	private setAxeZ(scene: babylon.Scene, position: babylon.Vector2): babylon.Mesh {
-		const posYOffset = 10; //10 seems to be a good value
-		const distanceFromGround = position.y + posYOffset;
-		const axeZ = babylon.MeshBuilder.CreateBox("contraint", { width: 1, height: 1, depth: 1 }, scene);
-		axeZ.position.x = position.x;
-		axeZ.position.y = distanceFromGround;
-		axeZ.renderingGroupId = 1;
-		axeZ.isVisible = true;
-		return axeZ;
-	}
-
-	/** The thing that prevents the player from moving thanks to movementConstraint */
-	private setRotater(scene: babylon.Scene, position: babylon.Vector2): babylon.Mesh {
-		const rotater = babylon.MeshBuilder.CreateBox("rotater", { width: 1, height: 1, depth: PLAYER_DIMENSION.x }, scene);
-		rotater.position.x = position.x;
-		rotater.position.y = position.y;
-		rotater.renderingGroupId = 1;
-		rotater.isVisible = true;
-		return rotater;
-	}
-
-	/** Prevents the rotater from moving on a different axe than Z */
-	private setZConstraint(scene: babylon.Scene): babylon.PrismaticConstraint {
-		const zConstraint = new babylon.PrismaticConstraint(
-			new babylon.Vector3(0, 0, 0),
-			new babylon.Vector3(0, this.mesh.position.y - this.axeZ.position.y, 0),
-			new babylon.Vector3(0, 0, 1),
-			new babylon.Vector3(0, 0, 1),
-			scene
-		);
-		if (this.rotaterPhysic) {
-			this.rotaterPhysic.body.addConstraint(this.axeZPhysic.body, zConstraint);
-		} else{
-			this.physic.body.addConstraint(this.axeZPhysic.body, zConstraint);
-		}
-		return zConstraint;
-	}
-
-	/** Prevents the rotater to reach the edge of the map */
-	private setDistanceConstraint(scene: babylon.Scene): babylon.Physics6DoFConstraint {
-		const distanceFromEdge = (MAP_SIZE.z / 2) - (WALL_WIDTH * 2) - (PLAYER_DIMENSION.z / 2);
-		const distanceConstraint = new babylon.Physics6DoFConstraint({
-			pivotA: new babylon.Vector3(0, 0, 0),
-			pivotB: new babylon.Vector3(0, this.mesh.position.y - this.axeZ.position.y, 0),
-			perpAxisA: new babylon.Vector3(0, 0, 0),
-			perpAxisB: new babylon.Vector3(0, 0, 0),
-		}, [
-			{ axis: babylon.PhysicsConstraintAxis.LINEAR_DISTANCE, minLimit: 0, maxLimit: distanceFromEdge }
-		], scene);
-		if (this.rotaterPhysic) {
-			this.rotaterPhysic.body.addConstraint(this.axeZPhysic.body, distanceConstraint);
-		} else{
-			this.physic.body.addConstraint(this.axeZPhysic.body, distanceConstraint);
-		}
-		return distanceConstraint;
-	}
-
-	/** Stick the center of the Player to the center of the Rotater, preventing movement but alloying rotation */
-	private setMovementConstraint(scene: babylon.Scene): babylon.Physics6DoFConstraint | null {
-		if (this.rotatingPlayer) {
-			const movementConstraint = new babylon.Physics6DoFConstraint({
-				pivotA: new babylon.Vector3(0, 0, 0),
-				pivotB: new babylon.Vector3(0, 0, 0),
-				perpAxisA: new babylon.Vector3(1, 0, 0),
-				perpAxisB: new babylon.Vector3(1, 0, 0),
-			}, [
-				{ axis: babylon.PhysicsConstraintAxis.LINEAR_DISTANCE, minLimit: 0, maxLimit: 0 }
-			], scene);
-			if (this.rotaterPhysic) {
-				this.rotaterPhysic.body.addConstraint(this.physic.body, movementConstraint);
-			}
-			return movementConstraint;
-		} else{
-			return null;
-		}
-	}
-
 	private handleKeyDown = (event: KeyboardEvent): void => {
 		/**@todo a enlever avec serverside */
 		event.preventDefault(); // prevent the action from the navigator (ex: space)
@@ -173,7 +72,10 @@ export class Player {
 		event.preventDefault(); // prevent the action from the navigator (ex: space)
 		for (let i = 0; i < this.controls.length; i++) {
 			if (event.code === this.controls[i] && this.keyPressed[i]) {
-				//console.log(this.controls[i] + "up");
+				if (event.code === this.controls[0] || event.code === this.controls[1])
+					this.linearVelocityZ = 0;
+				if (event.code === this.controls[2] || event.code === this.controls[3])
+					this.angularVelocityY = 0;
 				this.keyPressed[i] = false;
 			}
 		}
@@ -183,84 +85,48 @@ export class Player {
 	private handleAction(event: KeyboardEvent["code"]): void {
 		switch (event) {
 			case this.controls[0]:
-				this.impulse(-1);
+				this.linearVelocityZ = -50;
 				break;
 			case this.controls[1]:
-				this.impulse(1);
+				this.linearVelocityZ = 50;
 				break;
 			case this.controls[2]:
 				if (this.rotatingPlayer) {
-					this.physic.body.applyImpulse(
-						new babylon.Vector3(PLAYER_ROTATION_IMPULSE, 0, 0),
-						new babylon.Vector3(this.mesh.absolutePosition.x, this.mesh.absolutePosition.y,
-							this.mesh.absolutePosition.z - (PLAYER_DIMENSION.z / 2))
-					);
+					this.angularVelocityY = -10;
 				}
 				break;
 			case this.controls[3]:
 				if (this.rotatingPlayer) {
-					this.physic.body.applyImpulse(
-						new babylon.Vector3(PLAYER_ROTATION_IMPULSE, 0, 0),
-						new babylon.Vector3(this.mesh.absolutePosition.x, this.mesh.absolutePosition.y,
-							this.mesh.absolutePosition.z + (PLAYER_DIMENSION.z / 2))
-					);
+					this.angularVelocityY = 10;
 				}
 				break;
 			case this.controls[4]:
-				if (this.applyingSpin) {
+				if (this.applyingSpin)
 					this.mesh.metadata.playerSpinning = this.mesh.metadata.playerSpinning ? false : true;
 					/**@todo make a visual effect to show if effect is activated or not */
-				}
 				break;
 			default: ;
 		}
 	}
 
-	private impulse(directionZ: number): void {
-		if (this.rotaterPhysic && this.rotater) {
-			this.rotaterPhysic.body.applyImpulse(
-				new babylon.Vector3(0, 0, PLAYER_MOVEMENT_IMPULSE * directionZ),
-				this.rotater.absolutePosition
-			);
-		} else{
-			this.physic.body.applyImpulse(
-				new babylon.Vector3(0, 0, PLAYER_MOVEMENT_IMPULSE / 1.4 * directionZ),
-				this.mesh.absolutePosition
-			);
-		}
-	}
-
-	/**@todo in case we want to Lock player on Z axe */
-	// private observeXY(): babylon.Observer<babylon.Scene>{
-	// 	const positionObserver = this.sceneObservable.add(() => {
-	// 		this.mesh.position.x = this.originalPosXY.x;
-	// 		this.mesh.position.y = this.originalPosXY.y;
-	// if (this.rotater){
-	// 	this.rotater.position.x = this.originalPosXY.x;
-	// 	this.rotater.position.y = this.originalPosXY.y;
-	// }
-	// 	});
-	// 	return positionObserver;
-	// }
+	private playerObserver(): babylon.Observer<babylon.Scene> {
+		const distanceFromEdge = (MAP_SIZE.z / 2) - (WALL_WIDTH * 2) - (PLAYER_DIMENSION.z / 2);
+		const positionObserver = this.sceneObservable.add(() => {
+			if (this.mesh.position.z < -distanceFromEdge && this.linearVelocityZ === -50)
+				this.linearVelocityZ += 50;
+			if (this.mesh.position.z > distanceFromEdge && this.linearVelocityZ === 50)
+				this.linearVelocityZ -= 50;
+			this.body.setLinearVelocity(new babylon.Vector3(0, 0, this.linearVelocityZ)); 
+			this.body.setAngularVelocity(new babylon.Vector3(0, this.angularVelocityY, 0));
+		});
+		return positionObserver;
+	} 
 
 	destroy(): void {
-		this.zConstraint.dispose();
-		this.distanceConstraint.dispose();
-		if (this.movementConstraint) {
-			this.movementConstraint.dispose();
-		}
-		this.axeZPhysic.dispose();
-		this.axeZ.dispose();
-		if (this.rotaterPhysic) {
-			this.rotaterPhysic.dispose();
-		}
-		if (this.rotater) {
-			this.rotater.dispose();
-		}
 		/**@todo in case we want to Lock player on Z axe */
-		//this.sceneObservable.remove(this.positionObserver);
-		//
-		this.physic.dispose();
+		this.sceneObservable.remove(this.positionObserver);
+		this.body.shape?.dispose();
+		this.body.dispose();
 		this.mesh.material?.dispose();
 		this.mesh.dispose();
 		window.removeEventListener("keydown", this.handleKeyDown);
