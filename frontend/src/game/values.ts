@@ -58,7 +58,7 @@ export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12);
 export const PARTICLE_NUMBER = 500;
 export const GLOW_INTENSITY = 0.6;
 export const SUN_DIAMETER = 20;
-export const PLAYER_MASS = 20;
+export const PLAYER_MASS = 1;
 export const PLAYER_MOVEMENT_IMPULSE = MAP_SIZE.z * PLAYER_MASS * 0.8;
 export const PLAYER_ROTATION_IMPULSE = MAP_SIZE.x * PLAYER_MASS * 0.4;
 export const TRAIL_CREATION_INTERVAL = 15;
@@ -78,7 +78,6 @@ export const BALL_ANGULAR_FORCE = 2;
 export const BALL_ANGULAR_INTERVAL = 45;
 
 /** @todo player color when effect */
-/** @todo ball not going under a certain speed */
 /** @todo animation when goal and end of game ? */
 /** @todo balls */
 /** @todo maps */
