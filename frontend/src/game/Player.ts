@@ -136,6 +136,7 @@ export class Player {
 		this.body.shape?.dispose();
 		this.body.dispose();
 		this.mesh.material?.dispose();
+		this.highlight.dispose();
 		this.mesh.dispose();
 		window.removeEventListener("keydown", this.handleKeyDown);
 		window.removeEventListener("keyup", this.handleKeyUp);
