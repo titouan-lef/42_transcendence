@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { GameSettings } from "./GameSettings.js";
 import { PlayerKeys } from "./GameSettings.js";
-import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MOVEMENT_IMPULSE, PLAYER_ROTATION_IMPULSE, PLAYER_MASS } from "./values.js";
+import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MASS } from "./values.js";
 
 export class Player {
 	readonly mesh: babylon.Mesh;
@@ -10,6 +10,7 @@ export class Player {
 	private readonly keyPressed: boolean[] = [false, false, false, false, false];
 	private readonly rotatingPlayer: boolean;
 	private readonly applyingSpin;
+	private readonly highlight: babylon.HighlightLayer;
 
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	private readonly positionObserver: babylon.Observer<babylon.Scene>;
@@ -19,9 +20,10 @@ export class Player {
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, settings: GameSettings, controls: PlayerKeys) {
 		this.mesh = this.setPlayer(scene, position);
+		this.highlight = new babylon.HighlightLayer("highlight", scene);
 		this.body = new babylon.PhysicsBody(this.mesh, babylon.PhysicsMotionType.ANIMATED, false, scene);
 		this.body.setMassProperties({
-			mass: 1,
+			mass: PLAYER_MASS,
 			centerOfMass: babylon.Vector3.Zero()
 		});
 		this.body.shape = new babylon.PhysicsShapeBox(babylon.Vector3.Zero(), babylon.Quaternion.Identity(),
@@ -102,7 +104,13 @@ export class Player {
 				break;
 			case this.controls[4]:
 				if (this.applyingSpin)
-					this.mesh.metadata.playerSpinning = this.mesh.metadata.playerSpinning ? false : true;
+					if (this.mesh.metadata.playerSpinning === true) {
+						this.mesh.metadata.playerSpinning = false;
+						this.highlight.removeMesh(this.mesh);
+					} else {
+						this.mesh.metadata.playerSpinning = true;
+						this.highlight.addMesh(this.mesh, COLORS.red);
+					}
 					/**@todo make a visual effect to show if effect is activated or not */
 				break;
 			default: ;
