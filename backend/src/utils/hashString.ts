@@ -1,4 +1,4 @@
-import { scryptSync, randomBytes } from "crypto";
+import { scryptSync, randomBytes, timingSafeEqual } from "crypto";
 
 function encrypt(input: string, salt: string): string {
 	return scryptSync(input, salt, 32).toString('hex') + salt;
@@ -9,7 +9,7 @@ function encrypt(input: string, salt: string): string {
  * @param input password to hash
  * @returns hexadecimal encrypted password
  */
-function hashword(input: string): string {
+function hashString(input: string): string {
 	return encrypt(input, randomBytes(16).toString('hex'));
 }
 
@@ -19,10 +19,17 @@ function hashword(input: string): string {
  * @param hash hashed true password
  * @returns true if encrypted input is exactly the same as the hashed password
  */
-function verifyPassword(input: string, hash: string): boolean {
+function isValidPassword(input: string, hash: string): boolean {
 	const toVerify = encrypt(input, hash.slice(64));
 
-	return hash === toVerify;
+	const hashBuffer = Buffer.from(hash, "hex");
+	const verifyBuffer = Buffer.from(toVerify, "hex");
+
+	if (hashBuffer.length !== verifyBuffer.length) { // Avoids timingSafeEqual to fail.
+		return false;
+	}
+
+	return timingSafeEqual(hashBuffer, verifyBuffer);
 }
 
-export { hashword, verifyPassword };
+export { hashString, isValidPassword };
