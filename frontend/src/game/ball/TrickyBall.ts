@@ -5,11 +5,11 @@ import { GameSettings } from "../GameSettings.js";
 
 export class TrickyBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
-	private readonly color: babylon.Color3 = COLORS.orange;
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 
 	constructor(scene: babylon.Scene, settings: GameSettings) {
 		super(scene, "tricky", settings.spin);
+		this.color = COLORS.orange;
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);
 		this.effectIntervalId = this.activateEffect();

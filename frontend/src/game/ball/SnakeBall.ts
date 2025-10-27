@@ -5,10 +5,10 @@ import { GameSettings } from "../GameSettings.js";
 
 export class SnakeBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
-	private readonly color: babylon.Color3 = COLORS.green;
 
 	constructor(scene: babylon.Scene, settings: GameSettings) {
 		super(scene, "snake", settings.spin);
+		this.color = COLORS.green;
 		this.setMaterial(scene, this.color);
 		this.force = SNAKE_BALL_ANGULAR_FORCE;
 		this.trailIntervalId = this.setTrail(scene, this.color);

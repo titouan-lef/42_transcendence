@@ -5,7 +5,6 @@ import { GameSettings } from "../GameSettings.js";
 
 export class DefaultBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
-	private readonly color: babylon.Color3 = COLORS.white;
 
 	constructor(scene: babylon.Scene, settings: GameSettings) {
 		super(scene, "default", settings.spin);
