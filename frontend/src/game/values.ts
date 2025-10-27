@@ -77,7 +77,7 @@ export const BALL_ANGULAR_FORCE = 2;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const BALL_ANGULAR_INTERVAL = 45;
 
-/** @todo player color when effect */
 /** @todo animation when goal and end of game ? */
+/** @todo player sometimes blocked when pressing right left, should be solved with server side */
 /** @todo balls */
 /** @todo maps */

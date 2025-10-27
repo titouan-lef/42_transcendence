@@ -88,14 +88,32 @@ export class SceneManager {
 		this.players.push(player2);
 	}
 
-	checkGoal(): "player1" | "player2" | null {
+	/** @todo Titouan gaming */
+	checkGoal(): { goal: "player1" | "player2" | null, position: babylon.Vector3 | null } | null {
 		for (const ball of this.balls) {
-			const goal = ball.getGoal();
-			if (goal !== null) {
-				return goal;
+			const goalInfos = ball.getGoal();
+			if (goalInfos.goal !== null) {
+				return goalInfos;
 			}
 		};
 		return null;
+	}
+
+	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3, camera: babylon.ArcRotateCamera): Promise<void> {
+		const originalGetDelta = engine.getDeltaTime; // keep original delta
+
+		engine.getDeltaTime = function(): number {
+			return originalGetDelta.call(this) * 0.01; // slow animations
+		};
+
+		await new Promise<void>(resolve => { 
+			
+			setTimeout( () => {
+				resolve();
+			}, 2700);
+		});
+
+		engine.getDeltaTime = originalGetDelta;// set back to original speed
 	}
 
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {

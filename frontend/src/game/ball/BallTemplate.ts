@@ -8,9 +8,11 @@ export abstract class BallTemplate {
 	protected readonly physic: babylon.PhysicsAggregate;
 	private readonly type: BallOption;
 	protected readonly ballTrails: BallTrail[] = [];
+	//protected readonly collisionParticles: babylon.ParticleSystem;
 	private readonly collisionObservable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
 	private readonly collisionObserver: babylon.Observer<babylon.IPhysicsCollisionEvent>;
 	private isInGoal: "player1" | "player2" | null = null;
+	private goalPosition: babylon.Vector3 | null = null;
 	protected justCollided = false;
 	protected realDirection: babylon.Vector3;
 
@@ -32,6 +34,7 @@ export abstract class BallTemplate {
 		this.physic.body.setCollisionCallbackEnabled(true);
 		this.mesh.renderingGroupId = 1;
 		this.type = type;
+		//this.collisionParticles = this.createCollisionParticles(scene);
 
 		this.mesh.metadata = { type: "collider" };
 		this.collisionObservable = this.physic.body.getCollisionObservable();
@@ -92,16 +95,63 @@ export abstract class BallTemplate {
 		return sceneObserver;
 	}
 
+	/** particles on collides */
+	// createCollisionParticles(scene: babylon.Scene): babylon.ParticleSystem {
+	// 	const collisionParticles = new babylon.ParticleSystem("collisionParticles", 200, scene);
+
+	// 	// Texture (étincelles blanches)
+	// 	collisionParticles.particleTexture = new babylon.Texture("textures/particle.png", scene);
+
+	// 	// Forme d’émission : petite sphère
+	// 	collisionParticles.createSphereEmitter(0.5);
+	// 	collisionParticles.renderingGroupId = 2;
+
+	// 	// Couleurs de départ / fin
+	// 	collisionParticles.color1 = new babylon.Color4(1, 0.9, 0.4, 1.0);
+	// 	collisionParticles.color2 = new babylon.Color4(1, 0.6, 0.1, 1.0);
+	// 	collisionParticles.colorDead = new babylon.Color4(0.2, 0.2, 0.2, 0.0);
+
+	// 	// Taille et vie des particules
+	// 	collisionParticles.minSize = 0.05;
+	// 	collisionParticles.maxSize = 0.2;
+	// 	collisionParticles.minLifeTime = 0.3;
+	// 	collisionParticles.maxLifeTime = 0.8;
+
+	// 	// Vitesse
+	// 	collisionParticles.emitRate = 1000;
+	// 	collisionParticles.minEmitPower = 1.0;
+	// 	collisionParticles.maxEmitPower = 3.0;
+	// 	collisionParticles.updateSpeed = 0.01;
+
+	// 	// Gravité légère
+	// 	collisionParticles.gravity = new babylon.Vector3(0, -2, 0);
+	// 	return collisionParticles;
+	// }
+
+	// private showParticles(collisionPoint: null | babylon.Vector3): void {
+	// 	if (collisionPoint !== null)
+	// 		this.collisionParticles.emitter = collisionPoint;
+	// 	else
+	// 		return ;
+	// 	this.collisionParticles.start();
+	// 	setInterval( () => {
+	// 		this.collisionParticles.stop();
+	// 	}, 2000);
+	// }
+
 	/**@todo refacto */
 	private checkBallCollision(): babylon.Observer<babylon.IPhysicsCollisionEvent> {
 		const collisionObserver = this.collisionObservable.add((collisionEvent) => {
 			const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
 			if (!metadata)
 				return;
-			if (metadata.type === "goal")
+			if (metadata.type === "goal") {
 				this.isInGoal = metadata.player === 1 ? "player1" : "player2";
+				this.goalPosition = collisionEvent.point;
+			}
 			if (metadata.type === "collider") {
 				this.justCollided = true;
+				//this.showParticles(collisionEvent.point);
 				/** Effect */
 				if (metadata?.playerSpinning) {
 					const collisionPointZ = collisionEvent.point?.z;
@@ -131,8 +181,11 @@ export abstract class BallTemplate {
 		this.justCollided = true;
 	}
 
-	getGoal(): "player1" | "player2" | null {
-		return this.isInGoal;
+	/** @todo Titouan gaming */
+	getGoal(): { goal: "player1" | "player2" | null, position: babylon.Vector3 | null } {
+		const goal = this.isInGoal;
+		const position = this.goalPosition;
+		return { goal, position };
 	}
 
 	/**@todo remove */
@@ -155,6 +208,8 @@ export abstract class BallTemplate {
 		this.collisionObservable.remove(this.collisionObserver);
 		this.sceneObservable.remove(this.sceneObserver);
 		this.physic.dispose();
+		// this.collisionParticles.stop(); // in case
+		// this.collisionParticles.dispose();
 		this.mesh.material?.dispose();
 		this.mesh.dispose();
 	}
