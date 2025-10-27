@@ -13,6 +13,7 @@ export class Game {
 	private readonly camera: babylon.ArcRotateCamera;
 	private canvas: HTMLCanvasElement;
 	private score: babylon.Vector2;
+	private inAnimation = false;
 
 	constructor (canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.engine = engine;
@@ -90,16 +91,19 @@ export class Game {
 		};
 
 		this.scene.onAfterRenderObservable.add(() => {
-			this.checkEndOfPoint();
+			if (this.inAnimation === false)
+				this.checkEndOfPoint();
 		});
 	}
 
 	/**check collision for each balls */
-	checkEndOfPoint(): void {
-		const goal = this.sceneManager.checkGoal();
-		if (goal !== null) {
+	async checkEndOfPoint(): Promise<void> {
+		const goalInfos = this.sceneManager.checkGoal();
+		if (goalInfos !== null && goalInfos.position !== null) {
+			this.inAnimation = true;
+			await this.sceneManager.goalAnimation(this.engine, this.scene, goalInfos.position, this.camera);
 			/**@todo inscrire goal */
-			if (goal === "player2") {
+			if (goalInfos.goal === "player2") {
 				this.score.x += 1;
 				//console.log("player 2 goaled");
 			} else{
@@ -109,6 +113,7 @@ export class Game {
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
 				this.stop();
 			} else{
+				this.inAnimation = false;
 				this.sceneManager.destroyEnvironnement(this.scene);
 				this.sceneManager.setEnvironnement(this.scene, this.settings);
 			}
