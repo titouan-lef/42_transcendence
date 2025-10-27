@@ -5,10 +5,10 @@ import { GameSettings } from "../GameSettings.js";
 
 export class HeavyBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
-	private readonly color: babylon.Color3 = COLORS.grey;
-
+	
 	constructor(scene: babylon.Scene, settings: GameSettings) {
 		super(scene, "heavy", settings.spin);
+		this.color = COLORS.grey;
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);
 	}

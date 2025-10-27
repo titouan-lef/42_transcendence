@@ -6,12 +6,12 @@ import { GameSettings } from "../GameSettings.js";
 
 export class InvisibleBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
-	private readonly color: babylon.Color3 = COLORS.red;
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 	private effectTimeOutId: ReturnType<typeof setTimeout> | null = null;
 
 	constructor(scene: babylon.Scene, settings: GameSettings) {
 		super(scene, "invisible", settings.spin);
+		this.color = COLORS.red;
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);
 		this.effectIntervalId = this.activateEffect();
