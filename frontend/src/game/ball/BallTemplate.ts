@@ -138,7 +138,7 @@ export abstract class BallTemplate {
 		return collisionParticles;
 	}
 
-	private showParticles(collisionPoint: null | babylon.Vector3, scene: babylon.Scene): void {
+	protected showParticles(collisionPoint: null | babylon.Vector3, scene: babylon.Scene): void {
 		if (collisionPoint === null)
 			return ;
 		const collisionParticle = this.createCollisionParticles(scene, collisionPoint);

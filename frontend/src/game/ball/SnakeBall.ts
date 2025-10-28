@@ -27,7 +27,8 @@ export class SnakeBall extends BallTemplate {
 	/**@todo nothing */
 	activateEffect(): void {};
 
-	/** Redefine MovementChanges since spin doesn4t apply to snake ball */
+	/** Redefine MovementChanges since spin doesn t apply to snake ball */
+	/** ball moves with a snake pattern */
 	applyMovementChanges(): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
 			if (this.justCollided) {

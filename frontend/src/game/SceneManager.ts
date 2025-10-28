@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./ball/BallTemplate.js";
 import { DefaultBall } from "./ball/DefaultBall.js";
 import { InvisibleBall } from "./ball/InvisibleBall.js";
-import { HeavyBall } from "./ball/HeavyBall.js";
+import { PulseBall } from "./ball/PulseBall.js";
 import { TrickyBall } from "./ball/TrickyBall.js";
 import { SnakeBall } from "./ball/SnakeBall.js";
 import { MapTemplate } from "./map/MapTemplate.js";
@@ -28,7 +28,7 @@ export class SceneManager {
 
 	/**@todo Enum here is kinda hard to use because each class is different */
 	createBall(scene: babylon.Scene, settings: GameSettings): void {
-		const ballList: BallOption[] = ["default", "invisible", "tricky", "heavy", "snake"];
+		const ballList: BallOption[] = ["default", "invisible", "tricky", "pulse", "snake"];
 		let ball = settings.ball;
 		if (settings.ball === "random") {
 			ball = ballList[Math.floor(Math.random() * 5)];
@@ -43,8 +43,8 @@ export class SceneManager {
 			case "tricky":
 				this.balls.push(new TrickyBall(scene, settings));
 				break;
-			case "heavy":
-				this.balls.push(new HeavyBall(scene, settings));
+			case "pulse":
+				this.balls.push(new PulseBall(scene, settings));
 				break;
 			case "snake":
 				this.balls.push(new SnakeBall(scene, settings));
