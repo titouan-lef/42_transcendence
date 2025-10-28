@@ -6,8 +6,8 @@ export class PulseBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 	
-	constructor(scene: babylon.Scene) {
-		super(scene, "pulse");
+	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
+		super(scene, "pulse", texture);
 		this.color = COLORS.blue;
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);

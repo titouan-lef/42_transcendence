@@ -20,6 +20,7 @@ export class SceneManager {
 	private readonly balls: BallTemplate[] = [];
 	private readonly maps: MapTemplate[] = [];
 	private readonly players: Player[] = [];
+	private readonly textures: Record<string, babylon.Texture> = {};
 
 	/**@todo will be removed */
 	getBalls(): BallTemplate[] {
@@ -35,19 +36,19 @@ export class SceneManager {
 		}
 		switch (ball) {
 			case "default":
-				this.balls.push(new DefaultBall(scene));
+				this.balls.push(new DefaultBall(scene, this.textures));
 				break;
 			case "invisible":
-				this.balls.push(new InvisibleBall(scene));
+				this.balls.push(new InvisibleBall(scene, this.textures));
 				break;
 			case "tricky":
-				this.balls.push(new TrickyBall(scene));
+				this.balls.push(new TrickyBall(scene, this.textures));
 				break;
 			case "pulse":
-				this.balls.push(new PulseBall(scene));
+				this.balls.push(new PulseBall(scene, this.textures));
 				break;
 			case "snake":
-				this.balls.push(new SnakeBall(scene));
+				this.balls.push(new SnakeBall(scene, this.textures));
 				break;
 			default: throw new Error("switch ball fail");
 		}
@@ -60,7 +61,7 @@ export class SceneManager {
 		}
 		switch (map) {
 			case "default":
-				this.maps.push(new DefaultMap(scene));
+				this.maps.push(new DefaultMap(scene, this.textures.particle));
 				break;
 			case "volcano":
 				this.maps.push(new VolcanoMap(scene));
@@ -88,6 +89,12 @@ export class SceneManager {
 		this.players.push(player2);
 	}
 
+	createTextures(scene: babylon.Scene): void {
+		this.textures.spark = new babylon.Texture("textures/sparks.png", scene);
+		this.textures.flare = new babylon.Texture("textures/flare.png", scene);
+		this.textures.particle = new babylon.Texture("textures/particle.png", scene);
+	}
+
 	/** @todo Titouan gaming */
 	checkGoal(): { goal: "player1" | "player2" | null, position: babylon.Vector3 | null } | null {
 		for (const ball of this.balls) {
@@ -99,24 +106,22 @@ export class SceneManager {
 		return null;
 	}
 
+	/** ball explodes, the time slow down */
 	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3): Promise<void> {
-		const originalGetDelta = engine.getDeltaTime; // keep original delta
-
 		this.balls.forEach( ball => {
 			ball.preDeath();
 			ball.showParticles(position, scene, "explosion");
 		});
+
+		const originalGetDelta = engine.getDeltaTime; // keep original delta
 		engine.getDeltaTime = function(): number {
 			return originalGetDelta.call(this) * 0.01; // slow animations
 		};
-
-		await new Promise<void>(resolve => { 
-			
+		await new Promise<void>(resolve => { 	
 			setTimeout( () => {
 				resolve();
 			}, 2700);
 		});
-
 		engine.getDeltaTime = originalGetDelta;// set back to original speed
 	}
 
@@ -139,16 +144,22 @@ export class SceneManager {
 		}
 		scene.materials.forEach(mat => mat.dispose()); // these are the defualt materials, not sure if i have to dispose them since they are created auto
 		/**@todo Debugging logs */
-		console.log("meshes : " + scene.meshes);
-		console.log("materials : " + scene.materials);
-		scene.materials.forEach(mat => {
-			console.log("mat name : " + mat.name);
-		});
-		console.log("textures : " + scene.textures);
-		scene.textures.forEach(texture => {
-			console.log("texture name : " + texture.name);
-		});
-		console.log("lights : " + scene.lights);
+		// console.log("meshes : " + scene.meshes);
+		// console.log("materials : " + scene.materials);
+		// scene.materials.forEach(mat => {
+		// 	console.log("mat name : " + mat.name);
+		// });
+		// console.log("textures : " + scene.textures);
+		// scene.textures.forEach(texture => {
+		// 	console.log("texture name : " + texture.name);
+		// });
+		// console.log("lights : " + scene.lights);
+	}
+
+	destroyTextures(): void {
+		for (const texture in this.textures) {
+			this.textures[texture].dispose();
+		}
 	}
 
 	destroyBalls(): void {

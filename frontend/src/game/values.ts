@@ -76,7 +76,7 @@ export const PULSE_BALL_EFFECT_INTERVAL = 1000;
 export const SNAKE_BALL_ANGULAR_FORCE = 4;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const SNAKE_BALL_ANGULAR_INTERVAL = 20;
-export const BALL_ANGULAR_FORCE = 1;
+export const BALL_ANGULAR_FORCE = 0.5;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const BALL_ANGULAR_INTERVAL = 45;
 

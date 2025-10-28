@@ -68,16 +68,29 @@ export class Game {
 	}
 
 	stop(): void {
+		this.sceneManager.destroyTextures();
 		this.sceneManager.destroyEnvironnement(this.scene);
-		this.engine.stopRenderLoop();
 		this.scene.onAfterRenderObservable.clear();
 		this.camera.dispose();
+		this.engine.stopRenderLoop();
+		// console.log("meshes : " + this.scene.meshes);
+		// console.log("materials : " + this.scene.materials);
+		// this.scene.materials.forEach(mat => {
+		// 	console.log("mat name : " + mat.name);
+		// });
+		// console.log("textures : " + this.scene.textures);
+		// this.scene.textures.forEach(texture => {
+		// 	console.log("texture name : " + texture.name);
+		// });
+		// console.log("lights : " + this.scene.lights);
 		this.scene.dispose();
 		this.engine.dispose();
 		this.canvas.remove();
+		babylon.Tools.ClearLogCache(); // hides previous logs 
 	}
 
 	private setScene(): void {
+		this.sceneManager.createTextures(this.scene);
 		this.sceneManager.setEnvironnement(this.scene, this.settings);
 		/**@todo text GOAL?*/
 
