@@ -33,6 +33,7 @@ export class TrickyBall extends BallTemplate {
 			const randomDirZ = Math.random() * 2 - 1;
 			this.physic.body.setLinearVelocity(new babylon.Vector3
 			(randomDirX * TRICKY_BALL_EFFECT_FORCE, 0, randomDirZ * TRICKY_BALL_EFFECT_FORCE));
+			this.showParticles(this.mesh.position, this.mesh.getScene());
 		}, TRICKY_BALL_EFFECT_INTERVAL);
 		return effectIntervalId;
 	}
