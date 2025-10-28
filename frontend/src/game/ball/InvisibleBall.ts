@@ -33,8 +33,8 @@ export class InvisibleBall extends BallTemplate {
 		}, TRAIL_CREATION_INTERVAL);
 		return trailIntervalId;
 	}
-
-	/**@todo disappears gradually every 5sec for 1.2sec */
+	
+	/**@todo disappears gradually every INVISIBLE_BALL_FADING_INTERVAL ms for INVISIBLE_BALL_INVISIBILITY_INTERVAL ms */
 	activateEffect(): ReturnType<typeof setInterval> {
 		const effectIntervalId = setInterval(() => {
 			if (this.mesh.visibility > 0 && this.effectTimeOutId === null)

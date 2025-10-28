@@ -26,7 +26,7 @@ export class TrickyBall extends BallTemplate {
 		clearInterval(this.trailIntervalId);
 	}
 
-	/**@todo changes direction every 5sec */
+	/**@todo changes direction every TRICKY_BALL_EFFECT_INTERVAL ms */
 	activateEffect(): ReturnType<typeof setInterval> {
 		const effectIntervalId = setInterval(() => {
 			const randomDirX = Math.random() * 2 - 1;

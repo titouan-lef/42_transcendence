@@ -1,7 +1,6 @@
 import * as babylon from "@babylonjs/core";
-import { GameSettings } from "./GameSettings.js";
-import { PlayerKeys } from "./GameSettings.js";
-import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MASS } from "./values.js";
+import { GameSettings, PlayerKeys } from "./GameSettings.js";
+import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION } from "./values.js";
 
 export class Player {
 	readonly mesh: babylon.Mesh;
@@ -28,7 +27,7 @@ export class Player {
 		});
 		this.body.shape = new babylon.PhysicsShapeBox(babylon.Vector3.Zero(), babylon.Quaternion.Identity(),
 			PLAYER_DIMENSION, scene);
-		this.body.shape.material = { restitution: 0.5, friction: 0 };
+		this.body.shape.material = { restitution: PLAYER_RESTITUTION, friction: 0 };
 		this.setMaterial(scene, this.color);
 		this.rotatingPlayer = settings.rotatingPlayer;
 		this.applyingSpin = settings.spin;
