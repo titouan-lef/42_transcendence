@@ -35,19 +35,19 @@ export class SceneManager {
 		}
 		switch (ball) {
 			case "default":
-				this.balls.push(new DefaultBall(scene, settings));
+				this.balls.push(new DefaultBall(scene));
 				break;
 			case "invisible":
-				this.balls.push(new InvisibleBall(scene, settings));
+				this.balls.push(new InvisibleBall(scene));
 				break;
 			case "tricky":
-				this.balls.push(new TrickyBall(scene, settings));
+				this.balls.push(new TrickyBall(scene));
 				break;
 			case "pulse":
-				this.balls.push(new PulseBall(scene, settings));
+				this.balls.push(new PulseBall(scene));
 				break;
 			case "snake":
-				this.balls.push(new SnakeBall(scene, settings));
+				this.balls.push(new SnakeBall(scene));
 				break;
 			default: throw new Error("switch ball fail");
 		}
@@ -99,9 +99,13 @@ export class SceneManager {
 		return null;
 	}
 
-	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3, camera: babylon.ArcRotateCamera): Promise<void> {
+	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3): Promise<void> {
 		const originalGetDelta = engine.getDeltaTime; // keep original delta
 
+		this.balls.forEach( ball => {
+			ball.preDeath();
+			ball.showParticles(position, scene, "explosion");
+		});
 		engine.getDeltaTime = function(): number {
 			return originalGetDelta.call(this) * 0.01; // slow animations
 		};
@@ -135,16 +139,16 @@ export class SceneManager {
 		}
 		scene.materials.forEach(mat => mat.dispose()); // these are the defualt materials, not sure if i have to dispose them since they are created auto
 		/**@todo Debugging logs */
-		// console.log("meshes : " + scene.meshes);
-		// console.log("materials : " + scene.materials);
-		// scene.materials.forEach(mat => {
-		// 	console.log("mat name : " + mat.name);
-		// });
-		// console.log("textures : " + scene.textures);
-		// scene.textures.forEach(texture => {
-		// 	console.log("texture name : " + texture.name);
-		// });
-		// console.log("lights : " + scene.lights);
+		console.log("meshes : " + scene.meshes);
+		console.log("materials : " + scene.materials);
+		scene.materials.forEach(mat => {
+			console.log("mat name : " + mat.name);
+		});
+		console.log("textures : " + scene.textures);
+		scene.textures.forEach(texture => {
+			console.log("texture name : " + texture.name);
+		});
+		console.log("lights : " + scene.lights);
 	}
 
 	destroyBalls(): void {

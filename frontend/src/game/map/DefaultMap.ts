@@ -10,7 +10,7 @@ export class DefaultMap extends MapTemplate {
 	constructor(scene: babylon.Scene) {
 		super(scene, "default");
 		this.bars = this.createBars(scene);
-		this.particles = this.createParticules(scene);
+		this.particles = this.createParticles(scene);
 		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
 		this.limits.forEach(limit => this.wallHighlight.addMesh(limit, COLORS.red));
 	}
@@ -45,7 +45,7 @@ export class DefaultMap extends MapTemplate {
 	}
 
 	/** the stars in the background, will maybe move to abstract in template depending of the other maps's design */
-	private createParticules(scene: babylon.Scene): babylon.ParticleSystem {
+	private createParticles(scene: babylon.Scene): babylon.ParticleSystem {
 		scene.clearColor = new babylon.Color4(0, 0, 0, 1); // sky
 		const particles = new babylon.ParticleSystem("stars", PARTICLE_NUMBER, scene);
 		particles.particleTexture = new babylon.Texture("textures/particle.png", scene); // free ici

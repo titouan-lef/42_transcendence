@@ -73,7 +73,6 @@ export const INVISIBLE_BALL_INVISIBILITY_INTERVAL = 1200;
 export const TRICKY_BALL_EFFECT_INTERVAL = 2500;
 export const TRICKY_BALL_EFFECT_FORCE = 50;
 export const PULSE_BALL_EFFECT_INTERVAL = 1000;
-export const SNAKE_BALL_EFFECT_INTERVAL = 10;
 export const SNAKE_BALL_ANGULAR_FORCE = 4;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const SNAKE_BALL_ANGULAR_INTERVAL = 20;
@@ -84,5 +83,4 @@ export const BALL_ANGULAR_INTERVAL = 45;
 /** @todo better explosion on GOAL */
 /** @todo animation when goal and end of game ? */
 /** @todo player sometimes blocked when pressing right left, should be solved with server side */
-/** @todo balls */
 /** @todo maps */

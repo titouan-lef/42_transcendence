@@ -1,13 +1,11 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
-import { COLORS } from "../values.js";
-import { GameSettings } from "../GameSettings.js";
 
 export class DefaultBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
 
-	constructor(scene: babylon.Scene, settings: GameSettings) {
-		super(scene, "default", settings.spin);
+	constructor(scene: babylon.Scene) {
+		super(scene, "default");
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);
 	}

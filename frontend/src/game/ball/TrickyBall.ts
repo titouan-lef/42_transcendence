@@ -1,14 +1,13 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
 import { COLORS, TRICKY_BALL_EFFECT_INTERVAL, TRICKY_BALL_EFFECT_FORCE } from "../values.js";
-import { GameSettings } from "../GameSettings.js";
 
 export class TrickyBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
-
-	constructor(scene: babylon.Scene, settings: GameSettings) {
-		super(scene, "tricky", settings.spin);
+		
+	constructor(scene: babylon.Scene) {
+		super(scene, "tricky");
 		this.color = COLORS.orange;
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);
@@ -33,7 +32,7 @@ export class TrickyBall extends BallTemplate {
 			const randomDirZ = Math.random() * 2 - 1;
 			this.physic.body.setLinearVelocity(new babylon.Vector3
 			(randomDirX * TRICKY_BALL_EFFECT_FORCE, 0, randomDirZ * TRICKY_BALL_EFFECT_FORCE));
-			this.showParticles(this.mesh.position, this.mesh.getScene());
+			this.showParticles(this.mesh.position, this.mesh.getScene(), "impulse");
 		}, TRICKY_BALL_EFFECT_INTERVAL);
 		return effectIntervalId;
 	}
