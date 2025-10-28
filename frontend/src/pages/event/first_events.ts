@@ -1,5 +1,5 @@
-import { addHandler } from "../../routes/events.js";
-import { PageID, navigate } from "../../routes/pages.js";
+import { addHandler } from "../../routes/event.js";
+import { PageID, navigate } from "../../routes/page.js";
 
 function firstEvents(): void {
 	addHandler(PageID.FIRST, "click", () => navigate(PageID.API));

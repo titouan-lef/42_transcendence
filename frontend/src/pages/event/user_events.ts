@@ -1,4 +1,4 @@
-import { addHandler } from "../../routes/events.js";
+import { addHandler } from "../../routes/event.js";
 import { newUser } from "../../services/user_management/create_account.js";
 import { connectUser, disconnectUser } from "../../services/user_management/login.js";
 

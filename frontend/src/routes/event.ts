@@ -1,9 +1,9 @@
-import { PageID } from "./pages.js";
-import { firstEvents } from "../pages/events/first_events.js";
-import { apiEvents } from "../pages/events/API_events.js";
-import { themeEvents } from "../pages/events/theme_events.js";
+import { PageID } from "./page.js";
+import { firstEvents } from "../pages/event/first_events.js";
+import { apiEvents } from "../pages/event/api_events.js";
+import { themeEvents } from "../pages/event/theme_events.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
-import { userEvents } from "../pages/events/User_events.js";
+import { userEvents } from "../pages/event/user_events.js";
 import { whoami } from "../services/user_management/login.js";
 
 interface Handler {

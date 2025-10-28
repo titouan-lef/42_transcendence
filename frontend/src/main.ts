@@ -1,3 +1,3 @@
-import { init } from "./routes/pages.js";
+import { init } from "./routes/page.js";
 
 init();

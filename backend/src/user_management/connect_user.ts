@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { isValidUser, findUserPassword } from "../database/find_data.js";
 import { CookieSerializeOptions } from '@fastify/cookie';
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { isValidPassword } from "../utils/hashString.js";
+import { isValidPassword } from "../utils/hash_string.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
