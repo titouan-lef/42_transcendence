@@ -1,14 +1,13 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
 import { COLORS, MAX_SPEED, PULSE_BALL_EFFECT_INTERVAL } from "../values.js";
-import { GameSettings } from "../GameSettings.js";
 
 export class PulseBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 	
-	constructor(scene: babylon.Scene, settings: GameSettings) {
-		super(scene, "pulse", settings.spin);
+	constructor(scene: babylon.Scene) {
+		super(scene, "pulse");
 		this.color = COLORS.blue;
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);
@@ -35,7 +34,7 @@ export class PulseBall extends BallTemplate {
 				this.physic.body.applyImpulse(
 					velocity.scale(randomImpulse),
 					this.mesh.position);
-				this.showParticles(this.mesh.position, this.mesh.getScene());
+				this.showParticles(this.mesh.position, this.mesh.getScene(), "impulse");
 			} else {
 				const randomImpulse = -Math.random() / 2; // 0 -- -0.5
 				this.physic.body.applyImpulse(

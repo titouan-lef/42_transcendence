@@ -3,7 +3,7 @@ import { GameSettings } from "./GameSettings.js";
 
 //this will change when checking options
 /**@todo will move keys to the "session"'s settings */
-const SETTINGS: GameSettings = new GameSettings("default", "tricky", true, true, ["KeyA", "KeyD", "KeyW", "KeyS", "Space"], ["KeyJ", "KeyL", "KeyI", "KeyK", "KeyP"]);
+const SETTINGS: GameSettings = new GameSettings("default", "random", true, true, ["KeyA", "KeyD", "KeyW", "KeyS", "Space"], ["KeyJ", "KeyL", "KeyI", "KeyK", "KeyP"]);
 
 let isPressed = false;
 

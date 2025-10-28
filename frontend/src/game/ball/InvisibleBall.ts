@@ -2,15 +2,14 @@ import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
 import { COLORS, TRAIL_CREATION_INTERVAL, INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL } from "../values.js";
 import { BallTrail } from "./BallTrail.js";
-import { GameSettings } from "../GameSettings.js";
 
 export class InvisibleBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 	private effectTimeOutId: ReturnType<typeof setTimeout> | null = null;
-
-	constructor(scene: babylon.Scene, settings: GameSettings) {
-		super(scene, "invisible", settings.spin);
+		
+	constructor(scene: babylon.Scene) {
+		super(scene, "invisible");
 		this.color = COLORS.red;
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);

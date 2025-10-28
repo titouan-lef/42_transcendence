@@ -101,7 +101,7 @@ export class Game {
 		const goalInfos = this.sceneManager.checkGoal();
 		if (goalInfos !== null && goalInfos.position !== null) {
 			this.inAnimation = true;
-			await this.sceneManager.goalAnimation(this.engine, this.scene, goalInfos.position, this.camera);
+			await this.sceneManager.goalAnimation(this.engine, this.scene, goalInfos.position);
 			/**@todo inscrire goal */
 			if (goalInfos.goal === "player2") {
 				this.score.x += 1;
