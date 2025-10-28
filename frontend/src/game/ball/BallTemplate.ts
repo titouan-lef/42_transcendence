@@ -115,11 +115,10 @@ export abstract class BallTemplate {
 
 		// Couleurs de départ / fin
 		collisionParticles.color1 = new babylon.Color4(this.color.r, this.color.g, this.color.b, 1.0);
-		collisionParticles.color2 = new babylon.Color4(1, 0.6, 0.1, 1.0); // plus chaud
-		collisionParticles.colorDead = new babylon.Color4(0.2, 0.2, 0.2, 0.0);
+		collisionParticles.colorDead = new babylon.Color4(this.color.r, this.color.g, this.color.b, 1.0);
 
 		// Taille et vie
-		collisionParticles.minSize = 0.05;
+		collisionParticles.minSize = 0.3;
 		collisionParticles.maxSize = 0.3;
 		collisionParticles.minLifeTime = 0.2;
 		collisionParticles.maxLifeTime = 0.2;
@@ -196,7 +195,6 @@ export abstract class BallTemplate {
 			const excessRatio = (speed - MAX_SPEED) / speed; // between 0 and 1
 			const dampingFactor = excessRatio * NERF_SPEED_FACTOR;
 			this.physic.body.setLinearDamping(dampingFactor);
-			console.log("damped");
 		} else {
 			this.physic.body.setLinearDamping(0);
 		}
