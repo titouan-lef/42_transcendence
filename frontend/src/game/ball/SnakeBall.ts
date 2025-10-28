@@ -49,6 +49,7 @@ export class SnakeBall extends BallTemplate {
 				new babylon.Vector3(-this.realDirection.z * (SNAKE_BALL_ANGULAR_FORCE - this.force), 0, this.realDirection.x * (SNAKE_BALL_ANGULAR_FORCE - this.force)),
 				this.mesh.position
 			);
+			this.nerfSpeed();
 		});
 		return sceneObserver;
 	}

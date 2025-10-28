@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { BallOption } from "../GameSettings.js";
-import { BALL_DIAMETER, TRAIL_CREATION_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, COLORS } from "../values.js";
+import { BALL_DIAMETER, TRAIL_CREATION_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, COLORS, NERF_SPEED_FACTOR, MAX_SPEED } from "../values.js";
 import { BallTrail } from "./BallTrail.js";
 
 export abstract class BallTemplate {
@@ -71,12 +71,15 @@ export abstract class BallTemplate {
 	protected applyMovementChanges(): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
 			this.mesh.position.y = BALL_DIAMETER / 2;
+			/** @todo REFACTO To make angular force work, goes with the effectmode below */
 			if (this.justCollided) {
-				this.realDirection = this.physic.body.getLinearVelocity();
-				this.justCollided = false;
-				this.forceDirection = -1;
-				this.force = BALL_ANGULAR_FORCE;
+				this.realDirection = this.physic.body.getLinearVelocity(); // remember original velocity, to apply movement changes on it
+				this.justCollided = false; 
+				this.forceDirection = -1; // reset forceDirection
+				this.force = BALL_ANGULAR_FORCE; // reset angularForce
 			}
+			//
+			/** @todo REFACTO Applies effect if player in effectMode*/
 			if (this.force <= 0)
 				this.forceDirection *= -1;
 			this.force -= (BALL_ANGULAR_FORCE / BALL_ANGULAR_INTERVAL) * this.forceDirection; // Angular interval is the number of step it will take to reach maximum value
@@ -92,13 +95,14 @@ export abstract class BallTemplate {
 					this.mesh.position
 				);
 			}
+			this.nerfSpeed();
 		});
 		return sceneObserver;
 	}
 
 	/** @todo refacto and maybe upgrade */
 	/** particles on collides */
-	createCollisionParticles(scene: babylon.Scene, collisionPoint: babylon.Vector3): babylon.ParticleSystem {
+	private createCollisionParticles(scene: babylon.Scene, collisionPoint: babylon.Vector3): babylon.ParticleSystem {
 		const collisionParticles = new babylon.ParticleSystem("collisionParticles", 2000, scene);
 
 		// Texture (étincelles)
@@ -151,6 +155,7 @@ export abstract class BallTemplate {
 			const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
 			if (!metadata)
 				return;
+			//if has a metadata (ground doesn t have one)
 			if (metadata.type === "goal") {
 				this.isInGoal = metadata.player === 1 ? "player1" : "player2";
 				this.goalPosition = collisionEvent.point;
@@ -180,6 +185,21 @@ export abstract class BallTemplate {
 			}
 		});
 		return collisionObserver;
+	}
+
+	/** @todo damp ball if too fast ? */
+	protected nerfSpeed(): void {
+		const velocity = this.physic.body.getLinearVelocity();
+		const speed = velocity.length();
+
+		if (speed > MAX_SPEED) {
+			const excessRatio = (speed - MAX_SPEED) / speed; // between 0 and 1
+			const dampingFactor = excessRatio * NERF_SPEED_FACTOR;
+			this.physic.body.setLinearDamping(dampingFactor);
+			console.log("damped");
+		} else {
+			this.physic.body.setLinearDamping(0);
+		}
 	}
 
 	/**@todo To remove */
