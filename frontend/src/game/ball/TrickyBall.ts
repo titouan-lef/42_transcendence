@@ -6,8 +6,8 @@ export class TrickyBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 		
-	constructor(scene: babylon.Scene) {
-		super(scene, "tricky");
+	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
+		super(scene, "tricky", texture);
 		this.color = COLORS.orange;
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);

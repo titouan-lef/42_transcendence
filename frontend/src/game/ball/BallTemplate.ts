@@ -17,6 +17,7 @@ export abstract class BallTemplate {
 	private goalPosition: babylon.Vector3 | null = null;
 	protected justCollided = false;
 	protected realDirection: babylon.Vector3;
+	private readonly textures: Record<string, babylon.Texture>;
 
 	private spinningLeft = false;
 	private spinningRight = false;
@@ -27,8 +28,9 @@ export abstract class BallTemplate {
 
 	private readonly hitPoints: number[] = [];
 
-	constructor(scene: babylon.Scene, type: BallOption) {
+	constructor(scene: babylon.Scene, type: BallOption, textures: Record<string, babylon.Texture>) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
+		this.textures = textures;
 		this.color = COLORS.white;
 		this.mesh.position.y = BALL_DIAMETER / 2;
 		this.physic = this.setPhysic(scene);
@@ -40,6 +42,7 @@ export abstract class BallTemplate {
 		this.collisionObservable = this.physic.body.getCollisionObservable();
 		this.collisionObserver = this.checkBallCollision();
 
+		/**@todo launch ball */
 		//this.physic.body.setLinearVelocity(new babylon.Vector3((Math.random()  * 2 - 1) * 30, 0, (Math.random()  * 2 - 1) * 30));
 		this.realDirection = this.physic.body.getLinearVelocity();
 
@@ -56,6 +59,7 @@ export abstract class BallTemplate {
 		return physic;
 	}
 
+	/** trail behind the ball */
 	protected setTrail(scene: babylon.Scene, color: babylon.Color3): ReturnType<typeof setInterval> {
 		const trailIntervalId = setInterval(() => {
 			this.ballTrails.push(new BallTrail(scene, this.mesh.position, color));
@@ -69,41 +73,42 @@ export abstract class BallTemplate {
 	/** Spin doesn't apply to snake ball for obvious reasons */
 	protected applyMovementChanges(): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
-			this.mesh.position.y = BALL_DIAMETER / 2;
-			/** @todo REFACTO To make angular force work, goes with the effectmode below */
+			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y
 			if (this.justCollided) {
 				this.realDirection = this.physic.body.getLinearVelocity(); // remember original velocity, to apply movement changes on it
 				this.justCollided = false; 
 				this.forceDirection = -1; // reset forceDirection
 				this.force = BALL_ANGULAR_FORCE; // reset angularForce
 			}
-			//
-			/** @todo REFACTO Applies effect if player in effectMode*/
 			if (this.force <= 0)
 				this.forceDirection *= -1;
-			this.force -= (BALL_ANGULAR_FORCE / BALL_ANGULAR_INTERVAL) * this.forceDirection; // Angular interval is the number of step it will take to reach maximum value
-			this.force = Math.max(this.force, BALL_ANGULAR_FORCE); // to deny force to go higher than BALL_ANGULAR_FORCE
-			if (this.spinningLeft) {
-				this.physic.body.applyForce(
-					new babylon.Vector3(this.realDirection.z * this.force, 0, -this.realDirection.x * this.force),
-					this.mesh.position
-				);
-			} else if (this.spinningRight) {
-				this.physic.body.applyForce(
-					new babylon.Vector3(-this.realDirection.z * this.force, 0, this.realDirection.x * this.force),
-					this.mesh.position
-				);
-			}
+			this.applyEffect();
 			this.nerfSpeed();
 		});
 		return sceneObserver;
 	}
 
-	/** @todo refacto and maybe upgrade */
+	/** applies two contradictory forces on either side of the ball */
+	private applyEffect(): void {
+		this.force -= (BALL_ANGULAR_FORCE / BALL_ANGULAR_INTERVAL) * this.forceDirection; // Angular interval is the number of step it will take to reach maximum value
+		this.force = Math.max(this.force, BALL_ANGULAR_FORCE); // to deny force to go higher than BALL_ANGULAR_FORCE
+		if (this.spinningLeft) {
+			this.physic.body.applyForce(
+				new babylon.Vector3(this.realDirection.z * this.force, 0, -this.realDirection.x * this.force),
+				this.mesh.position
+			);
+		} else if (this.spinningRight) {
+			this.physic.body.applyForce(
+				new babylon.Vector3(-this.realDirection.z * this.force, 0, this.realDirection.x * this.force),
+				this.mesh.position
+			);
+		}
+	}
+
 	/** particles on collides */
 	private createCollisionParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
 		const collisionParticles = new babylon.ParticleSystem("collisionParticles", 300, scene);
-		collisionParticles.particleTexture = new babylon.Texture("textures/sparks.png", scene);
+		collisionParticles.particleTexture = this.textures.spark;
 		collisionParticles.emitter = position;
 		collisionParticles.createSphereEmitter(BALL_DIAMETER * 2);
 		collisionParticles.renderingGroupId = 1;
@@ -116,15 +121,15 @@ export abstract class BallTemplate {
 		collisionParticles.emitRate = 300;
 		collisionParticles.minEmitPower = 6;
 		collisionParticles.maxEmitPower = 12;
-		// ashes effect
 		collisionParticles.emitRate = 0;
 		collisionParticles.manualEmitCount = 200;
 		return collisionParticles;
 	}
 
+	/** particles on goal */
 	private createExplosionParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
 		const explosionParticles = new babylon.ParticleSystem("explosion", 200, scene);
-		explosionParticles.particleTexture = new babylon.Texture("textures/flare.png", scene);
+		explosionParticles.particleTexture = this.textures.flare;
 		explosionParticles.emitter = position;
 		explosionParticles.createSphereEmitter(BALL_DIAMETER * 10);
 		explosionParticles.renderingGroupId = 1;
@@ -136,15 +141,17 @@ export abstract class BallTemplate {
 		explosionParticles.minEmitPower = 5;
 		explosionParticles.maxEmitPower = 15;
 		explosionParticles.updateSpeed = 0.02;
-		// does a burst
+		
+		//does a burst
 		explosionParticles.emitRate = 0;
 		explosionParticles.manualEmitCount = 200;
 		return explosionParticles;
 	}
 
+	/** particles on impulses */
 	protected createImpulseParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
 		const explosionParticles = new babylon.ParticleSystem("explosion", 100, scene);
-		explosionParticles.particleTexture = new babylon.Texture("textures/flare.png", scene);
+		explosionParticles.particleTexture = this.textures.flare;
 		explosionParticles.emitter = position;
 		explosionParticles.createSphereEmitter(BALL_DIAMETER * 2);
 		explosionParticles.renderingGroupId = 1;
@@ -154,6 +161,7 @@ export abstract class BallTemplate {
 		explosionParticles.minEmitPower = 2;
 		explosionParticles.maxEmitPower = 4;
 		explosionParticles.updateSpeed = 0.02;
+
 		// does a burst
 		explosionParticles.emitRate = 0;
 		explosionParticles.manualEmitCount = 100;
@@ -174,31 +182,37 @@ export abstract class BallTemplate {
 			if (metadata.type === "collider") {
 				this.justCollided = true;
 				this.showParticles(collisionEvent.point, this.mesh.getScene(), "collision");
-				/** Effect */
-				if (metadata?.playerSpinning) {
-					const collisionPointZ = collisionEvent.point?.z;
-					if (collisionPointZ === undefined ) // forced to do that because point can be null, but cant happen here
-						return;
-					switch (collisionPointZ - collisionEvent.collidedAgainst.transformNode.position.z <= 0) { // colliding right or left of the player
-						case (true):
-							this.spinningLeft = true;
-							break;
-						case (false):
-							this.spinningRight = true;
-							break;
-						default: ;
-					}
-				} else{
-					this.spinningLeft = false;
-					this.spinningRight = false;
-				}
-				//
+				this.checkSpin(collisionEvent);
 			}
 		});
 		return collisionObserver;
 	}
 
-	/** @todo damp ball if too fast ? */
+	/** check if the player has the spinEffect and change the spinning boolean of the ball if so */
+	private checkSpin(collisionEvent: babylon.IPhysicsCollisionEvent) : void {
+		const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
+		if (!metadata)
+			return;
+		if (metadata?.playerSpinning) {
+			const collisionPointZ = collisionEvent.point?.z;
+			if (collisionPointZ === undefined ) // forced to do that because point can be null, but cant happen here
+				return;
+			switch (collisionPointZ - collisionEvent.collidedAgainst.transformNode.position.z <= 0) { // colliding right or left of the player
+				case (true):
+					this.spinningLeft = true;
+					break;
+				case (false):
+					this.spinningRight = true;
+					break;
+				default: ;
+			}
+		} else{
+			this.spinningLeft = false;
+			this.spinningRight = false;
+		}
+	}
+
+	/** damp ball if too fast */
 	protected nerfSpeed(): void {
 		const velocity = this.physic.body.getLinearVelocity();
 		const speed = velocity.length();
@@ -212,6 +226,7 @@ export abstract class BallTemplate {
 		}
 	}
 
+	/** hides ball on goal and stop intervals */
 	preDeath(): void {
 		this.mesh.visibility = 0;
 		this.destroyRest(); // stops intervals

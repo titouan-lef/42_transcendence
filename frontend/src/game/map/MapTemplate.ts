@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapOption } from "../GameSettings.js";
-import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, COLORS, PLAYER_DIMENSION, GLOW_INTENSITY } from "../values.js";
+import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, COLORS, GLOW_INTENSITY } from "../values.js";
 
 export abstract class MapTemplate {
 	protected glow: babylon.GlowLayer;
@@ -70,14 +70,6 @@ export abstract class MapTemplate {
 		return newMesh;
 	}
 
-	abstract createGround(scene: babylon.Scene): babylon.Mesh;
-
-	abstract createLight(scene: babylon.Scene): babylon.DirectionalLight;
-
-	abstract createSun(scene: babylon.Scene): babylon.Mesh;
-
-	abstract destroyRest(): void;
-
 	destroy(): void {
 		this.destroyRest();
 		this.groundPhysic.dispose();
@@ -94,4 +86,12 @@ export abstract class MapTemplate {
 		this.light.dispose();
 		this.glow.dispose();
 	}
+
+	abstract createGround(scene: babylon.Scene): babylon.Mesh;
+
+	abstract createLight(scene: babylon.Scene): babylon.DirectionalLight;
+
+	abstract createSun(scene: babylon.Scene): babylon.Mesh;
+
+	abstract destroyRest(): void;
 }

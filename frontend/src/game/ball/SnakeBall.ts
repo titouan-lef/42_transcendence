@@ -5,8 +5,8 @@ import { COLORS, SNAKE_BALL_ANGULAR_FORCE, SNAKE_BALL_ANGULAR_INTERVAL } from ".
 export class SnakeBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
 
-	constructor(scene: babylon.Scene) {
-		super(scene, "snake");
+	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
+		super(scene, "snake", texture);
 		this.color = COLORS.green;
 		this.setMaterial(scene, this.color);
 		this.force = SNAKE_BALL_ANGULAR_FORCE;
@@ -23,7 +23,7 @@ export class SnakeBall extends BallTemplate {
 		clearInterval(this.trailIntervalId);
 	}
 
-	/**@todo nothing */
+	/**@description no effect */
 	activateEffect(): void {};
 
 	/** Redefine MovementChanges since spin doesn t apply to snake ball */

@@ -8,8 +8,8 @@ export class InvisibleBall extends BallTemplate {
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 	private effectTimeOutId: ReturnType<typeof setTimeout> | null = null;
 		
-	constructor(scene: babylon.Scene) {
-		super(scene, "invisible");
+	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
+		super(scene, "invisible", texture);
 		this.color = COLORS.red;
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);

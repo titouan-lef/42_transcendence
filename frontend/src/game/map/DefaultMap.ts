@@ -7,10 +7,10 @@ export class DefaultMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
 	private readonly wallHighlight: babylon.HighlightLayer;
 
-	constructor(scene: babylon.Scene) {
+	constructor(scene: babylon.Scene, texture: babylon.Texture) {
 		super(scene, "default");
 		this.bars = this.createBars(scene);
-		this.particles = this.createParticles(scene);
+		this.particles = this.createParticles(scene, texture);
 		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
 		this.limits.forEach(limit => this.wallHighlight.addMesh(limit, COLORS.red));
 	}
@@ -45,10 +45,10 @@ export class DefaultMap extends MapTemplate {
 	}
 
 	/** the stars in the background, will maybe move to abstract in template depending of the other maps's design */
-	private createParticles(scene: babylon.Scene): babylon.ParticleSystem {
+	private createParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
 		scene.clearColor = new babylon.Color4(0, 0, 0, 1); // sky
 		const particles = new babylon.ParticleSystem("stars", PARTICLE_NUMBER, scene);
-		particles.particleTexture = new babylon.Texture("textures/particle.png", scene); // free ici
+		particles.particleTexture = texture;
 		particles.emitter = new babylon.Vector3(0, 0, 0);
 		particles.minEmitBox = new babylon.Vector3(-MAP_SIZE.x * 1.4, -MAP_SIZE.y * 1.4, -MAP_SIZE.z * 1.4);
 		particles.maxEmitBox = new babylon.Vector3(MAP_SIZE.x * 1.4, MAP_SIZE.y * 1.4, MAP_SIZE.y * 1.4);
@@ -85,8 +85,7 @@ export class DefaultMap extends MapTemplate {
 			bar.material?.dispose();
 			bar.dispose();
 		});
-		this.particles.stop();
-		this.particles.dispose();
+		this.particles.stop(); // we only stop them cow they will get disposed at the end of the game
 		this.wallHighlight.dispose();
 	}
 }

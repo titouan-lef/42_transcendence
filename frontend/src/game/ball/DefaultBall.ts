@@ -4,8 +4,8 @@ import { BallTemplate } from "./BallTemplate.js";
 export class DefaultBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
 
-	constructor(scene: babylon.Scene) {
-		super(scene, "default");
+	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
+		super(scene, "default", texture);
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);
 	}
@@ -21,7 +21,5 @@ export class DefaultBall extends BallTemplate {
 	}
 
 	/**@description no effect */
-	activateEffect(): void {
-		return;
-	}
+	activateEffect(): void {}
 }
