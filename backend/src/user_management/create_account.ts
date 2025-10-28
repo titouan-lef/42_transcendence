@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { insertUser } from "../database/insert_data.js";
-import { hashString } from "../utils/hashString.js";
+import { hashString } from "../utils/hash_string.js";
 
 interface NewUserBody {
 	id: string;

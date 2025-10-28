@@ -1,8 +1,8 @@
 import { FIRST_PAGE } from "../pages/content/first_page.js";
-import { API_PAGE } from "../pages/content/API_page.js";
+import { API_PAGE } from "../pages/content/api_page.js";
 import { SELECT_THEME } from "../pages/content/theme_page.js";
-import { USER_PAGE } from "../pages/content/User_page.js";
-import { loadEvent } from "./events.js";
+import { USER_PAGE } from "../pages/content/user_page.js";
+import { loadEvent } from "./event.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 
 enum PageID {

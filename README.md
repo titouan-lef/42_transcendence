@@ -55,6 +55,27 @@
 
 ### Common Rules
 
+#### File organisation rules
+
+##### Folder names
+- Except if discussed, folder names will be in the singular.
+- Always use shortest folder names possible.
+- Any functionalities must have his folder with a good context name.
+
+##### File names
+- Except if discussed, file names will be in the singular.
+- Always name your files with short and context friendly names.
+- In case of too much functions in one file, you can split your file, but never name them with filename_2.ts or equivalent, find a new context and organisation for your functions.
+
+  For example:
+  * Don't use utils/string_1, utils/string_2
+  * Use utils/parsing, utils/string_check
+- Use `snake_case` for ___all files___ except for all <u>following rules</u>.
+- Use `camelCase` for all ___class files___ and ___script files___.
+- Use `kebab-case` for ___docker-compose___ files.
+- Use `Capitalized` for ___fonts___, ___Makefile___ and ___Dockerfile___.
+- Use `flatcase` for all config files (_.json, .config.js_).
+
 #### General Rules
 - Names must be descriptive and clear to a new reader (scientific/technical names first, and if none exist, use computer science terms related to the problem).
 - Do not use abbreviations that are ambiguous or unfamiliar to readers outside your project, and do not abbreviate by deleting letters within a word.
