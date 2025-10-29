@@ -11,7 +11,7 @@ COPY . .
 RUN npm run format:check
 RUN npm run build
 
-ENTRYPOINT ["/app/checkAndBuilt.sh"]
+ENTRYPOINT ["/app/check_and_build.sh"]
 
 EXPOSE 3000
 
