@@ -4,12 +4,14 @@ import { SELECT_THEME } from "../pages/content/theme_page.js";
 import { USER_PAGE } from "../pages/content/user_page.js";
 import { loadEvent } from "./event.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
+import { MAIN_MENU } from "../pages/main_menu.js";
 
 enum PageID {
 	FIRST = "first_page",
 	API = "api_page",
 	THEME = "select_theme",
 	USER = "user_page",
+	MAIN_MENU = "main_menu",
 }
 
 const PAGE_CONTENT: Record<PageID, string> = {
@@ -17,6 +19,7 @@ const PAGE_CONTENT: Record<PageID, string> = {
 	[PageID.API]: API_PAGE,
 	[PageID.THEME]: SELECT_THEME,
 	[PageID.USER]: USER_PAGE,
+	[PageID.MAIN_MENU]: MAIN_MENU,
 };
 
 let currentPage = PageID.FIRST;
@@ -77,4 +80,4 @@ function init(): void {
 	loadPage(currentPage);
 };
 
-export { PageID,init, navigate };
+export { PageID, init, navigate };

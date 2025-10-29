@@ -5,6 +5,7 @@ import { themeEvents } from "../pages/event/theme_events.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 import { userEvents } from "../pages/event/user_events.js";
 import { whoami } from "../services/user_management/login.js";
+import { mainMenuEvents } from "../pages/main_menu.js";
 
 interface Handler {
 	elem: HTMLElement;
@@ -46,6 +47,10 @@ function loadEvent(id: PageID): void {
 		case PageID.USER: {
 			userEvents();
 			whoami();
+			break;
+		}
+		case PageID.MAIN_MENU: {
+			mainMenuEvents();
 			break;
 		}
 		default: {

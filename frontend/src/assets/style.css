@@ -37,7 +37,7 @@ header h1 {
 
 /* Main */
 main {
-  @apply flex-1 flex justify-center items-start p-8;
+  background-color: var(--color-primary);
 }
 
 .card {
