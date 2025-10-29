@@ -58,6 +58,7 @@
 #### File organisation rules
 
 ##### Folder names
+- Use `snake_case` to name folders.
 - Except if discussed, folder names will be in the singular.
 - Always use shortest folder names possible.
 - Any functionalities must have his folder with a good context name.
