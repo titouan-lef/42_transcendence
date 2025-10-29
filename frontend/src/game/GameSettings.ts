@@ -8,16 +8,20 @@ export class GameSettings {
 	readonly ball: BallOption;
 	readonly rotatingPlayer:  boolean;
 	readonly spin:  boolean;
+
+	/**@todo this wont be here with serverside */
+	readonly playerId: 1 | 2;
 	readonly player1Keys: PlayerKeys;
 	readonly player2Keys: PlayerKeys;
 
-	constructor(map:  MapOption, ball: BallOption, rotatingPlayer: boolean, effects: boolean, 
+	constructor(playerId: 1 | 2, map:  MapOption, ball: BallOption, rotatingPlayer: boolean, spin: boolean, 
 		player1Keys: PlayerKeys, player2Keys: PlayerKeys) {
 		this.map = map;
 		this.ball = ball;
 		this.rotatingPlayer = rotatingPlayer;
-		this.spin = effects;
+		this.spin = spin;
 		this.player1Keys = player1Keys;
 		this.player2Keys = player2Keys;
+		this.playerId = playerId;
 	}
 }

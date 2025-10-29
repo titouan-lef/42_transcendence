@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapOption } from "../GameSettings.js";
-import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, COLORS, GLOW_INTENSITY } from "../values.js";
+import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, COLORS, GLOW_INTENSITY, SCORE_CANVAS_SIZE_X, SCORE_CANVAS_SIZE_Y, SCORE_SIZE, CAMERA_POS_X, SCORE_POS_Y } from "../values.js";
 
 export abstract class MapTemplate {
 	protected glow: babylon.GlowLayer;
@@ -11,6 +11,10 @@ export abstract class MapTemplate {
 	protected readonly sun: babylon.Mesh;
 	protected readonly light: babylon.DirectionalLight;
 	readonly type: MapOption;
+	/**@todo check */
+	private readonly score: babylon.Mesh;
+	private readonly scoreTexture: babylon.DynamicTexture;
+	//
 
 	constructor(scene: babylon.Scene, type: MapOption) {
 		this.type = type;
@@ -22,6 +26,10 @@ export abstract class MapTemplate {
 		this.limits.forEach(limit => this.setLimitPhysic(scene, limit));
 		this.sun = this.createSun(scene);
 		this.light = this.createLight(scene);
+		/**@todo check */
+		this.scoreTexture = new babylon.DynamicTexture("scoreTexture", { width: SCORE_CANVAS_SIZE_X, height: SCORE_CANVAS_SIZE_Y }, scene, false);
+		this.score = this.createFloatingScore(scene);
+		//
 		this.glow = new babylon.GlowLayer("glow", scene);
 		this.glow.intensity = GLOW_INTENSITY;
 	}
@@ -70,6 +78,44 @@ export abstract class MapTemplate {
 		return newMesh;
 	}
 
+	/**@todo check */
+	private createFloatingScore(scene: babylon.Scene): babylon.Mesh {
+		const material = new babylon.StandardMaterial("scoreMat", scene);
+		material.diffuseTexture = this.scoreTexture;
+		material.emissiveColor = COLORS.white;
+		material.diffuseTexture.hasAlpha = true;  // transparency
+		material.alpha = 1;
+		// plane to show texture
+		const plane = babylon.MeshBuilder.CreatePlane("scorePlane", { width: MAP_SIZE.z * 0.4, height: MAP_SIZE.z * 0.2 }, scene);
+		plane.material = material;
+		// Position
+		plane.billboardMode = babylon.Mesh.BILLBOARDMODE_ALL; // so it faces camera
+		const camera = scene.getCameraByName("camera");
+		if (camera === null || !(camera instanceof babylon.ArcRotateCamera))
+			return plane;
+		const direction = camera.target.subtract(camera.position);
+		direction.y = 0;
+		direction.normalize();
+		const planePosition = camera.position.add(direction.scale(CAMERA_POS_X + (MAP_SIZE.x * 0.6)));
+		plane.position = new babylon.Vector3(planePosition.x, SCORE_POS_Y, planePosition.z);
+		return plane;
+	}
+
+	/**@todo check */
+	changeScore(score: number[]): void {
+		if (this.score.material === null)
+			return ;
+		const ctx = this.scoreTexture.getContext();
+		ctx.font = `bold ${SCORE_SIZE}px Arial`;
+		const text = `${score[0]} : ${score[1]}`;
+		const textWidth = ctx.measureText(text).width;
+		const x = (SCORE_CANVAS_SIZE_X - textWidth) / 2;
+		const y = SCORE_CANVAS_SIZE_Y / 2 + SCORE_SIZE / 2;
+		this.scoreTexture.clear(); // clear previous text
+		this.scoreTexture.drawText(text, x, y, `bold ${SCORE_SIZE}px Arial`, "white", "transparent");
+		this.scoreTexture.update();
+	}
+
 	destroy(): void {
 		this.destroyRest();
 		this.groundPhysic.dispose();
@@ -84,6 +130,11 @@ export abstract class MapTemplate {
 		this.sun.dispose();
 		this.light.dispose();
 		this.light.dispose();
+		/**@todo check */
+		this.scoreTexture.dispose();
+		this.score.material?.dispose();
+		this.score.dispose();
+		//
 		this.glow.dispose();
 	}
 
