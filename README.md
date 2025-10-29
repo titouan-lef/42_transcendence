@@ -67,13 +67,14 @@
 - Always name your files with short and context friendly names.
 - In case of too much functions in one file, you can split your file, but never name them with filename_2.ts or equivalent, find a new context and organisation for your functions.
 
-  For example:
-  * Don't use utils/string_1, utils/string_2
-  * Use utils/parsing, utils/string_check
-- Use `snake_case` for ___all files___ except for all <u>following rules</u>.
-- Use `camelCase` for all ___class files___ and ___script files___.
-- Use `kebab-case` for ___docker-compose___ files.
-- Use `Capitalized` for ___fonts___, ___Makefile___ and ___Dockerfile___.
+> [!note]
+> - Don't use _utils/string_1_, _utils/string_2_
+> - Use _utils/parsing_, _utils/string_check_
+- Use `snake_case` for **_all files_** except for all <ins>following rules</ins>.
+- Use `PascalCase` for all **_class files_** and **_fonts_**.
+- Always use font name for font files (erasing whitespace).
+- Use `kebab-case` for _docker-compose_ files.
+- Use `Capitalized` for _Makefile_ and _Dockerfile_.
 - Use `flatcase` for all config files (_.json, .config.js_).
 
 #### General Rules
@@ -211,6 +212,7 @@ CONSTANT_CASE | global constant values, including enum values and static readonl
 
 - Add tab size 4 for indentation and never use the spaces.
 - Names must not start or end with `_`.
+- It must contains a last empty line (to avoid auto-save vscode adding newline at the end).
 
 #### Visibility
 - TypeScript symbols are public by default. Never use the public modifier except when declaring non-readonly public parameter properties (in constructors).
