@@ -2,8 +2,9 @@ import { Game } from "./Game.js";
 import { GameSettings } from "./GameSettings.js";
 
 //this will change when checking options
-/**@todo will move keys to the "session"'s settings */
-const SETTINGS: GameSettings = new GameSettings("default", "random", true, true, ["KeyA", "KeyD", "KeyW", "KeyS", "Space"], ["KeyJ", "KeyL", "KeyI", "KeyK", "KeyP"]);
+/**@todo will move keys + playerId to the "session"'s settings */
+/**parameters: playerId, MapOption, BallOption, rotatingPlayer, spin, player1Keys, player2Keys */
+const SETTINGS: GameSettings = new GameSettings(1, "default", "random", true, true, ["KeyA", "KeyD", "KeyW", "KeyS", "Space"], ["KeyJ", "KeyL", "KeyI", "KeyK", "KeyP"]);
 
 let isPressed = false;
 

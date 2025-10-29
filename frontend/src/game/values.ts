@@ -50,23 +50,30 @@ export const COLORS: Record<string, babylon.Color3> = {
 	lightColorDefault: LIGHTCOLOR_DEFAULT
 };
 
+export const POINTS_TO_WIN = 5;
+
 export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 50, 100);
+export const CAMERA_POS_X = MAP_SIZE.x * 1.4;
 export const WALL_WIDTH = 3;
 export const WALL_HEIGHT = 5;
-export const BALL_DIAMETER = 2; //has to be smaller than the player
-export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x
-export const PARTICLE_NUMBER = 500;
-export const GLOW_INTENSITY = 0.6;
+export const SCORE_CANVAS_SIZE_X = 512;
+export const SCORE_CANVAS_SIZE_Y = 256;
+export const SCORE_SIZE = 120;
+export const SCORE_POS_Y = 20;
 export const SUN_DIAMETER = 20;
+export const GLOW_INTENSITY = 0.6;
+export const PARTICLE_NUMBER = 500;
+
+export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x
 export const PLAYER_MASS = 1;
 export const PLAYER_RESTITUTION = 1;
 export const PLAYER_MOVEMENT_IMPULSE = MAP_SIZE.z * PLAYER_MASS * 0.8;
 export const PLAYER_ROTATION_IMPULSE = MAP_SIZE.x * PLAYER_MASS * 0.4;
-export const TRAIL_CREATION_INTERVAL = 15;
-export const POINTS_TO_WIN = 5;
 
 /** BALL SETTINGS */
+export const BALL_DIAMETER = 2; //has to be smaller than the player
 export const MAX_SPEED = 60;
+export const TRAIL_CREATION_INTERVAL = 15;
 export const NERF_SPEED_FACTOR = MAX_SPEED / 4;
 export const INVISIBLE_BALL_FADING_INTERVAL = 50;
 export const INVISIBLE_BALL_INVISIBILITY_INTERVAL = 1200;
@@ -80,7 +87,6 @@ export const BALL_ANGULAR_FORCE = 0.5;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const BALL_ANGULAR_INTERVAL = 45;
 
-/** @todo better explosion on GOAL */
-/** @todo animation when goal and end of game ? */
+/** @todo SUN placement + refacto map classes */
 /** @todo player sometimes blocked when pressing right left, should be solved with server side */
 /** @todo maps */

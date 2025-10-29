@@ -107,12 +107,12 @@ export class SceneManager {
 	}
 
 	/** ball explodes, the time slow down */
-	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3): Promise<void> {
+	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3, score: babylon.Vector2): Promise<void> {
 		this.balls.forEach( ball => {
 			ball.preDeath();
-			ball.showParticles(position, scene, "explosion");
+			ball.showParticles(position, scene, "explosion"); /**@todo change position here */
 		});
-
+		this.updateScore(score);
 		const originalGetDelta = engine.getDeltaTime; // keep original delta
 		engine.getDeltaTime = function(): number {
 			return originalGetDelta.call(this) * 0.01; // slow animations
@@ -125,10 +125,17 @@ export class SceneManager {
 		engine.getDeltaTime = originalGetDelta;// set back to original speed
 	}
 
-	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
+	private updateScore(score: babylon.Vector2): void {
+		this.maps.forEach( map => {
+			map.changeScore([score.x, score.y]);
+		});
+	}
+
+	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void {
 		this.createPlayers(scene, settings);
 		this.createBall(scene, settings);
 		this.createMap(scene, settings.map);
+		this.updateScore(score);
 	}
 
 	destroyEnvironnement(scene: babylon.Scene): void {

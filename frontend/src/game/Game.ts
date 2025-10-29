@@ -3,7 +3,7 @@ import { SceneManager } from "./SceneManager.js";
 import { GameSettings } from "./GameSettings.js";
 import { HavokPlugin } from "@babylonjs/core/Physics";
 import havokPhysics from "@babylonjs/havok";
-import { MAP_SIZE, POINTS_TO_WIN } from "./values.js";
+import { CAMERA_POS_X, POINTS_TO_WIN } from "./values.js";
 
 export class Game {
 	private readonly engine: babylon.Engine;
@@ -22,9 +22,9 @@ export class Game {
 		this.sceneManager = new SceneManager();
 		this.scene = scene;
 		window.addEventListener("resize", () => this.engine.resize());
-		this.setScene();
-		this.camera = this.createCamera();
 		this.score = new babylon.Vector2(0, 0);
+		this.camera = this.createCamera();
+		this.setScene();
 	}
 
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
@@ -91,7 +91,7 @@ export class Game {
 
 	private setScene(): void {
 		this.sceneManager.createTextures(this.scene);
-		this.sceneManager.setEnvironnement(this.scene, this.settings);
+		this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
 		/**@todo text GOAL?*/
 
 		/**@todo just to make the ball move, will be removed*/
@@ -104,8 +104,9 @@ export class Game {
 		};
 
 		this.scene.onAfterRenderObservable.add(() => {
-			if (this.inAnimation === false)
+			if (this.inAnimation === false) {
 				this.checkEndOfPoint();
+			}
 		});
 	}
 
@@ -114,30 +115,35 @@ export class Game {
 		const goalInfos = this.sceneManager.checkGoal();
 		if (goalInfos !== null && goalInfos.position !== null) {
 			this.inAnimation = true;
-			await this.sceneManager.goalAnimation(this.engine, this.scene, goalInfos.position);
-			/**@todo inscrire goal */
-			if (goalInfos.goal === "player2") {
+			if (goalInfos.goal === "player1") {
 				this.score.x += 1;
-				//console.log("player 2 goaled");
 			} else{
 				this.score.y += 1;
-				//console.log("player 1 goaled");
 			}
+			await this.sceneManager.goalAnimation(this.engine, this.scene, goalInfos.position, this.score);
+			/**@todo inscrire goal */
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
 				this.stop();
 			} else{
 				this.inAnimation = false;
 				this.sceneManager.destroyEnvironnement(this.scene);
-				this.sceneManager.setEnvironnement(this.scene, this.settings);
+				this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
 			}
 		}
 	}
 
 	/**@todo see if camera can be moved via mouse or keyboard or none */
 	private createCamera(): babylon.ArcRotateCamera {
+		const cameraAxeLat = 1;
+		let cameraAxeLong;
+		if (this.settings.playerId === 1) {
+			cameraAxeLong = 0;
+		} else {
+			cameraAxeLong = Math.PI;
+		}
 		const camera = new babylon.ArcRotateCamera("camera",
-			babylon.Tools.ToRadians(0), babylon.Tools.ToRadians(57.3),
-			MAP_SIZE.x * 1.4, babylon.Vector3.Zero(), this.scene);
+			cameraAxeLong, cameraAxeLat,
+			CAMERA_POS_X, babylon.Vector3.Zero(), this.scene);
 		/**@todo will be removed, wont be able to move the camera */
 		camera.attachControl(this.canvas, true);
 		camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
