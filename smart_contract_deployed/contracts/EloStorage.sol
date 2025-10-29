@@ -6,7 +6,7 @@ contract EloStorage {
 	mapping(uint256 => mapping(uint256 => uint256)) private playerEloBySeason;
 
 	function usernameToId(string memory username) internal pure returns (uint256) {
-	return uint256(keccak256(abi.encodePacked(username)));
+		return uint256(keccak256(abi.encodePacked(username)));
 	}
 
 	function setElo(string memory username, uint256 season, uint256 elo) public
