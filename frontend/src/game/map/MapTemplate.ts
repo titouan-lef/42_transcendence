@@ -1,5 +1,5 @@
 import * as babylon from "/babylonjs/core/index.js";
-import { MapOption } from "../gameSettings.js";
+import { MapOption } from "../GameSettings.js";
 import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, COLORS, PLAYER_DIMENSION, GLOW_INTENSITY } from "../values.js";
 
 export abstract class MapTemplate {

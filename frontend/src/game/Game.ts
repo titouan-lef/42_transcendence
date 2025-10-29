@@ -1,6 +1,6 @@
 import * as babylon from "/babylonjs/core/index.js";
-import { SceneManager } from "./sceneManager.js";
-import { GameSettings } from "./gameSettings.js";
+import { SceneManager } from "./SceneManager.js";
+import { GameSettings } from "./GameSettings.js";
 import { HavokPlugin } from "/babylonjs/core/Physics/index.js";
 import havokPhysics from "/babylonjs/havok/lib/esm/HavokPhysics_es.js";
 import { MAP_SIZE, POINTS_TO_WIN } from "./values.js";
@@ -76,7 +76,7 @@ export class Game {
 	private setScene(): void {
 		this.sceneManager.setEnvironnement(this.scene, this.settings);
 		/**@todo text GOAL?*/
-		
+
 		/**@todo just to make the ball move, will be removed*/
 		const sceneManager = this.sceneManager;
 		this.scene.onPointerDown = (): void => {

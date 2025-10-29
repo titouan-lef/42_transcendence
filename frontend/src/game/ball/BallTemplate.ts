@@ -1,7 +1,7 @@
 import * as babylon from "/babylonjs/core/index.js";
-import { BallOption } from "../gameSettings.js";
+import { BallOption } from "../GameSettings.js";
 import { BALL_DIAMETER, TRAIL_CREATION_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL } from "../values.js";
-import { BallTrail } from "./ballTrail.js";
+import { BallTrail } from "./BallTrail.js";
 
 export abstract class BallTemplate {
 	protected readonly mesh: babylon.Mesh;
@@ -153,6 +153,6 @@ export abstract class BallTemplate {
 	abstract setMaterial(scene: babylon.Scene, color: babylon.Color3): void;
 
 	abstract activateEffect(): void;
-	
+
 	abstract destroyRest(): void;
 }
