@@ -1,7 +1,7 @@
 import * as babylon from "/babylonjs/core/index.js";
-import { BallTemplate } from "./ballTemplate.js";
+import { BallTemplate } from "./BallTemplate.js";
 import { COLORS, SNAKE_BALL_EFFECT_INTERVAL, SNAKE_BALL_ANGULAR_FORCE, SNAKE_BALL_ANGULAR_INTERVAL } from "../values.js";
-import { GameSettings } from "../gameSettings.js";
+import { GameSettings } from "../GameSettings.js";
 
 export class SnakeBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
@@ -13,7 +13,7 @@ export class SnakeBall extends BallTemplate {
 		this.force = SNAKE_BALL_ANGULAR_FORCE;
 		this.trailIntervalId = this.setTrail(scene, this.color);
 	}
-	
+
 	setMaterial(scene: babylon.Scene, color: babylon.Color3): void {
 		const material = new babylon.StandardMaterial('ballcolor', scene);
 		material.emissiveColor = color;

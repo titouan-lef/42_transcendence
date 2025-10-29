@@ -1,6 +1,6 @@
 import * as babylon from "/babylonjs/core/index.js";
-import { GameSettings } from "./gameSettings.js";
-import { PlayerKeys } from "./gameSettings.js";
+import { GameSettings } from "./GameSettings.js";
+import { PlayerKeys } from "./GameSettings.js";
 import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MOVEMENT_IMPULSE, PLAYER_ROTATION_IMPULSE, PLAYER_MASS } from "./values.js";
 
 export class Player {
@@ -10,7 +10,7 @@ export class Player {
 	private readonly controls: PlayerKeys;
 	private readonly rotatingPlayer: boolean;
 	private readonly keyPressed: boolean[] = [false, false, false, false, false];
-	
+
 	private readonly axeZ: babylon.Mesh;
 	private readonly axeZPhysic: babylon.PhysicsAggregate;
 	private readonly rotater: babylon.Mesh | null;
@@ -48,7 +48,7 @@ export class Player {
 			this.rotater = null;
 			this.rotaterPhysic = null;
 		}
-		
+
 		this.zConstraint = this.setZConstraint(scene);
 		this.distanceConstraint = this.setDistanceConstraint(scene);
 		this.movementConstraint = this.setMovementConstraint(scene);
@@ -64,7 +64,7 @@ export class Player {
 	}
 
 	private setPlayer(scene: babylon.Scene, position: babylon.Vector2): babylon.Mesh {
-		const player = babylon.MeshBuilder.CreateBox("player", 
+		const player = babylon.MeshBuilder.CreateBox("player",
 			{ width: PLAYER_DIMENSION.x, height: PLAYER_DIMENSION.y, depth: PLAYER_DIMENSION.z }, scene);
 		player.position.x = position.x;
 		player.position.y = position.y;
@@ -241,7 +241,7 @@ export class Player {
 	// }
 	// 	});
 	// 	return positionObserver;
-	// } 
+	// }
 
 	destroy(): void {
 		this.zConstraint.dispose();

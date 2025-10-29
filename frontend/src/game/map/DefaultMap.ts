@@ -1,5 +1,5 @@
 import * as babylon from "/babylonjs/core/index.js";
-import { MapTemplate } from "./mapTemplate.js";
+import { MapTemplate } from "./MapTemplate.js";
 import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, PARTICLE_NUMBER, COLORS } from "../values.js";
 
 export class DefaultMap extends MapTemplate {
@@ -16,7 +16,7 @@ export class DefaultMap extends MapTemplate {
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
-		const ground = babylon.MeshBuilder.CreateGround("defaultground", 
+		const ground = babylon.MeshBuilder.CreateGround("defaultground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
 		const material = new babylon.StandardMaterial('groundcolor', scene);
 		material.diffuseColor =  COLORS.black;
@@ -79,7 +79,7 @@ export class DefaultMap extends MapTemplate {
 		light.diffuse = COLORS.lightColorDefault;
 		return light;
 	}
-	
+
 	destroyRest(): void {
 		this.bars.forEach(bar => {
 			bar.material?.dispose();

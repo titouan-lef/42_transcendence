@@ -1,18 +1,18 @@
 import * as babylon from "/babylonjs/core/index.js";
-import { BallTemplate } from "./ballTemplate.js";
+import { BallTemplate } from "./BallTemplate.js";
 import { COLORS } from "../values.js";
-import { GameSettings } from "../gameSettings.js";
+import { GameSettings } from "../GameSettings.js";
 
-export class DefaultBall extends BallTemplate {
+export class HeavyBall extends BallTemplate {
 	protected trailIntervalId: ReturnType<typeof setInterval>;
-	private readonly color: babylon.Color3 = COLORS.white;
+	private readonly color: babylon.Color3 = COLORS.grey;
 
 	constructor(scene: babylon.Scene, settings: GameSettings) {
-		super(scene, "default", settings.spin);
+		super(scene, "heavy", settings.spin);
 		this.setMaterial(scene, this.color);
 		this.trailIntervalId = this.setTrail(scene, this.color);
 	}
-	
+
 	setMaterial(scene: babylon.Scene, color: babylon.Color3): void {
 		const material = new babylon.StandardMaterial('ballcolor', scene);
 		material.emissiveColor = color;

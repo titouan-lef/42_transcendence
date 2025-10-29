@@ -1,18 +1,18 @@
 import * as babylon from "/babylonjs/core/index.js";
-import { BallTemplate } from "./ball/ballTemplate.js";
-import { DefaultBall } from "./ball/defaultBall.js";
-import { InvisibleBall } from "./ball/invisibleBall.js";
-import { HeavyBall } from "./ball/heavyBall.js";
-import { TrickyBall } from "./ball/trickyBall.js";
-import { SnakeBall } from "./ball/snakeBall.js";
-import { MapTemplate } from "./map/mapTemplate.js";
-import { DefaultMap } from "./map/defaultMap.js";
-import { FrozenMap } from "./map/frozenMap.js";
-import { RainyMap } from "./map/rainyMap.js";
-import { VolcanoMap } from "./map/volcanoMap.js";
-import { WindyMap } from "./map/windyMap.js";
-import { Player } from "./player.js";
-import { GameSettings, MapOption, BallOption } from "./gameSettings.js";
+import { BallTemplate } from "./ball/BallTemplate.js";
+import { DefaultBall } from "./ball/DefaultBall.js";
+import { InvisibleBall } from "./ball/InvisibleBall.js";
+import { HeavyBall } from "./ball/HeavyBall.js";
+import { TrickyBall } from "./ball/TrickyBall.js";
+import { SnakeBall } from "./ball/SnakeBall.js";
+import { MapTemplate } from "./map/MapTemplate.js";
+import { DefaultMap } from "./map/DefaultMap.js";
+import { FrozenMap } from "./map/FrozenMap.js";
+import { RainyMap } from "./map/RainyMap.js";
+import { VolcanoMap } from "./map/VolcanoMap.js";
+import { WindyMap } from "./map/WindyMap.js";
+import { Player } from "./Player.js";
+import { GameSettings, MapOption, BallOption } from "./GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "./values.js";
 
 
