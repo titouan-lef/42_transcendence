@@ -1,94 +1,47 @@
 @import "tailwindcss";
 @import "./themes/theme.css";
 
-@tailwind utilities;
-
 /* fonts */
 @font-face {
-	font-family: "Jaro", sans-serif;
-	src: url("./fonts/Jaro.ttf") format("truetype");
+	font-family: Jaro;
+	font-style: normal;
 	font-display: swap;
+	src: url(/fonts/Jaro.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: JetBrains Mono;
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url(/fonts/JetBrainsMono-Regular.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: JetBrains Mono;
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url(/fonts/JetBrainsMono-Bold.ttf) format("truetype");
+}
+
+@font-face {
+	font-family: Parkinsans;
+	font-style: normal;
+	font-display: swap;
+	src: url(/fonts/Parkinsans.ttf) format("truetype");
 }
 
 /* Lists all our defaults variables */
 @theme {
 	--font-jaro:		"Jaro", sans-serif;
+	--font-jbm:			"JetBrains Mono", monospace;
+	--font-park:		"Parkinsans", sans-serif;
 	--color-primary:	#6e6e6e;
 	--color-light:		#c7c7c7;
 	--color-dark:		#313131;
 	--color-variant:	#477b99;
 	--color-secondary:	#d168cc;
-}
-
-/* Reset some defaults */
-* {
-  @apply m-0 p-0 box-border;
-}
-
-/* Body */
-body {
-  @apply font-sans flex flex-col min-h-screen text-white;
-  background: var(--color-primary);
-}
-
-header h1 {
-  @apply text-4xl text-center text-[#f9d342];
-}
-
-/* Main */
-main {
-  background-color: var(--color-primary);
-}
-
-.card {
-  @apply bg-white/10 p-8 rounded-2xl w-96 shadow-[0_8px_20px_rgba(0,0,0,0.5)];
-}
-
-.card h2 {
-  @apply mb-4 text-2xl text-[#f9d342];
-}
-
-.card p {
-  @apply mb-4 text-gray-300;
-}
-
-/* Glassy button with gradient edges */
-.btn {
-  @apply relative px-6 py-3 font-bold rounded-md text-white bg-transparent cursor-pointer transition-transform duration-200;
-
-  /* Create gradient border effect */
-  border: 2px solid transparent;
-  background-image: radial-gradient(circle, rgba(255,255,255,0), rgba(255,255,255,0.2));
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-}
-
-/* Hover: grow */
-.btn:hover {
-  @apply scale-110;
-}
-
-/* Active: shrink and subtle background */
-.btn:active {
-  @apply scale-95;
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Response box */
-.response-box {
-  @apply mt-4 p-4 bg-white/15 rounded-md font-mono text-gray-100 whitespace-pre-wrap;
-}
-
-/* Forms */
-.form {
-  @apply flex flex-col gap-4;
-}
-
-.form input {
-  @apply w-full px-4 py-2 rounded-lg bg-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition;
-}
-
-/* Footer */
-footer {
-  @apply text-center p-4 text-sm bg-black/30;
+	--color-tx-prim:	#d168cc;
+	--color-tx-sec:		#477b99;
 }

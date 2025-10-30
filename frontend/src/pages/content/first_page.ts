@@ -1,6 +1,6 @@
 /** @todo clamp : better responsivity (not working well here) */
 const CLASS_CSS = `
-font-jaro font-bold text-[var(--color-tx-prim)]
+font-jaro font-bold text-tx-prim bg-primary
 text-[clamp(100px,50vmin,500px)] text-balance
 flex items-center justify-center h-screen
 `;
