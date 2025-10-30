@@ -22,7 +22,8 @@ const PAGE_CONTENT: Record<PageID, string> = {
 	[PageID.MAIN_MENU]: MAIN_MENU,
 };
 
-let currentPage = PageID.FIRST;
+/** @todo loading first MAIN_MENU for testing purpose, default value must be FIRST */
+let currentPage = PageID.MAIN_MENU;
 
 /**
  * @warning please use erasePage(PageID) before you load a page
