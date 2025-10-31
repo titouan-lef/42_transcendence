@@ -73,7 +73,7 @@ export class SceneManager {
 				this.maps.push(new FrozenMap(scene));
 				break;
 			case "rainy":
-				this.maps.push(new RainyMap(scene, this.textures.stars));
+				this.maps.push(new RainyMap(scene, this.textures.rain));
 				break;
 			default: throw new Error("switch map fail");
 		}
@@ -93,7 +93,7 @@ export class SceneManager {
 		this.textures.spark = new babylon.Texture("textures/sparks.png", scene);
 		this.textures.flare = new babylon.Texture("textures/flare.png", scene);
 		this.textures.stars = new babylon.Texture("textures/particle.png", scene);
-		//this.textures.rain = new babylon.Texture("textures/rain.png", scene);
+		this.textures.rain = new babylon.Texture("textures/rain.png", scene);
 	}
 
 	/** @todo Titouan gaming */
@@ -162,7 +162,7 @@ export class SceneManager {
 		// 	console.log("texture name : " + texture.name);
 		// });
 		// console.log("lights : " + scene.lights);
-		console.log("particle system: " + scene.particleSystems);
+		// console.log("particle system: " + scene.particleSystems);
 	}
 
 	destroyTextures(): void {
