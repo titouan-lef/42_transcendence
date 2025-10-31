@@ -43,7 +43,16 @@ export abstract class BallTemplate {
 		this.collisionObserver = this.checkBallCollision();
 
 		/**@todo launch ball */
-		//this.physic.body.setLinearVelocity(new babylon.Vector3((Math.random()  * 2 - 1) * 30, 0, (Math.random()  * 2 - 1) * 30));
+		setTimeout( () => {
+			const random = Math.random();
+			let startingDirection;
+			if (random < 0.5)
+				startingDirection = 1;
+			else
+				startingDirection = -1;
+			this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
+		}, 1000);
+
 		this.realDirection = this.physic.body.getLinearVelocity();
 
 		this.sceneObservable = scene.onBeforeRenderObservable;
@@ -92,12 +101,12 @@ export abstract class BallTemplate {
 	private applyEffect(): void {
 		this.force -= (BALL_ANGULAR_FORCE / BALL_ANGULAR_INTERVAL) * this.forceDirection; // Angular interval is the number of step it will take to reach maximum value
 		this.force = Math.max(this.force, BALL_ANGULAR_FORCE); // to deny force to go higher than BALL_ANGULAR_FORCE
-		if (this.spinningLeft) {
+		if (this.spinningRight) {
 			this.physic.body.applyForce(
 				new babylon.Vector3(this.realDirection.z * this.force, 0, -this.realDirection.x * this.force),
 				this.mesh.position
 			);
-		} else if (this.spinningRight) {
+		} else if (this.spinningLeft) {
 			this.physic.body.applyForce(
 				new babylon.Vector3(-this.realDirection.z * this.force, 0, this.realDirection.x * this.force),
 				this.mesh.position

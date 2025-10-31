@@ -87,6 +87,6 @@ export const BALL_ANGULAR_FORCE = 0.5;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const BALL_ANGULAR_INTERVAL = 45;
 
-/** @todo SUN placement + refacto map classes */
 /** @todo player sometimes blocked when pressing right left, should be solved with server side */
 /** @todo maps */
+/** @todo SUN placement + refacto map classes */
