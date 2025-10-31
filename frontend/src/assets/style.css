@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "./themes/theme.css";
 
+@plugin "tailwind-scrollbar";
+
 /* fonts */
 @font-face {
 	font-family: Jaro;
