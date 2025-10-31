@@ -122,7 +122,7 @@ export abstract class BallTemplate {
 	/** particles on collides */
 	private createCollisionParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
 		const collisionParticles = new babylon.ParticleSystem("collisionParticles", 300, scene);
-		collisionParticles.particleTexture = this.textures.spark;
+		collisionParticles.particleTexture = this.textures.spark.clone();
 		collisionParticles.emitter = position;
 		collisionParticles.createSphereEmitter(BALL_DIAMETER * 2);
 		collisionParticles.renderingGroupId = 1;
@@ -143,7 +143,7 @@ export abstract class BallTemplate {
 	/** particles on goal */
 	private createExplosionParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
 		const explosionParticles = new babylon.ParticleSystem("explosion", 200, scene);
-		explosionParticles.particleTexture = this.textures.flare;
+		explosionParticles.particleTexture = this.textures.flare.clone();
 		explosionParticles.emitter = position;
 		explosionParticles.createSphereEmitter(BALL_DIAMETER * 10);
 		explosionParticles.renderingGroupId = 1;
@@ -165,7 +165,7 @@ export abstract class BallTemplate {
 	/** particles on impulses */
 	protected createImpulseParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
 		const explosionParticles = new babylon.ParticleSystem("explosion", 100, scene);
-		explosionParticles.particleTexture = this.textures.flare;
+		explosionParticles.particleTexture = this.textures.flare.clone();
 		explosionParticles.emitter = position;
 		explosionParticles.createSphereEmitter(BALL_DIAMETER * 2);
 		explosionParticles.renderingGroupId = 1;
@@ -267,9 +267,14 @@ export abstract class BallTemplate {
 		this.particles.push(particle);
 		particle.start();
 		setTimeout( () => {
-			particle.stop(); // could stack particles but the point wont last too long
-			this.particles.splice(this.particles.indexOf(particle), 1);
-		}, 20);
+			particle.stop();
+			const index = this.particles.indexOf(particle);
+			particle.dispose();
+			if (index !== -1) // protection in case destroy() and the end of timeOut occur at the same time
+				this.particles.splice(index, 1);
+			else
+				console.log("uuh");
+		}, 2000);
 	}
 
 	/**@todo To remove */
@@ -294,6 +299,8 @@ export abstract class BallTemplate {
 
 	destroy(): void {
 		this.destroyRest();
+		this.collisionObservable.remove(this.collisionObserver);
+		this.sceneObservable.remove(this.sceneObserver);
 		while (this.ballTrails.length) {
 			this.ballTrails[0].destroy();
 			this.ballTrails.splice(0, 1);
@@ -301,12 +308,10 @@ export abstract class BallTemplate {
 		while (this.hitPoints.length) {
 			this.hitPoints.splice(0, 1);
 		}
-		this.collisionObservable.remove(this.collisionObserver);
-		this.sceneObservable.remove(this.sceneObserver);
 		this.physic.dispose();
 		this.particles.forEach(particle => {
 			particle.stop();
-			particle.dispose(); // just in case
+			particle.dispose();
 		});
 		while (this.particles.length)
 			this.particles.splice(0, 1);

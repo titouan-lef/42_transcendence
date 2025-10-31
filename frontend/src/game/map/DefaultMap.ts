@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, PARTICLE_NUMBER, COLORS } from "../values.js";
+import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS } from "../values.js";
 
 export class DefaultMap extends MapTemplate {
 	private readonly bars: babylon.Mesh[];
@@ -47,7 +47,7 @@ export class DefaultMap extends MapTemplate {
 	/** the stars in the background, will maybe move to abstract in template depending of the other maps's design */
 	private createParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
 		scene.clearColor = new babylon.Color4(0, 0, 0, 1); // sky
-		const particles = new babylon.ParticleSystem("stars", PARTICLE_NUMBER, scene);
+		const particles = new babylon.ParticleSystem("stars", D_PARTICLE_NUMBER, scene);
 		particles.particleTexture = texture;
 		particles.emitter = new babylon.Vector3(0, 0, 0);
 		particles.minEmitBox = new babylon.Vector3(-MAP_SIZE.x * 1.4, -MAP_SIZE.y * 1.4, -MAP_SIZE.z * 1.4);
@@ -85,7 +85,8 @@ export class DefaultMap extends MapTemplate {
 			bar.material?.dispose();
 			bar.dispose();
 		});
-		this.particles.stop(); // we only stop them cow they will get disposed at the end of the game
+		this.particles.stop(); // textures will be dispose at the end of the game
+		this.particles.dispose();
 		this.wallHighlight.dispose();
 	}
 }
