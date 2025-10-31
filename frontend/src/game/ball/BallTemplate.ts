@@ -41,8 +41,16 @@ export abstract class BallTemplate {
 		this.mesh.metadata = { type: "collider" };
 		this.collisionObservable = this.physic.body.getCollisionObservable();
 		this.collisionObserver = this.checkBallCollision();
+		
+		this.realDirection = this.physic.body.getLinearVelocity();
+		
+		this.sceneObservable = scene.onBeforeRenderObservable;
+		this.sceneObserver = this.applyMovementChanges();
+		this.launchBall(scene);
+	}
 
-		/**@todo launch ball */
+	/**launch ball */
+	private launchBall(scene: babylon.Scene): void {
 		setTimeout( () => {
 			const random = Math.random();
 			let startingDirection;
@@ -51,12 +59,9 @@ export abstract class BallTemplate {
 			else
 				startingDirection = -1;
 			this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
+			this.showParticles(this.mesh.position, scene, "impulse");
+			this.justCollided = true;
 		}, 1000);
-
-		this.realDirection = this.physic.body.getLinearVelocity();
-
-		this.sceneObservable = scene.onBeforeRenderObservable;
-		this.sceneObserver = this.applyMovementChanges();
 	}
 
 	private setPhysic(scene: babylon.Scene): babylon.PhysicsAggregate {
