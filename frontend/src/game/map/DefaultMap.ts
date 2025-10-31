@@ -48,7 +48,7 @@ export class DefaultMap extends MapTemplate {
 	private createParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
 		scene.clearColor = new babylon.Color4(0, 0, 0, 1); // sky
 		const particles = new babylon.ParticleSystem("stars", D_PARTICLE_NUMBER, scene);
-		particles.particleTexture = texture;
+		particles.particleTexture = texture.clone();
 		particles.emitter = new babylon.Vector3(0, 0, 0);
 		particles.minEmitBox = new babylon.Vector3(-MAP_SIZE.x * 1.4, -MAP_SIZE.y * 1.4, -MAP_SIZE.z * 1.4);
 		particles.maxEmitBox = new babylon.Vector3(MAP_SIZE.x * 1.4, MAP_SIZE.y * 1.4, MAP_SIZE.y * 1.4);
