@@ -71,7 +71,7 @@ export const R_PARTICLE_NUMBER = 4000;
 export const LIGHTNING_INTERVAL = 600;
 export const LIGHTNING_FADING_INTERVAL = 40;
 export const LIGHTNING_COLLISION_RADIUS = 5;
-export const LIGHTNING_COLLISION_STRENGTH = 50;
+export const LIGHTNING_COLLISION_STRENGTH = 30;
 
 export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x
 export const PLAYER_MASS = 1;

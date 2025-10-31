@@ -77,13 +77,14 @@ export class Lightning {
 			if (!mesh.metadata?.pushable || !mesh.physicsBody)
 				return ;
 			const body = mesh.physicsBody;
-			const meshPosition = mesh.position;
+			const meshPosition = mesh.getAbsolutePosition();
 			const direction = meshPosition.subtract(center);
 			const distance = direction.length();
+			const explosionRadius = LIGHTNING_COLLISION_RADIUS * this.randomSize;
 
-			if (distance < LIGHTNING_COLLISION_RADIUS && distance > 0) { // if the mesh is in the explosion radius
+			if (distance < explosionRadius && distance > 0) { // if the mesh is in the explosion radius
 				direction.normalize();
-				const force = direction.scale(LIGHTNING_COLLISION_STRENGTH * (1 - distance / LIGHTNING_COLLISION_RADIUS) * this.randomSize);
+				const force = direction.scale(LIGHTNING_COLLISION_STRENGTH * (1 - distance / explosionRadius) * this.randomSize);
 				force.y = 0;
 				body.applyImpulse(force, meshPosition);
 			}
