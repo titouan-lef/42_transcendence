@@ -61,7 +61,7 @@ export class SceneManager {
 		}
 		switch (map) {
 			case "default":
-				this.maps.push(new DefaultMap(scene, this.textures.particle));
+				this.maps.push(new DefaultMap(scene, this.textures.stars));
 				break;
 			case "volcano":
 				this.maps.push(new VolcanoMap(scene));
@@ -73,7 +73,7 @@ export class SceneManager {
 				this.maps.push(new FrozenMap(scene));
 				break;
 			case "rainy":
-				this.maps.push(new RainyMap(scene));
+				this.maps.push(new RainyMap(scene, this.textures.stars));
 				break;
 			default: throw new Error("switch map fail");
 		}
@@ -92,7 +92,8 @@ export class SceneManager {
 	createTextures(scene: babylon.Scene): void {
 		this.textures.spark = new babylon.Texture("textures/sparks.png", scene);
 		this.textures.flare = new babylon.Texture("textures/flare.png", scene);
-		this.textures.particle = new babylon.Texture("textures/particle.png", scene);
+		this.textures.stars = new babylon.Texture("textures/particle.png", scene);
+		//this.textures.rain = new babylon.Texture("textures/rain.png", scene);
 	}
 
 	/** @todo Titouan gaming */
@@ -161,6 +162,7 @@ export class SceneManager {
 		// 	console.log("texture name : " + texture.name);
 		// });
 		// console.log("lights : " + scene.lights);
+		console.log("particle system: " + scene.particleSystems);
 	}
 
 	destroyTextures(): void {

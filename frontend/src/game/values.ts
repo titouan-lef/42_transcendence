@@ -62,7 +62,12 @@ export const SCORE_SIZE = 120;
 export const SCORE_POS_Y = 20;
 export const SUN_DIAMETER = 20;
 export const GLOW_INTENSITY = 0.6;
-export const PARTICLE_NUMBER = 500;
+
+/**DEFAULT MAP */
+export const D_PARTICLE_NUMBER = 500;
+
+/**RAINY MAP */
+export const R_PARTICLE_NUMBER = 1500;
 
 export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x
 export const PLAYER_MASS = 1;
