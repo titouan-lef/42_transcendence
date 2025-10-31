@@ -83,6 +83,7 @@ export class Game {
 		// 	console.log("texture name : " + texture.name);
 		// });
 		// console.log("lights : " + this.scene.lights);
+		//console.log("particle system: " + this.scene.particleSystems);
 		this.scene.dispose();
 		this.engine.dispose();
 		this.canvas.remove();

@@ -73,7 +73,7 @@ export class SceneManager {
 				this.maps.push(new FrozenMap(scene));
 				break;
 			case "rainy":
-				this.maps.push(new RainyMap(scene, this.textures.rain));
+				this.maps.push(new RainyMap(scene, this.textures));
 				break;
 			default: throw new Error("switch map fail");
 		}
@@ -109,6 +109,7 @@ export class SceneManager {
 
 	/** ball explodes, the time slow down */
 	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3, score: babylon.Vector2): Promise<void> {
+		this.maps.forEach(map => map.predeath());
 		this.balls.forEach( ball => {
 			ball.preDeath();
 			ball.showParticles(position, scene, "explosion"); /**@todo change position here */
@@ -152,17 +153,17 @@ export class SceneManager {
 		}
 		scene.materials.forEach(mat => mat.dispose()); // these are the defualt materials, not sure if i have to dispose them since they are created auto
 		/**@todo Debugging logs */
-		// console.log("meshes : " + scene.meshes);
-		// console.log("materials : " + scene.materials);
-		// scene.materials.forEach(mat => {
-		// 	console.log("mat name : " + mat.name);
-		// });
-		// console.log("textures : " + scene.textures);
-		// scene.textures.forEach(texture => {
-		// 	console.log("texture name : " + texture.name);
-		// });
-		// console.log("lights : " + scene.lights);
-		// console.log("particle system: " + scene.particleSystems);
+		console.log("meshes : " + scene.meshes);
+		console.log("materials : " + scene.materials);
+		scene.materials.forEach(mat => {
+			console.log("mat name : " + mat.name);
+		});
+		console.log("textures : " + scene.textures);
+		scene.textures.forEach(texture => {
+			console.log("texture name : " + texture.name);
+		});
+		console.log("lights : " + scene.lights);
+		console.log("particle system: " + scene.particleSystems);
 	}
 
 	destroyTextures(): void {

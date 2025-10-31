@@ -52,7 +52,7 @@ export const COLORS: Record<string, babylon.Color3> = {
 
 export const POINTS_TO_WIN = 5;
 
-export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 50, 100);
+export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100);
 export const CAMERA_POS_X = MAP_SIZE.x * 1.4;
 export const WALL_WIDTH = 3;
 export const WALL_HEIGHT = 5;
@@ -67,7 +67,11 @@ export const GLOW_INTENSITY = 0.6;
 export const D_PARTICLE_NUMBER = 500;
 
 /**RAINY MAP */
-export const R_PARTICLE_NUMBER = 1500;
+export const R_PARTICLE_NUMBER = 4000;
+export const LIGHTNING_INTERVAL = 600;
+export const LIGHTNING_FADING_INTERVAL = 40;
+export const LIGHTNING_COLLISION_RADIUS = 5;
+export const LIGHTNING_COLLISION_STRENGTH = 50;
 
 export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x
 export const PLAYER_MASS = 1;

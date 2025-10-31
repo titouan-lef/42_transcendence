@@ -34,7 +34,8 @@ export class BallTrail {
 	}
 
 	destroy(): void {
-		clearInterval(this.intervalId);
+		if (this.intervalId)
+			clearInterval(this.intervalId);
 		this.mesh.material?.dispose();
 		this.mesh.dispose();
 	}
