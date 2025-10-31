@@ -11,10 +11,9 @@ export abstract class MapTemplate {
 	protected readonly sun: babylon.Mesh;
 	protected readonly light: babylon.DirectionalLight;
 	readonly type: MapOption;
-	/**@todo check */
 	private readonly score: babylon.Mesh;
 	private readonly scoreTexture: babylon.DynamicTexture;
-	//
+	protected activateInterval = true;
 
 	constructor(scene: babylon.Scene, type: MapOption) {
 		this.type = type;
@@ -32,6 +31,10 @@ export abstract class MapTemplate {
 		//
 		this.glow = new babylon.GlowLayer("glow", scene);
 		this.glow.intensity = GLOW_INTENSITY;
+	}
+
+	predeath(): void {
+		this.activateInterval = false;
 	}
 
 	setLimitPhysic(scene: babylon.Scene, limit: babylon.Mesh): void {

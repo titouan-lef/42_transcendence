@@ -38,7 +38,7 @@ export abstract class BallTemplate {
 		this.mesh.renderingGroupId = 1;
 		this.type = type;
 
-		this.mesh.metadata = { type: "collider" };
+		this.mesh.metadata = { type: "collider", pushable: true };
 		this.collisionObservable = this.physic.body.getCollisionObservable();
 		this.collisionObserver = this.checkBallCollision();
 		
@@ -121,7 +121,7 @@ export abstract class BallTemplate {
 
 	/** particles on collides */
 	private createCollisionParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
-		const collisionParticles = new babylon.ParticleSystem("collisionParticles", 300, scene);
+		const collisionParticles = new babylon.ParticleSystem("collision", 300, scene);
 		collisionParticles.particleTexture = this.textures.spark.clone();
 		collisionParticles.emitter = position;
 		collisionParticles.createSphereEmitter(BALL_DIAMETER * 2);
@@ -164,7 +164,7 @@ export abstract class BallTemplate {
 
 	/** particles on impulses */
 	protected createImpulseParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
-		const explosionParticles = new babylon.ParticleSystem("explosion", 100, scene);
+		const explosionParticles = new babylon.ParticleSystem("impulse", 100, scene);
 		explosionParticles.particleTexture = this.textures.flare.clone();
 		explosionParticles.emitter = position;
 		explosionParticles.createSphereEmitter(BALL_DIAMETER * 2);
@@ -267,13 +267,11 @@ export abstract class BallTemplate {
 		this.particles.push(particle);
 		particle.start();
 		setTimeout( () => {
-			particle.stop();
+			particle?.stop();
 			const index = this.particles.indexOf(particle);
-			particle.dispose();
+			particle?.dispose();
 			if (index !== -1) // protection in case destroy() and the end of timeOut occur at the same time
 				this.particles.splice(index, 1);
-			else
-				console.log("uuh");
 		}, 2000);
 	}
 
