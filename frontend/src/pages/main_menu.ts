@@ -28,9 +28,9 @@ const MAIN_MENU = `
 <div class="${ROW_STYLE}">
 	<main class="${MAIN_STYLE}">
 		<div class="flex flex-col items-center gap-[10px]">
-			<div class="${PONG_STYLE}">
+			<h1 class="${PONG_STYLE}">
 				PONG
-			</div>
+			</h1>
 			<input id="btn-api" type="button" value="play" class="${BTN_STYLE}"/>
 		</div>
 	</main>
