@@ -64,6 +64,7 @@ export class RainyMap extends MapTemplate {
 		particles.updateSpeed = 0.008;
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
 
+		/**@todo sound effects ? */
 		// (Optionnel) Légère turbulence avec une NoiseProceduralTexture
 		// const noiseTex = new BABYLON.NoiseProceduralTexture("rainNoise", 128, scene);
 		// noiseTex.animationSpeedFactor = 2.0;
@@ -83,6 +84,14 @@ export class RainyMap extends MapTemplate {
 				clearInterval(this.lightningIntervalId);
 		}, LIGHTNING_INTERVAL);
 		return lightningIntervalId;
+	}
+
+	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
+		const newMesh = babylon.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
+		const material = new babylon.StandardMaterial('wallcolor', scene);
+		material.diffuseColor =  COLORS.lime;
+		newMesh.material = material;
+		return newMesh;
 	}
 
 	destroyRest(): void {
