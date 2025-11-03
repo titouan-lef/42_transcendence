@@ -1,5 +1,6 @@
 import * as babylon from "/babylonjs/core/index.js";
 import { MAP_SIZE, WALL_WIDTH, LIGHTNING_FADING_INTERVAL, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH } from "../values.js";
+import { BallTemplate } from "../ball/BallTemplate.js";
 
 export class Lightning {
 	private readonly lightningIntervalId: ReturnType<typeof setInterval>;
@@ -86,6 +87,8 @@ export class Lightning {
 				direction.normalize();
 				const force = direction.scale(LIGHTNING_COLLISION_STRENGTH * (1 - distance / explosionRadius) * this.randomSize);
 				force.y = 0;
+				if (mesh instanceof BallTemplate)
+					mesh.setJustCollide();
 				body.applyImpulse(force, meshPosition);
 			}
 		});
