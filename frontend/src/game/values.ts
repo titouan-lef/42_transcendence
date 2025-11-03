@@ -73,11 +73,12 @@ export const LIGHTNING_FADING_INTERVAL = 40;
 export const LIGHTNING_COLLISION_RADIUS = 5;
 export const LIGHTNING_COLLISION_STRENGTH = 30;
 
+/**PLAYER */
 export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x
 export const PLAYER_MASS = 1;
 export const PLAYER_RESTITUTION = 1;
-export const PLAYER_MOVEMENT_IMPULSE = MAP_SIZE.z * PLAYER_MASS * 0.8;
-export const PLAYER_ROTATION_IMPULSE = MAP_SIZE.x * PLAYER_MASS * 0.4;
+export const PLAYER_MOVEMENT_VELOCITY = 65;
+export const PLAYER_ROTATION_VELOCITY = 10;
 
 /** BALL SETTINGS */
 export const BALL_DIAMETER = 2; //has to be smaller than the player

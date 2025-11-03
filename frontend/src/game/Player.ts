@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { GameSettings, PlayerKeys } from "./GameSettings.js";
-import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION } from "./values.js";
+import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY } from "./values.js";
 
 export class Player {
 	readonly mesh: babylon.Mesh;
@@ -86,19 +86,19 @@ export class Player {
 	private handleAction(event: KeyboardEvent["code"]): void {
 		switch (event) {
 			case this.controls[0]:
-				this.linearVelocityZ = -50;
+				this.linearVelocityZ = -PLAYER_MOVEMENT_VELOCITY;
 				break;
 			case this.controls[1]:
-				this.linearVelocityZ = 50;
+				this.linearVelocityZ = PLAYER_MOVEMENT_VELOCITY;
 				break;
 			case this.controls[2]:
 				if (this.rotatingPlayer) {
-					this.angularVelocityY = -10;
+					this.angularVelocityY = -PLAYER_ROTATION_VELOCITY;
 				}
 				break;
 			case this.controls[3]:
 				if (this.rotatingPlayer) {
-					this.angularVelocityY = 10;
+					this.angularVelocityY = PLAYER_ROTATION_VELOCITY;
 				}
 				break;
 			case this.controls[4]:
@@ -119,10 +119,10 @@ export class Player {
 	private playerObserver(): babylon.Observer<babylon.Scene> {
 		const distanceFromEdge = (MAP_SIZE.z / 2) - (WALL_WIDTH * 2) - (PLAYER_DIMENSION.z / 2);
 		const positionObserver = this.sceneObservable.add(() => {
-			if (this.mesh.position.z < -distanceFromEdge && this.linearVelocityZ === -50)
-				this.linearVelocityZ += 50;
-			if (this.mesh.position.z > distanceFromEdge && this.linearVelocityZ === 50)
-				this.linearVelocityZ -= 50;
+			if (this.mesh.position.z < -distanceFromEdge && this.linearVelocityZ === -PLAYER_MOVEMENT_VELOCITY)
+				this.linearVelocityZ += PLAYER_MOVEMENT_VELOCITY;
+			if (this.mesh.position.z > distanceFromEdge && this.linearVelocityZ === PLAYER_MOVEMENT_VELOCITY)
+				this.linearVelocityZ -= PLAYER_MOVEMENT_VELOCITY;
 			this.body.setLinearVelocity(new babylon.Vector3(0, 0, this.linearVelocityZ)); 
 			this.body.setAngularVelocity(new babylon.Vector3(0, this.angularVelocityY, 0));
 		});
