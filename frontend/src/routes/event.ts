@@ -21,7 +21,7 @@ let activeHandlers: Handler[] = [];
  * @param func listener function
  */
 function addHandler(id: string, type: string, func: EventListener): void {
-	const elem = getSafeElement(id);
+	const elem = getSafeElement(id, HTMLElement);
 
 	elem.addEventListener(type, func);
 	activeHandlers.push({ elem, type, func });

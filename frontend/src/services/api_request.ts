@@ -23,7 +23,7 @@ async function sendRequestToBack(endpoint: string, content: string, targetDivId:
 
 		const result: ServerRes = await reply.json();
 		const message = result.message || "Unknown response";
-		const container = getSafeElement(targetDivId);
+		const container = getSafeElement(targetDivId, HTMLElement);
 		container.innerHTML = `<p>${message}</p>`;
 	} catch (err) {
 		console.error("Caught error:", err);

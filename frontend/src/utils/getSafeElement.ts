@@ -1,17 +1,12 @@
-function getSafeElement(id: string): HTMLElement {
-	const elem = document.getElementById(id);
-	if (!elem)
-		throw new Error("cannot find id " + id);
-	return (elem);
-}
+interface TagType<T> { new (): T };
 
-function getSafeInput(id: string): HTMLInputElement {
+function getSafeElement<T extends HTMLElement>(id: string, tagType: TagType<T>): T {
 	const elem = document.getElementById(id);
 	if (!elem)
 		throw new Error("cannot find id " + id);
-	if (elem instanceof HTMLInputElement)
+	if (elem instanceof tagType)
 		return (elem);
-	throw new Error(id + "is not an input");
+	throw new Error(id + " id is not correct to get element");
 }
 
-export { getSafeElement, getSafeInput };
+export { TagType, getSafeElement };

@@ -25,7 +25,7 @@ let currentPage = PageID.FIRST;
  * @warning please use erasePage(PageID) before you load a page
  */
 function loadPage(id: PageID): void {
-	const elem = getSafeElement(id);
+	const elem = getSafeElement(id, HTMLElement);
 
 	elem.innerHTML = PAGE_CONTENT[id];
 	loadEvent(id);
@@ -33,7 +33,7 @@ function loadPage(id: PageID): void {
 };
 
 function erasePage(id: PageID): void {
-	const elem = getSafeElement(id);
+	const elem = getSafeElement(id, HTMLElement);
 
 	elem.innerHTML = "";
 };
@@ -66,7 +66,7 @@ window.addEventListener("popstate", (event) => {
 function init(): void {
 	const ep = "entrypoint";
 
-	const elem = getSafeElement(ep);
+	const elem = getSafeElement(ep, HTMLElement);
 	let setupPages = "";
 
 	Object.values(PageID).forEach(id => {
