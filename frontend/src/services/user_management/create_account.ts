@@ -1,14 +1,14 @@
 import { isOneStringEmtpy } from "../../utils/strings.js";
-import { getSafeElement, getSafeInput } from "../../utils/getSafeElement.js";
+import { getSafeElement } from "../../utils/getSafeElement.js";
 import { sendRequestToBack } from "../api_request.js";
 
 function newUser(): void {
 
-	const userId: HTMLInputElement = getSafeInput("create_user_id");
-	const userPseudo: HTMLInputElement = getSafeInput("create_user_pseudo");
-	const userPassword: HTMLInputElement = getSafeInput("create_user_password");
-	const confPassword: HTMLInputElement = getSafeInput("create_conf_password");
-	const container: HTMLElement = getSafeElement("print-content");
+	const userId: HTMLInputElement = getSafeElement("create_user_id", HTMLInputElement);
+	const userPseudo: HTMLInputElement = getSafeElement("create_user_pseudo", HTMLInputElement);
+	const userPassword: HTMLInputElement = getSafeElement("create_user_password", HTMLInputElement);
+	const confPassword: HTMLInputElement = getSafeElement("create_conf_password", HTMLInputElement);
+	const container: HTMLElement = getSafeElement("print-content", HTMLElement);
 
 	if (isOneStringEmtpy(userId.value, userPseudo.value, userPassword.value, confPassword.value)) {
 		container.innerHTML = `<p>Form is incomplete.</p>`; /**@todo use translate tool */
