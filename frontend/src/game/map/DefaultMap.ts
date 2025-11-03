@@ -67,7 +67,9 @@ export class DefaultMap extends MapTemplate {
 		const sunMaterial = new babylon.StandardMaterial("sunMat", scene);
 		sunMaterial.emissiveColor = COLORS.sunColorDefault;
 		sun.material = sunMaterial;
-		sun.position = new babylon.Vector3(-(MAP_SIZE.x / 2), MAP_SIZE.y * 0.7, -(MAP_SIZE.z / 2));
+		sun.position = this.score.absolutePosition.clone();
+		sun.position.z -= MAP_SIZE.z / 2;
+		sun.position.y += 10;
 		return sun;
 	}
 

@@ -11,7 +11,7 @@ export abstract class MapTemplate {
 	protected readonly sun: babylon.Mesh;
 	protected readonly light: babylon.DirectionalLight;
 	readonly type: MapOption;
-	private readonly score: babylon.Mesh;
+	protected readonly score: babylon.Mesh;
 	private readonly scoreTexture: babylon.DynamicTexture;
 	protected activateInterval = true;
 
@@ -23,12 +23,10 @@ export abstract class MapTemplate {
 		this.limits = this.createLimits(scene);
 		this.limits.forEach(limit => limit.renderingGroupId = 1);
 		this.limits.forEach(limit => this.setLimitPhysic(scene, limit));
-		this.sun = this.createSun(scene);
-		this.light = this.createLight(scene);
-		/**@todo check */
 		this.scoreTexture = new babylon.DynamicTexture("scoreTexture", { width: SCORE_CANVAS_SIZE_X, height: SCORE_CANVAS_SIZE_Y }, scene, false);
 		this.score = this.createFloatingScore(scene);
-		//
+		this.sun = this.createSun(scene);
+		this.light = this.createLight(scene);
 		this.glow = new babylon.GlowLayer("glow", scene);
 		this.glow.intensity = GLOW_INTENSITY;
 	}
