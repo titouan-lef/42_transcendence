@@ -73,14 +73,6 @@ export abstract class MapTemplate {
 		return limits;
 	}
 
-	private createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
-		const newMesh = babylon.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
-		const material = new babylon.StandardMaterial('wallcolor', scene);
-		material.diffuseColor =  COLORS.lime;
-		newMesh.material = material;
-		return newMesh;
-	}
-
 	/**@todo check */
 	private createFloatingScore(scene: babylon.Scene): babylon.Mesh {
 		const material = new babylon.StandardMaterial("scoreMat", scene);
@@ -146,6 +138,8 @@ export abstract class MapTemplate {
 	abstract createLight(scene: babylon.Scene): babylon.DirectionalLight;
 
 	abstract createSun(scene: babylon.Scene): babylon.Mesh;
+
+	abstract createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh;
 
 	abstract destroyRest(): void;
 }
