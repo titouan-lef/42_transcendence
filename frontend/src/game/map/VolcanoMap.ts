@@ -1,16 +1,31 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS } from "../values.js";
+import { Meteor } from "./map_utils/Meteor.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS, METEOR_INTERVAL } from "../values.js";
 
 /**@todo this map is not configured dont mind the code */
 export class VolcanoMap extends MapTemplate {
-	constructor(scene: babylon.Scene) {
+	private readonly meteors: Meteor[] = [];
+	private readonly meteorIntervalId: ReturnType<typeof setInterval>;
+
+	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
 		super(scene, "volcano");
+		this.meteorIntervalId = this.meteorInterval(scene, texture.flare);
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
 		const ground = babylon.MeshBuilder.CreateGround("volcanoground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
+		ground.metadata = { type: "ground" };
+		const material = new babylon.StandardMaterial("ground",scene);
+		material.emissiveColor = COLORS.groundColorVolcano;
+		const noise = new babylon.NoiseProceduralTexture("groundNoise", 256, scene);
+		noise.animationSpeedFactor = 0;
+		noise.octaves = 4;
+		noise.persistence = 0.6;
+		noise.brightness = 0.3;
+		material.diffuseTexture = noise;
+		ground.material = material;
 		return ground;
 	}
 
@@ -29,8 +44,19 @@ export class VolcanoMap extends MapTemplate {
 		const light: babylon.DirectionalLight = new babylon.DirectionalLight("sunLight", directionCenter, scene);
 		light.position = this.sun.position;
 		light.intensity = 1;
-		light.diffuse = COLORS.orange;
+		light.diffuse = COLORS.lightColorVolcano;
 		return light;
+	}
+
+	private meteorInterval(scene: babylon.Scene, texture: babylon.Texture): ReturnType<typeof setInterval> {
+		const meteorIntervalId = setInterval( () => {
+			//if (this.meteors.length === 0) {
+			this.meteors.push(new Meteor(scene, texture));
+			if (this.activateInterval === false)
+				clearInterval(this.meteorIntervalId);
+			//}
+		}, METEOR_INTERVAL);
+		return meteorIntervalId;
 	}
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
@@ -42,6 +68,11 @@ export class VolcanoMap extends MapTemplate {
 	}
 
 	destroyRest(): void {
-
+		if (this.meteorIntervalId)
+			clearInterval(this.meteorIntervalId);
+		while (this.meteors.length) {
+			this.meteors[0].destroy();
+			this.meteors.splice(0, 1);
+		}
 	}
 }

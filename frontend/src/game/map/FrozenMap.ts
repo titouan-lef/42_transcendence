@@ -11,6 +11,7 @@ export class FrozenMap extends MapTemplate {
 	createGround(scene: babylon.Scene): babylon.Mesh {
 		const ground = babylon.MeshBuilder.CreateGround("frozenground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
+		ground.metadata = { type: "ground" };
 		return ground;
 	}
 

@@ -1,6 +1,6 @@
 import * as babylon from "/babylonjs/core/index.js";
-import { MAP_SIZE, WALL_WIDTH, LIGHTNING_FADING_INTERVAL, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH } from "../values.js";
-import { BallTemplate } from "../ball/BallTemplate.js";
+import { MAP_SIZE, WALL_WIDTH, LIGHTNING_FADING_INTERVAL, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH } from "../../values.js";
+import { BallTemplate } from "../../ball/BallTemplate.js";
 
 export class Lightning {
 	private readonly lightningIntervalId: ReturnType<typeof setInterval>;
@@ -17,12 +17,12 @@ export class Lightning {
 		this.randomSize = Math.random() * 4 + 1;
 
 		this.lightning = this.spawnLightning(scene, start, end);
-		const material = new babylon.StandardMaterial("boltMat", scene);
+		const material = new babylon.StandardMaterial("lightningMat", scene);
 		material.emissiveColor = new babylon.Color3(2.7, 2.85, 3);
 		material.alpha = 1;
 		this.lightning.material = material;
 		this.lightning.renderingGroupId = 2;
-		this.lightningIntervalId = this.animateBoltFade(material);
+		this.lightningIntervalId = this.animateLightningFade(material);
 		this.applyExplosionForce(scene, end);
 		this.particles = this.createContactParticles(scene, end, texture);
 
@@ -34,7 +34,7 @@ export class Lightning {
 
 	private spawnLightning(scene: babylon.Scene, start: babylon.Vector3, end: babylon.Vector3): babylon.Mesh {
 		const points = this.makeLightningPoints(start, end);
-		const lightning = babylon.MeshBuilder.CreateTube("bolt", {
+		const lightning = babylon.MeshBuilder.CreateTube("lightning", {
 			path: points,
 			radius: 0.25 * this.randomSize,              
 			tessellation: 6, // sides of the circle
@@ -60,7 +60,7 @@ export class Lightning {
 	}
 
 	/** fades slowly */
-	private animateBoltFade(material: babylon.StandardMaterial): ReturnType<typeof setInterval> {
+	private animateLightningFade(material: babylon.StandardMaterial): ReturnType<typeof setInterval> {
 		let fade = 1.0;
 		const lightningIntervalId = setInterval(() => {
 			fade -= 0.04;

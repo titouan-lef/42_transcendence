@@ -64,7 +64,7 @@ export class SceneManager {
 				this.maps.push(new DefaultMap(scene, this.textures.stars));
 				break;
 			case "volcano":
-				this.maps.push(new VolcanoMap(scene));
+				this.maps.push(new VolcanoMap(scene, this.textures));
 				break;
 			case "windy":
 				this.maps.push(new WindyMap(scene));
@@ -153,17 +153,17 @@ export class SceneManager {
 		}
 		scene.materials.forEach(mat => mat.dispose()); // these are the defualt materials, not sure if i have to dispose them since they are created auto
 		/**@todo Debugging logs */
-		// console.log("meshes : " + scene.meshes);
-		// console.log("materials : " + scene.materials);
-		// scene.materials.forEach(mat => {
-		// 	console.log("mat name : " + mat.name);
-		// });
-		// console.log("textures : " + scene.textures);
-		// scene.textures.forEach(texture => {
-		// 	console.log("texture name : " + texture.name);
-		// });
-		// console.log("lights : " + scene.lights);
-		// console.log("particle system: " + scene.particleSystems);
+		console.log("meshes : " + scene.meshes);
+		console.log("materials : " + scene.materials);
+		scene.materials.forEach(mat => {
+			console.log("mat name : " + mat.name);
+		});
+		console.log("textures : " + scene.textures);
+		scene.textures.forEach(texture => {
+			console.log("texture name : " + texture.name);
+		});
+		console.log("lights : " + scene.lights);
+		console.log("particle system: " + scene.particleSystems);
 	}
 
 	destroyTextures(): void {

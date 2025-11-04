@@ -21,6 +21,7 @@ export class DefaultMap extends MapTemplate {
 		const material = new babylon.StandardMaterial('groundcolor', scene);
 		material.diffuseColor =  COLORS.black;
 		ground.material = material;
+		ground.metadata = { type: "ground" };
 		return ground;
 	}
 
@@ -93,10 +94,10 @@ export class DefaultMap extends MapTemplate {
 	destroyRest(): void {
 		this.bars.forEach(bar => {
 			bar.material?.dispose();
-			bar.dispose();
+			bar?.dispose();
 		});
-		this.particles.stop(); // textures will be dispose at the end of the game
-		this.particles.dispose();
-		this.wallHighlight.dispose();
+		this.particles?.stop(); // textures will be dispose at the end of the game
+		this.particles?.dispose();
+		this.wallHighlight?.dispose();
 	}
 }

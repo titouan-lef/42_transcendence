@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { Lightning } from "./Lightning.js";
+import { Lightning } from "./map_utils/Lightning.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL } from "../values.js";
 
 /**@todo this map is not configured dont mind the code */
@@ -18,6 +18,18 @@ export class RainyMap extends MapTemplate {
 	createGround(scene: babylon.Scene): babylon.Mesh {
 		const ground = babylon.MeshBuilder.CreateGround("rainyground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
+		const material = new babylon.StandardMaterial("groundMat", scene);
+		material.diffuseColor = COLORS.groundColorRainy;
+		material.alpha = 0.85;
+		const noise = new babylon.NoiseProceduralTexture("grassNoise", 256, scene);
+		noise.animationSpeedFactor = 0.2;
+		noise.persistence = 0.9;
+		noise.brightness = 0.5;
+		noise.octaves = 5;
+		material.bumpTexture = noise;
+		material.bumpTexture.level = 0.25;
+		ground.material = material;
+		ground.metadata = { type: "ground" };
 		return ground;
 	}
 
@@ -37,8 +49,8 @@ export class RainyMap extends MapTemplate {
 		const directionCenter: babylon.Vector3 = babylon.Vector3.Zero().subtract(this.sun.position).normalize();
 		const light: babylon.DirectionalLight = new babylon.DirectionalLight("sunLight", directionCenter, scene);
 		light.position = this.sun.position;
-		light.intensity = 1;
-		light.diffuse = COLORS.grey;
+		light.intensity = 0.45;
+		light.diffuse = COLORS.lightColorRainy;
 		return light;
 	}
 
@@ -79,6 +91,7 @@ export class RainyMap extends MapTemplate {
 		return particles;
 	}
 
+	/** will stack lighting till the end of the point */
 	private lightningInterval(scene: babylon.Scene, texture: babylon.Texture): ReturnType<typeof setInterval> {
 		const lightningIntervalId = setInterval( () => {
 			this.lightnings.push(new Lightning(scene, texture));
@@ -103,7 +116,7 @@ export class RainyMap extends MapTemplate {
 			this.lightnings[0].destroy();
 			this.lightnings.splice(0, 1);
 		}
-		this.particles.stop();
-		this.particles.dispose(); // textures will be disposed at the end of the game
+		this.particles?.stop();
+		this.particles?.dispose(); // textures will be disposed at the end of the game
 	}
 }

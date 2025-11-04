@@ -19,10 +19,6 @@ export class SnakeBall extends BallTemplate {
 		this.mesh.material = material;
 	}
 
-	destroyRest(): void {
-		clearInterval(this.trailIntervalId);
-	}
-
 	/**@description no effect */
 	activateEffect(): void {};
 
@@ -52,5 +48,9 @@ export class SnakeBall extends BallTemplate {
 			this.nerfSpeed();
 		});
 		return sceneObserver;
+	}
+
+	destroyRest(): void {
+		clearInterval(this.trailIntervalId);
 	}
 }
