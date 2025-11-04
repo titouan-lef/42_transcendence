@@ -150,8 +150,8 @@ export abstract class BallTemplate {
 		collisionParticles.colorDead = new babylon.Color4(this.color.r, this.color.g, this.color.b, 1.0);
 		collisionParticles.minSize = 0.3;
 		collisionParticles.maxSize = 0.3;
-		collisionParticles.minLifeTime = 0.2;
-		collisionParticles.maxLifeTime = 0.2;
+		collisionParticles.minLifeTime = 0.5;
+		collisionParticles.maxLifeTime = 0.5;
 		collisionParticles.emitRate = 300;
 		collisionParticles.minEmitPower = 6;
 		collisionParticles.maxEmitPower = 12;
@@ -288,10 +288,10 @@ export abstract class BallTemplate {
 		particle.start();
 		setTimeout( () => {
 			particle?.stop();
-			const index = this.particles.indexOf(particle);
+			const index = this.particles?.indexOf(particle);
 			particle?.dispose();
 			if (index !== -1) // protection in case destroy() and the end of timeOut occur at the same time
-				this.particles.splice(index, 1);
+				this.particles?.splice(index, 1);
 		}, 2000);
 	}
 
@@ -330,6 +330,7 @@ export abstract class BallTemplate {
 		this.physic?.dispose();
 		this.particles.forEach(particle => {
 			particle?.stop();
+			particle?.particleTexture?.dispose();
 			particle?.dispose();
 		});
 		while (this.particles.length)

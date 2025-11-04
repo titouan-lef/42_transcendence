@@ -1,5 +1,5 @@
 import * as babylon from "/babylonjs/core/index.js";
-import { MAP_SIZE, WALL_WIDTH, LIGHTNING_FADING_INTERVAL, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH } from "../../values.js";
+import { MAP_SIZE, WALL_WIDTH, LIGHTNING_FADING_INTERVAL, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH, LIGHTNING_LIFETIME } from "../../values.js";
 import { BallTemplate } from "../../ball/BallTemplate.js";
 
 export class Lightning {
@@ -29,7 +29,7 @@ export class Lightning {
 		this.particles.start();
 		this.timeoutId = setTimeout( () => {
 			this.destroy();
-		}, 2000);
+		}, LIGHTNING_LIFETIME);
 	}
 
 	private spawnLightning(scene: babylon.Scene, start: babylon.Vector3, end: babylon.Vector3): babylon.Mesh {
@@ -106,8 +106,6 @@ export class Lightning {
 		explosionParticles.minEmitPower = 2;
 		explosionParticles.maxEmitPower = 4;
 		explosionParticles.updateSpeed = 0.02;
-
-		// does a burst
 		explosionParticles.emitRate = 0;
 		explosionParticles.manualEmitCount = Math.floor(200 * this.randomSize);
 		return explosionParticles;
@@ -117,6 +115,7 @@ export class Lightning {
 		clearInterval(this.lightningIntervalId);
 		clearTimeout(this.timeoutId);
 		this.particles?.stop();
+		this.particles?.particleTexture?.dispose();
 		this.particles?.dispose();
 		this.lightning?.material?.dispose();
 		this.lightning?.dispose();

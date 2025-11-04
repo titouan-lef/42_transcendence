@@ -33,7 +33,7 @@ export class DefaultMap extends MapTemplate {
 		const endPositionZ = MAP_SIZE.z / 2 - WALL_WIDTH;
 		const steps = 3;
 		for (startPositionZ; startPositionZ < endPositionZ;) {
-			bar = babylon.CreateBox("bar", { width: 0.5, height: 0.1, depth: steps }, scene);
+			bar = babylon.MeshBuilder.CreateBox("bar", { width: 0.5, height: 0.1, depth: steps }, scene);
 			bar.position = new babylon.Vector3(0, 0, startPositionZ);
 			startPositionZ += steps * 2;
 			const mat = new babylon.StandardMaterial("barmat", scene);
@@ -84,7 +84,7 @@ export class DefaultMap extends MapTemplate {
 	}
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
-		const newMesh = babylon.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
+		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
 		const material = new babylon.StandardMaterial('wallcolor', scene);
 		material.diffuseColor =  COLORS.lime;
 		newMesh.material = material;
@@ -96,7 +96,8 @@ export class DefaultMap extends MapTemplate {
 			bar.material?.dispose();
 			bar?.dispose();
 		});
-		this.particles?.stop(); // textures will be dispose at the end of the game
+		this.particles?.stop();
+		this.particles?.particleTexture?.dispose();
 		this.particles?.dispose();
 		this.wallHighlight?.dispose();
 	}

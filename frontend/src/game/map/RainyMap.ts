@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Lightning } from "./map_utils/Lightning.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL } from "../values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME } from "../values.js";
 
 /**@todo this map is not configured dont mind the code */
 export class RainyMap extends MapTemplate {
@@ -33,7 +33,6 @@ export class RainyMap extends MapTemplate {
 		return ground;
 	}
 
-	/**@todo to configure */
 	createSun(scene: babylon.Scene): babylon.Mesh {
 		const sun = babylon.MeshBuilder.CreateSphere("sun", { diameter: SUN_DIAMETER }, scene);
 		const sunMaterial = new babylon.StandardMaterial("sunMat", scene);
@@ -78,7 +77,7 @@ export class RainyMap extends MapTemplate {
 		particles.updateSpeed = 0.008;
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
 
-		/**@todo sound effects ? */
+		/**@todo */
 		// (Optionnel) Légère turbulence avec une NoiseProceduralTexture
 		// const noiseTex = new BABYLON.NoiseProceduralTexture("rainNoise", 128, scene);
 		// noiseTex.animationSpeedFactor = 2.0;
@@ -94,15 +93,21 @@ export class RainyMap extends MapTemplate {
 	/** will stack lighting till the end of the point */
 	private lightningInterval(scene: babylon.Scene, texture: babylon.Texture): ReturnType<typeof setInterval> {
 		const lightningIntervalId = setInterval( () => {
-			this.lightnings.push(new Lightning(scene, texture));
+			const lightning = new Lightning(scene, texture);
+			this.lightnings.push(lightning);
 			if (this.activateInterval === false)
 				clearInterval(this.lightningIntervalId);
+			setTimeout(() => {
+				const index = this.lightnings?.indexOf(lightning);
+				if (index !== -1)
+					this.lightnings?.splice(index, 1);
+			}, LIGHTNING_LIFETIME + 100);
 		}, LIGHTNING_INTERVAL);
 		return lightningIntervalId;
 	}
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
-		const newMesh = babylon.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
+		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
 		const material = new babylon.StandardMaterial('wallcolor', scene);
 		material.diffuseColor =  COLORS.lime;
 		newMesh.material = material;
@@ -117,6 +122,7 @@ export class RainyMap extends MapTemplate {
 			this.lightnings.splice(0, 1);
 		}
 		this.particles?.stop();
-		this.particles?.dispose(); // textures will be disposed at the end of the game
+		this.particles?.particleTexture?.dispose();
+		this.particles?.dispose();
 	}
 }

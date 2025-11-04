@@ -80,12 +80,13 @@ export const LIGHTNING_INTERVAL = 600;
 export const LIGHTNING_FADING_INTERVAL = 40;
 export const LIGHTNING_COLLISION_RADIUS = 5;
 export const LIGHTNING_COLLISION_STRENGTH = 30;
+export const LIGHTNING_LIFETIME = 2000;
 
 /**VOLCANO MAP */
 export const METEOR_INTERVAL = 3000;
 export const METEOR_DIAMETER = 2;
 export const METEOR_PARTICLE_INTERVAL = 5000;
-export const METEOR_MESH_INTERVAL = 5000;
+export const METEOR_LIFETIME = 5000;
 export const METEOR_COLLISION_RADIUS = METEOR_DIAMETER;
 export const METEOR_COLLISION_STRENGTH = 30;
 export const METEOR_SPEED = 100;
@@ -114,5 +115,9 @@ export const BALL_ANGULAR_FORCE = 0.5;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const BALL_ANGULAR_INTERVAL = 45;
 
-/** @todo volcano, ball sometimes jump coz of the angle */
+
+/** @todo cendres floatantes dans volcano */
+/** @todo warning texture */
+/** @todo rainy change ground */
+/** @todo error when double playing */
 /** @todo player sometimes blocked when pressing right left, should be solved with server side */
