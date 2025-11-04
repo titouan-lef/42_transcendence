@@ -110,7 +110,7 @@ export class Meteor {
 
 	protected createContactParticles(scene: babylon.Scene, texture: babylon.Texture, end: babylon.Vector3): babylon.ParticleSystem {
 		const dustParticles = new babylon.ParticleSystem("MeteorDust", Math.floor(100 * this.randomSize), scene);
-		dustParticles.particleTexture = texture.clone();
+		dustParticles.particleTexture = texture;
 		dustParticles.blendMode = babylon.ParticleSystem.BLENDMODE_STANDARD;
 		dustParticles.emitter = end.clone();
 		dustParticles.emitter.y += 1;
@@ -134,7 +134,7 @@ export class Meteor {
 
 	private createTrail(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
 		const trail = new babylon.ParticleSystem("meteorTrail", Math.floor(400 * this.randomSize), scene);
-		trail.particleTexture = texture.clone();
+		trail.particleTexture = texture;
 		trail.emitter = this.meteor;
 		trail.particleEmitterType = new babylon.SphereParticleEmitter(METEOR_COLLISION_RADIUS * this.randomSize * 1.5);
 		trail.renderingGroupId = 1;
@@ -157,10 +157,14 @@ export class Meteor {
 		this.body?.dispose();
 		this.meteorLight?.dispose();
 		this.trail?.stop();
-		this.trail?.particleTexture?.dispose();
+		//this.trail?.particleTexture?.dispose();
+		if (this.trail && this.trail.particleTexture)
+			this.trail.particleTexture = null;
 		this.trail?.dispose();
 		this.particles?.stop();
-		this.particles?.particleTexture?.dispose();
+		//this.particles?.particleTexture?.dispose();
+		if (this.particles && this.particles.particleTexture)
+			this.particles.particleTexture = null;
 		this.particles?.dispose();
 		this.meteor.material?.dispose();
 		this.meteor?.dispose();

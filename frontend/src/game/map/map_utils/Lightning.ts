@@ -94,28 +94,40 @@ export class Lightning {
 		});
 	}
 
-	protected createContactParticles(scene: babylon.Scene, position: babylon.Vector3, texture: babylon.Texture): babylon.ParticleSystem {
-		const explosionParticles = new babylon.ParticleSystem("lightning", Math.floor(200 * this.randomSize), scene);
-		explosionParticles.particleTexture = texture.clone();
-		explosionParticles.emitter = position;
-		explosionParticles.createSphereEmitter(LIGHTNING_COLLISION_RADIUS * this.randomSize);
-		explosionParticles.renderingGroupId = 1;
-		explosionParticles.color1 = new babylon.Color4(0.5, 0.6, 1.0, 1.0);
-		explosionParticles.minSize = 0.3 * this.randomSize;
-		explosionParticles.maxSize = 0.3 * this.randomSize;
-		explosionParticles.minEmitPower = 2;
-		explosionParticles.maxEmitPower = 4;
-		explosionParticles.updateSpeed = 0.02;
-		explosionParticles.emitRate = 0;
-		explosionParticles.manualEmitCount = Math.floor(200 * this.randomSize);
-		return explosionParticles;
+	private createContactParticles(scene: babylon.Scene, position: babylon.Vector3, texture: babylon.Texture): babylon.ParticleSystem {
+		const particles = new babylon.ParticleSystem("lightningSparks", Math.floor(50 * this.randomSize), scene);
+		particles.particleTexture = texture;
+		particles.emitter = position;
+		const emitter = new babylon.ConeParticleEmitter();
+		emitter.radius = LIGHTNING_COLLISION_RADIUS * this.randomSize;
+		emitter.directionRandomizer = 0.8;
+		particles.particleEmitterType = emitter;
+		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_STRETCHED;
+		particles.blendMode = babylon.ParticleSystem.BLENDMODE_ADD;
+		particles.addColorGradient(0.0, new babylon.Color4(1.0, 1.0, 1.0, 1.0));
+		particles.addColorGradient(0.3, new babylon.Color4(0.6, 0.8, 1.0, 0.9));
+		particles.addColorGradient(1.0, new babylon.Color4(0.2, 0.5, 1.0, 0.0));
+		particles.minSize = 3;
+		particles.maxSize = 4;
+		particles.minLifeTime = 0.4;
+		particles.maxLifeTime = 0.6;
+		particles.minEmitPower = 10;
+		particles.maxEmitPower = 30;
+		particles.updateSpeed = 0.012;
+		particles.emitRate = 0;
+		particles.manualEmitCount = Math.floor(35 * this.randomSize);
+		particles.renderingGroupId = 2;
+		return particles;
 	}
+
 
 	destroy(): void {
 		clearInterval(this.lightningIntervalId);
 		clearTimeout(this.timeoutId);
 		this.particles?.stop();
-		this.particles?.particleTexture?.dispose();
+		//this.particles?.particleTexture?.dispose();
+		if (this.particles && this.particles.particleTexture)
+			this.particles.particleTexture = null;
 		this.particles?.dispose();
 		this.lightning?.material?.dispose();
 		this.lightning?.dispose();

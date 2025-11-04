@@ -112,8 +112,10 @@ export abstract class MapTemplate {
 	destroy(): void {
 		this.destroyRest();
 		this.groundPhysic?.dispose();
-		if (this.ground.material && this.ground.material instanceof babylon.StandardMaterial)
+		if (this.ground.material && this.ground.material instanceof babylon.StandardMaterial) {
+			this.ground.material.bumpTexture?.dispose();
 			this.ground.material.diffuseTexture?.dispose();
+		}
 		this.ground?.material?.dispose();
 		this.ground?.dispose();
 		for (let i = 0; i < this.limits.length; i++) {

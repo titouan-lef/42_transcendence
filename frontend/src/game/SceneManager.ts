@@ -90,11 +90,17 @@ export class SceneManager {
 	}
 
 	createTextures(scene: babylon.Scene): void {
-		this.textures.spark = new babylon.Texture("textures/sparks.png", scene);
-		this.textures.flare = new babylon.Texture("textures/flare.png", scene);
-		this.textures.stars = new babylon.Texture("textures/particle.png", scene);
-		this.textures.rain = new babylon.Texture("textures/rain.png", scene);
-		this.textures.smoke = new babylon.Texture("textures/smoke.png", scene);
+		this.textures.spark = new babylon.Texture("textures/sparks.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
+		this.textures.flare = new babylon.Texture("textures/flare.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
+		this.textures.stars = new babylon.Texture("textures/particle.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
+		this.textures.rain = new babylon.Texture("textures/rain.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
+		this.textures.smoke = new babylon.Texture("textures/smoke.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
+		this.textures.electricity = new babylon.Texture("textures/electricity.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
+		for (const key in this.textures) {
+			this.textures[key].hasAlpha = true;
+			this.textures[key].wrapU = babylon.Texture.CLAMP_ADDRESSMODE;
+			this.textures[key].wrapV = babylon.Texture.CLAMP_ADDRESSMODE;
+		}
 	}
 
 	/** @todo Titouan gaming */
