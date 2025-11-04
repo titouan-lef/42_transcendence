@@ -114,13 +114,11 @@ export class Lightning {
 	}
 
 	destroy(): void {
-		if (this.lightningIntervalId)
-			clearInterval(this.lightningIntervalId);
-		if (this.timeoutId)
-			clearTimeout(this.timeoutId);
+		clearInterval(this.lightningIntervalId);
+		clearTimeout(this.timeoutId);
 		this.particles?.stop();
 		this.particles?.dispose();
-		this.lightning.material?.dispose();
+		this.lightning?.material?.dispose();
 		this.lightning?.dispose();
 	}
 }
