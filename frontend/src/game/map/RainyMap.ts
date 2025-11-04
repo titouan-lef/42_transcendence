@@ -12,7 +12,7 @@ export class RainyMap extends MapTemplate {
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
 		super(scene, "rainy");
 		this.particles = this.createParticles(scene, texture.rain);
-		this.lightningIntervalId = this.lightningInterval(scene, texture.flare);
+		this.lightningIntervalId = this.lightningInterval(scene, texture.electricity);
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
@@ -21,13 +21,13 @@ export class RainyMap extends MapTemplate {
 		const material = new babylon.StandardMaterial("groundMat", scene);
 		material.diffuseColor = COLORS.groundColorRainy;
 		material.alpha = 0.85;
-		const noise = new babylon.NoiseProceduralTexture("grassNoise", 256, scene);
+		const noise = new babylon.NoiseProceduralTexture("grassNoise", 256, scene, undefined, false);
 		noise.animationSpeedFactor = 0.2;
 		noise.persistence = 0.9;
 		noise.brightness = 0.5;
 		noise.octaves = 5;
 		material.bumpTexture = noise;
-		material.bumpTexture.level = 0.25;
+		//material.bumpTexture.level = 0.25;
 		ground.material = material;
 		ground.metadata = { type: "ground" };
 		return ground;
@@ -53,12 +53,13 @@ export class RainyMap extends MapTemplate {
 		return light;
 	}
 
-	/** the stars in the background, will maybe move to abstract in template depending of the other maps's design */
+	/** the rain */
 	private createParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
 		scene.clearColor = new babylon.Color4(0.5, 0.5, 0.5, 1); // sky
 		const particles = new babylon.ParticleSystem("rain", R_PARTICLE_NUMBER, scene);
-		particles.particleTexture = texture.clone();
+		particles.particleTexture = texture;
 		particles.emitter = new babylon.Vector3(0, 0, 0);
+		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
 		particles.minEmitBox = new babylon.Vector3(-MAP_SIZE.x * 1.4, -MAP_SIZE.y * 1, -MAP_SIZE.z * 1.4);
 		particles.maxEmitBox = new babylon.Vector3(MAP_SIZE.x * 1.4, MAP_SIZE.y * 2, MAP_SIZE.y * 1.4);
 		particles.color1 = new babylon.Color4(0.85, 0.9, 1.0, 0.85);
@@ -76,16 +77,6 @@ export class RainyMap extends MapTemplate {
 		particles.direction2 = new babylon.Vector3(0, -5, 0);
 		particles.updateSpeed = 0.008;
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
-
-		/**@todo */
-		// (Optionnel) Légère turbulence avec une NoiseProceduralTexture
-		// const noiseTex = new BABYLON.NoiseProceduralTexture("rainNoise", 128, scene);
-		// noiseTex.animationSpeedFactor = 2.0;
-		// noiseTex.persistence = 0.6;
-		// noiseTex.brightness = 0.2;
-		// rain.noiseTexture = noiseTex;
-		// rain.noiseStrength = new BABYLON.Vector3(1.5, 0, 1.5);
-
 		particles.start();
 		return particles;
 	}
@@ -122,7 +113,8 @@ export class RainyMap extends MapTemplate {
 			this.lightnings.splice(0, 1);
 		}
 		this.particles?.stop();
-		this.particles?.particleTexture?.dispose();
+		if (this.particles && this.particles.particleTexture)
+			this.particles.particleTexture = null;
 		this.particles?.dispose();
 	}
 }

@@ -1,15 +1,17 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Meteor } from "./map_utils/Meteor.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS, METEOR_INTERVAL, METEOR_LIFETIME } from "../values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER } from "../values.js";
 
 /**@todo this map is not configured dont mind the code */
 export class VolcanoMap extends MapTemplate {
 	private readonly meteors: Meteor[] = [];
 	private readonly meteorIntervalId: ReturnType<typeof setInterval>;
+	private readonly particles: babylon.ParticleSystem;
 
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
 		super(scene, "volcano");
+		this.particles = this.createParticles(scene, texture.flare);
 		this.meteorIntervalId = this.meteorInterval(scene, texture);
 	}
 
@@ -19,7 +21,7 @@ export class VolcanoMap extends MapTemplate {
 		ground.metadata = { type: "ground" };
 		const material = new babylon.StandardMaterial("ground",scene);
 		material.emissiveColor = COLORS.groundColorVolcano;
-		const noise = new babylon.NoiseProceduralTexture("groundNoise", 256, scene);
+		const noise = new babylon.NoiseProceduralTexture("groundNoise", 256, scene, undefined, false);
 		noise.animationSpeedFactor = 0;
 		noise.octaves = 4;
 		noise.persistence = 0.6;
@@ -47,6 +49,34 @@ export class VolcanoMap extends MapTemplate {
 		light.intensity = 1;
 		light.diffuse = COLORS.lightColorVolcano;
 		return light;
+	}
+
+	/** the ashes */
+	private createParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
+		scene.clearColor = new babylon.Color4(0.5, 0.5, 0.5, 1); // sky
+		const particles = new babylon.ParticleSystem("ashes", V_PARTICLE_NUMBER, scene);
+		particles.particleTexture = texture;
+		particles.emitter = new babylon.Vector3(0, 0, 0);
+		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
+		particles.minEmitBox = new babylon.Vector3(-MAP_SIZE.x * 1.4, -MAP_SIZE.y * 1, -MAP_SIZE.z * 1.4);
+		particles.maxEmitBox = new babylon.Vector3(MAP_SIZE.x * 1.4, MAP_SIZE.y * 2, MAP_SIZE.y * 1.4);
+		particles.color1 = new babylon.Color4(1, 0.3, 0, 0.85);
+		particles.color2 = new babylon.Color4(1, 0.3, 0, 0.65);
+		particles.colorDead = new babylon.Color4(1, 0.3, 0, 0.0);
+		particles.emitRate = 1800;
+		particles.renderingGroupId = 2; //
+		particles.minEmitPower = 35;
+		particles.maxEmitPower = 45;
+		particles.minSize = 0.2;
+		particles.maxSize = 0.3;
+		particles.minLifeTime = 1.1;
+		particles.maxLifeTime = 1.3;
+		particles.direction1 = new babylon.Vector3(0, 0.3, 0);
+		particles.direction2 = new babylon.Vector3(0, 0.3, 0);
+		particles.updateSpeed = 0.005;
+		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
+		particles.start();
+		return particles;
 	}
 
 	private meteorInterval(scene: babylon.Scene, texture: Record<string, babylon.Texture>): ReturnType<typeof setInterval> {
@@ -79,5 +109,9 @@ export class VolcanoMap extends MapTemplate {
 			this.meteors[0].destroy();
 			this.meteors.splice(0, 1);
 		}
+		this.particles?.stop();
+		if (this.particles && this.particles.particleTexture)
+			this.particles.particleTexture = null;
+		this.particles?.dispose();
 	}
 }
