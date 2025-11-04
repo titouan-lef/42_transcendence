@@ -111,26 +111,25 @@ export abstract class MapTemplate {
 
 	destroy(): void {
 		this.destroyRest();
-		this.groundPhysic.dispose();
+		this.groundPhysic?.dispose();
 		if (this.ground.material && this.ground.material instanceof babylon.StandardMaterial)
 			this.ground.material.diffuseTexture?.dispose();
-		this.ground.material?.dispose();
-		this.ground.dispose();
+		this.ground?.material?.dispose();
+		this.ground?.dispose();
 		for (let i = 0; i < this.limits.length; i++) {
-			this.limitsPhysic[i].dispose();
-			this.limits[i].material?.dispose();
-			this.limits[i].dispose();
+			this.limitsPhysic[i]?.dispose();
+			this.limits[i]?.material?.dispose();
+			this.limits[i]?.dispose();
 		}
-		this.sun.material?.dispose();
-		this.sun.dispose();
-		this.light.dispose();
-		this.light.dispose();
+		this.sun?.material?.dispose();
+		this.sun?.dispose();
+		this.light?.dispose();
 		/**@todo check */
-		this.scoreTexture.dispose();
-		this.score.material?.dispose();
-		this.score.dispose();
+		this.scoreTexture?.dispose();
+		this.score?.material?.dispose();
+		this.score?.dispose();
 		//
-		this.glow.dispose();
+		this.glow?.dispose();
 	}
 
 	abstract createGround(scene: babylon.Scene): babylon.Mesh;
