@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Meteor } from "./map_utils/Meteor.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS, METEOR_INTERVAL } from "../values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS, METEOR_INTERVAL, METEOR_LIFETIME } from "../values.js";
 
 /**@todo this map is not configured dont mind the code */
 export class VolcanoMap extends MapTemplate {
@@ -10,7 +10,7 @@ export class VolcanoMap extends MapTemplate {
 
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
 		super(scene, "volcano");
-		this.meteorIntervalId = this.meteorInterval(scene, texture.flare);
+		this.meteorIntervalId = this.meteorInterval(scene, texture);
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
@@ -29,13 +29,14 @@ export class VolcanoMap extends MapTemplate {
 		return ground;
 	}
 
-	/**@todo to configure */
 	createSun(scene: babylon.Scene): babylon.Mesh {
 		const sun = babylon.MeshBuilder.CreateSphere("sun", { diameter: SUN_DIAMETER }, scene);
 		const sunMaterial = new babylon.StandardMaterial("sunMat", scene);
 		sunMaterial.emissiveColor = COLORS.orange;
 		sun.material = sunMaterial;
-		sun.position = new babylon.Vector3(-(MAP_SIZE.x / 2), MAP_SIZE.y * 0.7, -(MAP_SIZE.z / 2));
+		sun.position = this.score.absolutePosition.clone();
+		sun.position.z -= MAP_SIZE.z / 2;
+		sun.position.y += 10;
 		return sun;
 	}
 
@@ -48,19 +49,23 @@ export class VolcanoMap extends MapTemplate {
 		return light;
 	}
 
-	private meteorInterval(scene: babylon.Scene, texture: babylon.Texture): ReturnType<typeof setInterval> {
+	private meteorInterval(scene: babylon.Scene, texture: Record<string, babylon.Texture>): ReturnType<typeof setInterval> {
 		const meteorIntervalId = setInterval( () => {
-			//if (this.meteors.length === 0) {
-			this.meteors.push(new Meteor(scene, texture));
+			const meteor = new Meteor(scene, texture);
+			this.meteors.push(meteor);
 			if (this.activateInterval === false)
 				clearInterval(this.meteorIntervalId);
-			//}
+			setTimeout(() => {
+				const index = this.meteors?.indexOf(meteor);
+				if (index !== -1)
+					this.meteors?.splice(index, 1);
+			}, METEOR_LIFETIME + 2000);
 		}, METEOR_INTERVAL);
 		return meteorIntervalId;
 	}
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
-		const newMesh = babylon.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
+		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
 		const material = new babylon.StandardMaterial('wallcolor', scene);
 		material.diffuseColor =  COLORS.lime;
 		newMesh.material = material;

@@ -94,6 +94,7 @@ export class SceneManager {
 		this.textures.flare = new babylon.Texture("textures/flare.png", scene);
 		this.textures.stars = new babylon.Texture("textures/particle.png", scene);
 		this.textures.rain = new babylon.Texture("textures/rain.png", scene);
+		this.textures.smoke = new babylon.Texture("textures/smoke.png", scene);
 	}
 
 	/** @todo Titouan gaming */
