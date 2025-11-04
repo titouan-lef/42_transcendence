@@ -3,6 +3,7 @@ import { GameSettings, PlayerKeys } from "./GameSettings.js";
 import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY } from "./values.js";
 
 export class Player {
+	/**@todo set to private */
 	readonly mesh: babylon.Mesh;
 	private readonly color: babylon.Color3 = COLORS.white;
 	private readonly controls: PlayerKeys;

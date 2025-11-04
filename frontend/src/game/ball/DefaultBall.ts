@@ -16,10 +16,10 @@ export class DefaultBall extends BallTemplate {
 		this.mesh.material = material;
 	}
 
+	/**@description no effect */
+	activateEffect(): void {}
+
 	destroyRest(): void {
 		clearInterval(this.trailIntervalId);
 	}
-
-	/**@description no effect */
-	activateEffect(): void {}
 }

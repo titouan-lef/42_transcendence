@@ -20,11 +20,7 @@ export class TrickyBall extends BallTemplate {
 		this.mesh.material = material;
 	}
 
-	destroyRest(): void {
-		clearInterval(this.effectIntervalId);
-		clearInterval(this.trailIntervalId);
-	}
-
+	
 	/**@todo changes direction every TRICKY_BALL_EFFECT_INTERVAL ms */
 	activateEffect(): ReturnType<typeof setInterval> {
 		const effectIntervalId = setInterval(() => {
@@ -35,5 +31,10 @@ export class TrickyBall extends BallTemplate {
 			this.showParticles(this.mesh.position, this.mesh.getScene(), "impulse");
 		}, TRICKY_BALL_EFFECT_INTERVAL);
 		return effectIntervalId;
+	}
+		
+	destroyRest(): void {
+		clearInterval(this.effectIntervalId);
+		clearInterval(this.trailIntervalId);
 	}
 }

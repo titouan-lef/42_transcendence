@@ -11,6 +11,7 @@ export class WindyMap extends MapTemplate {
 	createGround(scene: babylon.Scene): babylon.Mesh {
 		const ground = babylon.MeshBuilder.CreateGround("windyground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
+		ground.metadata = { type: "ground" };
 		return ground;
 	}
 

@@ -21,6 +21,10 @@ const TEAL: babylon.Color3					= new babylon.Color3(0, 0.5, 0.5);
 const OLIVE: babylon.Color3					= new babylon.Color3(0.5, 0.5, 0);
 const SUNCOLOR_DEFAULT: babylon.Color3		= new babylon.Color3(1, 0.9, 0.5);
 const LIGHTCOLOR_DEFAULT: babylon.Color3	= new babylon.Color3(1, 0.9, 0.5);
+const LIGHTCOLOR_RAINY: babylon.Color3		= new babylon.Color3(0.6, 0.65, 0.8);
+const GROUNDCOLOR_RAINY: babylon.Color3		= new babylon.Color3(0.05, 0.25, 0.4);
+const LIGHTCOLOR_VOLCANO: babylon.Color3	= new babylon.Color3(1.0, 0.5, 0.3);
+const GROUNDCOLOR_VOLCANO: babylon.Color3	= new babylon.Color3(0.15, 0.05, 0.02);
 /**
 * WHITE, BLACK, RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, GREY,
 	DARK_GREY, LIGHT_GREY, ORANGE, PURPLE, PINK, BROWN, LIME, NAVY, TEAL, OLIVE,
@@ -47,7 +51,11 @@ export const COLORS: Record<string, babylon.Color3> = {
 	teal: TEAL,
 	olive: OLIVE,
 	sunColorDefault: SUNCOLOR_DEFAULT,
-	lightColorDefault: LIGHTCOLOR_DEFAULT
+	lightColorDefault: LIGHTCOLOR_DEFAULT,
+	lightColorRainy: LIGHTCOLOR_RAINY,
+	groundColorRainy: GROUNDCOLOR_RAINY,
+	lightColorVolcano: LIGHTCOLOR_VOLCANO,
+	groundColorVolcano: GROUNDCOLOR_VOLCANO
 };
 
 export const POINTS_TO_WIN = 5;
@@ -73,6 +81,15 @@ export const LIGHTNING_FADING_INTERVAL = 40;
 export const LIGHTNING_COLLISION_RADIUS = 5;
 export const LIGHTNING_COLLISION_STRENGTH = 30;
 
+/**VOLCANO MAP */
+export const METEOR_INTERVAL = 3000;
+export const METEOR_DIAMETER = 2;
+export const METEOR_PARTICLE_INTERVAL = 5000;
+export const METEOR_MESH_INTERVAL = 5000;
+export const METEOR_COLLISION_RADIUS = METEOR_DIAMETER;
+export const METEOR_COLLISION_STRENGTH = 30;
+export const METEOR_SPEED = 100;
+
 /**PLAYER */
 export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x
 export const PLAYER_MASS = 1;
@@ -97,6 +114,5 @@ export const BALL_ANGULAR_FORCE = 0.5;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const BALL_ANGULAR_INTERVAL = 45;
 
+/** @todo volcano, ball sometimes jump coz of the angle */
 /** @todo player sometimes blocked when pressing right left, should be solved with server side */
-/** @todo maps */
-/** @todo SUN placement + refacto map classes */

@@ -33,14 +33,13 @@ export class BallTrail {
 		return intervalId;
 	}
 
-	destroy(): void {
-		if (this.intervalId)
-			clearInterval(this.intervalId);
-		this.mesh.material?.dispose();
-		this.mesh.dispose();
-	}
-
 	hasDisappeared(): boolean {
 		return this.isFaded;
+	}
+
+	destroy(): void {
+		clearInterval(this.intervalId);
+		this.mesh.material?.dispose();
+		this.mesh?.dispose();
 	}
 }

@@ -46,6 +46,7 @@ export abstract class BallTemplate {
 		
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.sceneObserver = this.applyMovementChanges();
+		/**@todo protect this against instaclose game */
 		this.launchBall(scene);
 	}
 
@@ -306,15 +307,15 @@ export abstract class BallTemplate {
 		while (this.hitPoints.length) {
 			this.hitPoints.splice(0, 1);
 		}
-		this.physic.dispose();
+		this.physic?.dispose();
 		this.particles.forEach(particle => {
-			particle.stop();
-			particle.dispose();
+			particle?.stop();
+			particle?.dispose();
 		});
 		while (this.particles.length)
 			this.particles.splice(0, 1);
-		this.mesh.material?.dispose();
-		this.mesh.dispose();
+		this.mesh?.material?.dispose();
+		this.mesh?.dispose();
 	}
 
 	abstract setMaterial(scene: babylon.Scene, color: babylon.Color3): void;

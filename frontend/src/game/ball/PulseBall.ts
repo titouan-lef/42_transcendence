@@ -20,11 +20,6 @@ export class PulseBall extends BallTemplate {
 		this.mesh.material = material;
 	}
 
-	destroyRest(): void {
-		clearInterval(this.trailIntervalId);
-		clearInterval(this.effectIntervalId);
-	}
-
 	/**@description apply a pulsation every PULSE_BALL_EFFECT_INTERVAL ms */
 	activateEffect(): ReturnType<typeof setInterval> {
 		const effectIntervalId = setInterval(() => {
@@ -43,5 +38,10 @@ export class PulseBall extends BallTemplate {
 			}
 		}, PULSE_BALL_EFFECT_INTERVAL);
 		return effectIntervalId;
+	}
+
+	destroyRest(): void {
+		clearInterval(this.trailIntervalId);
+		clearInterval(this.effectIntervalId);
 	}
 }
