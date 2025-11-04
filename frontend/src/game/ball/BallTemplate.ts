@@ -28,6 +28,9 @@ export abstract class BallTemplate {
 
 	private readonly hitPoints: number[] = [];
 
+	private readonly yObservable: babylon.Observable<babylon.Scene>;
+	private readonly yObserver: babylon.Observer<babylon.Scene>;
+
 	constructor(scene: babylon.Scene, type: BallOption, textures: Record<string, babylon.Texture>) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.textures = textures;
@@ -41,6 +44,9 @@ export abstract class BallTemplate {
 		this.mesh.metadata = { type: "collider", pushable: true };
 		this.collisionObservable = this.physic.body.getCollisionObservable();
 		this.collisionObserver = this.checkBallCollision();
+
+		this.yObservable = scene.onAfterPhysicsObservable;
+		this.yObserver = this.blockVelocityY();
 		
 		this.realDirection = this.physic.body.getLinearVelocity();
 		
@@ -49,6 +55,19 @@ export abstract class BallTemplate {
 		/**@todo protect this against instaclose game */
 		this.launchBall(scene);
 	}
+
+	/**block the ball from having a Y velocity */
+	private blockVelocityY(): babylon.Observer<babylon.Scene> {
+		const yObserver = this.yObservable.add(() => {
+			const velocity = this.physic.body.getLinearVelocity(); // Vector3
+			if (velocity) {
+				velocity.y = 0;
+				this.physic.body.setLinearVelocity(velocity);
+			}
+		});
+		return yObserver;
+	}
+	//
 
 	/**launch ball */
 	private launchBall(scene: babylon.Scene): void {
@@ -300,6 +319,7 @@ export abstract class BallTemplate {
 		this.destroyRest();
 		this.collisionObservable.remove(this.collisionObserver);
 		this.sceneObservable.remove(this.sceneObserver);
+		this.yObservable.remove(this.yObserver);
 		while (this.ballTrails.length) {
 			this.ballTrails[0].destroy();
 			this.ballTrails.splice(0, 1);
