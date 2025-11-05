@@ -53,7 +53,7 @@ export class Player {
 			{ width: PLAYER_DIMENSION.x, height: PLAYER_DIMENSION.y, depth: PLAYER_DIMENSION.z }, scene);
 		player.position.x = position.x;
 		player.position.y = position.y;
-		player.renderingGroupId = 1;
+		player.renderingGroupId = 2;
 		player.metadata = { type: "collider", playerSpinning: false };
 		return player;
 	}
@@ -167,6 +167,7 @@ export class Player {
 		this.body.shape?.dispose();
 		this.body.dispose();
 		this.mesh.material?.dispose();
+		this.highlight.removeMesh(this.mesh);
 		this.highlight.dispose();
 		this.mesh.dispose();
 		window.removeEventListener("keydown", this.handleKeyDown);

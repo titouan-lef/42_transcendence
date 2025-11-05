@@ -12,8 +12,6 @@ export class PlayerTrail {
 		this.mesh.position = player.position.clone();
 		if (player.rotationQuaternion)
 			this.mesh.rotationQuaternion = player.rotationQuaternion.clone();
-		// if (player.material)
-		// 	this.mesh.material = player.material.clone("trailMat");
 		this.setMaterial(scene);
 		this.mesh.renderingGroupId = 1;
 		this.mesh.visibility = 0.20;

@@ -116,7 +116,7 @@ export class Lightning {
 		particles.updateSpeed = 0.012;
 		particles.emitRate = 0;
 		particles.manualEmitCount = Math.floor(35 * this.randomSize);
-		particles.renderingGroupId = 1;
+		particles.renderingGroupId = 2;
 		return particles;
 	}
 

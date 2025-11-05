@@ -38,7 +38,7 @@ export abstract class BallTemplate {
 		this.mesh.position.y = BALL_DIAMETER / 2;
 		this.physic = this.setPhysic(scene);
 		this.physic.body.setCollisionCallbackEnabled(true);
-		this.mesh.renderingGroupId = 1;
+		this.mesh.renderingGroupId = 2;
 		this.type = type;
 
 		this.mesh.metadata = { type: "collider", pushable: true };
@@ -154,7 +154,7 @@ export abstract class BallTemplate {
 		collisionParticles.particleTexture = this.textures.spark.clone();
 		collisionParticles.emitter = position;
 		collisionParticles.createSphereEmitter(BALL_DIAMETER * 2);
-		collisionParticles.renderingGroupId = 1;
+		collisionParticles.renderingGroupId = 2;
 		collisionParticles.color1 = new babylon.Color4(this.color.r, this.color.g, this.color.b, 1.0);
 		collisionParticles.colorDead = new babylon.Color4(this.color.r, this.color.g, this.color.b, 1.0);
 		collisionParticles.minSize = 0.3;
@@ -175,7 +175,7 @@ export abstract class BallTemplate {
 		explosionParticles.particleTexture = this.textures.flare.clone();
 		explosionParticles.emitter = position;
 		explosionParticles.createSphereEmitter(BALL_DIAMETER * 10);
-		explosionParticles.renderingGroupId = 1;
+		explosionParticles.renderingGroupId = 2;
 		explosionParticles.color1 = new babylon.Color4(1, 0.5, 0, 1);
 		explosionParticles.color2 = new babylon.Color4(1, 0.2, 0, 1);
 		explosionParticles.colorDead = new babylon.Color4(0, 0, 0, 0);
@@ -197,7 +197,7 @@ export abstract class BallTemplate {
 		explosionParticles.particleTexture = this.textures.flare.clone();
 		explosionParticles.emitter = position;
 		explosionParticles.createSphereEmitter(BALL_DIAMETER * 2);
-		explosionParticles.renderingGroupId = 1;
+		explosionParticles.renderingGroupId = 2;
 		explosionParticles.color1 = new babylon.Color4(this.color.r, this.color.g, this.color.b, 1.0);
 		explosionParticles.minSize = 3;
 		explosionParticles.maxSize = 3;

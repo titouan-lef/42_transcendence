@@ -43,7 +43,7 @@ export class Meteor {
 		material.emissiveColor = new babylon.Color3(0.85, 0.3, 0.1);
 		material.alpha = 1;
 		meteor.material = material;
-		meteor.renderingGroupId = 1;
+		meteor.renderingGroupId = 2;
 		return meteor;
 	}
 
@@ -114,7 +114,7 @@ export class Meteor {
 		dustParticles.blendMode = babylon.ParticleSystem.BLENDMODE_STANDARD;
 		dustParticles.emitter = end.clone();
 		dustParticles.emitter.y += 1;
-		dustParticles.renderingGroupId = 1;
+		dustParticles.renderingGroupId = 2;
 		const emitter = new babylon.ConeParticleEmitter(90); // 90° = émet latéralement
 		emitter.radius = METEOR_COLLISION_RADIUS * this.randomSize * 2;
 		dustParticles.particleEmitterType = emitter;
@@ -137,7 +137,7 @@ export class Meteor {
 		trail.particleTexture = texture;
 		trail.emitter = this.meteor;
 		trail.particleEmitterType = new babylon.SphereParticleEmitter(METEOR_COLLISION_RADIUS * this.randomSize * 1.5);
-		trail.renderingGroupId = 1;
+		trail.renderingGroupId = 2;
 		trail.color1 = new babylon.Color4(1, 0.5, 0.1, 1);
 		trail.color2 = new babylon.Color4(0.7, 0.2, 0, 0.5);
 		trail.minSize = 1;

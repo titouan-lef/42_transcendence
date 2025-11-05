@@ -67,7 +67,7 @@ export class RainyMap extends MapTemplate {
 		particles.color2 = new babylon.Color4(0.85, 0.9, 1.0, 0.65);
 		particles.colorDead = new babylon.Color4(0.85, 0.9, 1.0, 0.0);
 		particles.emitRate = 1800;
-		particles.renderingGroupId = 2; //
+		particles.renderingGroupId = 3; //
 		particles.minEmitPower = 35;
 		particles.maxEmitPower = 45;
 		particles.minSize = 1;
