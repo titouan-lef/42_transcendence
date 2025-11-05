@@ -4,7 +4,7 @@ import { GameSettings } from "./GameSettings.js";
 //this will change when checking options
 /**@todo will move keys + playerId to the "session"'s settings */
 /**parameters: playerId, MapOption, BallOption, rotatingPlayer, spin, player1Keys, player2Keys */
-const SETTINGS: GameSettings = new GameSettings(1, "default", "random", true, true, ["KeyA", "KeyD", "KeyW", "KeyS", "KeyC", "Space"], ["KeyJ", "KeyL", "KeyI", "KeyK", "KeyO", "KeyP"]);
+const SETTINGS: GameSettings = new GameSettings(1, "rainy", "random", true, true, ["KeyA", "KeyD", "KeyW", "KeyS", "KeyC", "Space"], ["KeyJ", "KeyL", "KeyI", "KeyK", "KeyO", "KeyP"]);
 
 let isPressed = false;
 
