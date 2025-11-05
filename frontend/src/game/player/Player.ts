@@ -121,6 +121,14 @@ export class Player {
 				}
 				break;
 			case this.controls[4]:
+				if (this.rotatingPlayer) {
+					this.body.disablePreStep = true; // desactivate body physic for this frame so rotating doesn't cancel the reset
+					this.mesh.rotationQuaternion = new babylon.Quaternion(0, 0, 0, 1);
+					this.body.setTargetTransform(this.mesh.position.clone(), new babylon.Quaternion(0, 0, 0, 1));
+					this.body.disablePreStep = false;
+				}
+				break;
+			case this.controls[5]:
 				if (this.applyingSpin)
 					if (this.mesh.metadata.playerSpinning === true) {
 						this.mesh.metadata.playerSpinning = false;
