@@ -16,7 +16,7 @@ import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 
 export class SceneManager {
 	private readonly balls: BallTemplate[] = [];
-	private readonly maps: MapTemplate[] = [];
+	private map: MapTemplate | null = null;
 	private readonly players: Player[] = [];
 	private readonly textures: Record<string, babylon.Texture> = {};
 	private score: Score;
@@ -64,13 +64,13 @@ export class SceneManager {
 		}
 		switch (map) {
 			case "default":
-				this.maps.push(new DefaultMap(scene, this.textures.stars));
+				this.map = new DefaultMap(scene, this.textures.stars);
 				break;
 			case "volcano":
-				this.maps.push(new VolcanoMap(scene, this.textures));
+				this.map = new VolcanoMap(scene, this.textures);
 				break;
 			case "rainy":
-				this.maps.push(new RainyMap(scene, this.textures));
+				this.map = new RainyMap(scene, this.textures);
 				break;
 			default: throw new Error("switch map fail");
 		}
@@ -113,7 +113,8 @@ export class SceneManager {
 
 	/** ball explodes, the time slow down */
 	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3, score: babylon.Vector2): Promise<void> {
-		this.maps.forEach(map => map.predeath());
+		if (this.map)
+			this.map.predeath();
 		this.balls.forEach( ball => {
 			ball.preDeath();
 			ball.showParticles(position, scene, "explosion"); /**@todo change position here */
@@ -140,12 +141,12 @@ export class SceneManager {
 
 	destroyEnvironnement(scene: babylon.Scene): void {
 		this.destroyBalls();
-		this.destroyMaps();
+		this.destroyMap();
 		this.destroyPlayers();
 		while(this.balls.length > 0) {
 			this.balls.pop();
 		}
-		this.maps.pop();
+		this.map = null;
 		while(this.players.length > 0) {
 			this.players.pop();
 		}
@@ -173,8 +174,8 @@ export class SceneManager {
 		this.balls.forEach(ball => ball.destroy());
 	}
 
-	destroyMaps(): void  {
-		this.maps.forEach(map => map.destroy());
+	destroyMap(): void  {
+		this.map?.destroy();
 	}
 
 	destroyPlayers(): void {
