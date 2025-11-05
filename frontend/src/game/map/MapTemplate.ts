@@ -21,7 +21,7 @@ export abstract class MapTemplate {
 		this.groundPhysic = new babylon.PhysicsAggregate(this.ground, babylon.PhysicsShapeType.BOX, { mass: 0, restitution: 0, friction: 1 }, scene);
 		this.ground.renderingGroupId = 1;
 		this.limits = this.createLimits(scene);
-		this.limits.forEach(limit => limit.renderingGroupId = 1);
+		this.limits.forEach(limit => limit.renderingGroupId = 2);
 		this.limits.forEach(limit => this.setLimitPhysic(scene, limit));
 		this.scoreTexture = new babylon.DynamicTexture("scoreTexture", { width: SCORE_CANVAS_SIZE_X, height: SCORE_CANVAS_SIZE_Y }, scene, false);
 		this.score = this.createFloatingScore(scene);
