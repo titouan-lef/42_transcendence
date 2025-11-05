@@ -1,18 +1,18 @@
-import { TranslationKey, translate } from "../lang/lang.js";
+import { TranslationKey, translateTab } from "../lang/lang.js";
 import { onLangChange } from "../lang/langListener.js";
 import { getSafeElement, TagType } from "../utils/getSafeElement.js";
 
 interface HtmlData {
 	tag: string;
-	key: TranslationKey;
+	keyTab: TranslationKey[];
 	id: string;
 	attributeList: Record<string, string>;
 }
 
-type SetContentFunc<T> = (el: T, textTranslate: string) => void;
+type SetContentFunc<T> = (el: T, textTranslateTab: string[]) => void;
 
-function createHtmlData(tag: string, key: TranslationKey, id: string, attributeList: Record<string, string>): HtmlData {
-	const htmlData: HtmlData = { tag, key, id, attributeList };
+function createHtmlData(tag: string, keyTab: TranslationKey[], id: string, attributeList: Record<string, string>): HtmlData {
+	const htmlData: HtmlData = { tag, keyTab, id, attributeList };
 	return htmlData;
 }
 
@@ -26,7 +26,7 @@ function createTranslatableElement<T extends HTMLElement>(htmlData: HtmlData, se
 	const element = createElement(htmlData, setContent, tagType);
 	onLangChange(() => {
 		const el = getSafeElement<T>(htmlData.id, tagType);// Get element because its ref is destroyed when it is converted to a string.
-		setContent(el, translate(htmlData.key));
+		setContent(el, translateTab(htmlData.keyTab));
 	});
 	return element;
 }
@@ -36,7 +36,7 @@ function createElement<T extends HTMLElement>(htmlData: HtmlData, setContent: Se
 	if (!(element instanceof tagType))
 		throw new Error("Element is not of the correct type to be created");
 	applyAttribute(element, htmlData.id, htmlData.attributeList);
-	setContent(element, translate(htmlData.key));
+	setContent(element, translateTab(htmlData.keyTab));
 	return element;
 }
 

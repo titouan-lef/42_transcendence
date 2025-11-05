@@ -1,14 +1,14 @@
 import { TranslationKey } from "../lang/lang.js";
 import { createHtmlData, createTranslatableElement } from "./utils.js";
 
-function createButtonHtml(key: TranslationKey, id: string, attributeList: Record<string, string> = {}): string {
-	const button = createButton(key, id, attributeList);
+function createButtonHtml(keyTab: TranslationKey[], id: string, attributeList: Record<string, string> = {}): string {
+	const button = createButton(keyTab, id, attributeList);
 	return button.outerHTML;
 }
 
-function createButton(key: TranslationKey, id: string, attributeList: Record<string, string> = {}): HTMLButtonElement {
-	const htmlData = createHtmlData("button", key, id, attributeList);
-	return createTranslatableElement(htmlData, (el, translateText) => el.textContent = translateText, HTMLButtonElement);
+function createButton(keyTab: TranslationKey[], id: string, attributeList: Record<string, string> = {}): HTMLButtonElement {
+	const htmlData = createHtmlData("button", keyTab, id, attributeList);
+	return createTranslatableElement(htmlData, (el, translateTextTab) => el.textContent = translateTextTab[0], HTMLButtonElement);
 }
 
 export { createButtonHtml };
