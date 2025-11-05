@@ -3,23 +3,12 @@ import { BallTemplate } from "./BallTemplate.js";
 import { COLORS, TRICKY_BALL_EFFECT_INTERVAL, TRICKY_BALL_FORWARD_ONLY } from "../values.js";
 
 export class TrickyBall extends BallTemplate {
-	protected trailIntervalId: ReturnType<typeof setInterval>;
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 		
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
-		super(scene, "tricky", texture);
-		this.color = COLORS.orange;
-		this.setMaterial(scene, this.color);
-		this.trailIntervalId = this.setTrail(scene, this.color);
+		super(scene, "tricky", texture, COLORS.orange);
 		this.effectIntervalId = this.activateEffect();
 	}
-
-	setMaterial(scene: babylon.Scene, color: babylon.Color3): void {
-		const material = new babylon.StandardMaterial('ballcolor', scene);
-		material.emissiveColor = color;
-		this.mesh.material = material;
-	}
-
 	
 	/**@todo changes direction every TRICKY_BALL_EFFECT_INTERVAL ms */
 	activateEffect(): ReturnType<typeof setInterval> {
@@ -48,6 +37,5 @@ export class TrickyBall extends BallTemplate {
 		
 	destroyRest(): void {
 		clearInterval(this.effectIntervalId);
-		clearInterval(this.trailIntervalId);
 	}
 }

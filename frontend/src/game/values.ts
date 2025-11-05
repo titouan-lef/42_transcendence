@@ -98,11 +98,14 @@ export const PLAYER_MASS = 1;
 export const PLAYER_RESTITUTION = 1;
 export const PLAYER_MOVEMENT_VELOCITY = 65;
 export const PLAYER_ROTATION_VELOCITY = 10;
+export const PLAYER_TRAIL_INTERVAL = 25;
+export const PLAYER_TRAIL_ON = true;
 
 /** BALL SETTINGS */
 export const BALL_DIAMETER = 2; //has to be smaller than the player
 export const MAX_SPEED = 60;
-export const TRAIL_CREATION_INTERVAL = 15;
+export const BALL_TRAIL_INTERVAL = 15;
+export const BALL_TRAIL_ON = true;
 export const NERF_SPEED_FACTOR = MAX_SPEED / 4;
 export const INVISIBLE_BALL_FADING_INTERVAL = 50;
 export const INVISIBLE_BALL_INVISIBILITY_INTERVAL = 1200;
@@ -116,7 +119,6 @@ export const BALL_ANGULAR_FORCE = 0.5;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const BALL_ANGULAR_INTERVAL = 45;
 
-/** @todo tricky ball only go forward */
 /** @todo key to be straight again */
 /** @todo player trail */
 /** @todo rainy change ground*/

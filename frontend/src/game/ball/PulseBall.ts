@@ -3,21 +3,11 @@ import { BallTemplate } from "./BallTemplate.js";
 import { COLORS, MAX_SPEED, PULSE_BALL_EFFECT_INTERVAL } from "../values.js";
 
 export class PulseBall extends BallTemplate {
-	protected trailIntervalId: ReturnType<typeof setInterval>;
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 	
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
-		super(scene, "pulse", texture);
-		this.color = COLORS.blue;
-		this.setMaterial(scene, this.color);
-		this.trailIntervalId = this.setTrail(scene, this.color);
+		super(scene, "pulse", texture, COLORS.blue);
 		this.effectIntervalId = this.activateEffect();
-	}
-	
-	setMaterial(scene: babylon.Scene, color: babylon.Color3): void {
-		const material = new babylon.StandardMaterial('ballcolor', scene);
-		material.emissiveColor = color;
-		this.mesh.material = material;
 	}
 
 	/**@description apply a pulsation every PULSE_BALL_EFFECT_INTERVAL ms */
@@ -41,7 +31,6 @@ export class PulseBall extends BallTemplate {
 	}
 
 	destroyRest(): void {
-		clearInterval(this.trailIntervalId);
 		clearInterval(this.effectIntervalId);
 	}
 }
