@@ -1,18 +1,21 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS, START_INTERVAL } from "../settings/values.js";
 
 export class DefaultMap extends MapTemplate {
 	private readonly bars: babylon.Mesh[];
 	private readonly particles: babylon.ParticleSystem;
 	private readonly wallHighlight: babylon.HighlightLayer;
+	private readonly highlightTimeout: ReturnType<typeof setTimeout>;
 
 	constructor(scene: babylon.Scene, texture: babylon.Texture) {
 		super(scene, "default");
 		this.bars = this.createBars(scene);
 		this.particles = this.createParticles(scene, texture);
 		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
-		this.limits.forEach(limit => this.wallHighlight.addMesh(limit, COLORS.red));
+		this.highlightTimeout = setTimeout(() => {
+			this.limits.forEach(limit => this.wallHighlight.addMesh(limit, COLORS.red));
+		}, START_INTERVAL);
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
@@ -92,6 +95,7 @@ export class DefaultMap extends MapTemplate {
 	}
 
 	destroyRest(): void {
+		clearTimeout(this.highlightTimeout);
 		this.bars.forEach(bar => {
 			bar.material?.dispose();
 			bar?.dispose();

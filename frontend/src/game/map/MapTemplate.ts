@@ -12,7 +12,7 @@ export abstract class MapTemplate {
 	protected readonly light: babylon.DirectionalLight;
 	readonly type: MapOption;
 	protected readonly sunPosition: babylon.Vector3;
-	private readonly startTimeout:  ReturnType<typeof setTimeout>;
+	private readonly startTimeout: ReturnType<typeof setTimeout>;
 	protected gameStopped = true;
 
 	constructor(scene: babylon.Scene, type: MapOption) {

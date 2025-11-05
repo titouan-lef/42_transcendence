@@ -13,10 +13,12 @@ import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
+import { CountDown } from "./CountDown.js";
 
 export class SceneManager {
 	private ball: BallTemplate | null = null;
 	private map: MapTemplate | null = null;
+	private countDown: CountDown | null = null;
 	private readonly players: Player[] = [];
 	private readonly textures: Record<string, babylon.Texture> = {};
 	private score: Score;
@@ -31,7 +33,7 @@ export class SceneManager {
 	}
 
 	/**@todo Enum here is kinda hard to use because each class is different */
-	createBall(scene: babylon.Scene, settings: GameSettings): void {
+	private createBall(scene: babylon.Scene, settings: GameSettings): void {
 		const ballList: BallOption[] = ["default", "invisible", "tricky", "pulse", "snake"];
 		let ball = settings.ball;
 		if (settings.ball === "random") {
@@ -57,7 +59,7 @@ export class SceneManager {
 		}
 	}
 
-	createMap(scene: babylon.Scene, map: MapOption): void {
+	private createMap(scene: babylon.Scene, map: MapOption): void {
 		const mapList: MapOption[] = ["default", "volcano", "rainy"];
 		if (map === "random") {
 			map = mapList[Math.floor(Math.random() * 3)];
@@ -76,7 +78,7 @@ export class SceneManager {
 		}
 	}
 
-	createPlayers(scene: babylon.Scene, settings: GameSettings): void {
+	private createPlayers(scene: babylon.Scene, settings: GameSettings): void {
 		const player1PosX = MAP_SIZE.x / 2 - (PLAYER_DIMENSION.z + WALL_WIDTH);
 		const player2PosX = (PLAYER_DIMENSION.z + WALL_WIDTH) -(MAP_SIZE.x / 2);
 		const playersPoxY = PLAYER_DIMENSION.y / 2;
@@ -84,6 +86,10 @@ export class SceneManager {
 		const player2 = new Player(scene, new babylon.Vector2(player2PosX, playersPoxY), settings, settings.player2Keys);
 		this.players.push(player1);
 		this.players.push(player2);
+	}
+
+	private createCountDown(scene: babylon.Scene): void {
+		this.countDown = new CountDown(scene);
 	}
 
 	createTextures(scene: babylon.Scene): void {
@@ -132,10 +138,12 @@ export class SceneManager {
 		this.createPlayers(scene, settings);
 		this.createBall(scene, settings);
 		this.createMap(scene, settings.map);
+		this.createCountDown(scene);
 		this.score.changeScore([score.x, score.y]);
 	}
 
-	destroyEnvironnement(scene: babylon.Scene): void {
+	destroyEnvironnement(): void {
+		this.destroyCountDown();	
 		this.destroyBall();
 		this.destroyMap();
 		this.destroyPlayers();
@@ -158,22 +166,29 @@ export class SceneManager {
 		// console.log("particle system: " + scene.particleSystems);
 	}
 
+	private destroyBall(): void {
+		this.ball?.destroy();
+		this.ball = null;
+	}
+
+	private destroyMap(): void  {
+		this.map?.destroy();
+		this.map = null;
+	}
+
+	private destroyPlayers(): void {
+		this.players.forEach(player => player.destroy());
+	}
+
+	private destroyCountDown(): void {
+		this.countDown?.destroy();
+		this.countDown = null;
+	}
+
 	destroyTextures(): void {
 		for (const texture in this.textures) {
 			this.textures[texture].dispose();
 		}
-	}
-
-	destroyBall(): void {
-		this.ball?.destroy();
-	}
-
-	destroyMap(): void  {
-		this.map?.destroy();
-	}
-
-	destroyPlayers(): void {
-		this.players.forEach(player => player.destroy());
 	}
 
 	destroyScore(): void {
