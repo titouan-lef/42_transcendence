@@ -3,20 +3,9 @@ import { BallTemplate } from "./BallTemplate.js";
 import { COLORS, SNAKE_BALL_ANGULAR_FORCE, SNAKE_BALL_ANGULAR_INTERVAL } from "../values.js";
 
 export class SnakeBall extends BallTemplate {
-	protected trailIntervalId: ReturnType<typeof setInterval>;
-
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
-		super(scene, "snake", texture);
-		this.color = COLORS.green;
-		this.setMaterial(scene, this.color);
+		super(scene, "snake", texture, COLORS.green);
 		this.force = SNAKE_BALL_ANGULAR_FORCE;
-		this.trailIntervalId = this.setTrail(scene, this.color);
-	}
-
-	setMaterial(scene: babylon.Scene, color: babylon.Color3): void {
-		const material = new babylon.StandardMaterial('ballcolor', scene);
-		material.emissiveColor = color;
-		this.mesh.material = material;
 	}
 
 	/**@description no effect */
@@ -50,7 +39,5 @@ export class SnakeBall extends BallTemplate {
 		return sceneObserver;
 	}
 
-	destroyRest(): void {
-		clearInterval(this.trailIntervalId);
-	}
+	destroyRest(): void {}
 }

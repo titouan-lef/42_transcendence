@@ -1,37 +1,27 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
-import { COLORS, TRAIL_CREATION_INTERVAL, INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL } from "../values.js";
+import { COLORS, BALL_TRAIL_INTERVAL, INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL } from "../values.js";
 import { BallTrail } from "./BallTrail.js";
 
 export class InvisibleBall extends BallTemplate {
-	protected trailIntervalId: ReturnType<typeof setInterval>;
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 	private effectTimeOutId: ReturnType<typeof setTimeout> | null = null;
 		
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
-		super(scene, "invisible", texture);
-		this.color = COLORS.red;
-		this.setMaterial(scene, this.color);
-		this.trailIntervalId = this.setTrail(scene, this.color);
+		super(scene, "invisible", texture, COLORS.red);
 		this.effectIntervalId = this.activateEffect();
 	}
 
-	setMaterial(scene: babylon.Scene, color: babylon.Color3): void {
-		const material = new babylon.StandardMaterial('ballcolor', scene);
-		material.emissiveColor = color;
-		this.mesh.material = material;
-	}
-
 	/** redefining setTrail to specify the visibility of the current ball */
-	protected setTrail(scene: babylon.Scene, color: babylon.Color3): ReturnType<typeof setInterval> {
-		const trailIntervalId = setInterval(() => {
-			this.ballTrails.push(new BallTrail(scene, this.mesh.position, color, this.mesh.visibility));
-			while (this.ballTrails.length && this.ballTrails[0].hasDisappeared()) {
-				this.ballTrails.splice(0, 1);
-			}
-		}, TRAIL_CREATION_INTERVAL);
-		return trailIntervalId;
-	}
+	// private setTrail(scene: babylon.Scene, color: babylon.Color3): ReturnType<typeof setInterval> {
+	// 	const trailIntervalId = setInterval(() => {
+	// 		this.ballTrails.push(new BallTrail(scene, this.mesh.position, color, this.mesh.visibility));
+	// 		while (this.ballTrails.length && this.ballTrails[0].hasDisappeared()) {
+	// 			this.ballTrails.splice(0, 1);
+	// 		}
+	// 	}, BALL_TRAIL_INTERVAL);
+	// 	return trailIntervalId;
+	// }
 	
 	/**@todo disappears gradually every INVISIBLE_BALL_FADING_INTERVAL ms for INVISIBLE_BALL_INVISIBILITY_INTERVAL ms */
 	activateEffect(): ReturnType<typeof setInterval> {
@@ -55,6 +45,5 @@ export class InvisibleBall extends BallTemplate {
 		if (this.effectTimeOutId !== null) {
 			clearTimeout(this.effectTimeOutId);
 		}
-		clearInterval(this.trailIntervalId);
 	}
 }

@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { BallOption } from "../GameSettings.js";
-import { BALL_DIAMETER, TRAIL_CREATION_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, COLORS, NERF_SPEED_FACTOR, MAX_SPEED } from "../values.js";
+import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, COLORS, NERF_SPEED_FACTOR, MAX_SPEED, BALL_TRAIL_ON } from "../values.js";
 import { BallTrail } from "./BallTrail.js";
 type ParticlesType = "explosion" | "collision" | "impulse";
 
@@ -9,7 +9,8 @@ export abstract class BallTemplate {
 	protected readonly physic: babylon.PhysicsAggregate;
 	private readonly type: BallOption;
 	protected color: babylon.Color3;
-	protected readonly ballTrails: BallTrail[] = [];
+	private readonly ballTrails: BallTrail[] = [];
+	private trailIntervalId: ReturnType<typeof setInterval> | null = null;
 	protected readonly particles: babylon.ParticleSystem[] = [];
 	private readonly collisionObservable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
 	private readonly collisionObserver: babylon.Observer<babylon.IPhysicsCollisionEvent>;
@@ -31,10 +32,11 @@ export abstract class BallTemplate {
 	private readonly yObservable: babylon.Observable<babylon.Scene>;
 	private readonly yObserver: babylon.Observer<babylon.Scene>;
 
-	constructor(scene: babylon.Scene, type: BallOption, textures: Record<string, babylon.Texture>) {
+	constructor(scene: babylon.Scene, type: BallOption, textures: Record<string, babylon.Texture>, color: babylon.Color3) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.textures = textures;
-		this.color = COLORS.white;
+		this.color = color;
+		this.setMaterial(scene);
 		this.mesh.position.y = BALL_DIAMETER / 2;
 		this.physic = this.setPhysic(scene);
 		this.physic.body.setCollisionCallbackEnabled(true);
@@ -52,6 +54,8 @@ export abstract class BallTemplate {
 		
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.sceneObserver = this.applyMovementChanges();
+		if (BALL_TRAIL_ON)
+			this.trailIntervalId = this.setTrail(scene);
 		/**@todo protect this against instaclose game */
 		this.launchBall(scene);
 	}
@@ -84,6 +88,12 @@ export abstract class BallTemplate {
 		}, 1000);
 	}
 
+	private setMaterial(scene: babylon.Scene): void {
+		const material = new babylon.StandardMaterial('ballcolor', scene);
+		material.emissiveColor = this.color;
+		this.mesh.material = material;
+	}
+
 	private setPhysic(scene: babylon.Scene): babylon.PhysicsAggregate {
 		const physic = new babylon.PhysicsAggregate(this.mesh, babylon.PhysicsShapeType.SPHERE, {
 			mass: 1,
@@ -94,13 +104,13 @@ export abstract class BallTemplate {
 	}
 
 	/** trail behind the ball */
-	protected setTrail(scene: babylon.Scene, color: babylon.Color3): ReturnType<typeof setInterval> {
+	private setTrail(scene: babylon.Scene): ReturnType<typeof setInterval> {
 		const trailIntervalId = setInterval(() => {
-			this.ballTrails.push(new BallTrail(scene, this.mesh.position, color));
+			this.ballTrails.push(new BallTrail(scene, this.mesh.position, this.color, this.mesh.visibility));
 			while (this.ballTrails.length && this.ballTrails[0].hasDisappeared()) {
 				this.ballTrails.splice(0, 1);
 			}
-		}, TRAIL_CREATION_INTERVAL);
+		}, BALL_TRAIL_INTERVAL);
 		return trailIntervalId;
 	}
 
@@ -317,6 +327,8 @@ export abstract class BallTemplate {
 
 	destroy(): void {
 		this.destroyRest();
+		if (this.trailIntervalId)
+			clearInterval(this.trailIntervalId);
 		this.collisionObservable.remove(this.collisionObserver);
 		this.sceneObservable.remove(this.sceneObserver);
 		this.yObservable.remove(this.yObserver);
@@ -338,8 +350,6 @@ export abstract class BallTemplate {
 		this.mesh?.material?.dispose();
 		this.mesh?.dispose();
 	}
-
-	abstract setMaterial(scene: babylon.Scene, color: babylon.Color3): void;
 
 	abstract activateEffect(): void;
 

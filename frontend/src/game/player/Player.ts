@@ -1,6 +1,7 @@
 import * as babylon from "@babylonjs/core";
-import { GameSettings, PlayerKeys } from "./GameSettings.js";
-import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY } from "./values.js";
+import { GameSettings, PlayerKeys } from "./../GameSettings.js";
+import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY, PLAYER_TRAIL_INTERVAL, PLAYER_TRAIL_ON } from "./../values.js";
+import { PlayerTrail } from "./PlayerTrail.js";
 
 export class Player {
 	/**@todo set to private */
@@ -11,6 +12,8 @@ export class Player {
 	private readonly rotatingPlayer: boolean;
 	private readonly applyingSpin;
 	private readonly highlight: babylon.HighlightLayer;
+	private readonly playerTrails: PlayerTrail[] = [];
+	private trailIntervalId: ReturnType<typeof setInterval> | null = null;
 
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	private readonly positionObserver: babylon.Observer<babylon.Scene>;
@@ -40,6 +43,9 @@ export class Player {
 
 		window.addEventListener("keydown", this.handleKeyDown);
 		window.addEventListener("keyup", this.handleKeyUp);
+
+		if (PLAYER_TRAIL_ON)
+			this.trailIntervalId = this.setTrail(scene);
 	}
 
 	private setPlayer(scene: babylon.Scene, position: babylon.Vector2): babylon.Mesh {
@@ -56,6 +62,18 @@ export class Player {
 		const material = new babylon.StandardMaterial('ballcolor', scene);
 		material.emissiveColor = color;
 		this.mesh.material = material;
+	}
+
+	private setTrail(scene: babylon.Scene): ReturnType<typeof setInterval> {
+		const trailIntervalId = setInterval(() => {
+			if (!this.mesh.material)
+				return;
+			this.playerTrails.push(new PlayerTrail(scene, this.mesh));
+			while (this.playerTrails.length && this.playerTrails[0].hasDisappeared()) {
+				this.playerTrails.splice(0, 1);
+			}
+		}, PLAYER_TRAIL_INTERVAL);
+		return trailIntervalId;
 	}
 
 	private handleKeyDown = (event: KeyboardEvent): void => {
@@ -131,8 +149,13 @@ export class Player {
 	} 
 
 	destroy(): void {
-		/**@todo in case we want to Lock player on Z axe */
 		this.sceneObservable.remove(this.positionObserver);
+		if (this.trailIntervalId)
+			clearInterval(this.trailIntervalId);
+		while (this.playerTrails.length) {
+			this.playerTrails[0].destroy();
+			this.playerTrails.splice(0, 1);
+		}
 		this.body.shape?.dispose();
 		this.body.dispose();
 		this.mesh.material?.dispose();

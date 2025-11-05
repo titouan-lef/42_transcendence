@@ -11,7 +11,7 @@ import { FrozenMap } from "./map/FrozenMap.js";
 import { RainyMap } from "./map/RainyMap.js";
 import { VolcanoMap } from "./map/VolcanoMap.js";
 import { WindyMap } from "./map/WindyMap.js";
-import { Player } from "./Player.js";
+import { Player } from "./player/Player.js";
 import { GameSettings, MapOption, BallOption } from "./GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "./values.js";
 
