@@ -3,6 +3,7 @@ import { MapTemplate } from "./MapTemplate.js";
 import { Lightning } from "./map_utils/Lightning.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME } from "../values.js";
 
+
 /**@todo this map is not configured dont mind the code */
 export class RainyMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
@@ -19,15 +20,15 @@ export class RainyMap extends MapTemplate {
 		const ground = babylon.MeshBuilder.CreateGround("rainyground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
 		const material = new babylon.StandardMaterial("groundMat", scene);
-		material.diffuseColor = COLORS.groundColorRainy;
-		material.alpha = 0.85;
-		const noise = new babylon.NoiseProceduralTexture("grassNoise", 256, scene, undefined, false);
-		noise.animationSpeedFactor = 0.2;
-		noise.persistence = 0.9;
+		material.diffuseColor = new babylon.Color3(0.35, 0.6, 0.75);
+		material.alpha = 1;
+		const noise = new babylon.NoiseProceduralTexture("groundNoise", 256, scene, undefined, false);
+		noise.animationSpeedFactor = 0;
+		noise.persistence = 0.8;
 		noise.brightness = 0.5;
-		noise.octaves = 5;
+		noise.octaves = 4;
+		material.emissiveColor = new babylon.Color3(0.05, 0.15, 0.1);
 		material.bumpTexture = noise;
-		//material.bumpTexture.level = 0.25;
 		ground.material = material;
 		ground.metadata = { type: "ground" };
 		return ground;
