@@ -70,7 +70,7 @@ export class Game {
 
 	stop(): void {
 		this.sceneManager.destroyTextures();
-		this.sceneManager.destroyEnvironnement(this.scene);
+		this.sceneManager.destroyEnvironnement();
 		this.sceneManager.destroyScore();
 		this.scene.onAfterRenderObservable.clear();
 		this.camera.dispose();
@@ -131,7 +131,7 @@ export class Game {
 				this.stop();
 			} else {
 				this.inAnimation = false;
-				this.sceneManager.destroyEnvironnement(this.scene);
+				this.sceneManager.destroyEnvironnement();
 				this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
 			}
 		}

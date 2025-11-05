@@ -64,13 +64,15 @@ export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100);
 export const CAMERA_POS_X = MAP_SIZE.x * 1.4;
 export const WALL_WIDTH = 3;
 export const WALL_HEIGHT = 5;
-export const SCORE_CANVAS_SIZE_X = 512;
-export const SCORE_CANVAS_SIZE_Y = 256;
+export const SCORE_CANVAS_SIZE = new babylon.Vector2(512, 256);
 export const SCORE_SIZE = 120;
 export const SCORE_POS_Y = 20;
+export const COUNTDOWN_POS_Y = 30;
+export const COUNTDOWN_CANVAS_SIZE = new babylon.Vector2(512, 256);
+export const COUNTDOWN_SIZE = 200;
 export const SUN_DIAMETER = 20;
 export const GLOW_INTENSITY = 0.6;
-export const START_INTERVAL = 2500;
+export const START_INTERVAL = 4000;
 
 /**DEFAULT MAP */
 export const D_PARTICLE_NUMBER = 500;

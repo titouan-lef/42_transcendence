@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { MAP_SIZE, WALL_WIDTH, METEOR_SPEED, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, METEOR_COLLISION_STRENGTH, METEOR_LIFETIME, METEOR_PARTICLE_INTERVAL, WALL_HEIGHT, COLORS, BALL_DIAMETER } from "../../settings/values.js";
+import { MAP_SIZE, WALL_WIDTH, METEOR_SPEED, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, METEOR_COLLISION_STRENGTH, METEOR_LIFETIME, COLORS, BALL_DIAMETER } from "../../settings/values.js";
 import { BallTemplate } from "../../ball/BallTemplate.js";
 
 export class Meteor {

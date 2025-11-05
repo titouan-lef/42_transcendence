@@ -1,12 +1,12 @@
 import * as babylon from "@babylonjs/core";
-import { SCORE_CANVAS_SIZE_X, SCORE_CANVAS_SIZE_Y, COLORS, CAMERA_POS_X, MAP_SIZE, SCORE_POS_Y, SCORE_SIZE } from "../settings/values.js";
+import { SCORE_CANVAS_SIZE, COLORS, CAMERA_POS_X, MAP_SIZE, SCORE_POS_Y, SCORE_SIZE } from "../settings/values.js";
 
 export class Score { 
 	private readonly score: babylon.Mesh;
 	private readonly scoreTexture: babylon.DynamicTexture;
 
 	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera) {
-		this.scoreTexture = new babylon.DynamicTexture("scoreTexture", { width: SCORE_CANVAS_SIZE_X, height: SCORE_CANVAS_SIZE_Y }, scene, false);
+		this.scoreTexture = new babylon.DynamicTexture("scoreTexture", { width: SCORE_CANVAS_SIZE.x, height: SCORE_CANVAS_SIZE.y }, scene, false);
 		this.score = babylon.MeshBuilder.CreatePlane("scorePlane", { width: MAP_SIZE.z * 0.4, height: MAP_SIZE.z * 0.2 }, scene);
 		this.setMaterial(scene);
 		this.score.billboardMode = babylon.Mesh.BILLBOARDMODE_ALL; // so it faces camera
@@ -37,8 +37,8 @@ export class Score {
 		ctx.font = `bold ${SCORE_SIZE}px Arial`;
 		const text = `${score[0]} : ${score[1]}`;
 		const textWidth = ctx.measureText(text).width;
-		const x = (SCORE_CANVAS_SIZE_X - textWidth) / 2;
-		const y = SCORE_CANVAS_SIZE_Y / 2 + SCORE_SIZE / 2;
+		const x = (SCORE_CANVAS_SIZE.x - textWidth) / 2;
+		const y = SCORE_CANVAS_SIZE.y / 2 + SCORE_SIZE / 2;
 		this.scoreTexture.clear(); // clear previous text
 		this.scoreTexture.drawText(text, x, y, `bold ${SCORE_SIZE}px Arial`, "white", "transparent");
 		this.scoreTexture.update();
