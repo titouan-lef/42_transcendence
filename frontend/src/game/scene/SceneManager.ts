@@ -15,7 +15,7 @@ import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js
 import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 
 export class SceneManager {
-	private readonly balls: BallTemplate[] = [];
+	private ball: BallTemplate | null = null;
 	private map: MapTemplate | null = null;
 	private readonly players: Player[] = [];
 	private readonly textures: Record<string, babylon.Texture> = {};
@@ -26,8 +26,8 @@ export class SceneManager {
 	}
 
 	/**@todo will be removed */
-	getBalls(): BallTemplate[] {
-		return this.balls;
+	getBall(): BallTemplate | null {
+		return this.ball;
 	}
 
 	/**@todo Enum here is kinda hard to use because each class is different */
@@ -39,19 +39,19 @@ export class SceneManager {
 		}
 		switch (ball) {
 			case "default":
-				this.balls.push(new DefaultBall(scene, this.textures));
+				this.ball = new DefaultBall(scene, this.textures);
 				break;
 			case "invisible":
-				this.balls.push(new InvisibleBall(scene, this.textures));
+				this.ball = new InvisibleBall(scene, this.textures);
 				break;
 			case "tricky":
-				this.balls.push(new TrickyBall(scene, this.textures));
+				this.ball = new TrickyBall(scene, this.textures);
 				break;
 			case "pulse":
-				this.balls.push(new PulseBall(scene, this.textures));
+				this.ball = new PulseBall(scene, this.textures);
 				break;
 			case "snake":
-				this.balls.push(new SnakeBall(scene, this.textures));
+				this.ball = new SnakeBall(scene, this.textures);
 				break;
 			default: throw new Error("switch ball fail");
 		}
@@ -102,12 +102,10 @@ export class SceneManager {
 
 	/** @todo Titouan gaming */
 	checkGoal(): { goal: "player1" | "player2" | null, position: babylon.Vector3 | null } | null {
-		for (const ball of this.balls) {
-			const goalInfos = ball.getGoal();
-			if (goalInfos.goal !== null) {
-				return goalInfos;
-			}
-		};
+		const goalInfos = this.ball?.getGoal();
+		if (goalInfos && goalInfos.goal !== null) {
+			return goalInfos;
+		}
 		return null;
 	}
 
@@ -115,10 +113,8 @@ export class SceneManager {
 	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3, score: babylon.Vector2): Promise<void> {
 		if (this.map)
 			this.map.predeath();
-		this.balls.forEach( ball => {
-			ball.preDeath();
-			ball.showParticles(position, scene, "explosion"); /**@todo change position here */
-		});
+		this.ball?.preDeath();
+		this.ball?.showParticles(position, scene, "explosion"); /**@todo change position here */
 		this.score.changeScore([score.x, score.y]);
 		const originalGetDelta = engine.getDeltaTime; // keep original delta
 		engine.getDeltaTime = function(): number {
@@ -140,28 +136,26 @@ export class SceneManager {
 	}
 
 	destroyEnvironnement(scene: babylon.Scene): void {
-		this.destroyBalls();
+		this.destroyBall();
 		this.destroyMap();
 		this.destroyPlayers();
-		while(this.balls.length > 0) {
-			this.balls.pop();
-		}
+		this.ball = null;
 		this.map = null;
 		while(this.players.length > 0) {
 			this.players.pop();
 		}
 		/**@todo Debugging logs */
-		console.log("meshes : " + scene.meshes);
-		console.log("materials : " + scene.materials);
-		scene.materials.forEach(mat => {
-			console.log("mat name : " + mat.name);
-		});
-		console.log("textures : " + scene.textures);
-		scene.textures.forEach(texture => {
-			console.log("texture name : " + texture.name);
-		});
-		console.log("lights : " + scene.lights);
-		console.log("particle system: " + scene.particleSystems);
+		// console.log("meshes : " + scene.meshes);
+		// console.log("materials : " + scene.materials);
+		// scene.materials.forEach(mat => {
+		// 	console.log("mat name : " + mat.name);
+		// });
+		// console.log("textures : " + scene.textures);
+		// scene.textures.forEach(texture => {
+		// 	console.log("texture name : " + texture.name);
+		// });
+		// console.log("lights : " + scene.lights);
+		// console.log("particle system: " + scene.particleSystems);
 	}
 
 	destroyTextures(): void {
@@ -170,8 +164,8 @@ export class SceneManager {
 		}
 	}
 
-	destroyBalls(): void {
-		this.balls.forEach(ball => ball.destroy());
+	destroyBall(): void {
+		this.ball?.destroy();
 	}
 
 	destroyMap(): void  {

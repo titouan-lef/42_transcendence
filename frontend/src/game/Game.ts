@@ -75,6 +75,7 @@ export class Game {
 		this.scene.onAfterRenderObservable.clear();
 		this.camera.dispose();
 		this.engine.stopRenderLoop();
+		// this.scene.materials.forEach(mat => mat.dispose()); // these are the defualt materials, not sure if i have to dispose them since they are created auto
 		// console.log("meshes : " + this.scene.meshes);
 		// console.log("materials : " + this.scene.materials);
 		// this.scene.materials.forEach(mat => {
@@ -85,7 +86,7 @@ export class Game {
 		// 	console.log("texture name : " + texture.name);
 		// });
 		// console.log("lights : " + this.scene.lights);
-		//console.log("particle system: " + this.scene.particleSystems);
+		// console.log("particle system: " + this.scene.particleSystems);
 		this.scene.dispose();
 		this.engine.dispose();
 		this.canvas.remove();
@@ -101,10 +102,9 @@ export class Game {
 		/**@todo just to make the ball move, will be removed*/
 		const sceneManager = this.sceneManager;
 		this.scene.onPointerDown = (): void => {
-			sceneManager.getBalls().forEach(ball => {
-				ball.testMove();
-				ball.setJustCollide();
-			});
+			const ball = sceneManager.getBall();
+			ball?.testMove();
+			ball?.setJustCollide();
 		};
 
 		this.scene.onAfterRenderObservable.add(() => {
