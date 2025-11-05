@@ -1,5 +1,5 @@
 import { TranslationKey } from "../lang/lang.js";
-import { createHtmlData, createTranslatableElement } from "./utils.js";
+import { createHtmlData, createTranslatableElement } from "./component_utils.js";
 
 type InputType = "button" | "text";
 

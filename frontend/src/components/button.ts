@@ -1,5 +1,5 @@
 import { TranslationKey } from "../lang/lang.js";
-import { createHtmlData, createTranslatableElement } from "./utils.js";
+import { createHtmlData, createTranslatableElement } from "./component_utils.js";
 
 function createButtonHtml(keyTab: TranslationKey[], id: string, attributeList: Record<string, string> = {}): string {
 	const button = createButton(keyTab, id, attributeList);
