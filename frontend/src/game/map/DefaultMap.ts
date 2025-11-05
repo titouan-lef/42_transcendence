@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS } from "../values.js";
+import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS } from "../settings/values.js";
 
 export class DefaultMap extends MapTemplate {
 	private readonly bars: babylon.Mesh[];
@@ -68,7 +68,7 @@ export class DefaultMap extends MapTemplate {
 		const sunMaterial = new babylon.StandardMaterial("sunMat", scene);
 		sunMaterial.emissiveColor = COLORS.sunColorDefault;
 		sun.material = sunMaterial;
-		sun.position = this.score.absolutePosition.clone();
+		sun.position = this.sunPosition.clone();
 		sun.position.z -= MAP_SIZE.z / 2;
 		sun.position.y += 10;
 		return sun;

@@ -121,4 +121,5 @@ export const BALL_ANGULAR_FORCE = 0.5;
 export const BALL_ANGULAR_INTERVAL = 45;
 
 /** @todo do a timer before lightnings meteor, and maybe 3 2 1 go */
+/** @todo block camera */
 /** @todo player sometimes blocked when pressing right left, should be solved with server side */

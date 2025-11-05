@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Meteor } from "./map_utils/Meteor.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER } from "../values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER } from "../settings/values.js";
 
 /**@todo this map is not configured dont mind the code */
 export class VolcanoMap extends MapTemplate {
@@ -36,7 +36,7 @@ export class VolcanoMap extends MapTemplate {
 		const sunMaterial = new babylon.StandardMaterial("sunMat", scene);
 		sunMaterial.emissiveColor = COLORS.orange;
 		sun.material = sunMaterial;
-		sun.position = this.score.absolutePosition.clone();
+		sun.position = this.sunPosition.clone();
 		sun.position.z -= MAP_SIZE.z / 2;
 		sun.position.y += 10;
 		return sun;

@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
-import { BallOption } from "../GameSettings.js";
-import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, COLORS, NERF_SPEED_FACTOR, MAX_SPEED, BALL_TRAIL_ON, START_INTERVAL } from "../values.js";
+import { BallOption } from "../settings/GameSettings.js";
+import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, COLORS, NERF_SPEED_FACTOR, MAX_SPEED, BALL_TRAIL_ON, START_INTERVAL } from "../settings/values.js";
 import { BallTrail } from "./BallTrail.js";
 type ParticlesType = "explosion" | "collision" | "impulse";
 
