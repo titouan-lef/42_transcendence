@@ -107,7 +107,7 @@ export const NERF_SPEED_FACTOR = MAX_SPEED / 4;
 export const INVISIBLE_BALL_FADING_INTERVAL = 50;
 export const INVISIBLE_BALL_INVISIBILITY_INTERVAL = 1200;
 export const TRICKY_BALL_EFFECT_INTERVAL = 2500;
-export const TRICKY_BALL_EFFECT_FORCE = 50;
+export const TRICKY_BALL_FORWARD_ONLY = true;
 export const PULSE_BALL_EFFECT_INTERVAL = 1000;
 export const SNAKE_BALL_ANGULAR_FORCE = 4;
 /** Angular interval is the number of step it will take to reach max/min value */
@@ -116,6 +116,9 @@ export const BALL_ANGULAR_FORCE = 0.5;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const BALL_ANGULAR_INTERVAL = 45;
 
+/** @todo tricky ball only go forward */
+/** @todo key to be straight again */
+/** @todo player trail */
 /** @todo rainy change ground*/
 /** @todo error when double playing */
 /** @todo player sometimes blocked when pressing right left, should be solved with server side */
