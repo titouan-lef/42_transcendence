@@ -6,7 +6,7 @@ function getSafeElement<T extends HTMLElement>(id: string, tagType: TagType<T>):
 		throw new Error("cannot find id " + id);
 	if (elem instanceof tagType)
 		return (elem);
-	throw new Error(id + " id is not correct to get element");
+	throw new Error("element get with id " + id + " does not correspond with tag type passed in parameter");
 }
 
 export { TagType, getSafeElement };
