@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
-import { PLAYER_DIMENSION } from "./../values.js";
-import { COLORS } from "./../values.js";
+import { PLAYER_DIMENSION } from "../settings/values.js";
+import { COLORS } from "../settings/values.js";
 
 export class PlayerTrail {
 	private readonly mesh: babylon.Mesh;

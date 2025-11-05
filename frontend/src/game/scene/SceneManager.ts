@@ -1,24 +1,29 @@
 import * as babylon from "@babylonjs/core";
-import { BallTemplate } from "./ball/BallTemplate.js";
-import { DefaultBall } from "./ball/DefaultBall.js";
-import { InvisibleBall } from "./ball/InvisibleBall.js";
-import { PulseBall } from "./ball/PulseBall.js";
-import { TrickyBall } from "./ball/TrickyBall.js";
-import { SnakeBall } from "./ball/SnakeBall.js";
-import { MapTemplate } from "./map/MapTemplate.js";
-import { DefaultMap } from "./map/DefaultMap.js";
-import { RainyMap } from "./map/RainyMap.js";
-import { VolcanoMap } from "./map/VolcanoMap.js";
-import { Player } from "./player/Player.js";
-import { GameSettings, MapOption, BallOption } from "./GameSettings.js";
-import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "./values.js";
-
+import { BallTemplate } from "../ball/BallTemplate.js";
+import { Score } from "./Score.js";
+import { DefaultBall } from "../ball/DefaultBall.js";
+import { InvisibleBall } from "../ball/InvisibleBall.js";
+import { PulseBall } from "../ball/PulseBall.js";
+import { TrickyBall } from "../ball/TrickyBall.js";
+import { SnakeBall } from "../ball/SnakeBall.js";
+import { MapTemplate } from "../map/MapTemplate.js";
+import { DefaultMap } from "../map/DefaultMap.js";
+import { RainyMap } from "../map/RainyMap.js";
+import { VolcanoMap } from "../map/VolcanoMap.js";
+import { Player } from "../player/Player.js";
+import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
+import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 
 export class SceneManager {
 	private readonly balls: BallTemplate[] = [];
 	private readonly maps: MapTemplate[] = [];
 	private readonly players: Player[] = [];
 	private readonly textures: Record<string, babylon.Texture> = {};
+	private score: Score;
+
+	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera) {
+		this.score = new Score(scene, camera);
+	}
 
 	/**@todo will be removed */
 	getBalls(): BallTemplate[] {
@@ -113,7 +118,7 @@ export class SceneManager {
 			ball.preDeath();
 			ball.showParticles(position, scene, "explosion"); /**@todo change position here */
 		});
-		this.updateScore(score);
+		this.score.changeScore([score.x, score.y]);
 		const originalGetDelta = engine.getDeltaTime; // keep original delta
 		engine.getDeltaTime = function(): number {
 			return originalGetDelta.call(this) * 0.01; // slow animations
@@ -126,17 +131,11 @@ export class SceneManager {
 		engine.getDeltaTime = originalGetDelta;// set back to original speed
 	}
 
-	private updateScore(score: babylon.Vector2): void {
-		this.maps.forEach( map => {
-			map.changeScore([score.x, score.y]);
-		});
-	}
-
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void {
 		this.createPlayers(scene, settings);
 		this.createBall(scene, settings);
 		this.createMap(scene, settings.map);
-		this.updateScore(score);
+		this.score.changeScore([score.x, score.y]);
 	}
 
 	destroyEnvironnement(scene: babylon.Scene): void {
@@ -150,7 +149,6 @@ export class SceneManager {
 		while(this.players.length > 0) {
 			this.players.pop();
 		}
-		scene.materials.forEach(mat => mat.dispose()); // these are the defualt materials, not sure if i have to dispose them since they are created auto
 		/**@todo Debugging logs */
 		console.log("meshes : " + scene.meshes);
 		console.log("materials : " + scene.materials);
@@ -181,5 +179,9 @@ export class SceneManager {
 
 	destroyPlayers(): void {
 		this.players.forEach(player => player.destroy());
+	}
+
+	destroyScore(): void {
+		this.score.destroy();
 	}
 }

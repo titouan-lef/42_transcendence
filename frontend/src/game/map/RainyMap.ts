@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Lightning } from "./map_utils/Lightning.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME } from "../values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME } from "../settings/values.js";
 
 
 /**@todo this map is not configured dont mind the code */
@@ -39,7 +39,7 @@ export class RainyMap extends MapTemplate {
 		const sunMaterial = new babylon.StandardMaterial("sunMat", scene);
 		sunMaterial.emissiveColor = COLORS.grey;
 		sun.material = sunMaterial;
-		sun.position = this.score.absolutePosition.clone();
+		sun.position = this.sunPosition.clone();
 		sun.position.z -= MAP_SIZE.z / 2;
 		sun.position.y += 10;
 		return sun;

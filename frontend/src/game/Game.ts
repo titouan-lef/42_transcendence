@@ -1,9 +1,9 @@
 import * as babylon from "@babylonjs/core";
-import { SceneManager } from "./SceneManager.js";
-import { GameSettings } from "./GameSettings.js";
+import { SceneManager } from "./scene/SceneManager.js";
+import { GameSettings } from "./settings/GameSettings.js";
 import { HavokPlugin } from "@babylonjs/core/Physics";
 import havokPhysics from "@babylonjs/havok";
-import { CAMERA_POS_X, POINTS_TO_WIN } from "./values.js";
+import { CAMERA_POS_X, POINTS_TO_WIN } from "./settings/values.js";
 
 export class Game {
 	private readonly engine: babylon.Engine;
@@ -20,11 +20,11 @@ export class Game {
 		this.engine = engine;
 		this.canvas = canvas;
 		this.settings = settings;
-		this.sceneManager = new SceneManager();
+		this.camera = this.createCamera();
+		this.sceneManager = new SceneManager(scene, this.camera);
 		this.scene = scene;
 		window.addEventListener("resize", () => this.engine.resize());
 		this.score = new babylon.Vector2(0, 0);
-		this.camera = this.createCamera();
 		this.setScene();
 	}
 
@@ -71,6 +71,7 @@ export class Game {
 	stop(): void {
 		this.sceneManager.destroyTextures();
 		this.sceneManager.destroyEnvironnement(this.scene);
+		this.sceneManager.destroyScore();
 		this.scene.onAfterRenderObservable.clear();
 		this.camera.dispose();
 		this.engine.stopRenderLoop();

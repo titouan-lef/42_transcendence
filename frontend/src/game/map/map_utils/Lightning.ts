@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { MAP_SIZE, WALL_WIDTH, LIGHTNING_FADING_INTERVAL, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH, LIGHTNING_LIFETIME } from "../../values.js";
+import { MAP_SIZE, WALL_WIDTH, LIGHTNING_FADING_INTERVAL, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH, LIGHTNING_LIFETIME } from "../../settings/values.js";
 import { BallTemplate } from "../../ball/BallTemplate.js";
 
 export class Lightning {

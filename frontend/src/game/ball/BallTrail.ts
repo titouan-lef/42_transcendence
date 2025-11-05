@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { BALL_DIAMETER } from "../values.js";
+import { BALL_DIAMETER } from "../settings/values.js";
 
 export class BallTrail {
 	private readonly mesh: babylon.Mesh;

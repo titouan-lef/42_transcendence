@@ -1,5 +1,5 @@
 import { Game } from "./Game.js";
-import { GameSettings } from "./GameSettings.js";
+import { GameSettings } from "./settings/GameSettings.js";
 
 //this will change when checking options
 /**@todo will move keys + playerId to the "session"'s settings */
