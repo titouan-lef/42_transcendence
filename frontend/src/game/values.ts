@@ -120,7 +120,6 @@ export const BALL_ANGULAR_FORCE = 0.5;
 export const BALL_ANGULAR_INTERVAL = 45;
 
 /** @todo key to be straight again */
-/** @todo player trail */
 /** @todo rainy change ground*/
 /** @todo error when double playing */
 /** @todo player sometimes blocked when pressing right left, should be solved with server side */
