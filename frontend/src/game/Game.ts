@@ -14,6 +14,7 @@ export class Game {
 	private canvas: HTMLCanvasElement;
 	private score: babylon.Vector2;
 	private inAnimation = false;
+	private gameStopped = false;
 
 	constructor (canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.engine = engine;
@@ -87,6 +88,7 @@ export class Game {
 		this.scene.dispose();
 		this.engine.dispose();
 		this.canvas.remove();
+		this.gameStopped = true;
 		babylon.Tools.ClearLogCache(); // hides previous logs 
 	}
 
@@ -122,10 +124,11 @@ export class Game {
 				this.score.y += 1;
 			}
 			await this.sceneManager.goalAnimation(this.engine, this.scene, goalInfos.position, this.score);
-			/**@todo inscrire goal */
+			if (this.gameStopped) // if closing game while animation
+				return ;
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
 				this.stop();
-			} else{
+			} else {
 				this.inAnimation = false;
 				this.sceneManager.destroyEnvironnement(this.scene);
 				this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
