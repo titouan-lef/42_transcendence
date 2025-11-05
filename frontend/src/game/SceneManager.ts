@@ -7,10 +7,8 @@ import { TrickyBall } from "./ball/TrickyBall.js";
 import { SnakeBall } from "./ball/SnakeBall.js";
 import { MapTemplate } from "./map/MapTemplate.js";
 import { DefaultMap } from "./map/DefaultMap.js";
-import { FrozenMap } from "./map/FrozenMap.js";
 import { RainyMap } from "./map/RainyMap.js";
 import { VolcanoMap } from "./map/VolcanoMap.js";
-import { WindyMap } from "./map/WindyMap.js";
 import { Player } from "./player/Player.js";
 import { GameSettings, MapOption, BallOption } from "./GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "./values.js";
@@ -55,9 +53,9 @@ export class SceneManager {
 	}
 
 	createMap(scene: babylon.Scene, map: MapOption): void {
-		const mapList: MapOption[] = ["default", "volcano", "windy", "frozen", "rainy"];
+		const mapList: MapOption[] = ["default", "volcano", "rainy"];
 		if (map === "random") {
-			map = mapList[Math.floor(Math.random() * 5)];
+			map = mapList[Math.floor(Math.random() * 3)];
 		}
 		switch (map) {
 			case "default":
@@ -65,12 +63,6 @@ export class SceneManager {
 				break;
 			case "volcano":
 				this.maps.push(new VolcanoMap(scene, this.textures));
-				break;
-			case "windy":
-				this.maps.push(new WindyMap(scene));
-				break;
-			case "frozen":
-				this.maps.push(new FrozenMap(scene));
 				break;
 			case "rainy":
 				this.maps.push(new RainyMap(scene, this.textures));

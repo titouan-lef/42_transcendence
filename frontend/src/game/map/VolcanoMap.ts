@@ -81,9 +81,11 @@ export class VolcanoMap extends MapTemplate {
 
 	private meteorInterval(scene: babylon.Scene, texture: Record<string, babylon.Texture>): ReturnType<typeof setInterval> {
 		const meteorIntervalId = setInterval( () => {
+			if (this.gameStopped)
+				return;
 			const meteor = new Meteor(scene, texture);
 			this.meteors.push(meteor);
-			if (this.activateInterval === false)
+			if (this.gameStopped)
 				clearInterval(this.meteorIntervalId);
 			setTimeout(() => {
 				const index = this.meteors?.indexOf(meteor);

@@ -13,6 +13,8 @@ export class TrickyBall extends BallTemplate {
 	/**@todo changes direction every TRICKY_BALL_EFFECT_INTERVAL ms */
 	activateEffect(): ReturnType<typeof setInterval> {
 		const effectIntervalId = setInterval(() => {
+			if (this.gameStopped)
+				return;
 			const speed = this.physic.body.getLinearVelocity().length();
 			if (speed === 0)
 				return;

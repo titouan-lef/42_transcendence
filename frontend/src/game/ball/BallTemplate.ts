@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { BallOption } from "../GameSettings.js";
-import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, COLORS, NERF_SPEED_FACTOR, MAX_SPEED, BALL_TRAIL_ON } from "../values.js";
+import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, COLORS, NERF_SPEED_FACTOR, MAX_SPEED, BALL_TRAIL_ON, START_INTERVAL } from "../values.js";
 import { BallTrail } from "./BallTrail.js";
 type ParticlesType = "explosion" | "collision" | "impulse";
 
@@ -29,6 +29,7 @@ export abstract class BallTemplate {
 	private readonly yObservable: babylon.Observable<babylon.Scene>;
 	private readonly yObserver: babylon.Observer<babylon.Scene>;
 	private readonly launchBallTimeoutId: ReturnType<typeof setTimeout>;
+	protected gameStopped = true;
 
 	constructor(scene: babylon.Scene, type: BallOption, textures: Record<string, babylon.Texture>, color: babylon.Color3) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
@@ -83,7 +84,8 @@ export abstract class BallTemplate {
 			this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
 			this.showParticles(this.mesh.position, scene, "impulse");
 			this.justCollided = true;
-		}, 1000);
+			this.gameStopped = false;
+		}, START_INTERVAL);
 		return launchBallTimeoutId;
 	}
 
@@ -272,7 +274,8 @@ export abstract class BallTemplate {
 	/** hides ball on goal and stop intervals */
 	preDeath(): void {
 		this.mesh.visibility = 0;
-		this.destroyRest(); // stops intervals
+		this.gameStopped = true;
+		this.destroyRest();
 	}
 
 	/** Spawn particules */

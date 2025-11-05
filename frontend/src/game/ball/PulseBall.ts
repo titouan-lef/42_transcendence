@@ -13,6 +13,8 @@ export class PulseBall extends BallTemplate {
 	/**@description apply a pulsation every PULSE_BALL_EFFECT_INTERVAL ms */
 	activateEffect(): ReturnType<typeof setInterval> {
 		const effectIntervalId = setInterval(() => {
+			if (this.gameStopped)
+				return;
 			const velocity = this.physic.body.getLinearVelocity();
 			if (velocity.length() < MAX_SPEED * 0.85) {
 				const randomImpulse = (Math.random() / 2 + 0.5); // 0.5 -- 1
