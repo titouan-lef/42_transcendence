@@ -14,6 +14,15 @@ function setLang(newLang: CodeLang): void {
 	updateTranslation();
 }
 
+function translateTab(keyTab: TranslationKey[]): string[] {
+	const tabMessage: string[] = [];
+	keyTab.forEach((key) => {
+		const message = translate(key);
+		tabMessage.push(message);
+	});
+	return tabMessage;
+}
+
 function translate(key: TranslationKey): string {
 	const message = getTranslation(key);
 	return formatMessage(message);
@@ -43,4 +52,4 @@ function getTranslation(key: TranslationKey): string {
 	return translation;
 }
 
-export { TranslationKey, translate, setLang };
+export { TranslationKey, translateTab, setLang };
