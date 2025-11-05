@@ -19,18 +19,16 @@ export abstract class BallTemplate {
 	protected justCollided = false;
 	protected realDirection: babylon.Vector3;
 	private readonly textures: Record<string, babylon.Texture>;
-
 	private spinningLeft = false;
 	private spinningRight = false;
 	protected force = BALL_ANGULAR_FORCE;
 	protected forceDirection = -1;
 	protected readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	protected readonly sceneObserver: babylon.Observer<babylon.Scene>;
-
 	private readonly hitPoints: number[] = [];
-
 	private readonly yObservable: babylon.Observable<babylon.Scene>;
 	private readonly yObserver: babylon.Observer<babylon.Scene>;
+	private readonly launchBallTimeoutId: ReturnType<typeof setTimeout>;
 
 	constructor(scene: babylon.Scene, type: BallOption, textures: Record<string, babylon.Texture>, color: babylon.Color3) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
@@ -57,7 +55,7 @@ export abstract class BallTemplate {
 		if (BALL_TRAIL_ON)
 			this.trailIntervalId = this.setTrail(scene);
 		/**@todo protect this against instaclose game */
-		this.launchBall(scene);
+		this.launchBallTimeoutId = this.launchBall(scene);
 	}
 
 	/**block the ball from having a Y velocity */
@@ -74,8 +72,8 @@ export abstract class BallTemplate {
 	//
 
 	/**launch ball */
-	private launchBall(scene: babylon.Scene): void {
-		setTimeout( () => {
+	private launchBall(scene: babylon.Scene): ReturnType<typeof setTimeout> {
+		const launchBallTimeoutId = setTimeout( () => {
 			const random = Math.random();
 			let startingDirection;
 			if (random < 0.5)
@@ -86,6 +84,7 @@ export abstract class BallTemplate {
 			this.showParticles(this.mesh.position, scene, "impulse");
 			this.justCollided = true;
 		}, 1000);
+		return launchBallTimeoutId;
 	}
 
 	private setMaterial(scene: babylon.Scene): void {
@@ -327,6 +326,7 @@ export abstract class BallTemplate {
 
 	destroy(): void {
 		this.destroyRest();
+		clearTimeout(this.launchBallTimeoutId);
 		if (this.trailIntervalId)
 			clearInterval(this.trailIntervalId);
 		this.collisionObservable.remove(this.collisionObserver);
