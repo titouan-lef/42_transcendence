@@ -1,6 +1,7 @@
-import { addHandler } from "../routes/event.js";
+import { addHandler, deleteHandlerByID } from "../routes/event.js";
 import { navigate, PageID } from "../routes/page.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
+import { SIGN_IN } from "./sign_in.js";
 
 const ROW_STYLE = "min-h-screen max-h-screen flex flex-row gap-[10px] p-[10px] bg-dark";
 const MAIN_STYLE = `
@@ -47,11 +48,13 @@ const FRIENDLIST = [
 ];
 
 const MAIN_MENU = `
+	<dialog id="modal">
+		${SIGN_IN}
+	</dialog>
 <div class="${ROW_STYLE}">
 	<main class="${MAIN_STYLE}">
 		<div class="flex flex-col items-center gap-[10px]">
-			<h1 class="${PONG_STYLE}">
-				PONG</h1>
+			<h1 class="${PONG_STYLE}">PONG</h1>
 			<input id="btn-api" type="button" value="play" class="${BTN_STYLE} bg-secondary"/>
 		</div>
 	</main>
@@ -60,7 +63,7 @@ const MAIN_MENU = `
 			<div class="${AVATAR_STYLE}">
 				<img src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
 			</div>
-			<input id="temp" type="button" value="profile" class="${BTN_STYLE} bg-secondary"/>
+			<input id="btn-profile" type="button" value="profile" class="${BTN_STYLE} bg-secondary"/>
 			<div id="friendlist" class="${FRIENDLIST_STYLE}">
 			</div>
 			<input id="add-friend" type="button" value="add friend" class="${BTN_STYLE} bg-secondary"/>
@@ -71,11 +74,11 @@ const MAIN_MENU = `
 `;
 
 function generateFriendList(): void {
-	const elem = getSafeElement("friendlist");
+	const elem = getSafeElement("friendlist", HTMLElement);
 
 	FRIENDLIST.forEach(friend => {
 		elem.innerHTML += `
-			<details class="rounded-2xl bg-secondary w-full">
+			<details id="${friend}" class="rounded-2xl bg-secondary w-full">
 				<summary class="list-none cursor-pointer p-[5px]">
 					<p class="text-center overflow-hidden text-ellipsis" title="${friend}">${friend}</p>
 				</summary>
@@ -99,8 +102,35 @@ function addFriend(): void {
 	generateFriendList();
 }
 
+function clickOutOfTheBoxEvent(modal: HTMLDialogElement, e: PointerEvent): void {
+	const rect = modal.getBoundingClientRect();
+	const isInDialog =
+		e.clientX >= rect.left &&
+		e.clientX <= rect.right &&
+		e.clientY >= rect.top &&
+		e.clientY <= rect.bottom;
+
+	if (!isInDialog) {
+		modal.close();
+		deleteHandlerByID("modal");
+	}
+}
+
+function popLoginPage(): void {
+	const modal = getSafeElement("modal", HTMLDialogElement);
+
+	modal.showModal();
+
+	addHandler("modal", "click", (event) => {
+		if (event instanceof PointerEvent) {
+			clickOutOfTheBoxEvent(modal, event);
+		}
+	});
+}
+
 function mainMenuEvents(): void {
 	addHandler("btn-api", "click", () => navigate(PageID.API));
+	addHandler("btn-profile", "click", () => popLoginPage());
 	addHandler("add-friend", "click", () => addFriend());
 };
 

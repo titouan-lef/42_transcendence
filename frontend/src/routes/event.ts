@@ -8,8 +8,9 @@ import { whoami } from "../services/user_management/login.js";
 import { mainMenuEvents } from "../pages/main_menu.js";
 
 interface Handler {
+	id	: string;
 	elem: HTMLElement;
-	type: string;
+	type: string; /** @todo we can make it directly as HTMLElementEventMap (enfin c'est peut etre pas ca) */
 	func: EventListener;
 }
 
@@ -25,7 +26,16 @@ function addHandler(id: string, type: string, func: EventListener): void {
 	const elem = getSafeElement(id, HTMLElement);
 
 	elem.addEventListener(type, func);
-	activeHandlers.push({ elem, type, func });
+	activeHandlers.push({ id, elem, type, func });
+}
+
+function deleteHandlerByID(id: string): void {
+	const i = activeHandlers.findIndex((handler) => handler.id === id);
+	if (i === -1)
+		throw new Error("no event handler for this id found.");
+
+	activeHandlers[i].elem.removeEventListener(activeHandlers[i].type, activeHandlers[i].func);
+	activeHandlers.splice(i, 1);
 }
 
 function loadEvent(id: PageID): void {
@@ -67,4 +77,4 @@ function clearHandlers(): void {
 	activeHandlers = [];
 }
 
-export { addHandler, loadEvent };
+export { addHandler, loadEvent, deleteHandlerByID };

@@ -22,7 +22,7 @@ const PAGE_CONTENT: Record<PageID, string> = {
 	[PageID.MAIN_MENU]: MAIN_MENU,
 };
 
-/** @todo loading first MAIN_MENU for testing purpose, default value must be FIRST */
+/** @todo loading other page for testing purpose, default value must be FIRST */
 let currentPage = PageID.MAIN_MENU;
 
 /**
