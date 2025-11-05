@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapOption } from "../GameSettings.js";
-import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, COLORS, GLOW_INTENSITY, SCORE_CANVAS_SIZE_X, SCORE_CANVAS_SIZE_Y, SCORE_SIZE, CAMERA_POS_X, SCORE_POS_Y } from "../values.js";
+import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, COLORS, GLOW_INTENSITY, SCORE_CANVAS_SIZE_X, SCORE_CANVAS_SIZE_Y, SCORE_SIZE, CAMERA_POS_X, SCORE_POS_Y, START_INTERVAL } from "../values.js";
 
 export abstract class MapTemplate {
 	protected glow: babylon.GlowLayer;
@@ -13,7 +13,8 @@ export abstract class MapTemplate {
 	readonly type: MapOption;
 	protected readonly score: babylon.Mesh;
 	private readonly scoreTexture: babylon.DynamicTexture;
-	protected activateInterval = true;
+	private readonly startTimeout:  ReturnType<typeof setTimeout>;
+	protected gameStopped = true;
 
 	constructor(scene: babylon.Scene, type: MapOption) {
 		this.type = type;
@@ -29,10 +30,13 @@ export abstract class MapTemplate {
 		this.light = this.createLight(scene);
 		this.glow = new babylon.GlowLayer("glow", scene);
 		this.glow.intensity = GLOW_INTENSITY;
+		this.startTimeout = setTimeout(() => {
+			this.gameStopped = false;
+		}, START_INTERVAL);
 	}
 
 	predeath(): void {
-		this.activateInterval = false;
+		this.gameStopped = true;
 	}
 
 	setLimitPhysic(scene: babylon.Scene, limit: babylon.Mesh): void {
@@ -110,6 +114,7 @@ export abstract class MapTemplate {
 	}
 
 	destroy(): void {
+		clearTimeout(this.startTimeout);
 		this.destroyRest();
 		this.groundPhysic?.dispose();
 		if (this.ground.material && this.ground.material instanceof babylon.StandardMaterial) {

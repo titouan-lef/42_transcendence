@@ -20,7 +20,6 @@ export class SnakeBall extends BallTemplate {
 				this.justCollided = false;
 				this.force = SNAKE_BALL_ANGULAR_FORCE;
 			}
-
 			if (this.force >= SNAKE_BALL_ANGULAR_FORCE || this.force <= 0)
 				this.forceDirection *= -1;
 			this.force -= (SNAKE_BALL_ANGULAR_FORCE / SNAKE_BALL_ANGULAR_INTERVAL) * this.forceDirection;

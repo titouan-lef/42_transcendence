@@ -11,21 +11,12 @@ export class InvisibleBall extends BallTemplate {
 		super(scene, "invisible", texture, COLORS.red);
 		this.effectIntervalId = this.activateEffect();
 	}
-
-	/** redefining setTrail to specify the visibility of the current ball */
-	// private setTrail(scene: babylon.Scene, color: babylon.Color3): ReturnType<typeof setInterval> {
-	// 	const trailIntervalId = setInterval(() => {
-	// 		this.ballTrails.push(new BallTrail(scene, this.mesh.position, color, this.mesh.visibility));
-	// 		while (this.ballTrails.length && this.ballTrails[0].hasDisappeared()) {
-	// 			this.ballTrails.splice(0, 1);
-	// 		}
-	// 	}, BALL_TRAIL_INTERVAL);
-	// 	return trailIntervalId;
-	// }
 	
 	/**@todo disappears gradually every INVISIBLE_BALL_FADING_INTERVAL ms for INVISIBLE_BALL_INVISIBILITY_INTERVAL ms */
 	activateEffect(): ReturnType<typeof setInterval> {
 		const effectIntervalId = setInterval(() => {
+			if (this.gameStopped)
+				return;
 			if (this.mesh.visibility > 0 && this.effectTimeOutId === null)
 				this.mesh.visibility -= 0.01;
 			else {

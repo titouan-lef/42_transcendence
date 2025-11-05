@@ -85,9 +85,11 @@ export class RainyMap extends MapTemplate {
 	/** will stack lighting till the end of the point */
 	private lightningInterval(scene: babylon.Scene, texture: babylon.Texture): ReturnType<typeof setInterval> {
 		const lightningIntervalId = setInterval( () => {
+			if (this.gameStopped)
+				return;
 			const lightning = new Lightning(scene, texture);
 			this.lightnings.push(lightning);
-			if (this.activateInterval === false)
+			if (this.gameStopped)
 				clearInterval(this.lightningIntervalId);
 			setTimeout(() => {
 				const index = this.lightnings?.indexOf(lightning);
