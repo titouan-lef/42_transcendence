@@ -5,6 +5,7 @@ import { USER_PAGE } from "../pages/content/user_page.js";
 import { loadEvent } from "./event.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 import { MAIN_MENU } from "../pages/main_menu.js";
+import { clearLangListeners } from "../lang/langListener.js"; /** @todo clearLangListener somewhere */
 
 enum PageID {
 	FIRST = "first_page",
@@ -31,6 +32,7 @@ let currentPage = PageID.MAIN_MENU;
 function loadPage(id: PageID): void {
 	const elem = getSafeElement(id, HTMLElement);
 
+	// clearLangListeners();
 	elem.innerHTML = PAGE_CONTENT[id];
 	loadEvent(id);
 	currentPage = id;
