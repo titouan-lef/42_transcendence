@@ -1,12 +1,28 @@
 # How to Deploy the Smart Contract
 
+## Project Installation and Initialization
+
 First, create a new folder and install the required tools:
+
+node.js
+```bash
+# Download and install nvm:
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+# in lieu of restarting the shell
+\. "$HOME/.nvm/nvm.sh"
+# Download and install Node.js:
+nvm install 22
+# Verify the Node.js version:
+node -v # Should print "v22.21.1".
+# Verify npm version:
+npm -v # Should print "10.9.4".
+```
 
 ```bash
 mkdir DeploySmartContract
 cd DeploySmartContract
 npm init -y
-npm install --save-dev hardhat@^2.22.5 @nomicfoundation/hardhat-toolbox typescript ts-node chai @types/chai @types/mocha dotenv
+npm install --save-dev hardhat@v2.26.5 @nomicfoundation/hardhat-toolbox typescript ts-node chai @types/chai @types/mocha dotenv
 ```
 
 Then, start Hardhat to set up a TypeScript project:
@@ -25,7 +41,7 @@ npx hardhat
 Welcome to Hardhat v2.26.5
 
 ✔ What do you want to do? · Create a TypeScript project
-✔ Hardhat project root: · /home/pchalmin/HardhatEloProject
+✔ Hardhat project root: · /path/to/your/folder
 ✔ Do you want to add a .gitignore? (Y/n) · y
 ```
 
@@ -36,21 +52,11 @@ ls
 contracts  hardhat.config.ts  ignition  node_modules  package.json  package-lock.json  README.md  test  tsconfig.json
 ```
 
-Replace the file ./contracts/Lock.sol with the EloStorage.sol file from the blockchain folder.
-Replace the file ./test/Lock.ts with EloStorage.test.ts from the same blockchain folder.
+Replace the file `./contracts/Lock.sol` with the `EloStorage.sol` file from the blockchain folder.
+Replace the file `./test/Lock.ts` with `EloStorage.test.ts` from the same blockchain folder.
+Replace `the hardhat.config.ts` file with the one from the blockchain folder.
 
-Create a scripts directory:
-
-```bash
-mkdir scripts
-```
-
-Inside it, add the file deploy.ts and the interact folder containing the files:
-getElo.ts, setElo.ts, updateElo.ts, and showPlayers.ts.
-
-Also, replace the hardhat.config.ts file with the one from the blockchain folder.
-
-Create a .env file with the following content:
+Create a `.env` file with the following content:
 
 ```env
 PRIVATE_KEY=<your wallet>
@@ -58,7 +64,9 @@ AVVALANCHE_RPC_URL=https://api.avax-test.network/ext/bc/C/rpc
 CONTRACT_ADDRESS=<adress of your contract when you deploy on your local or test chain>
 ```
 
-Next, compile the Smart Contract with:
+## Compilation and Testing of the Smart Contract Before Deployment
+
+Run the command `npx hardhat compile` to compile the Smart Contract:
 
 ```bash
 npx hardhat compile
@@ -74,10 +82,8 @@ Then, run the test files (written in TypeScript) located in the test folder to v
 npx hardhat test
 [dotenv@17.2.3] injecting env (3) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
 
-
   EloStorage
     ✔ set/get/update ELO for multiple users
-
 
   1 passing (43ms)
 
@@ -111,6 +117,15 @@ npx hardhat test
 ```
 
 If everything passes successfully, you can deploy the Smart Contract to the local Hardhat blockchain.
+
+## Deployment and interaction testing on the local network and testnet
+
+Create a scripts directory:
+```bash
+mkdir scripts
+```
+Inside it, add the file `deploy.ts` and the interacts folder containing the files:
+`getElo.ts`, `setElo.ts`, `updateElo.ts`, and `showPlayers.ts`.
 
 In one terminal, start the local Hardhat network:
 
@@ -146,7 +161,7 @@ In another terminal, deploy the Smart Contract:
 npx hardhat run scripts/deploy.ts --network localhost
 [dotenv@17.2.3] injecting env (3) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
 [dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
-EloStorage deployed to: 0x5FbDB2315678afecb367f032d93F642f64180aa3 //copier ceci dans le .env
+EloStorage deployed to: 0x5FbDB2315678afecb367f032d93F642f64180aa3 //copy this into .env
 ```
 
 Once deployed locally, you can interact with the contract to verify that it works correctly:
@@ -164,7 +179,7 @@ If everything works properly, you can deploy the Smart Contract to the Avalanche
 npx hardhat run scripts/deploy.ts --network fuji
 [dotenv@17.2.3] injecting env (3) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
 [dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
-EloStorage deployed to: 0x5FbDB2315678afecb367f032d93F642f64180aa3 //copier ceci dans le .env
+EloStorage deployed to: 0x5FbDB2315678afecb367f032d93F642f64180aa3 //copy this into .env
 ```
 
 Finally, you can interact directly with the testnet blockchain using the following commands:
@@ -175,3 +190,8 @@ npx hardhat run scripts/interact/getElo.ts --network fuji
 npx hardhat run scripts/interact/updateElo.ts --network fuji
 npx hardhat run scripts/interact/showPlayers.ts --network fuji
 ```
+
+## Retrieving the ABI for use with SmartContract in the Backend
+
+Retrieve the file `/path/to/your/folder/artifacts/contracts/nameofyoursmartcontract.sol/nameofyoursmartcontract.json`
+And import it into the files that need the Smart Contract.

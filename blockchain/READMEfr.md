@@ -1,12 +1,28 @@
 # Comment déployer le smart contract
 
+## Instalation et Initialisation du projet
+
 Tous d'abord il faut créer un dossier et installer les outils necessaire :
+
+node.js
+```bash
+# Download and install nvm:
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+# in lieu of restarting the shell
+\. "$HOME/.nvm/nvm.sh"
+# Download and install Node.js:
+nvm install 22
+# Verify the Node.js version:
+node -v # Should print "v22.21.1".
+# Verify npm version:
+npm -v # Should print "10.9.4".
+```
 
 ```bash
 mkdir DeploySmartContract
 cd DeploySmartContract
 npm init -y
-npm install --save-dev hardhat@^2.22.5 @nomicfoundation/hardhat-toolbox typescript ts-node chai @types/chai @types/mocha dotenv
+npm install --save-dev hardhat@v2.26.5 @nomicfoundation/hardhat-toolbox typescript ts-node chai @types/chai @types/mocha dotenv
 ```
 
 Puis lancer hardhat pour un project TypeScript:
@@ -25,7 +41,7 @@ npx hardhat
 Welcome to Hardhat v2.26.5
 
 ✔ What do you want to do? · Create a TypeScript project
-✔ Hardhat project root: · /home/pchalmin/HardhatEloProject
+✔ Hardhat project root: · /path/to/your/folder
 ✔ Do you want to add a .gitignore? (Y/n) · y
 ```
 
@@ -38,16 +54,7 @@ contracts  hardhat.config.ts  ignition  node_modules  package.json  package-lock
 
 Remplacer le fichier `./contracts/Lock.sol` par le fichier `EloStorage.sol` présent dans le dossier `blockchain`
 Remplacer le fichier `./test/Lock.ts` par le fichier `EloStorage.test.ts` présent dans le dossier `blockchain`
-
-Créer un dossier scripts
-
-```bash
-mkdir scripts
-```
-
-Y mettre dedans le fichier `deploy.ts` et le dossier interact avec les fichiers `getElo.ts`, `setElo.ts`, `updateElo.ts` et `showPlauers.ts`.
-
-Et remplacer le fichier `hardhat.config.ts` par le fichier `hardhat.config.ts` présent dans le dossier blockchain
+Remplacer le fichier `hardhat.config.ts` par le fichier `hardhat.config.ts` présent dans le dossier blockchain
 
 Créer un fichier `.env`
 
@@ -57,7 +64,9 @@ AVVALANCHE_RPC_URL=https://api.avax-test.network/ext/bc/C/rpc
 CONTRACT_ADDRESS=<adress of your contract when you deploy on your local or test chain>
 ```
 
-Ensuite lancer la commande `npx hardhat compile` pour compiler le Smart Contract:
+## Compilation et Tests du SmartContract avant deployement
+
+Lancer la commande `npx hardhat compile` pour compiler le Smart Contract:
 
 ```bash
 npx hardhat compile
@@ -109,6 +118,16 @@ npx hardhat test
 |  Toolchain:  hardhat                                                                                      │
 ·············································································································
 ```
+
+
+## Deployement et Tests d'interacttion sur le reseau local et le testnet
+
+Créer un dossier scripts
+```bash
+mkdir scripts
+```
+Y mettre dedans le fichier `deploy.ts` et le dossier interact avec les fichiers `getElo.ts`, `setElo.ts`, `updateElo.ts` et `showPlauers.ts`.
+
 
 Si tous cela est validé, vous pouvez lancer la commande pour deployer le Smart Contract sur la blockchain local de hardhat.
 
@@ -175,3 +194,9 @@ npx hardhat run scripts/interact/getElo.ts --network fuji
 npx hardhat run scripts/interact/updateElo.ts --network fuji
 npx hardhat run scripts/interact/showPlayers.ts --network fuji
 ```
+
+## Récupération de l'ABI pour utilisation du SmartContract dans le Backend
+
+Récuperer le fichier `/path/to/your/folder/artifacts/contracts/nameofyoursmartcontract.sol/nameofyoursmartcontract.json`
+Et l'importer dans les ficher ts qui on besoin du Smart Contract.
+ 
