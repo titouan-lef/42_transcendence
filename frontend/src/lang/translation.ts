@@ -25,6 +25,26 @@ const TRANSLATOR = {
 		en: "{change} {password}",
 		fr: "{change} de {password}",
 	},
+	profile: {
+		en: "profile",
+		fr: "profil",
+	},
+	user_name: {
+		en: "username",
+		fr: "nom d'utilisateur",
+	},
+	connect: {
+		en: "connect",
+		fr: "se connecter"
+	},
+	continue_as_guest: {
+		en: "continue as guest",
+		fr: "continuer en tant qu'invité"
+	},
+	create_account: {
+		en: "create account",
+		fr: "créer un compte"
+	},
 } as const satisfies Record<string, Expression>;
 
 export { CodeLang, TRANSLATOR };

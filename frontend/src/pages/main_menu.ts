@@ -1,7 +1,9 @@
-import { addHandler, deleteHandlerByID } from "../routes/event.js";
+import { createButtonHtml } from "../components/button.js";
+import { setLang } from "../lang/lang.js";
+import { addHandler } from "../routes/event.js";
 import { navigate, PageID } from "../routes/page.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
-import { SIGN_IN } from "./sign_in.js";
+import { SIGN_IN, signInHandler } from "./sign_in.js";
 
 const ROW_STYLE = "min-h-screen max-h-screen flex flex-row gap-[10px] p-[10px] bg-dark";
 const MAIN_STYLE = `
@@ -48,9 +50,11 @@ const FRIENDLIST = [
 ];
 
 const MAIN_MENU = `
+<div class="flex flex-col justify-center items-center">
 	<dialog id="modal">
 		${SIGN_IN}
 	</dialog>
+</div>
 <div class="${ROW_STYLE}">
 	<main class="${MAIN_STYLE}">
 		<div class="flex flex-col items-center gap-[10px]">
@@ -63,7 +67,7 @@ const MAIN_MENU = `
 			<div class="${AVATAR_STYLE}">
 				<img src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
 			</div>
-			<input id="btn-profile" type="button" value="profile" class="${BTN_STYLE} bg-secondary"/>
+			${createButtonHtml(["profile"], `btn-profile`, { "class": `${BTN_STYLE} bg-secondary` })}
 			<div id="friendlist" class="${FRIENDLIST_STYLE}">
 			</div>
 			<input id="add-friend" type="button" value="add friend" class="${BTN_STYLE} bg-secondary"/>
@@ -72,6 +76,8 @@ const MAIN_MENU = `
 	</aside>
 </div>
 `;
+
+//
 
 function generateFriendList(): void {
 	const elem = getSafeElement("friendlist", HTMLElement);
@@ -83,7 +89,7 @@ function generateFriendList(): void {
 					<p class="text-center overflow-hidden text-ellipsis" title="${friend}">${friend}</p>
 				</summary>
 				<div class="rounded-xl bg-primary w-auto p-[5px] m-[5px] flex flex-col justify-center items-center">
-					<button class="text-tx-prim text-center w-full">profile</button>
+					${createButtonHtml(["profile"], `btn-profile-${friend}`, { "class": "text-tx-prim text-center w-full" })}
 					<button class="text-tx-prim text-center w-full">invite</button>
 					<hr class="border-1 border-variant w-full my-1">
 					<input id="delete-friend-${friend}" type="button" value="delete" class="text-warning font-bold text-center w-full"/>
@@ -93,27 +99,16 @@ function generateFriendList(): void {
 	});
 
 	FRIENDLIST.forEach(friend => {
+		addHandler(`btn-profile-${friend}`, "click", () => console.log(`je consulte le profil de ${friend}`));
 		addHandler(`delete-friend-${friend}`, "click", () => console.log(`je delete ${friend}`));
 	});
 }
 
 function addFriend(): void {
-	FRIENDLIST.push("new_friend");
-	generateFriendList();
-}
-
-function clickOutOfTheBoxEvent(modal: HTMLDialogElement, e: PointerEvent): void {
-	const rect = modal.getBoundingClientRect();
-	const isInDialog =
-		e.clientX >= rect.left &&
-		e.clientX <= rect.right &&
-		e.clientY >= rect.top &&
-		e.clientY <= rect.bottom;
-
-	if (!isInDialog) {
-		modal.close();
-		deleteHandlerByID("modal");
-	}
+	setLang('fr');
+	console.log("CLICK ADD FRIEND");
+	// FRIENDLIST.push("new_friend");
+	// generateFriendList();
 }
 
 function popLoginPage(): void {
@@ -121,11 +116,8 @@ function popLoginPage(): void {
 
 	modal.showModal();
 
-	addHandler("modal", "click", (event) => {
-		if (event instanceof PointerEvent) {
-			clickOutOfTheBoxEvent(modal, event);
-		}
-	});
+
+	signInHandler(modal);
 }
 
 function mainMenuEvents(): void {
