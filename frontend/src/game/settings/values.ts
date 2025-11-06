@@ -97,12 +97,12 @@ export const METEOR_SPEED = 100;
 
 /**WINDY MAP */
 export const W_PARTICLE_NUMBER = 3000;
-export const TORNADO_INTERVAL = 1500;
-export const TORNADO_LIFETIME = 2500;
-export const WIND_FORCE_MAX = 100;
-export const TORNADO_ATTRACTION_STRENGTH = 50;
-export const TORNADO_COLLISION_RADIUS = 5;
-export const TORNADO_FADING_INTERVAL = 100;
+export const TORNADO_INTERVAL = 3000;
+export const TORNADO_LIFETIME = 8000;
+export const WIND_FORCE = 5;
+export const TORNADO_ATTRACTION_STRENGTH = 100;
+export const TORNADO_COLLISION_RADIUS = 3;
+export const TORNADO_HEIGHT = 40;
 
 
 /**PLAYER */
@@ -132,6 +132,7 @@ export const BALL_ANGULAR_FORCE = 0.5;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const BALL_ANGULAR_INTERVAL = 45;
 
-/** @todo do a timer before lightnings meteor, and maybe 3 2 1 go */
+/** @todo do something for ground rendering */
+/** @todo windymap design*/
 /** @todo block camera */
 /** @todo player sometimes blocked when pressing right left, should be solved with server side */

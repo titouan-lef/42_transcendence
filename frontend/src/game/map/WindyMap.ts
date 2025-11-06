@@ -1,7 +1,7 @@
 import * as babylon from "/babylonjs/core/index.js";
 import { MapTemplate } from "./MapTemplate.js";
 import { Tornado } from "./map_utils/Tornado.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS, W_PARTICLE_NUMBER, TORNADO_INTERVAL, TORNADO_LIFETIME, WIND_FORCE_MAX } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS, W_PARTICLE_NUMBER, TORNADO_INTERVAL, TORNADO_LIFETIME, WIND_FORCE } from "../settings/values.js";
 
 export class WindyMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
@@ -14,9 +14,9 @@ export class WindyMap extends MapTemplate {
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
 		super(scene, "windy");
 		this.windForce = new babylon.Vector3(
-			(Math.random() - 0.5) * WIND_FORCE_MAX,
+			(Math.random() - 0.5) * WIND_FORCE,
 			0,
-			(Math.random() - 0.5) * WIND_FORCE_MAX
+			(Math.random() - 0.5) * WIND_FORCE
 		);
 		this.windObservable = scene.onBeforeRenderObservable;
 		this.windObserver = this.applyWind(scene);
@@ -26,8 +26,12 @@ export class WindyMap extends MapTemplate {
 
 	private applyWind(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
 		const windObserver = this.windObservable.add(() => {
-			if (this.gameStopped)
+			if (this.gameStopped) {
+				this.tornados.forEach(tornado => {
+					tornado.stopParticles();
+				});
 				return ;
+			}
 			scene.meshes.forEach(mesh => {
 				if (!mesh.physicsBody)
 					return;
@@ -45,15 +49,7 @@ export class WindyMap extends MapTemplate {
 		const ground = babylon.MeshBuilder.CreateGround("rainyground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
 		const material = new babylon.StandardMaterial("groundMat", scene);
-		material.diffuseColor = new babylon.Color3(0.35, 0.6, 0.75);
-		material.alpha = 1;
-		const noise = new babylon.NoiseProceduralTexture("groundNoise", 256, scene, undefined, false);
-		noise.animationSpeedFactor = 0;
-		noise.persistence = 0.8;
-		noise.brightness = 0.5;
-		noise.octaves = 4;
-		material.emissiveColor = new babylon.Color3(0.05, 0.15, 0.1);
-		material.bumpTexture = noise;
+		material.diffuseColor = COLORS.green;
 		ground.material = material;
 		ground.metadata = { type: "ground" };
 		return ground;
@@ -63,7 +59,7 @@ export class WindyMap extends MapTemplate {
 	createSun(scene: babylon.Scene): babylon.Mesh {
 		const sun = babylon.MeshBuilder.CreateSphere("sun", { diameter: SUN_DIAMETER }, scene);
 		const sunMaterial = new babylon.StandardMaterial("sunMat", scene);
-		sunMaterial.emissiveColor = COLORS.grey;
+		sunMaterial.emissiveColor = COLORS.orange;
 		sun.material = sunMaterial;
 		sun.position = this.sunPosition.clone();
 		sun.position.z -= MAP_SIZE.z / 2;
@@ -76,8 +72,8 @@ export class WindyMap extends MapTemplate {
 		const directionCenter: babylon.Vector3 = babylon.Vector3.Zero().subtract(this.sun.position).normalize();
 		const light: babylon.DirectionalLight = new babylon.DirectionalLight("sunLight", directionCenter, scene);
 		light.position = this.sun.position;
-		light.intensity = 0.45;
-		light.diffuse = COLORS.lightColorRainy;
+		light.intensity = 0.7;
+		light.diffuse = COLORS.orange;
 		return light;
 	}
 
@@ -97,10 +93,10 @@ export class WindyMap extends MapTemplate {
 		particles.renderingGroupId = 3; //
 		particles.minEmitPower = 35;
 		particles.maxEmitPower = 45;
-		particles.minSize = 0.2;
-		particles.maxSize = 0.3;
-		particles.direction1 = this.windForce.scale(0.01);
-		particles.direction2 = this.windForce.scale(0.01);
+		particles.minSize = 0.05;
+		particles.maxSize = 0.1;
+		particles.direction1 = this.windForce;
+		particles.direction2 = this.windForce;
 		particles.minLifeTime = 1;
 		particles.maxLifeTime = 2;
 		particles.updateSpeed = 0.008;
@@ -112,9 +108,10 @@ export class WindyMap extends MapTemplate {
 	/** will stack lighting till the end of the point */
 	private tornadoInterval(scene: babylon.Scene, texture: babylon.Texture): ReturnType<typeof setInterval> {
 		const tornadoIntervalId = setInterval( () => {
-			if (this.gameStopped || 1)
+			if (this.gameStopped) {
 				return;
-			const tornado = new Tornado(scene, texture);
+			}
+			const tornado = new Tornado(scene, texture, this.windForce);
 			this.tornados.push(tornado);
 			if (this.gameStopped)
 				clearInterval(this.tornadoIntervalId);
