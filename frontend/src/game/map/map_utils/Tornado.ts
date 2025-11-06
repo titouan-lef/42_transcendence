@@ -1,135 +1,109 @@
 import * as babylon from "/babylonjs/core/index.js";
-import { MAP_SIZE, TORNADO_ATTRACTION_STRENGTH, TORNADO_COLLISION_RADIUS, TORNADO_FADING_INTERVAL, TORNADO_LIFETIME, WALL_WIDTH } from "../../settings/values.js";
-import { BallTemplate } from "../../ball/BallTemplate.js";
+import { MAP_SIZE, TORNADO_ATTRACTION_STRENGTH, TORNADO_COLLISION_RADIUS, TORNADO_HEIGHT, TORNADO_LIFETIME, WALL_WIDTH } from "../../settings/values.js";
 
 export class Tornado {
-	private readonly lightningIntervalId: ReturnType<typeof setInterval>;
-	private readonly lightning: babylon.Mesh;
+	private tornado: babylon.Mesh;
 	private readonly particles: babylon.ParticleSystem;
 	private readonly timeoutId: ReturnType<typeof setTimeout>;
 	private readonly randomSize;
+	private readonly tornadoObservable: babylon.Observable<babylon.Scene>;
+	private readonly tornadoObserver: babylon.Observer<babylon.Scene>;
 
-	constructor(scene: babylon.Scene, texture: babylon.Texture) {
+	constructor(scene: babylon.Scene, texture: babylon.Texture, windforce: babylon.Vector3) {
 		const possiblePositionX = ((Math.random() - 0.5) * 2) * ((MAP_SIZE.x - WALL_WIDTH) / 2);
 		const possiblePositionZ = ((Math.random() - 0.5) * 2) * ((MAP_SIZE.z - WALL_WIDTH) / 2);
-		const start = new babylon.Vector3(possiblePositionX, MAP_SIZE.y, possiblePositionZ);
-		const end = new babylon.Vector3(possiblePositionX, 0, possiblePositionZ);
-		this.randomSize = Math.random() * 4 + 1;
+		const position = new babylon.Vector3(possiblePositionX, 0, possiblePositionZ);
+		this.tornado = babylon.MeshBuilder.CreateBox("tornado", { width: 0.01, height: 0.01, depth: 0.01 }, scene);
+		this.tornado.visibility = 0;
+		this.tornado.position = position;
+		this.randomSize = Math.random() * 4 + 3;
 
-		this.lightning = this.spawnLightning(scene, start, end);
-		const material = new babylon.StandardMaterial("lightningMat", scene);
-		material.emissiveColor = new babylon.Color3(2.7, 2.85, 3);
-		material.alpha = 1;
-		this.lightning.material = material;
-		this.lightning.renderingGroupId = 2;
-		this.lightningIntervalId = this.animateLightningFade(material);
-		this.applyExplosionForce(scene, end);
-		this.particles = this.createContactParticles(scene, end, texture);
+		this.particles = this.createTornadoParticles(scene, texture);
 
-		this.particles.start();
+		this.tornadoObservable = scene.onBeforeRenderObservable;;
+		this.tornadoObserver = this.setTornadoObserver(scene, windforce);
 		this.timeoutId = setTimeout( () => {
 			this.destroy();
 		}, TORNADO_LIFETIME);
 	}
 
-	private spawnLightning(scene: babylon.Scene, start: babylon.Vector3, end: babylon.Vector3): babylon.Mesh {
-		const points = this.makeLightningPoints(start, end);
-		const lightning = babylon.MeshBuilder.CreateTube("lightning", {
-			path: points,
-			radius: 0.25 * this.randomSize,              
-			tessellation: 6, // sides of the circle
-			updatable: false // less GPU ressources
-		}, scene);
-		return lightning;
+	stopParticles(): void {
+		this.particles?.stop();
 	}
 
-	/** zigzag path of the lightning */
-	private makeLightningPoints(start: babylon.Vector3, end: babylon.Vector3): babylon.Vector3[] {
-		const segments = 12;
-		const diff = 5;
-		const points: babylon.Vector3[] = [start.clone()];
-		for (let i = 1; i < segments; i++) {
-			const t = i / segments; // current travel of the point in the path from start to end
-			const p = babylon.Vector3.Lerp(start, end, t); // if t = 0.5, the point is between start and end
-			p.x += (Math.random() - 0.5) * diff * (1 - Math.abs(0.5 - t) * 2); // diff x
-			p.z += (Math.random() - 0.5) * diff; // diff z
-			points.push(p);
-		}
-		points.push(end.clone());
-		return points;
-	}
-
-	/** fades slowly */
-	private animateLightningFade(material: babylon.StandardMaterial): ReturnType<typeof setInterval> {
-		let fade = 1.0;
-		const lightningIntervalId = setInterval(() => {
-			fade -= 0.04;
-			material.emissiveColor = new babylon.Color3(0.8 * fade, 0.85 * fade, fade);
-			material.alpha = fade;
-			if (fade <= 0.6) {
-				this.lightning.visibility = 0;
-			}
-		}, TORNADO_FADING_INTERVAL * this.randomSize);
-		return lightningIntervalId;
-	}
-
-	private applyExplosionForce(scene: babylon.Scene, center: babylon.Vector3): void {
-		scene.meshes.forEach(mesh => {
-			if (!mesh.metadata?.pushable || !mesh.physicsBody)
-				return ;
-			const body = mesh.physicsBody;
-			const meshPosition = mesh.getAbsolutePosition();
-			const direction = meshPosition.subtract(center);
-			const distance = direction.length();
-			const explosionRadius = TORNADO_COLLISION_RADIUS * this.randomSize;
-
-			if (distance < explosionRadius && distance > 0) { // if the mesh is in the explosion radius
-				direction.normalize();
-				const force = direction.scale(TORNADO_ATTRACTION_STRENGTH * (1 - distance / explosionRadius) * this.randomSize);
-				force.y = 0;
-				if (mesh instanceof BallTemplate)
-					mesh.setJustCollide();
-				body.applyImpulse(force, meshPosition);
-			}
+	private setTornadoObserver(scene: babylon.Scene, windforce: babylon.Vector3): babylon.Observer<babylon.Scene> {
+		const tornadoObserver = this.tornadoObservable.add(() => {
+			this.tornado.position = this.tornado.absolutePosition.addInPlace(windforce.scale(0.05));
+			scene.meshes.forEach(mesh => {
+				if (!mesh.metadata?.pushable || !mesh.physicsBody)
+					return;
+				const body = mesh.physicsBody;
+				const meshPosition = mesh.getAbsolutePosition();
+				const direction = meshPosition.subtract(this.tornado.absolutePosition);
+				direction.y = 0;
+				const distance = direction.length();
+				const tornadoRadius = TORNADO_COLLISION_RADIUS * this.randomSize;
+				if (distance < tornadoRadius && distance > 0) {
+					const tangent = new babylon.Vector3(-direction.z, 0, direction.x).normalize();
+					const distanceFromCenter = 1 - (distance / tornadoRadius);
+					const turningForce = tangent.scale(TORNADO_ATTRACTION_STRENGTH * distanceFromCenter);
+					const attractiveForce = direction.scale(-TORNADO_ATTRACTION_STRENGTH * distanceFromCenter);
+					const totalForce = turningForce.add(attractiveForce);
+					body.applyForce(totalForce, meshPosition);
+				}
+			});
 		});
+		return tornadoObserver;
 	}
 
-	private createContactParticles(scene: babylon.Scene, position: babylon.Vector3, texture: babylon.Texture): babylon.ParticleSystem {
-		const particles = new babylon.ParticleSystem("lightningSparks", Math.floor(50 * this.randomSize), scene);
+	private createTornadoParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
+		const particles = new babylon.ParticleSystem("tornadoParticles", 4000, scene);
 		particles.particleTexture = texture;
-		particles.emitter = position;
-		const emitter = new babylon.ConeParticleEmitter();
-		emitter.radius = TORNADO_COLLISION_RADIUS * this.randomSize;
-		emitter.directionRandomizer = 0.8;
+		particles.emitter = this.tornado; // Vector3
+		const emitter = new babylon.CustomParticleEmitter();
 		particles.particleEmitterType = emitter;
-		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_STRETCHED;
-		particles.blendMode = babylon.ParticleSystem.BLENDMODE_ADD;
-		particles.addColorGradient(0.0, new babylon.Color4(1.0, 1.0, 1.0, 1.0));
-		particles.addColorGradient(0.3, new babylon.Color4(0.6, 0.8, 1.0, 0.9));
-		particles.addColorGradient(1.0, new babylon.Color4(0.2, 0.5, 1.0, 0.0));
-		particles.minSize = 3;
-		particles.maxSize = 4;
-		particles.minLifeTime = 0.4;
-		particles.maxLifeTime = 0.6;
-		particles.minEmitPower = 10;
-		particles.maxEmitPower = 30;
-		particles.updateSpeed = 0.012;
-		particles.emitRate = 0;
-		particles.manualEmitCount = Math.floor(35 * this.randomSize);
 		particles.renderingGroupId = 2;
+		particles.minEmitPower = 25;
+		particles.maxEmitPower = 25;
+		particles.minLifeTime = 0.2;
+		particles.maxLifeTime = 0.2;
+		particles.minSize = 1;
+		particles.maxSize = 2;
+		particles.color1 = new babylon.Color4(0.8, 0.9, 1, 0.4);
+		particles.color2 = new babylon.Color4(0.5, 0.6, 1, 0.2);
+		particles.colorDead = new babylon.Color4(0.2, 0.4, 1, 0);
+		particles.emitRate = 4000;
+		emitter.startPositionFunction = (worldMatrix, position): void => {
+			const positionY = Math.random();
+			const angle = Math.random() * Math.PI * 2;
+			const local = new babylon.Vector3(
+				Math.cos(angle) * TORNADO_COLLISION_RADIUS * Math.min(positionY + 0.2, 1) * this.randomSize,
+				TORNADO_HEIGHT * positionY,
+				Math.sin(angle) * TORNADO_COLLISION_RADIUS * Math.min(positionY + 0.2, 1) * this.randomSize
+			);
+			babylon.Vector3.TransformCoordinatesToRef(local, worldMatrix, position);
+		};
+		emitter.startDirectionFunction = (worldMatrix, direction, particle): void => {
+			const inv = worldMatrix.clone().invert();
+			const localPos = babylon.Vector3.TransformCoordinates(particle.position, inv);
+			const tangent = new babylon.Vector3(
+				-localPos.z,
+				0.8,
+				localPos.x
+			).normalize();
+			babylon.Vector3.TransformNormalToRef(tangent, worldMatrix, direction);
+		};
+		particles.start();
 		return particles;
 	}
 
-
 	destroy(): void {
-		clearInterval(this.lightningIntervalId);
 		clearTimeout(this.timeoutId);
+		this.tornadoObservable.remove(this.tornadoObserver);
 		this.particles?.stop();
-		//this.particles?.particleTexture?.dispose();
 		if (this.particles && this.particles.particleTexture)
 			this.particles.particleTexture = null;
 		this.particles?.dispose();
-		this.lightning?.material?.dispose();
-		this.lightning?.dispose();
+		this.tornado?.dispose();
 	}
 }
