@@ -1,9 +1,11 @@
 import fastify from "fastify";
 import fastifyCors from "@fastify/cors";
 import fastifyCookies from "@fastify/cookie";
+import websocketPlugin from "@fastify/websocket";
 import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
 import { connectUser, disconnectUser, whoami, verifyAuth } from "./user_management/connect_user.js";
+import { initWebSocketConnection, joinGame } from "./online/create_new_game.js";
 
 const APP = fastify();
 
@@ -21,12 +23,25 @@ APP.register(fastifyCors, {
 	credentials: true, // allow cookies
 });
 APP.register(fastifyCookies);
+APP.register(websocketPlugin);
 
-// --- Route handlers ---
+// --- HTTPS route handlers ---
 APP.post("/api/user/new_user", addNewUser);
 APP.post("/api/user/login", connectUser);
 APP.post("/api/user/logout", { preHandler: verifyAuth }, disconnectUser);
-APP.post("/api/user/whoami", { preHandler: verifyAuth }, whoami);
+APP.get("/api/user/whoami", { preHandler: verifyAuth }, whoami);
+APP.post("/api/game/join", { preHandler: verifyAuth }, joinGame);
+
+/**
+ * Register plugins like `fastifyCors` or `fastifyCookies` globally, Fastify applies those preHandlers and hooks immediately.
+ * For WebSocket routes, this can break the upgrade request, because WS upgrade requests are special HTTP GETs:
+ * (they must get a 101 Switching Protocols response).
+ * By wrapping the WebSocket route in a register, we are creating a separate encapsulated context where Global hooks don’t interfere with the WebSocket upgrade.
+ */
+// --- Web Socket route handlers ---
+APP.register(() => {
+	APP.get('/ws', { websocket: true }, initWebSocketConnection);
+});
 
 // --- Start server ---
 async function start(): Promise<void> {

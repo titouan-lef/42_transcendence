@@ -1,5 +1,5 @@
 import { isOneStringEmtpy } from "../../utils/strings.js";
-import { sendRequestToBack } from "../api_request.js";
+import { sendPostRequestToBack, sendGetRequestToBack } from "../api_request.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
 
 function connectUser(): void {
@@ -18,15 +18,15 @@ function connectUser(): void {
 		password: userPassword.value,
 	};
 
-	sendRequestToBack("api/user/login", JSON.stringify(data), "print-content");
+	sendPostRequestToBack("api/user/login", JSON.stringify(data), "print-content");
 }
 
 function disconnectUser(): void {
-	sendRequestToBack("api/user/logout", "{}", "print-content");
+	sendPostRequestToBack("api/user/logout", "{}", "print-content");
 }
 
 function whoami(): void {
-	sendRequestToBack("api/user/whoami", "{}", "feedback_id");
+	sendGetRequestToBack("api/user/whoami", "feedback_id");
 }
 
 export { connectUser, disconnectUser, whoami };

@@ -1,6 +1,6 @@
 import { isOneStringEmtpy } from "../../utils/strings.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
-import { sendRequestToBack } from "../api_request.js";
+import { sendPostRequestToBack } from "../api_request.js";
 
 function newUser(): void {
 
@@ -30,7 +30,7 @@ function newUser(): void {
 		ppLink: "/pictures/users/avatar.jpg" /** @TODO */
 	};
 
-	sendRequestToBack("api/user/new_user", JSON.stringify(data), "print-content");
+	sendPostRequestToBack("api/user/new_user", JSON.stringify(data), "print-content");
 }
 
 export { newUser };

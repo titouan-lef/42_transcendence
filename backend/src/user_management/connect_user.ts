@@ -21,9 +21,9 @@ interface NewUserBody {
 const SECRET = "blablablou"; /** @todo: put in the .env file and import it from .env -> remove the literal from the readable code */
 const COOKIES_OPTIONS: CookieSerializeOptions = {
 	httpOnly: true,		// httpOnly prevent js on client to read teh cookies and so protect again XSS attacks
-	sameSite: "lax",	// or "none" if cross-site
+	sameSite: "lax",	// for cross-site with cookies
 	secure: false,		// must be true if you're using HTTPS
-	path: "/",
+	path: "/",			// cookie sent to all routes
 };
 
 async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
@@ -47,7 +47,7 @@ async function disconnectUser(req: FastifyRequest, reply: FastifyReply): Promise
 
 async function whoami(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	sendReply(reply, 200, true, req.user);
-}
+} 
 
 async function verifyAuth(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const token = req.cookies?.token;
@@ -69,4 +69,4 @@ async function verifyAuth(req: FastifyRequest, reply: FastifyReply): Promise<voi
 	}
 }
 
-export { connectUser, disconnectUser, whoami, verifyAuth };
+export { connectUser, disconnectUser, whoami, verifyAuth, SECRET, COOKIES_OPTIONS };
