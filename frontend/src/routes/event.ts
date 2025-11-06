@@ -10,7 +10,7 @@ import { mainMenuEvents } from "../pages/main_menu.js";
 interface Handler {
 	id	: string;
 	elem: HTMLElement;
-	type: string; /** @todo we can make it directly as HTMLElementEventMap (enfin c'est peut etre pas ca) */
+	type: keyof GlobalEventHandlersEventMap;
 	func: EventListener;
 }
 
@@ -22,7 +22,7 @@ let activeHandlers: Handler[] = [];
  * @param type event type (i.e.: "click")
  * @param func listener function
  */
-function addHandler(id: string, type: string, func: EventListener): void {
+function addHandler(id: string, type: keyof GlobalEventHandlersEventMap, func: EventListener): void {
 	const elem = getSafeElement(id, HTMLElement);
 
 	elem.addEventListener(type, func);
