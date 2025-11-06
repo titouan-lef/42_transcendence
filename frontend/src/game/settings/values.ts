@@ -72,7 +72,7 @@ export const COUNTDOWN_CANVAS_SIZE = new babylon.Vector2(512, 256);
 export const COUNTDOWN_SIZE = 200;
 export const SUN_DIAMETER = 20;
 export const GLOW_INTENSITY = 0.6;
-export const START_INTERVAL = 4000;
+export const START_TIMEOUT = 4000;
 
 /**DEFAULT MAP */
 export const D_PARTICLE_NUMBER = 500;

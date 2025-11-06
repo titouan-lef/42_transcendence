@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { BallOption } from "../settings/GameSettings.js";
-import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, BALL_TRAIL_ON, START_INTERVAL } from "../settings/values.js";
+import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, BALL_TRAIL_ON, START_TIMEOUT } from "../settings/values.js";
 import { BallTrail } from "./BallTrail.js";
 type ParticlesType = "explosion" | "collision" | "impulse";
 
@@ -85,7 +85,7 @@ export abstract class BallTemplate {
 			this.showParticles(this.mesh.position, scene, "impulse");
 			this.justCollided = true;
 			this.gameStopped = false;
-		}, START_INTERVAL);
+		}, START_TIMEOUT);
 		return launchBallTimeoutId;
 	}
 

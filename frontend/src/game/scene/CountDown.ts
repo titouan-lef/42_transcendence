@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { COLORS, MAP_SIZE, COUNTDOWN_SIZE, COUNTDOWN_CANVAS_SIZE, COUNTDOWN_POS_Y, START_INTERVAL } from "../settings/values.js";
+import { COLORS, MAP_SIZE, COUNTDOWN_SIZE, COUNTDOWN_CANVAS_SIZE, COUNTDOWN_POS_Y, START_TIMEOUT } from "../settings/values.js";
 
 export class CountDown { 
 	private readonly countDown: babylon.Mesh;
@@ -24,9 +24,9 @@ export class CountDown {
 				this.changeText("GO!");
 				this.timeOutId = setTimeout(() => {
 					this.destroy();
-				}, START_INTERVAL / 4);
+				}, START_TIMEOUT / 4);
 			}
-		}, START_INTERVAL / 4);
+		}, START_TIMEOUT / 4);
 	}
 	
 	private setMaterial(scene: babylon.Scene): void {
