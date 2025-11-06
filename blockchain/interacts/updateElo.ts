@@ -11,7 +11,7 @@ async function main() {
 
   const username = "pchalmin";
   const season = 1;
-  const change = -150; // peut être positif ou négatif
+  const change = -150;
 
   const tx = await contract.updateElo(username, season, change);
   await tx.wait();

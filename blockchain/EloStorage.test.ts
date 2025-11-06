@@ -4,11 +4,11 @@ import { ethers } from "hardhat";
 describe("EloStorage", function () {
   let elo: any;
   const season = 1;
-  const users = ["ael-atmi","tilegran","tle-floc","lguerbig","pchalmin"];
+  const users = ["ael-atmi", "tilegran", "tle-floc", "lguerbig", "pchalmin"];
 
   beforeEach(async function () {
     const EloFactory = await ethers.getContractFactory("EloStorage");
-    elo = await EloFactory.deploy(); // déjà déployé, pas besoin de .deployed()
+    elo = await EloFactory.deploy();
   });
 
   it("set/get/update ELO for multiple users", async function () {
