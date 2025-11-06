@@ -16,7 +16,7 @@ async function main() {
   const tx = await contract.setElo(username, season, eloValue);
   await tx.wait();
 
-  console.log(`✅ ELO de ${username} défini à ${eloValue} pour la saison ${season}`);
+  console.log(`✅ ELO of ${username} defined at ${eloValue} for the season ${season}`);
 }
 
 main().catch((err) => {

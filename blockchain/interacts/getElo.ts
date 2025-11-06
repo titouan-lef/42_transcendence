@@ -13,7 +13,7 @@ async function main() {
   const season = 1;
 
   const elo = await contract.getElo(username, season);
-  console.log(`🏆 ELO de ${username} (saison ${season}) = ${elo.toString()}`);
+  console.log(`🏆 ELO of ${username} (season ${season}) = ${elo.toString()}`);
 }
 
 main().catch((err) => {
