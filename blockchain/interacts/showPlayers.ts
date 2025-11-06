@@ -10,7 +10,7 @@ async function main() {
   const season = 1;
   const players = ["ael-atmi", "tilegran", "lguerbig", "tle-floc", "pchalmin"];
 
-  console.log(`🏁 Saison ${season}`);
+  console.log(`🏁 Season ${season}`);
   for (const username of players) {
     const elo = await contract.getElo(username, season);
     console.log(`${username}: ${elo.toString()}`);

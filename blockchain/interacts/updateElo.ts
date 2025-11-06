@@ -17,7 +17,9 @@ async function main() {
   await tx.wait();
 
   const newElo = await contract.getElo(username, season);
-  console.log(`⚡ Nouveau ELO de ${username} (saison ${season}) = ${newElo.toString()}`);
+  console.log(
+    `⚡ New ELO rating for ${username} (season ${season}) = ${newElo.toString()}`
+  );
 }
 
 main().catch((err) => {
