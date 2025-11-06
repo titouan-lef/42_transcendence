@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS, START_INTERVAL } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS, START_TIMEOUT } from "../settings/values.js";
 
 export class DefaultMap extends MapTemplate {
 	private readonly bars: babylon.Mesh[];
@@ -15,7 +15,7 @@ export class DefaultMap extends MapTemplate {
 		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
 		this.highlightTimeout = setTimeout(() => {
 			this.limits.forEach(limit => this.wallHighlight.addMesh(limit, COLORS.red));
-		}, START_INTERVAL);
+		}, START_TIMEOUT);
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
