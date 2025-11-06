@@ -95,6 +95,16 @@ export const METEOR_COLLISION_RADIUS = METEOR_DIAMETER;
 export const METEOR_COLLISION_STRENGTH = 30;
 export const METEOR_SPEED = 100;
 
+/**WINDY MAP */
+export const W_PARTICLE_NUMBER = 3000;
+export const TORNADO_INTERVAL = 1500;
+export const TORNADO_LIFETIME = 2500;
+export const WIND_FORCE_MAX = 100;
+export const TORNADO_ATTRACTION_STRENGTH = 50;
+export const TORNADO_COLLISION_RADIUS = 5;
+export const TORNADO_FADING_INTERVAL = 100;
+
+
 /**PLAYER */
 export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x
 export const PLAYER_MASS = 1;

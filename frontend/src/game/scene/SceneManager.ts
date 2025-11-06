@@ -9,6 +9,7 @@ import { SnakeBall } from "../ball/SnakeBall.js";
 import { MapTemplate } from "../map/MapTemplate.js";
 import { DefaultMap } from "../map/DefaultMap.js";
 import { RainyMap } from "../map/RainyMap.js";
+import { WindyMap } from "../map/WindyMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
@@ -60,9 +61,9 @@ export class SceneManager {
 	}
 
 	private createMap(scene: babylon.Scene, map: MapOption): void {
-		const mapList: MapOption[] = ["default", "volcano", "rainy"];
+		const mapList: MapOption[] = ["default", "volcano", "rainy", "windy"];
 		if (map === "random") {
-			map = mapList[Math.floor(Math.random() * 3)];
+			map = mapList[Math.floor(Math.random() * 4)];
 		}
 		switch (map) {
 			case "default":
@@ -73,6 +74,9 @@ export class SceneManager {
 				break;
 			case "rainy":
 				this.map = new RainyMap(scene, this.textures);
+				break;
+			case "windy":
+				this.map = new WindyMap(scene, this.textures);
 				break;
 			default: throw new Error("switch map fail");
 		}
