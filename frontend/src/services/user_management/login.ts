@@ -1,8 +1,8 @@
 import { isOneStringEmtpy } from "../../utils/strings.js";
-import { sendPostRequestToBack, sendGetRequestToBack } from "../api_request.js";
+import { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv } from "../api_request.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
 
-function connectUser(): void {
+async function connectUser(): Promise<void> {
 
 	const userId: HTMLInputElement = getSafeElement("login_user_id", HTMLInputElement);
 	const userPassword: HTMLInputElement = getSafeElement("login_user_password", HTMLInputElement);
@@ -18,15 +18,20 @@ function connectUser(): void {
 		password: userPassword.value,
 	};
 
-	sendPostRequestToBack("api/user/login", JSON.stringify(data), "print-content");
+	const reply = await sendPostRequestToBack("api/user/login", JSON.stringify(data));
+	printReplyInDiv(reply, "print-content");
+	
 }
 
-function disconnectUser(): void {
-	sendPostRequestToBack("api/user/logout", "{}", "print-content");
+async function disconnectUser(): Promise<void> {
+	const reply = await sendGetRequestToBack("api/user/logout");
+	printReplyInDiv(reply, "print-content");
+	
 }
 
-function whoami(): void {
-	sendGetRequestToBack("api/user/whoami", "feedback_id");
+async function whoami(): Promise<void> {
+	const reply = await sendGetRequestToBack("api/user/whoami");
+	printReplyInDiv(reply, "feedback_id");
 }
 
 export { connectUser, disconnectUser, whoami };

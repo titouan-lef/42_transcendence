@@ -1,8 +1,8 @@
 import { isOneStringEmtpy } from "../../utils/strings.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
-import { sendPostRequestToBack } from "../api_request.js";
+import { printReplyInDiv, sendPostRequestToBack } from "../api_request.js";
 
-function newUser(): void {
+async function newUser(): Promise<void> {
 
 	const userId: HTMLInputElement = getSafeElement("create_user_id", HTMLInputElement);
 	const userPseudo: HTMLInputElement = getSafeElement("create_user_pseudo", HTMLInputElement);
@@ -30,7 +30,8 @@ function newUser(): void {
 		ppLink: "/pictures/users/avatar.jpg" /** @TODO */
 	};
 
-	sendPostRequestToBack("api/user/new_user", JSON.stringify(data), "print-content");
+	const reply = await sendPostRequestToBack("api/user/new_user", JSON.stringify(data));
+	printReplyInDiv(reply, "print-content");
 }
 
 export { newUser };

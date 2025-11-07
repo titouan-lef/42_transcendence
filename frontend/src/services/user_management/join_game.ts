@@ -1,13 +1,8 @@
-import { openWebSocketConnection, sendPostRequestToBack } from "../api_request.js";
-
-function delay(ms: number): Promise<void> {
-	return new Promise( resolve => setTimeout(resolve, ms) );
-}
+import { openWebSocketConnection } from "../api_request.js";
 
 async function joinGame(): Promise<void> {
 	await openWebSocketConnection();
-	await delay(50);
-	await sendPostRequestToBack("api/game/join", "{}", "print-content");
+	/** if successfull launch the page game */
 }
- 
+
 export { joinGame };
