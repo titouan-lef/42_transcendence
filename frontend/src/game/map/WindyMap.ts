@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Tornado } from "./map_utils/Tornado.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS3, W_PARTICLE_NUMBER, TORNADO_INTERVAL, TORNADO_LIFETIME, WIND_FORCE } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS3, W_PARTICLE_NUMBER, TORNADO_INTERVAL, TORNADO_LIFETIME, WIND_FORCE, W_GLOW_INTENSITY } from "../settings/values.js";
 
 export class WindyMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
@@ -13,6 +13,7 @@ export class WindyMap extends MapTemplate {
 
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
 		super(scene, "windy");
+		this.glow.intensity = W_GLOW_INTENSITY;
 		this.windForce = new babylon.Vector3(
 			(Math.random() - 0.5) * WIND_FORCE,
 			0,

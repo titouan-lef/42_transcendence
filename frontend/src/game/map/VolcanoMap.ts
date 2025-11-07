@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Meteor } from "./map_utils/Meteor.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER, V_GLOW_INTENSITY } from "../settings/values.js";
 
 /**@todo this map is not configured dont mind the code */
 export class VolcanoMap extends MapTemplate {
@@ -11,6 +11,7 @@ export class VolcanoMap extends MapTemplate {
 
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
 		super(scene, "volcano");
+		this.glow.intensity = V_GLOW_INTENSITY;
 		this.particles = this.createParticles(scene, texture.flare);
 		this.meteorIntervalId = this.meteorInterval(scene, texture);
 	}
@@ -49,7 +50,6 @@ export class VolcanoMap extends MapTemplate {
 		light.position = this.sun.position;
 		light.intensity = 1;
 		light.diffuse = COLORS3.volcanoDiffuseLight;
-		light.specular = COLORS3.volcanoSpecularLight;
 		return light;
 	}
 

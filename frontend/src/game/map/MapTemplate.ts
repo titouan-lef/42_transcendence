@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapOption } from "../settings/GameSettings.js";
-import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, GLOW_INTENSITY, CAMERA_POS_X, SCORE_POS_Y, START_TIMEOUT } from "../settings/values.js";
+import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, CAMERA_POS_X, SCORE_POS_Y, START_TIMEOUT } from "../settings/values.js";
 
 export abstract class MapTemplate {
 	protected glow: babylon.GlowLayer;
@@ -27,7 +27,6 @@ export abstract class MapTemplate {
 		this.sun = this.createSun(scene);
 		this.light = this.createLight(scene);
 		this.glow = new babylon.GlowLayer("glow", scene);
-		this.glow.intensity = GLOW_INTENSITY;
 		this.startTimeout = setTimeout(() => {
 			this.gameStopped = false;
 		}, START_TIMEOUT);
