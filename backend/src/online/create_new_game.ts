@@ -1,6 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { WebSocket } from "ws";
-import { sendReply } from "../utils/reply.js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { SECRET } from "../user_management/connect_user.js";
 import { isValidUser } from "../database/find_data.js";
@@ -14,40 +13,61 @@ declare module 'fastify' {
 const WAITING_PLAYERS: string[] = [];
 const ACTIVES_SOCKETS = new Map<string, WebSocket>();
 
+/**
+ * Ping the socket if he send no data for 30 seconds, to keep it alive
+ */
+function startHeartbeat(socket: WebSocket): void {
+	let lastActivity = Date.now();
+
+	// update last activity whenever something is received
+	socket.on("message", () => {
+		lastActivity = Date.now();
+	});
+
+	const timer = setInterval(() => {
+		const idleTime = Date.now() - lastActivity;
+		socket.ping();
+	}, 10000); // check every 10 seconds
+
+	socket.on("close", () => clearInterval(timer));
+}
+
 async function initWebSocketConnection(socket: WebSocket, req: FastifyRequest): Promise<void> {
 	console.log("New WebSocket connection");
 
 	const token = req.cookies?.token;
 	if (!token)
 		return socket.close(1008, "User not logged in");
-	let user: string;
-	try {
-		// eslint-disable-next-line
-		const payload: JwtPayload = jwt.verify(token, SECRET) as JwtPayload;
-		const exists = await isValidUser(payload.id);
-		if (!exists)
-			return socket.close(1008, "User does not exist");
-		user = payload.id;
-		console.log("Identified", user);
-		if (ACTIVES_SOCKETS.has(user))
-			return socket.close(1008, "Already looking for a game");
-		ACTIVES_SOCKETS.set(user, socket);
-	} catch {
+	// eslint-disable-next-line
+	const payload: JwtPayload = jwt.verify(token, SECRET) as JwtPayload;
+	if (!payload)
 		return socket.close(1008, "Invalid token");
+	const exists = await isValidUser(payload.id);
+	if (!exists)
+		return socket.close(1008, "User does not exist");
+	const user = payload.id;
+	console.log("Identified", user);
+	if (ACTIVES_SOCKETS.has(user))
+		return socket.close(1008, "Already looking for a game");
+	ACTIVES_SOCKETS.set(user, socket);
+	WAITING_PLAYERS.push(user);
+	console.log(user, "is waiting for a game");
+	socket.send("Added to the waiting list");
+
+	startHeartbeat(socket);
+
+	if (WAITING_PLAYERS.length >= 2) { /** @todo real match making system */
+		const [players1, players2] = WAITING_PLAYERS.splice(0, 2);
+		newGame(players1, players2);
 	}
 
 	socket.on("message", (message: Buffer | string) => {
 		console.log("Received message from", user, ":", message.toString());
-		socket.send("Hello Fastify WebSockets"); /** @todo handler for the game */
+		socket.send("Received"); /** @todo handler for the game */
 	});
 
-	socket.on("close", () => {
-		if (user) {
-			ACTIVES_SOCKETS.delete(user);
-			console.log("WebSocket connection closed for", user);
-		} else {
-			console.log("WebSocket closed before identification");
-		}
+	socket.on("close", () => { 
+		ACTIVES_SOCKETS.delete(user);
 	});
 }
 
@@ -65,25 +85,4 @@ function newGame(player1: string, player2: string): void {
 	// create a new game with Tim work
 }
 
-async function joinGame(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-	const user = req.user;
-	if (!user)
-		return sendReply(reply, 401, false, "User not loged in");
-
-	if (!ACTIVES_SOCKETS.get(user))
-		return sendReply(reply, 401, false, "User not connected with a WebSocket");
-
-	if (WAITING_PLAYERS.includes(user))
-		return sendReply(reply, 401, false, "Already looking for a game");
-
-	WAITING_PLAYERS.push(user);
-	console.log(user, "is waiting for a game");
-
-	if (WAITING_PLAYERS.length >= 2) { /** @todo real match making system */
-		const [players1, players2] = WAITING_PLAYERS.splice(0, 2);
-		newGame(players1, players2);
-	}
-	return sendReply(reply, 200, true, "Added to waiting list");
-}
-
-export { joinGame, initWebSocketConnection };
+export { initWebSocketConnection };

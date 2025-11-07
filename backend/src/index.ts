@@ -5,7 +5,7 @@ import websocketPlugin from "@fastify/websocket";
 import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
 import { connectUser, disconnectUser, whoami, verifyAuth } from "./user_management/connect_user.js";
-import { initWebSocketConnection, joinGame } from "./online/create_new_game.js";
+import { initWebSocketConnection } from "./online/create_new_game.js";
 
 const APP = fastify();
 
@@ -28,9 +28,8 @@ APP.register(websocketPlugin);
 // --- HTTPS route handlers ---
 APP.post("/api/user/new_user", addNewUser);
 APP.post("/api/user/login", connectUser);
-APP.post("/api/user/logout", { preHandler: verifyAuth }, disconnectUser);
+APP.get("/api/user/logout", { preHandler: verifyAuth }, disconnectUser);
 APP.get("/api/user/whoami", { preHandler: verifyAuth }, whoami);
-APP.post("/api/game/join", { preHandler: verifyAuth }, joinGame);
 
 /**
  * Register plugins like `fastifyCors` or `fastifyCookies` globally, Fastify applies those preHandlers and hooks immediately.
