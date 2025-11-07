@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Lightning } from "./map_utils/Lightning.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS3, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME } from "../settings/values.js";
 
 
 /**@todo this map is not configured dont mind the code */
@@ -37,7 +37,7 @@ export class RainyMap extends MapTemplate {
 	createSun(scene: babylon.Scene): babylon.Mesh {
 		const sun = babylon.MeshBuilder.CreateSphere("sun", { diameter: SUN_DIAMETER }, scene);
 		const sunMaterial = new babylon.StandardMaterial("sunMat", scene);
-		sunMaterial.emissiveColor = COLORS.grey;
+		sunMaterial.emissiveColor = COLORS3.grey;
 		sun.material = sunMaterial;
 		sun.position = this.sunPosition.clone();
 		sun.position.z -= MAP_SIZE.z / 2;
@@ -50,7 +50,7 @@ export class RainyMap extends MapTemplate {
 		const light: babylon.DirectionalLight = new babylon.DirectionalLight("sunLight", directionCenter, scene);
 		light.position = this.sun.position;
 		light.intensity = 0.45;
-		light.diffuse = COLORS.lightColorRainy;
+		light.diffuse = COLORS3.lightColorRainy;
 		return light;
 	}
 
@@ -67,7 +67,7 @@ export class RainyMap extends MapTemplate {
 		particles.color2 = new babylon.Color4(0.85, 0.9, 1.0, 0.65);
 		particles.colorDead = new babylon.Color4(0.85, 0.9, 1.0, 0.0);
 		particles.emitRate = 1800;
-		particles.renderingGroupId = 3; //
+		particles.renderingGroupId = 1; //
 		particles.minEmitPower = 35;
 		particles.maxEmitPower = 45;
 		particles.minSize = 1;
@@ -103,7 +103,7 @@ export class RainyMap extends MapTemplate {
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
 		const material = new babylon.StandardMaterial('wallcolor', scene);
-		material.diffuseColor =  COLORS.lime;
+		material.diffuseColor =  COLORS3.lime;
 		newMesh.material = material;
 		return newMesh;
 	}

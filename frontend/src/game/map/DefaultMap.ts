@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS, START_TIMEOUT } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS3, START_TIMEOUT } from "../settings/values.js";
 
 export class DefaultMap extends MapTemplate {
 	private readonly bars: babylon.Mesh[];
@@ -14,7 +14,7 @@ export class DefaultMap extends MapTemplate {
 		this.particles = this.createParticles(scene, texture);
 		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
 		this.highlightTimeout = setTimeout(() => {
-			this.limits.forEach(limit => this.wallHighlight.addMesh(limit, COLORS.red));
+			this.limits.forEach(limit => this.wallHighlight.addMesh(limit, COLORS3.red));
 		}, START_TIMEOUT);
 	}
 
@@ -22,7 +22,7 @@ export class DefaultMap extends MapTemplate {
 		const ground = babylon.MeshBuilder.CreateGround("defaultground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
 		const material = new babylon.StandardMaterial('groundcolor', scene);
-		material.diffuseColor =  COLORS.black;
+		material.diffuseColor =  COLORS3.black;
 		ground.material = material;
 		ground.metadata = { type: "ground" };
 		return ground;
@@ -40,7 +40,7 @@ export class DefaultMap extends MapTemplate {
 			bar.position = new babylon.Vector3(0, 0, startPositionZ);
 			startPositionZ += steps * 2;
 			const mat = new babylon.StandardMaterial("barmat", scene);
-			mat.emissiveColor = COLORS.white;
+			mat.emissiveColor = COLORS3.white;
 			bar.material = mat;
 			bar.renderingGroupId = 1;
 			bars.push(bar);
@@ -69,7 +69,7 @@ export class DefaultMap extends MapTemplate {
 	createSun(scene: babylon.Scene): babylon.Mesh {
 		const sun = babylon.MeshBuilder.CreateSphere("sun", { diameter: SUN_DIAMETER }, scene);
 		const sunMaterial = new babylon.StandardMaterial("sunMat", scene);
-		sunMaterial.emissiveColor = COLORS.sunColorDefault;
+		sunMaterial.emissiveColor = COLORS3.sunColorDefault;
 		sun.material = sunMaterial;
 		sun.position = this.sunPosition.clone();
 		sun.position.z -= MAP_SIZE.z / 2;
@@ -82,14 +82,14 @@ export class DefaultMap extends MapTemplate {
 		const light: babylon.DirectionalLight = new babylon.DirectionalLight("sunLight", directionCenter, scene);
 		light.position = this.sun.position;
 		light.intensity = 1;
-		light.diffuse = COLORS.lightColorDefault;
+		light.diffuse = COLORS3.lightColorDefault;
 		return light;
 	}
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
 		const material = new babylon.StandardMaterial('wallcolor', scene);
-		material.diffuseColor =  COLORS.lime;
+		material.diffuseColor =  COLORS3.lime;
 		newMesh.material = material;
 		return newMesh;
 	}

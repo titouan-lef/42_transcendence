@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Meteor } from "./map_utils/Meteor.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER } from "../settings/values.js";
 
 /**@todo this map is not configured dont mind the code */
 export class VolcanoMap extends MapTemplate {
@@ -20,7 +20,8 @@ export class VolcanoMap extends MapTemplate {
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
 		ground.metadata = { type: "ground" };
 		const material = new babylon.StandardMaterial("ground",scene);
-		material.emissiveColor = COLORS.groundColorVolcano;
+		material.diffuseColor = COLORS3.volcanoDiffuseGround;
+		material.emissiveColor = COLORS3.volcanoEmissiveGround;
 		const noise = new babylon.NoiseProceduralTexture("groundNoise", 256, scene, undefined, false);
 		noise.animationSpeedFactor = 0;
 		noise.octaves = 4;
@@ -34,7 +35,7 @@ export class VolcanoMap extends MapTemplate {
 	createSun(scene: babylon.Scene): babylon.Mesh {
 		const sun = babylon.MeshBuilder.CreateSphere("sun", { diameter: SUN_DIAMETER }, scene);
 		const sunMaterial = new babylon.StandardMaterial("sunMat", scene);
-		sunMaterial.emissiveColor = COLORS.orange;
+		sunMaterial.emissiveColor = COLORS3.volcanoEmissiveSun;
 		sun.material = sunMaterial;
 		sun.position = this.sunPosition.clone();
 		sun.position.z -= MAP_SIZE.z / 2;
@@ -47,24 +48,25 @@ export class VolcanoMap extends MapTemplate {
 		const light: babylon.DirectionalLight = new babylon.DirectionalLight("sunLight", directionCenter, scene);
 		light.position = this.sun.position;
 		light.intensity = 1;
-		light.diffuse = COLORS.lightColorVolcano;
+		light.diffuse = COLORS3.volcanoDiffuseLight;
+		light.specular = COLORS3.volcanoSpecularLight;
 		return light;
 	}
 
 	/** the ashes */
 	private createParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
-		scene.clearColor = new babylon.Color4(0.5, 0.5, 0.5, 1); // sky
+		scene.clearColor = COLORS4.volcanoDiffuseSky; // sky
 		const particles = new babylon.ParticleSystem("ashes", V_PARTICLE_NUMBER, scene);
 		particles.particleTexture = texture;
 		particles.emitter = new babylon.Vector3(0, 0, 0);
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
 		particles.minEmitBox = new babylon.Vector3(-MAP_SIZE.x * 1.4, -MAP_SIZE.y * 1, -MAP_SIZE.z * 1.4);
 		particles.maxEmitBox = new babylon.Vector3(MAP_SIZE.x * 1.4, MAP_SIZE.y * 2, MAP_SIZE.y * 1.4);
-		particles.color1 = new babylon.Color4(1, 0.3, 0, 0.85);
-		particles.color2 = new babylon.Color4(1, 0.3, 0, 0.65);
-		particles.colorDead = new babylon.Color4(1, 0.3, 0, 0.0);
+		particles.color1 = COLORS4.volcanoDiffuseAsh1;
+		particles.color2 = COLORS4.volcanoDiffuseAsh2;
+		particles.colorDead = COLORS4.volcanoDiffuseAshDead;
 		particles.emitRate = 1800;
-		particles.renderingGroupId = 3; //
+		particles.renderingGroupId = 1; //
 		particles.minEmitPower = 35;
 		particles.maxEmitPower = 45;
 		particles.minSize = 0.2;
@@ -99,7 +101,7 @@ export class VolcanoMap extends MapTemplate {
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
 		const material = new babylon.StandardMaterial('wallcolor', scene);
-		material.diffuseColor =  COLORS.lime;
+		material.diffuseColor =  COLORS3.volcanoDiffuseWall;
 		newMesh.material = material;
 		return newMesh;
 	}

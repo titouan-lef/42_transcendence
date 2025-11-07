@@ -21,7 +21,7 @@ export class Lightning {
 		material.emissiveColor = new babylon.Color3(2.7, 2.85, 3);
 		material.alpha = 1;
 		this.lightning.material = material;
-		this.lightning.renderingGroupId = 2;
+		this.lightning.renderingGroupId = 1;
 		this.lightningIntervalId = this.animateLightningFade(material);
 		this.applyExplosionForce(scene, end);
 		this.particles = this.createContactParticles(scene, end, texture);
@@ -116,7 +116,7 @@ export class Lightning {
 		particles.updateSpeed = 0.012;
 		particles.emitRate = 0;
 		particles.manualEmitCount = Math.floor(35 * this.randomSize);
-		particles.renderingGroupId = 2;
+		particles.renderingGroupId = 1;
 		return particles;
 	}
 

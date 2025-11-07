@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { MAP_SIZE, WALL_WIDTH, METEOR_SPEED, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, METEOR_COLLISION_STRENGTH, METEOR_LIFETIME, COLORS, BALL_DIAMETER } from "../../settings/values.js";
+import { MAP_SIZE, WALL_WIDTH, METEOR_SPEED, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, METEOR_COLLISION_STRENGTH, METEOR_LIFETIME, COLORS3, BALL_DIAMETER, COLORS4 } from "../../settings/values.js";
 import { BallTemplate } from "../../ball/BallTemplate.js";
 
 export class Meteor {
@@ -37,19 +37,19 @@ export class Meteor {
 		meteor.position = position;
 		meteor.metadata = { type: "collider" };
 		const material = new babylon.StandardMaterial("MeteorMat", scene);
-		material.diffuseColor = new babylon.Color3(0.1, 0.08, 0.05);
-		material.specularColor = new babylon.Color3(0.5, 0.3, 0.2);
+		material.diffuseColor = COLORS3.volcanoDiffuseMeteor;
+		material.specularColor = COLORS3.volcanoSpecularMeteor;
 		material.specularPower = 32;
-		material.emissiveColor = new babylon.Color3(0.85, 0.3, 0.1);
+		material.emissiveColor = COLORS3.volcanoEmissiveMeteor;
 		material.alpha = 1;
 		meteor.material = material;
-		meteor.renderingGroupId = 2;
+		meteor.renderingGroupId = 1;
 		return meteor;
 	}
 
 	private createMeteorLight(scene: babylon.Scene): babylon.PointLight {
 		const light = new babylon.PointLight("meteorLight", this.meteor.position, scene);
-		light.diffuse = COLORS.orange;
+		light.diffuse = COLORS3.volcanoDiffuseMeteorLight;
 		light.intensity = 1 * this.randomSize;
 		light.range = 30 * this.randomSize;
 		light.parent = this.meteor;
@@ -108,17 +108,19 @@ export class Meteor {
 		});
 	}
 
-	protected createContactParticles(scene: babylon.Scene, texture: babylon.Texture, end: babylon.Vector3): babylon.ParticleSystem {
+	private createContactParticles(scene: babylon.Scene, texture: babylon.Texture, end: babylon.Vector3): babylon.ParticleSystem {
 		const dustParticles = new babylon.ParticleSystem("MeteorDust", Math.floor(100 * this.randomSize), scene);
 		dustParticles.particleTexture = texture;
 		dustParticles.blendMode = babylon.ParticleSystem.BLENDMODE_STANDARD;
 		dustParticles.emitter = end.clone();
 		dustParticles.emitter.y += 1;
-		dustParticles.renderingGroupId = 2;
+		dustParticles.renderingGroupId = 1;
 		const emitter = new babylon.ConeParticleEmitter(90); // 90° = émet latéralement
 		emitter.radius = METEOR_COLLISION_RADIUS * this.randomSize * 2;
 		dustParticles.particleEmitterType = emitter;
-		dustParticles.color1 = new babylon.Color4(0, 0, 0, 0.9);
+		dustParticles.color1 = COLORS4.volcanoDiffuseDust1;
+		dustParticles.color2 = COLORS4.volcanoDiffuseDust2;
+		dustParticles.colorDead = COLORS4.volcanoDiffuseDustDead;
 		dustParticles.minSize = 1 * this.randomSize;
 		dustParticles.maxSize = 2 * this.randomSize;
 		dustParticles.minEmitPower = 0.8;
@@ -137,11 +139,14 @@ export class Meteor {
 		trail.particleTexture = texture;
 		trail.emitter = this.meteor;
 		trail.particleEmitterType = new babylon.SphereParticleEmitter(METEOR_COLLISION_RADIUS * this.randomSize * 1.5);
-		trail.renderingGroupId = 2;
-		trail.color1 = new babylon.Color4(1, 0.5, 0.1, 1);
-		trail.color2 = new babylon.Color4(0.7, 0.2, 0, 0.5);
+		trail.renderingGroupId = 1;
+		trail.color1 = COLORS4.volcanoDiffuseTrail1;
+		trail.color2 = COLORS4.volcanoDiffuseTrail2;
+		trail.colorDead = COLORS4.volcanoDiffuseTrailDead;
 		trail.minSize = 1;
-		trail.maxSize = 2;
+		trail.maxSize = 1;
+		trail.minLifeTime = 0.5;
+		trail.maxLifeTime = 0.5;
 		trail.minEmitPower = 0;
 		trail.maxEmitPower = 0;
 		trail.updateSpeed = 0.02;

@@ -1,4 +1,4 @@
-import * as babylon from "/babylonjs/core/index.js";
+import * as babylon from "@babylonjs/core";
 import { MAP_SIZE, TORNADO_ATTRACTION_STRENGTH, TORNADO_COLLISION_RADIUS, TORNADO_HEIGHT, TORNADO_LIFETIME, WALL_WIDTH } from "../../settings/values.js";
 
 export class Tornado {
@@ -62,7 +62,7 @@ export class Tornado {
 		particles.emitter = this.tornado; // Vector3
 		const emitter = new babylon.CustomParticleEmitter();
 		particles.particleEmitterType = emitter;
-		particles.renderingGroupId = 2;
+		particles.renderingGroupId = 1;
 		particles.minEmitPower = 25;
 		particles.maxEmitPower = 25;
 		particles.minLifeTime = 0.2;

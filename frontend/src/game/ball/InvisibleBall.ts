@@ -1,13 +1,13 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
-import { COLORS, BALL_TRAIL_INTERVAL, INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL } from "../settings/values.js";
+import { COLORS3, BALL_TRAIL_INTERVAL, INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL } from "../settings/values.js";
 
 export class InvisibleBall extends BallTemplate {
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 	private effectTimeOutId: ReturnType<typeof setTimeout> | null = null;
 		
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
-		super(scene, "invisible", texture, COLORS.red);
+		super(scene, "invisible", texture, COLORS3.red);
 		this.effectIntervalId = this.activateEffect();
 	}
 	
