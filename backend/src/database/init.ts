@@ -21,22 +21,22 @@ async function initDB(): Promise<void> {
 		CREATE TABLE IF NOT EXISTS User (
 			username TEXT PRIMARY KEY,
 			pseudo TEXT NOT NULL,
-			created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-			hashed_password TEXT NOT NULL,
-			pp_link TEXT NOT NULL,
-			theme_id INTEGER REFERENCES Theme(id)
+			createdAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+			hashedPassword TEXT NOT NULL,
+			ppLink TEXT NOT NULL,
+			themeId INTEGER REFERENCES Theme(id)
 		);
 	`);
 	await db.exec(`
 		CREATE TABLE IF NOT EXISTS Friendship (
 			username TEXT PRIMARY KEY,
-			friend_name TEXT NOT NULL
+			friendName TEXT NOT NULL
 		);
 	`);void
 	await db.exec(`
 		CREATE TABLE IF NOT EXISTS Season (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			began_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
+			beganAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
 		);
 	`);
 	await db.exec(`
@@ -60,38 +60,38 @@ async function initDB(): Promise<void> {
 	await db.exec(`
 		CREATE TABLE IF NOT EXISTS Game (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			began_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-			map_id INTEGER REFERENCES Map(id),
-			ball_id INTEGER REFERENCES Ball(id),
-			season_id INTEGER REFERENCES Season(id)
+			beganAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+			mapId INTEGER REFERENCES Map(id),
+			ballId INTEGER REFERENCES Ball(id),
+			seasonId INTEGER REFERENCES Season(id)
 		);
 	`);
 	await db.exec(`
 		CREATE TABLE IF NOT EXISTS Goal (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			scored_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-			game_id INTEGER REFERENCES Game(id),
+			scoredAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+			gameId INTEGER REFERENCES Game(id),
 			by TEXT REFERENCES User(pseudo)
 		);
 	`);
 	await db.exec(`
 		CREATE TABLE IF NOT EXISTS Game_rule (
-			game_id INTEGER,
-			rule_id INTEGER,
-			is_active INTEGER NOT NULL,
-			PRIMARY KEY (game_id, rule_id),
-			FOREIGN KEY (game_id) REFERENCES Game(id),
-			FOREIGN KEY (rule_id) REFERENCES Rule(id)
+			gameId INTEGER,
+			ruleId INTEGER,
+			isActive INTEGER NOT NULL,
+			PRIMARY KEY (gameId, ruleId),
+			FOREIGN KEY (gameId) REFERENCES Game(id),
+			FOREIGN KEY (ruleId) REFERENCES Rule(id)
 		);
 	`);
 	await db.exec(`
 		CREATE TABLE IF NOT EXISTS Elo (
 			username TEXT,
-			game_id INTEGER,
+			gameId INTEGER,
 			variation INTEGER NOT NULL,
-			PRIMARY KEY (username, game_id),
+			PRIMARY KEY (username, gameId),
 			FOREIGN KEY (username) REFERENCES User(username),
-			FOREIGN KEY (game_id) REFERENCES Game(id)
+			FOREIGN KEY (gameId) REFERENCES Game(id)
 		)
 	`);
 	await db.close();
