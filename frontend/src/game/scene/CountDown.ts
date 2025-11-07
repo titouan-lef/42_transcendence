@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { COLORS, MAP_SIZE, COUNTDOWN_SIZE, COUNTDOWN_CANVAS_SIZE, COUNTDOWN_POS_Y, START_TIMEOUT } from "../settings/values.js";
+import { COLORS3, MAP_SIZE, COUNTDOWN_SIZE, COUNTDOWN_CANVAS_SIZE, COUNTDOWN_POS_Y, START_TIMEOUT } from "../settings/values.js";
 
 export class CountDown { 
 	private readonly countDown: babylon.Mesh;
@@ -10,7 +10,7 @@ export class CountDown {
 	constructor(scene: babylon.Scene) {
 		this.countDownTexture = new babylon.DynamicTexture("scoreTexture", { width: COUNTDOWN_CANVAS_SIZE.x, height: COUNTDOWN_CANVAS_SIZE.y }, scene, false);
 		this.countDown = babylon.MeshBuilder.CreatePlane("scorePlane", { width: MAP_SIZE.z * 0.4, height: MAP_SIZE.z * 0.2 }, scene);
-		this.countDown.renderingGroupId = 3;
+		this.countDown.renderingGroupId = 2;
 		this.setMaterial(scene);
 		this.countDown.billboardMode = babylon.Mesh.BILLBOARDMODE_ALL; // so it faces camera
 		this.countDown.position = new babylon.Vector3(0, COUNTDOWN_POS_Y, 0);
@@ -32,7 +32,7 @@ export class CountDown {
 	private setMaterial(scene: babylon.Scene): void {
 		const material = new babylon.StandardMaterial("scoreMat", scene);
 		material.diffuseTexture = this.countDownTexture;
-		material.emissiveColor = COLORS.red;
+		material.emissiveColor = COLORS3.red;
 		material.diffuseTexture.hasAlpha = true;
 		material.alpha = 1;
 		this.countDown.material = material;

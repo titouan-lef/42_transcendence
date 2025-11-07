@@ -1,12 +1,12 @@
 import * as babylon from "@babylonjs/core";
 import { GameSettings, PlayerKeys } from "../settings/GameSettings.js";
-import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY, PLAYER_TRAIL_INTERVAL, PLAYER_TRAIL_ON } from "../settings/values.js";
+import { PLAYER_DIMENSION, COLORS3, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY, PLAYER_TRAIL_INTERVAL, PLAYER_TRAIL_ON } from "../settings/values.js";
 import { PlayerTrail } from "./PlayerTrail.js";
 
 export class Player {
 	/**@todo set to private */
 	readonly mesh: babylon.Mesh;
-	private readonly color: babylon.Color3 = COLORS.white;
+	private readonly color: babylon.Color3 = COLORS3.white;
 	private readonly controls: PlayerKeys;
 	private readonly keyPressed: boolean[] = [false, false, false, false, false];
 	private readonly rotatingPlayer: boolean;
@@ -53,7 +53,7 @@ export class Player {
 			{ width: PLAYER_DIMENSION.x, height: PLAYER_DIMENSION.y, depth: PLAYER_DIMENSION.z }, scene);
 		player.position.x = position.x;
 		player.position.y = position.y;
-		player.renderingGroupId = 2;
+		player.renderingGroupId = 1;
 		player.metadata = { type: "collider", playerSpinning: false };
 		return player;
 	}
@@ -135,7 +135,7 @@ export class Player {
 						this.highlight.removeMesh(this.mesh);
 					} else {
 						this.mesh.metadata.playerSpinning = true;
-						this.highlight.addMesh(this.mesh, COLORS.red);
+						this.highlight.addMesh(this.mesh, COLORS3.red);
 					}
 					/**@todo make a visual effect to show if effect is activated or not */
 				break;

@@ -1,12 +1,12 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
-import { COLORS, TRICKY_BALL_EFFECT_INTERVAL, TRICKY_BALL_FORWARD_ONLY } from "../settings/values.js";
+import { COLORS3, TRICKY_BALL_EFFECT_INTERVAL, TRICKY_BALL_FORWARD_ONLY } from "../settings/values.js";
 
 export class TrickyBall extends BallTemplate {
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 		
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
-		super(scene, "tricky", texture, COLORS.orange);
+		super(scene, "tricky", texture, COLORS3.orange);
 		this.effectIntervalId = this.activateEffect();
 	}
 	

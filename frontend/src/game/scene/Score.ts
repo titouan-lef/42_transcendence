@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { SCORE_CANVAS_SIZE, COLORS, CAMERA_POS_X, MAP_SIZE, SCORE_POS_Y, SCORE_SIZE } from "../settings/values.js";
+import { SCORE_CANVAS_SIZE, COLORS3, CAMERA_POS_X, MAP_SIZE, SCORE_POS_Y, SCORE_SIZE } from "../settings/values.js";
 
 export class Score { 
 	private readonly score: babylon.Mesh;
@@ -16,7 +16,7 @@ export class Score {
 	private setMaterial(scene: babylon.Scene): void {
 		const material = new babylon.StandardMaterial("scoreMat", scene);
 		material.diffuseTexture = this.scoreTexture;
-		material.emissiveColor = COLORS.white;
+		material.emissiveColor = COLORS3.white;
 		material.diffuseTexture.hasAlpha = true;  // transparency
 		material.alpha = 1;
 		this.score.material = material;
