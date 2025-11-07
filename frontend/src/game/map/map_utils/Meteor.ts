@@ -38,8 +38,6 @@ export class Meteor {
 		meteor.metadata = { type: "collider" };
 		const material = new babylon.StandardMaterial("MeteorMat", scene);
 		material.diffuseColor = COLORS3.volcanoDiffuseMeteor;
-		material.specularColor = COLORS3.volcanoSpecularMeteor;
-		material.specularPower = 32;
 		material.emissiveColor = COLORS3.volcanoEmissiveMeteor;
 		material.alpha = 1;
 		meteor.material = material;

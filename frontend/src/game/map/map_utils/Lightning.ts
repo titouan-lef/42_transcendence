@@ -1,12 +1,11 @@
 import * as babylon from "@babylonjs/core";
-import { MAP_SIZE, WALL_WIDTH, LIGHTNING_FADING_INTERVAL, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH, LIGHTNING_LIFETIME } from "../../settings/values.js";
+import { MAP_SIZE, WALL_WIDTH, LIGHTNING_FRAMES_TO_DISAPPEAR, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH, LIGHTNING_LIFETIME, COLORS4, COLORS3 } from "../../settings/values.js";
 import { BallTemplate } from "../../ball/BallTemplate.js";
 
 export class Lightning {
 	private readonly lightningIntervalId: ReturnType<typeof setInterval>;
 	private readonly lightning: babylon.Mesh;
 	private readonly particles: babylon.ParticleSystem;
-	private readonly timeoutId: ReturnType<typeof setTimeout>;
 	private readonly randomSize;
 
 	constructor(scene: babylon.Scene, texture: babylon.Texture) {
@@ -18,18 +17,14 @@ export class Lightning {
 
 		this.lightning = this.spawnLightning(scene, start, end);
 		const material = new babylon.StandardMaterial("lightningMat", scene);
-		material.emissiveColor = new babylon.Color3(2.7, 2.85, 3);
+		material.emissiveColor = COLORS3.rainyEmissiveLightning;
 		material.alpha = 1;
 		this.lightning.material = material;
 		this.lightning.renderingGroupId = 1;
 		this.lightningIntervalId = this.animateLightningFade(material);
 		this.applyExplosionForce(scene, end);
 		this.particles = this.createContactParticles(scene, end, texture);
-
 		this.particles.start();
-		this.timeoutId = setTimeout( () => {
-			this.destroy();
-		}, LIGHTNING_LIFETIME);
 	}
 
 	private spawnLightning(scene: babylon.Scene, start: babylon.Vector3, end: babylon.Vector3): babylon.Mesh {
@@ -63,13 +58,15 @@ export class Lightning {
 	private animateLightningFade(material: babylon.StandardMaterial): ReturnType<typeof setInterval> {
 		let fade = 1.0;
 		const lightningIntervalId = setInterval(() => {
-			fade -= 0.04;
-			material.emissiveColor = new babylon.Color3(0.8 * fade, 0.85 * fade, fade);
+			fade -= 1 / LIGHTNING_FRAMES_TO_DISAPPEAR;
+			material.emissiveColor = COLORS3.rainyEmissiveLightning.scale(fade);
 			material.alpha = fade;
-			if (fade <= 0.6) {
+			if (fade <= 0) {
+				material.emissiveColor = COLORS3.rainyEmissiveLightning.scale(0);
 				this.lightning.visibility = 0;
+				this.destroy();
 			}
-		}, LIGHTNING_FADING_INTERVAL * this.randomSize);
+		}, LIGHTNING_LIFETIME / LIGHTNING_FRAMES_TO_DISAPPEAR);
 		return lightningIntervalId;
 	}
 
@@ -104,9 +101,9 @@ export class Lightning {
 		particles.particleEmitterType = emitter;
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_STRETCHED;
 		particles.blendMode = babylon.ParticleSystem.BLENDMODE_ADD;
-		particles.addColorGradient(0.0, new babylon.Color4(1.0, 1.0, 1.0, 1.0));
-		particles.addColorGradient(0.3, new babylon.Color4(0.6, 0.8, 1.0, 0.9));
-		particles.addColorGradient(1.0, new babylon.Color4(0.2, 0.5, 1.0, 0.0));
+		particles.addColorGradient(0.0, COLORS4.rainyLightningSpark1);
+		particles.addColorGradient(0.3, COLORS4.rainyLightningSpark2);
+		particles.addColorGradient(1.0, COLORS4.rainyLightningSpark3);
 		particles.minSize = 3;
 		particles.maxSize = 4;
 		particles.minLifeTime = 0.4;
@@ -123,9 +120,7 @@ export class Lightning {
 
 	destroy(): void {
 		clearInterval(this.lightningIntervalId);
-		clearTimeout(this.timeoutId);
 		this.particles?.stop();
-		//this.particles?.particleTexture?.dispose();
 		if (this.particles && this.particles.particleTexture)
 			this.particles.particleTexture = null;
 		this.particles?.dispose();

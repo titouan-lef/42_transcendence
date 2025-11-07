@@ -1,59 +1,79 @@
 import * as babylon from "@babylonjs/core";
 
-/**
-* WHITE, BLACK, RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA, GREY,
-	DARK_GREY, LIGHT_GREY, ORANGE, PURPLE, PINK, BROWN, LIME, NAVY, TEAL, OLIVE,
-	SUNCOLOR_DEFAULT, LIGHTCOLOR_DEFAULT
-*/
-export const COLORS3: Record<string, babylon.Color3> = {
-	white: new babylon.Color3(1, 1, 1),
-	black: new babylon.Color3(0, 0, 0),
-	red: new babylon.Color3(1, 0, 0),
-	green: new babylon.Color3(0, 1, 0),
-	blue: new babylon.Color3(0, 0, 1),
-	yellow: new babylon.Color3(1, 1, 0),
-	cyan: new babylon.Color3(0, 1, 1),
-	magenta: new babylon.Color3(1, 0, 1),
-	grey: new babylon.Color3(0.5, 0.5, 0.5),
-	darkGrey: new babylon.Color3(0.25, 0.25, 0.25),
-	lightGrey: new babylon.Color3(0.75, 0.75, 0.75),
-	orange: new babylon.Color3(1, 0.5, 0),
-	purple: new babylon.Color3(0.5, 0, 0.5),
-	pink: new babylon.Color3(1, 0.75, 0.8),
-	brown: new babylon.Color3(0.6, 0.3, 0.1),
-	lime: new babylon.Color3(0.75, 1, 0),
-	navy: new babylon.Color3(0, 0, 0.5),
-	teal: new babylon.Color3(0, 0.5, 0.5),
-	olive: new babylon.Color3(0.5, 0.5, 0),
-	sunColorDefault: new babylon.Color3(1, 0.9, 0.5),
-	lightColorDefault: new babylon.Color3(1, 0.9, 0.5),
-	lightColorRainy: new babylon.Color3(0.6, 0.65, 0.8),
-	groundColorRainy: new babylon.Color3(0.05, 0.25, 0.4),
+/** @todo here */
+export const COLORS3 = {
+	// REGULAR
+	white: babylon.Color3.FromHexString("#FFFFFF"),
+	black: babylon.Color3.FromHexString("#000000"),
+	red: babylon.Color3.FromHexString("#FF0000"),
+	green: babylon.Color3.FromHexString("#00FF00"),
+	blue: babylon.Color3.FromHexString("#0000FF"),
+	yellow: babylon.Color3.FromHexString("#FFFF00"),
+	cyan: babylon.Color3.FromHexString("#00FFFF"),
+	magenta: babylon.Color3.FromHexString("#FF00FF"),
+	grey: babylon.Color3.FromHexString("#808080"),
+	darkGrey: babylon.Color3.FromHexString("#404040"),
+	lightGrey: babylon.Color3.FromHexString("#C0C0C0"),
+	orange: babylon.Color3.FromHexString("#FF8000"),
+	purple: babylon.Color3.FromHexString("#800080"),
+	pink: babylon.Color3.FromHexString("#FFBFCB"),
+	brown: babylon.Color3.FromHexString("#99661A"),
+	lime: babylon.Color3.FromHexString("#BFFF00"),
+	navy: babylon.Color3.FromHexString("#000080"),
+	teal: babylon.Color3.FromHexString("#008080"),
+	olive: babylon.Color3.FromHexString("#808000"),
+	sunColorDefault: babylon.Color3.FromHexString("#FFE699"),
+	lightColorDefault: babylon.Color3.FromHexString("#FFE699"),
 
-	volcanoEmissiveSun:       new babylon.Color3(1, 0.478, 0.165),
-	volcanoDiffuseLight:      new babylon.Color3(1, 0.58, 0.26),
-	volcanoSpecularLight:     new babylon.Color3(1, 0.690, 0.404),
-	volcanoDiffuseGround:     new babylon.Color3(0.227, 0.102, 0.086),
-	volcanoEmissiveGround:    new babylon.Color3(0.35, 0.15, 0.11),
-	volcanoDiffuseMeteor:     new babylon.Color3(0.353, 0.165, 0.102),
-	volcanoSpecularMeteor:    new babylon.Color3(0.659, 0.353, 0.204),
-	volcanoEmissiveMeteor:    new babylon.Color3(1, 0.38, 0.16),
-	volcanoDiffuseMeteorLight:new babylon.Color3(1, 0.416, 0.165),
-	volcanoDiffuseWall:       new babylon.Color3(0.82, 0.60, 0.18),
+	// VOLCANO
+	volcanoEmissiveSun:       babylon.Color3.FromHexString("#FF7A2A"),
+	volcanoDiffuseLight:      babylon.Color3.FromHexString("#FF9442"),
+	volcanoDiffuseGround:     babylon.Color3.FromHexString("#3A1A16"),
+	volcanoEmissiveGround:    babylon.Color3.FromHexString("#59261C"),
+	volcanoDiffuseMeteor:     babylon.Color3.FromHexString("#5A2A1A"),
+	volcanoEmissiveMeteor:    babylon.Color3.FromHexString("#FF6128"),
+	volcanoDiffuseMeteorLight:babylon.Color3.FromHexString("#FF6A2A"),
+	volcanoDiffuseWall:       babylon.Color3.FromHexString("#D19A2E"),
+
+	// RAINY
+	rainyEmissiveSun:         babylon.Color3.FromHexString("#FFA50F"),
+	rainyDiffuseLight:        babylon.Color3.FromHexString("#FFA50F"),
+	rainyDiffuseGround:       babylon.Color3.FromHexString("#8da087"),
+	rainyEmissiveGround:      babylon.Color3.FromHexString("#757c6d"),
+	rainyDiffuseWall:         babylon.Color3.FromHexString("#003d38"), 
+	rainyEmissiveLightning:   babylon.Color3.FromHexString("#bceefc"),
+	rainySparksC1:            babylon.Color3.FromHexString("#FFFFFF"),
+	rainySparksC2:            babylon.Color3.FromHexString("#3898B0"),
+	rainySparksC3:            babylon.Color3.FromHexString("#11C5F0")
 };
 
-export const COLORS4: Record<string, babylon.Color4> = {
-	volcanoDiffuseAsh1:       new babylon.Color4(1, 0.471, 0.157, 1),
-	volcanoDiffuseAsh2:       new babylon.Color4(1, 0.471, 0.157, 0.55),
-	volcanoDiffuseAshDead:    new babylon.Color4(1, 0.471, 0.157, 0),
-	volcanoDiffuseSky:        new babylon.Color4(0.34, 0.30, 0.28, 1),
-	volcanoDiffuseTrail1:     new babylon.Color4(1, 0.47, 0.14, 1),
-	volcanoDiffuseTrail2:     new babylon.Color4(0.706, 0.157, 0, 0.6),
-	volcanoDiffuseTrailDead:  new babylon.Color4(1, 0.314, 0.078, 0.2),
-	volcanoDiffuseDust1:      new babylon.Color4(0.300, 0.120, 0.080, 0.9),
-	volcanoDiffuseDust2:      new babylon.Color4(0.250, 0.100, 0.070, 0.9),
-	volcanoDiffuseDustDead:   new babylon.Color4(0.200, 0.080, 0.050, 0.7)
+function convertToColor4(hex: string, a: number): babylon.Color4 {
+	const c = babylon.Color3.FromHexString(hex);
+	return new babylon.Color4(c.r, c.g, c.b, a);
 };
+
+export const COLORS4 = {
+	volcanoDiffuseAsh1:      convertToColor4("#FF7828", 1),
+	volcanoDiffuseAsh2:      convertToColor4("#FF7828", 0.55),
+	volcanoDiffuseAshDead:   convertToColor4("#FF7828", 0),
+	volcanoDiffuseSky:       convertToColor4("#574D47", 1),
+	volcanoDiffuseTrail1:    convertToColor4("#FF7716", 1),
+	volcanoDiffuseTrail2:    convertToColor4("#B32700", 0.6),
+	volcanoDiffuseTrailDead: convertToColor4("#FF5020", 0.2),
+	volcanoDiffuseDust1:     convertToColor4("#4C1F14", 0.9),
+	volcanoDiffuseDust2:     convertToColor4("#401A12", 0.9),
+	volcanoDiffuseDustDead:  convertToColor4("#33140D", 0.7),
+
+	rainyDiffuseSky:         convertToColor4("#A1AA96", 1),
+	rainyRain1:              convertToColor4("#D9E6FF", 0.85),
+	rainyRain2:              convertToColor4("#D9E6FF", 0.60),
+	rainyRainDead:           convertToColor4("#D9E6FF", 0.00),
+	rainyLightningSpark1:    convertToColor4("#FFFFFF", 1.00),
+	rainyLightningSpark2:    convertToColor4("#99CCFF", 0.85),
+	rainyLightningSpark3:    convertToColor4("#3380FF", 0.00)
+};
+
+
 
 
 export const POINTS_TO_WIN = 5;
@@ -69,19 +89,20 @@ export const COUNTDOWN_POS_Y = 30;
 export const COUNTDOWN_CANVAS_SIZE = new babylon.Vector2(512, 256);
 export const COUNTDOWN_SIZE = 200;
 export const SUN_DIAMETER = 20;
-export const GLOW_INTENSITY = 0.6;
 export const START_TIMEOUT = 4000;
 
 /**DEFAULT MAP */
 export const D_PARTICLE_NUMBER = 500;
+export const D_GLOW_INTENSITY = 0.6;
 
 /**RAINY MAP */
 export const R_PARTICLE_NUMBER = 4000;
 export const LIGHTNING_INTERVAL = 600;
-export const LIGHTNING_FADING_INTERVAL = 40;
+export const LIGHTNING_LIFETIME = 1200;
+export const LIGHTNING_FRAMES_TO_DISAPPEAR = 30;
 export const LIGHTNING_COLLISION_RADIUS = 5;
 export const LIGHTNING_COLLISION_STRENGTH = 30;
-export const LIGHTNING_LIFETIME = 2000;
+export const R_GLOW_INTENSITY = 0.45;
 
 /**VOLCANO MAP */
 export const V_PARTICLE_NUMBER = 4000;
@@ -92,6 +113,7 @@ export const METEOR_LIFETIME = 5000;
 export const METEOR_COLLISION_RADIUS = METEOR_DIAMETER;
 export const METEOR_COLLISION_STRENGTH = 30;
 export const METEOR_SPEED = 100;
+export const V_GLOW_INTENSITY = 0.7;
 
 /**WINDY MAP */
 export const W_PARTICLE_NUMBER = 3000;
@@ -101,6 +123,7 @@ export const WIND_FORCE = 5;
 export const TORNADO_ATTRACTION_STRENGTH = 100;
 export const TORNADO_COLLISION_RADIUS = 3;
 export const TORNADO_HEIGHT = 40;
+export const W_GLOW_INTENSITY = 0.6;
 
 
 /**PLAYER */
@@ -130,7 +153,10 @@ export const BALL_ANGULAR_FORCE = 0.5;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const BALL_ANGULAR_INTERVAL = 45;
 
+
+/** @todo rainymap design WALL*/
+/** @todo windymap design + tornados*/
+/** @todo defaultmap design*/
 /** @todo do something highlights */
-/** @todo windymap design*/
 /** @todo block camera */
 /** @todo player sometimes blocked when pressing right left, should be solved with server side */
