@@ -3,6 +3,7 @@ import { WebSocket } from "ws";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { SECRET } from "../user_management/connect_user.js";
 import { isValidUser } from "../database/find_data.js";
+import { startGame } from "../game/new_game.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -79,10 +80,7 @@ function newGame(player1: string, player2: string): void {
 	if (!socket1 || !socket2)
 		return console.error("One of the players is no longer connected.");
 
-	socket1.send("Game begins");
-	socket2.send("Game begins");
-
-	// create a new game with Tim work
+	startGame(player1, player2, socket1, socket2);
 }
 
 export { initWebSocketConnection };
