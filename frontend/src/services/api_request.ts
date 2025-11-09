@@ -1,3 +1,5 @@
+import { hideCanvas, showCanvas, updateGameStatus } from "../game/canvas_creation.js";
+import { GameStatus } from "../game/data_transfert.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 
 declare const API_URL: string; // just telling the compiler that API_URL and WS_URL will exists during execution
@@ -53,6 +55,17 @@ async function openWebSocketConnection(): Promise<void> {
 
 	ws.onmessage = (event): void => { /** @todo handeler for game */
 		console.log("Received:", event.data);
+
+		const status : GameStatus = JSON.parse(event.data);
+		if (status.status === "start") {
+			showCanvas();
+		} else if (status.status === "stop") {
+			hideCanvas();
+			return ;
+		} else if (status.status === "pending") {
+			updateGameStatus(status);
+			return ;
+		}
 	};
 
 	ws.onerror = (err): void => {

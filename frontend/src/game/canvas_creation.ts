@@ -1,3 +1,4 @@
+import { GameStatus } from "./data_transfert.js";
 import { Game } from "./Game.js";
 import { GameSettings } from "./GameSettings.js";
 
@@ -5,12 +6,30 @@ import { GameSettings } from "./GameSettings.js";
 /**@todo will move keys to the "session"'s settings */
 const SETTINGS: GameSettings = new GameSettings("default", "random", true, true, ["KeyA", "KeyD", "KeyW", "KeyS", "Space"], ["KeyJ", "KeyL", "KeyI", "KeyK", "KeyP"]);
 
-let isPressed = false;
-
 /**@todo not sure about this, do we loose reference at the end ? */
 let game: Game;
 
-/**@todo just to test */
+/**@todo will see how we pop the game */
+async function showCanvas(): Promise<void> {
+	game = await Game.create(SETTINGS);
+	game.show();
+}
+
+async function hideCanvas(): Promise<void> {
+	if (game)
+		game.stop();
+}
+
+async function updateGameStatus(status: GameStatus): Promise<void> {
+	/** @todo apply position to the game */
+}
+
+export { showCanvas, hideCanvas, updateGameStatus };
+
+/** @todo This part is temporary just to launch the game directly in the front */
+
+let isPressed = false;
+
 function createButton(): HTMLElement {
 	const button = document.createElement("button");
 	button.textContent = "LaunchGame";
@@ -24,18 +43,14 @@ function createButton(): HTMLElement {
 	return button;
 }
 
-/**@todo will see how we pop the game */
-async function showCanvas(): Promise<void> {
+function test(): void {
 	if (!isPressed) {
 		isPressed = true;
-		game = await Game.create(SETTINGS);
-		game.show();
-		/**@todo if the game ends, we have to click 2 times on the button to show it again, which is normal, and will probably change in the future */
+		showCanvas();
 	} else {
 		isPressed = false;
-		game.stop();
+		hideCanvas();
 	}
 }
 
-/** @todo This is temporary just to launch the game in the front */
-export { createButton, showCanvas };
+export { createButton, test };

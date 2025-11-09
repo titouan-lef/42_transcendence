@@ -105,6 +105,7 @@ export class Game {
 
 	private getGameStatus(player: Player, enemy: Player): GameStatus {
 		const status: GameStatus = {
+			status: "pending",
 			env: {
 				map: this.settings.map,
 				ball: this.settings.ball,
@@ -114,7 +115,7 @@ export class Game {
 			state: {
 				start_time: 0, // request from db
 				current_time: Date.now(),
-				score: { player: this.score.x, enemy: this.score.y } // wrong
+				score: { player: this.score.x, enemy: this.score.y } // wrong, alway the same / needs to differ for each player
 			},
 			player: {
 				pseudo: player.username,
@@ -131,22 +132,25 @@ export class Game {
 		return status;
 	}
 
-	private async sendGameStatus() : Promise<void> {
-		/** @todo better management of players and ball*/
-		const player1 = this.sceneManager.players.at(0);
-		const player2 = this.sceneManager.players.at(1);
-		if (!player1 || !player2 )
-			return;
-
-		player1?.socket.send(JSON.stringify(this.getGameStatus(player1, player2)));
-		player2?.socket.send(JSON.stringify(this.getGameStatus(player2, player1)));
+	private async sendGameStatus(player1: Player, player2: Player) : Promise<void> {
+		player1.socket.send(JSON.stringify(this.getGameStatus(player1, player2)));
+		player2.socket.send(JSON.stringify(this.getGameStatus(player2, player1)));
 	}
 
 	startSendingGameStatus(): void {
 		console.log(typeof this.gameInterval);
 		const intervalMs = 1000 / 30; // 30 fps
+
+		/** @todo better management of players and ball*/
+		const player1 = this.sceneManager.players.at(0);
+		const player2 = this.sceneManager.players.at(1);
+		if (!player1 || !player2 )
+			return;
+		player1.socket.send(JSON.stringify({ status: "start" }));
+		player2.socket.send(JSON.stringify({ status: "start" }));
+		
 		this.gameInterval = setInterval(() => {
-			this.sendGameStatus();
+			this.sendGameStatus(player1, player2);
 		}, intervalMs);
 	}
 
@@ -154,6 +158,13 @@ export class Game {
 		if (this.gameInterval) {
 			clearInterval(this.gameInterval);
 			this.gameInterval = undefined;
+
+			const player1 = this.sceneManager.players.at(0);
+			const player2 = this.sceneManager.players.at(1);
+			if (!player1 || !player2 )
+				return;
+			player1.socket.send(JSON.stringify({ status: "stop" }));
+			player2.socket.send(JSON.stringify({ status: "stop" }));
 		}
 	}
 	

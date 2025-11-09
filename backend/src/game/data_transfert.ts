@@ -1,6 +1,7 @@
 import { BallOption, MapOption } from "./GameSettings.js";
 
 interface GameStatus {
+	status: string;
 	env : {
 		map: MapOption;
 		ball: BallOption;
