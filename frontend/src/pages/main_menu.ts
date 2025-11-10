@@ -50,8 +50,16 @@ const FRIENDLIST = [
 	"friendd_7",
 ];
 
+const DIALOG_STYLE = `
+m-auto p-0 rounded-2xl
+shadow-[0_0_25px_0] shadow-shadow
+backdrop:bg-black/50 backdrop:backdrop-blur-sm bg-transparent
+w-full max-w-[500px]
+h-1/2
+`;
+
 const MAIN_MENU = `
-<dialog id="modal" class="m-auto rounded-2xl shadow-[0_0_25px_0] shadow-shadow backdrop:bg-black/50 backdrop:backdrop-blur-sm bg-transparent p-0 w-full max-w-[500px]">
+<dialog id="modal" class="${DIALOG_STYLE}">
 	${SIGN_IN}
 </dialog>
 <div class="${ROW_STYLE}">

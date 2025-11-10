@@ -33,17 +33,17 @@ const TRANSLATOR = {
 		en: "username",
 		fr: "nom d'utilisateur",
 	},
-	connect: {
-		en: "connect",
+	sign_in: {
+		en: "sign in",
 		fr: "se connecter"
 	},
 	continue_as_guest: {
 		en: "continue as guest",
 		fr: "continuer en tant qu'invité"
 	},
-	create_account: {
-		en: "create account",
-		fr: "créer un compte"
+	sign_up: {
+		en: "sign up",
+		fr: "s'inscrire"
 	},
 } as const satisfies Record<string, Expression>;
 
