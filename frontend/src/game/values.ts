@@ -1,4 +1,4 @@
-import * as babylon from "/babylonjs/core/index.js";
+import * as babylon from "@babylonjs/core";
 
 const WHITE: babylon.Color3					= new babylon.Color3(1,1,1);
 const BLACK: babylon.Color3					= new babylon.Color3(0,0,0);

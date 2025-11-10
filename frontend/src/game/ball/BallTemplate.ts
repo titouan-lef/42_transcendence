@@ -1,4 +1,4 @@
-import * as babylon from "/babylonjs/core/index.js";
+import * as babylon from "@babylonjs/core";
 import { BallOption } from "../GameSettings.js";
 import { BALL_DIAMETER, TRAIL_CREATION_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL } from "../values.js";
 import { BallTrail } from "./BallTrail.js";

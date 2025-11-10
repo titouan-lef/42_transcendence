@@ -1,4 +1,4 @@
-import * as babylon from "/babylonjs/core/index.js";
+import * as babylon from "@babylonjs/core";
 import { MapOption } from "../GameSettings.js";
 import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, COLORS, PLAYER_DIMENSION, GLOW_INTENSITY } from "../values.js";
 
