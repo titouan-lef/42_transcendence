@@ -50,7 +50,7 @@ const FRIENDLIST = [
 ];
 
 const MAIN_MENU = `
-<dialog id="modal" class="m-auto backdrop:bg-primary/30 backdrop:backdrop-blur-sm bg-transparent p-0 max-w-md">
+<dialog id="modal" class="m-auto backdrop:bg-black/50 backdrop:backdrop-blur-sm bg-transparent p-0 w-full max-w-[500px]">
 	${SIGN_IN}
 </dialog>
 <div class="${ROW_STYLE}">

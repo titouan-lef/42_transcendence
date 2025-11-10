@@ -12,12 +12,19 @@ w-[150px] h-[40px]
 bg-secondary
 `;
 
+const INPUT_STYLE = `
+rounded-xl p-[5px] min-w-[100px] max-w-[250px]
+text-tx-sec align-center text-center font-bold
+bg-lighter
+focus:outline-2 focus:text-dark
+`;
+
 const SIGN_IN = `
-<div class="bg-pink-500 rounded-2xl p-6">
+<div class="bg-primary rounded-2xl p-6">
 	<div class="flex flex-col gap-4">
-		<form name="Login" class="flex flex-col gap-3">
-			${createInputHtml(["user_name"], "text", "login_id", { "autofocus": "true" })}
-			${createInputHtml(["password"], "password", "login_password")}
+		<form name="Login" class="flex flex-col justify-center items-center gap-3">
+			${createInputHtml(["user_name"], "text", "login_id", { "autofocus": "true", "class": `${INPUT_STYLE}` })}
+			${createInputHtml(["password"], "password", "login_password", { "class": `${INPUT_STYLE}` })}
 		</form>
 		${createButtonHtml(["connect"], `btn-connect`, { "class": `${BTN_STYLE}` })}
 		<hr>
