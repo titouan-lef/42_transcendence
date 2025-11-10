@@ -4,8 +4,7 @@ import { PLAYER_DIMENSION, COLORS3, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RE
 import { PlayerTrail } from "./PlayerTrail.js";
 
 export class Player {
-	/**@todo set to private */
-	readonly mesh: babylon.Mesh;
+	private readonly mesh: babylon.Mesh;
 	private readonly color: babylon.Color3 = COLORS3.white;
 	private readonly controls: PlayerKeys;
 	private readonly keyPressed: boolean[] = [false, false, false, false, false];
@@ -137,7 +136,6 @@ export class Player {
 						this.mesh.metadata.playerSpinning = true;
 						this.highlight.addMesh(this.mesh, COLORS3.red);
 					}
-					/**@todo make a visual effect to show if effect is activated or not */
 				break;
 			default: ;
 		}

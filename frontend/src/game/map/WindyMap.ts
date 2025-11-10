@@ -45,7 +45,6 @@ export class WindyMap extends MapTemplate {
 		return windObserver;
 	}
 
-	/** @todo to configure */
 	createGround(scene: babylon.Scene): babylon.Mesh {
 		const ground = babylon.MeshBuilder.CreateGround("windyground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
@@ -63,7 +62,6 @@ export class WindyMap extends MapTemplate {
 		return ground;
 	}
 
-	/** @todo to configure */
 	createSun(scene: babylon.Scene): babylon.Mesh {
 		const sun = babylon.MeshBuilder.CreateSphere("sun", { diameter: SUN_DIAMETER }, scene);
 		const sunMaterial = new babylon.StandardMaterial("sunMat", scene);
@@ -75,7 +73,6 @@ export class WindyMap extends MapTemplate {
 		return sun;
 	}
 
-	/** @todo to configure */
 	createLight(scene: babylon.Scene): babylon.DirectionalLight {
 		const directionCenter: babylon.Vector3 = babylon.Vector3.Zero().subtract(this.sun.position).normalize();
 		const light: babylon.DirectionalLight = new babylon.DirectionalLight("sunLight", directionCenter, scene);
@@ -132,7 +129,6 @@ export class WindyMap extends MapTemplate {
 		return tornadoIntervalId;
 	}
 
-	/** @todo to configure */
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
 		const material = new babylon.StandardMaterial('wallcolor', scene);

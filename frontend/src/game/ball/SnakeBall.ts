@@ -23,7 +23,7 @@ export class SnakeBall extends BallTemplate {
 			if (this.force >= SNAKE_BALL_ANGULAR_FORCE || this.force <= 0)
 				this.forceDirection *= -1;
 			this.force -= (SNAKE_BALL_ANGULAR_FORCE / SNAKE_BALL_ANGULAR_INTERVAL) * this.forceDirection;
-			this.force = Math.max(0, Math.min(this.force, SNAKE_BALL_ANGULAR_FORCE)); // to deny force to go bellow 0 or max because division does shit
+			this.force = Math.max(0, Math.min(this.force, SNAKE_BALL_ANGULAR_FORCE));
 
 			this.physic.body.applyForce(
 				new babylon.Vector3(this.realDirection.z * this.force, 0, -this.realDirection.x * this.force),

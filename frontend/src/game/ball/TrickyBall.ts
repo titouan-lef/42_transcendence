@@ -10,7 +10,7 @@ export class TrickyBall extends BallTemplate {
 		this.effectIntervalId = this.activateEffect();
 	}
 	
-	/**@todo changes direction every TRICKY_BALL_EFFECT_INTERVAL ms */
+	/**changes direction every TRICKY_BALL_EFFECT_INTERVAL ms */
 	activateEffect(): ReturnType<typeof setInterval> {
 		const effectIntervalId = setInterval(() => {
 			if (this.gameStopped)

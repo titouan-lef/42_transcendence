@@ -1,27 +1,26 @@
 import * as babylon from "@babylonjs/core";
 
-/** @todo here */
 export const COLORS3 = {
-	// REGULAR
-	white: babylon.Color3.FromHexString("#FFFFFF"),
-	black: babylon.Color3.FromHexString("#000000"),
-	red: babylon.Color3.FromHexString("#FF0000"),
-	green: babylon.Color3.FromHexString("#00FF00"),
-	blue: babylon.Color3.FromHexString("#0000FF"),
-	yellow: babylon.Color3.FromHexString("#FFFF00"),
-	cyan: babylon.Color3.FromHexString("#00FFFF"),
-	magenta: babylon.Color3.FromHexString("#FF00FF"),
-	grey: babylon.Color3.FromHexString("#808080"),
-	darkGrey: babylon.Color3.FromHexString("#404040"),
-	lightGrey: babylon.Color3.FromHexString("#C0C0C0"),
-	orange: babylon.Color3.FromHexString("#FF8000"),
-	purple: babylon.Color3.FromHexString("#800080"),
-	pink: babylon.Color3.FromHexString("#FFBFCB"),
-	brown: babylon.Color3.FromHexString("#99661A"),
-	lime: babylon.Color3.FromHexString("#BFFF00"),
-	navy: babylon.Color3.FromHexString("#000080"),
-	teal: babylon.Color3.FromHexString("#008080"),
-	olive: babylon.Color3.FromHexString("#808000"),
+	// REGULAR COLORS
+	white:							babylon.Color3.FromHexString("#FFFFFF"),
+	black:							babylon.Color3.FromHexString("#000000"),
+	red:							babylon.Color3.FromHexString("#FF0000"),
+	green:							babylon.Color3.FromHexString("#00FF00"),
+	blue:							babylon.Color3.FromHexString("#0000FF"),
+	yellow:							babylon.Color3.FromHexString("#FFFF00"),
+	cyan:							babylon.Color3.FromHexString("#00FFFF"),
+	magenta:						babylon.Color3.FromHexString("#FF00FF"),
+	grey:							babylon.Color3.FromHexString("#808080"),
+	darkGrey:						babylon.Color3.FromHexString("#404040"),
+	lightGrey:						babylon.Color3.FromHexString("#C0C0C0"),
+	orange:							babylon.Color3.FromHexString("#FF8000"),
+	purple:							babylon.Color3.FromHexString("#800080"),
+	pink:							babylon.Color3.FromHexString("#FFBFCB"),
+	brown:							babylon.Color3.FromHexString("#99661A"),
+	lime:							babylon.Color3.FromHexString("#BFFF00"),
+	navy:							babylon.Color3.FromHexString("#000080"),
+	teal:							babylon.Color3.FromHexString("#008080"),
+	olive:							babylon.Color3.FromHexString("#808000"),
 
 	// VOLCANO
 	volcanoEmissiveSun:				babylon.Color3.FromHexString("#FF7A2A"),
@@ -53,12 +52,12 @@ export const COLORS3 = {
 	windyDiffuseWall:				babylon.Color3.FromHexString("#703c00"),
 
 	//DEFAULT
-	defaultDiffuseGround: babylon.Color3.FromHexString("#000000"),
-	defaultEmissiveBars:  babylon.Color3.FromHexString("#FFFFFF"),
-	defaultHighlightWall: babylon.Color3.FromHexString("#FF0000"),
-	defaultEmissiveSun:   babylon.Color3.FromHexString("#FFE699"),
-	defaultDiffuseLight:  babylon.Color3.FromHexString("#FFE699"),
-	defaultDiffuseWall:   babylon.Color3.FromHexString("#ffffff"),
+	defaultDiffuseGround:			babylon.Color3.FromHexString("#000000"),
+	defaultEmissiveBars:			babylon.Color3.FromHexString("#FFFFFF"),
+	defaultHighlightWall:			babylon.Color3.FromHexString("#FF0000"),
+	defaultEmissiveSun:				babylon.Color3.FromHexString("#FFE699"),
+	defaultDiffuseLight:			babylon.Color3.FromHexString("#FFE699"),
+	defaultDiffuseWall:				babylon.Color3.FromHexString("#ffffff"),
 };
 
 function convertToColor4(hex: string, a: number): babylon.Color4 {
@@ -100,8 +99,17 @@ export const COLORS4 = {
 	defaultSky:					convertToColor4("#000000", 1)
 };
 
-export const POINTS_TO_WIN = 5;
+/**DEBUG FUNCTION */
+/**@todo should be false */
+export const MOVE_BALL_ONCLICK = true;
+export const MOVE_CAMERA_ONCLICK = false;
+export const SHOW_DISPOSE_LOGS = false;
 
+/**GAMEPLAY GENERAL SETTINGS */
+export const POINTS_TO_WIN = 11;
+export const START_TIMEOUT = 4000;
+
+/**MAP GENERAL SETTINGS */
 export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100);
 export const CAMERA_POS_X = MAP_SIZE.x * 1.4;
 export const WALL_WIDTH = 3;
@@ -113,7 +121,6 @@ export const COUNTDOWN_POS_Y = 30;
 export const COUNTDOWN_CANVAS_SIZE = new babylon.Vector2(512, 256);
 export const COUNTDOWN_SIZE = 200;
 export const SUN_DIAMETER = 20;
-export const START_TIMEOUT = 4000;
 
 /**DEFAULT MAP */
 export const D_PARTICLE_NUMBER = 500;
@@ -177,8 +184,4 @@ export const BALL_ANGULAR_FORCE = 0.5;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const BALL_ANGULAR_INTERVAL = 45;
 
-
-/** @todo defaultmap design*/
-/** @todo do something highlights */
-/** @todo block camera */
 /** @todo player sometimes blocked when pressing right left, should be solved with server side */

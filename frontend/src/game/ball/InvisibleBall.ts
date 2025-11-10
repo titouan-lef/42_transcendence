@@ -11,7 +11,7 @@ export class InvisibleBall extends BallTemplate {
 		this.effectIntervalId = this.activateEffect();
 	}
 	
-	/**@todo disappears gradually every INVISIBLE_BALL_FADING_INTERVAL ms for INVISIBLE_BALL_INVISIBILITY_INTERVAL ms */
+	/**disappears gradually every INVISIBLE_BALL_FADING_INTERVAL ms for INVISIBLE_BALL_INVISIBILITY_INTERVAL ms */
 	activateEffect(): ReturnType<typeof setInterval> {
 		const effectIntervalId = setInterval(() => {
 			if (this.gameStopped)

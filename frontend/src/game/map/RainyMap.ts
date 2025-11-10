@@ -3,8 +3,6 @@ import { MapTemplate } from "./MapTemplate.js";
 import { Lightning } from "./map_utils/Lightning.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME, R_GLOW_INTENSITY } from "../settings/values.js";
 
-
-/**@todo this map is not configured dont mind the code */
 export class RainyMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
 	private readonly lightningIntervalId: ReturnType<typeof setInterval>;
