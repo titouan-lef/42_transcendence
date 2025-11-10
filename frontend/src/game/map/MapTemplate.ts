@@ -10,7 +10,7 @@ export abstract class MapTemplate {
 	protected readonly limitsPhysic: babylon.PhysicsAggregate[] = [];
 	protected readonly sun: babylon.Mesh;
 	protected readonly light: babylon.DirectionalLight;
-	readonly type: MapOption;
+	private readonly type: MapOption;
 	protected readonly sunPosition: babylon.Vector3;
 	private readonly startTimeout: ReturnType<typeof setTimeout>;
 	protected highlightTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -38,7 +38,7 @@ export abstract class MapTemplate {
 		this.gameStopped = true;
 	}
 
-	setLimitPhysic(scene: babylon.Scene, limit: babylon.Mesh): void {
+	private setLimitPhysic(scene: babylon.Scene, limit: babylon.Mesh): void {
 		const limitPhysic = new babylon.PhysicsAggregate(limit, babylon.PhysicsShapeType.BOX, { mass: 0, restitution: 1, friction: 0 }, scene);
 		this.limitsPhysic.push(limitPhysic);
 	}

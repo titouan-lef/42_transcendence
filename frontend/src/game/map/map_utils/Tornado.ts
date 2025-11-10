@@ -59,7 +59,7 @@ export class Tornado {
 	private createTornadoParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
 		const particles = new babylon.ParticleSystem("tornadoParticles", 4000, scene);
 		particles.particleTexture = texture;
-		particles.emitter = this.tornado; // Vector3
+		particles.emitter = this.tornado;
 		const emitter = new babylon.CustomParticleEmitter();
 		particles.particleEmitterType = emitter;
 		particles.renderingGroupId = 1;

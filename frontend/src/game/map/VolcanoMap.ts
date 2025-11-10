@@ -58,7 +58,7 @@ export class VolcanoMap extends MapTemplate {
 
 	/** the ashes */
 	private createParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
-		scene.clearColor = COLORS4.volcanoDiffuseSky; // sky
+		scene.clearColor = COLORS4.volcanoDiffuseSky;
 		const particles = new babylon.ParticleSystem("ashes", V_PARTICLE_NUMBER, scene);
 		particles.particleTexture = texture;
 		particles.emitter = new babylon.Vector3(0, 0, 0);
@@ -69,7 +69,7 @@ export class VolcanoMap extends MapTemplate {
 		particles.color2 = COLORS4.volcanoDiffuseAsh2;
 		particles.colorDead = COLORS4.volcanoDiffuseAshDead;
 		particles.emitRate = 1800;
-		particles.renderingGroupId = 1; //
+		particles.renderingGroupId = 1;
 		particles.minEmitPower = 35;
 		particles.maxEmitPower = 45;
 		particles.minSize = 0.2;

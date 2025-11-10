@@ -9,7 +9,7 @@ export class Score {
 		this.scoreTexture = new babylon.DynamicTexture("scoreTexture", { width: SCORE_CANVAS_SIZE.x, height: SCORE_CANVAS_SIZE.y }, scene, false);
 		this.score = babylon.MeshBuilder.CreatePlane("scorePlane", { width: MAP_SIZE.z * 0.4, height: MAP_SIZE.z * 0.2 }, scene);
 		this.setMaterial(scene);
-		this.score.billboardMode = babylon.Mesh.BILLBOARDMODE_ALL; // so it faces camera
+		this.score.billboardMode = babylon.Mesh.BILLBOARDMODE_ALL;
 		this.placeScore(camera);
 	}
 	
@@ -17,7 +17,7 @@ export class Score {
 		const material = new babylon.StandardMaterial("scoreMat", scene);
 		material.diffuseTexture = this.scoreTexture;
 		material.emissiveColor = COLORS3.white;
-		material.diffuseTexture.hasAlpha = true;  // transparency
+		material.diffuseTexture.hasAlpha = true;
 		material.alpha = 1;
 		this.score.material = material;
 	}
@@ -39,7 +39,7 @@ export class Score {
 		const textWidth = ctx.measureText(text).width;
 		const x = (SCORE_CANVAS_SIZE.x - textWidth) / 2;
 		const y = SCORE_CANVAS_SIZE.y / 2 + SCORE_SIZE / 2;
-		this.scoreTexture.clear(); // clear previous text
+		this.scoreTexture.clear();
 		this.scoreTexture.drawText(text, x, y, `bold ${SCORE_SIZE}px Arial`, "white", "transparent");
 		this.scoreTexture.update();
 	}

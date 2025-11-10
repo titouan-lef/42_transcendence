@@ -94,7 +94,7 @@ export class Meteor {
 			const distance = direction.length();
 			const explosionRadius = METEOR_COLLISION_RADIUS * this.randomSize * 2;
 
-			if (distance < explosionRadius && distance > 0) { // if the mesh is in the explosion radius
+			if (distance < explosionRadius && distance > 0) {
 				direction.normalize();
 				const force = direction.scale(METEOR_COLLISION_STRENGTH * (1 - distance / explosionRadius) * this.randomSize);
 				force.y = 0;
@@ -112,7 +112,7 @@ export class Meteor {
 		dustParticles.emitter = end.clone();
 		dustParticles.emitter.y += 1;
 		dustParticles.renderingGroupId = 1;
-		const emitter = new babylon.ConeParticleEmitter(90); // 90° = émet latéralement
+		const emitter = new babylon.ConeParticleEmitter(90);
 		emitter.radius = METEOR_COLLISION_RADIUS * this.randomSize * 2;
 		dustParticles.particleEmitterType = emitter;
 		dustParticles.color1 = COLORS4.volcanoDiffuseDust1;
