@@ -22,8 +22,6 @@ export const COLORS3 = {
 	navy: babylon.Color3.FromHexString("#000080"),
 	teal: babylon.Color3.FromHexString("#008080"),
 	olive: babylon.Color3.FromHexString("#808000"),
-	sunColorDefault: babylon.Color3.FromHexString("#FFE699"),
-	lightColorDefault: babylon.Color3.FromHexString("#FFE699"),
 
 	// VOLCANO
 	volcanoEmissiveSun:				babylon.Color3.FromHexString("#FF7A2A"),
@@ -52,7 +50,15 @@ export const COLORS3 = {
 	windyEmissiveGround:			babylon.Color3.FromHexString("#7a4602"),
 	windyEmissiveSun:				babylon.Color3.FromHexString("#f89430"),
 	windyDiffuseLight:				babylon.Color3.FromHexString("#f8f5f2"),
-	windyDiffuseWall:				babylon.Color3.FromHexString("#703c00")
+	windyDiffuseWall:				babylon.Color3.FromHexString("#703c00"),
+
+	//DEFAULT
+	defaultDiffuseGround: babylon.Color3.FromHexString("#000000"),
+	defaultEmissiveBars:  babylon.Color3.FromHexString("#FFFFFF"),
+	defaultHighlightWall: babylon.Color3.FromHexString("#FF0000"),
+	defaultEmissiveSun:   babylon.Color3.FromHexString("#FFE699"),
+	defaultDiffuseLight:  babylon.Color3.FromHexString("#FFE699"),
+	defaultDiffuseWall:   babylon.Color3.FromHexString("#ffffff"),
 };
 
 function convertToColor4(hex: string, a: number): babylon.Color4 {
@@ -86,11 +92,13 @@ export const COLORS4 = {
 	windyTornado1:				convertToColor4("#ebffc5", 0.40),
 	windyTornado2:				convertToColor4("#ebffc5", 0.20),
 	windyTornadoDead:			convertToColor4("#ebffc5", 0.00),
-	windySky:					convertToColor4("#8ba7fc", 1)
+	windySky:					convertToColor4("#8ba7fc", 1),
+
+	defaultStar1:				convertToColor4("#ffffff", 1),
+	defaultStar2:				convertToColor4("#ffffff", 0.7),
+	defaultStarDead:			convertToColor4("#ffffff", 0),
+	defaultSky:					convertToColor4("#000000", 1)
 };
-
-
-
 
 export const POINTS_TO_WIN = 5;
 
@@ -170,7 +178,6 @@ export const BALL_ANGULAR_FORCE = 0.5;
 export const BALL_ANGULAR_INTERVAL = 45;
 
 
-/** @todo windymap design + tornados*/
 /** @todo defaultmap design*/
 /** @todo do something highlights */
 /** @todo block camera */
