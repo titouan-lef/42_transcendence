@@ -5,8 +5,6 @@ import { WebSocket } from "ws";
 let game: Game;
 
 async function startGame(playerName1: string, playerName2: string, player1: WebSocket, player2: WebSocket): Promise<void> {
-	player1.send("Game begins");
-	player2.send("Game begins");
 
 	const settings = new GameSettings(
 		"default", "random", true, true,

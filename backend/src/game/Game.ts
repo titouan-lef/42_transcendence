@@ -138,7 +138,6 @@ export class Game {
 	}
 
 	startSendingGameStatus(): void {
-		console.log(typeof this.gameInterval);
 		const intervalMs = 1000 / 30; // 30 fps
 
 		/** @todo better management of players and ball*/
@@ -152,6 +151,9 @@ export class Game {
 		this.gameInterval = setInterval(() => {
 			this.sendGameStatus(player1, player2);
 		}, intervalMs);
+
+		player1.socket.on("close", () => this.stop());
+		player2.socket.on("close", () => this.stop());
 	}
 
 	stopSendingGameStatus(): void {

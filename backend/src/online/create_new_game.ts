@@ -53,7 +53,6 @@ async function initWebSocketConnection(socket: WebSocket, req: FastifyRequest): 
 	ACTIVES_SOCKETS.set(user, socket);
 	WAITING_PLAYERS.push(user);
 	console.log(user, "is waiting for a game");
-	socket.send("Added to the waiting list");
 
 	startHeartbeat(socket);
 
@@ -64,10 +63,10 @@ async function initWebSocketConnection(socket: WebSocket, req: FastifyRequest): 
 
 	socket.on("message", (message: Buffer | string) => {
 		console.log("Received message from", user, ":", message.toString());
-		socket.send("Received"); /** @todo handler for the game */
+		/** @todo handler for the game */
 	});
 
-	socket.on("close", () => { 
+	socket.on("close", () => {
 		ACTIVES_SOCKETS.delete(user);
 	});
 }
