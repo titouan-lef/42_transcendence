@@ -5,7 +5,6 @@ import { GameSettings } from "./GameSettings.js";
 /**@todo will move keys to the "session"'s settings */
 const SETTINGS: GameSettings = new GameSettings("default", "random", true, true, ["KeyA", "KeyD", "KeyW", "KeyS", "Space"], ["KeyJ", "KeyL", "KeyI", "KeyK", "KeyP"]);
 
-const BUTTON = createButton();
 let isPressed = false;
 
 /**@todo not sure about this, do we loose reference at the end ? */
@@ -38,8 +37,5 @@ async function showCanvas(): Promise<void> {
 	}
 }
 
-try {
-	BUTTON.addEventListener("click", () => showCanvas());
-} catch(e) {
-	console.log(e);
-}
+/** @todo This is temporary just to launch the game in the front */
+export { createButton, showCanvas };

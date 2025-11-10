@@ -1,4 +1,4 @@
-import * as babylon from "/babylonjs/core/index.js";
+import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
 import { COLORS, TRAIL_CREATION_INTERVAL, INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL } from "../values.js";
 import { BallTrail } from "./BallTrail.js";

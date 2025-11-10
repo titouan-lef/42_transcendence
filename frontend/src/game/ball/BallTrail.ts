@@ -1,4 +1,4 @@
-import * as babylon from "/babylonjs/core/index.js";
+import * as babylon from "@babylonjs/core";
 import { BALL_DIAMETER } from "../values.js";
 
 export class BallTrail {

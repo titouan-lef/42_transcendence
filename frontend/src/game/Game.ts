@@ -1,8 +1,8 @@
-import * as babylon from "/babylonjs/core/index.js";
+import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./SceneManager.js";
 import { GameSettings } from "./GameSettings.js";
-import { HavokPlugin } from "/babylonjs/core/Physics/index.js";
-import havokPhysics from "/babylonjs/havok/lib/esm/HavokPhysics_es.js";
+import { HavokPlugin } from "@babylonjs/core/Physics";
+import havokPhysics from "@babylonjs/havok";
 import { MAP_SIZE, POINTS_TO_WIN } from "./values.js";
 
 export class Game {
@@ -48,7 +48,10 @@ export class Game {
 
 	private static async initScene(engine: babylon.Engine): Promise<babylon.Scene> {
 		const scene = new babylon.Scene(engine);
-		const havokInstance = await havokPhysics();
+
+		const havokInstance = await havokPhysics({
+			locateFile: (fileName) => `/dist/public/${fileName}` // tells havok where to fetch the WASM file
+		});
 		const havokPlugin = new HavokPlugin(true, havokInstance);
 		scene.enablePhysics(new babylon.Vector3(0, -9.81, 0), havokPlugin);
 		return scene;
