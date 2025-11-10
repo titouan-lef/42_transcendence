@@ -4,7 +4,7 @@ import { BALL_DIAMETER, TRAIL_CREATION_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULA
 import { BallTrail } from "./BallTrail.js";
 
 export abstract class BallTemplate {
-	protected readonly mesh: babylon.Mesh;
+	readonly mesh: babylon.Mesh;
 	protected readonly physic: babylon.PhysicsAggregate;
 	private readonly type: BallOption;
 	protected readonly ballTrails: BallTrail[] = [];

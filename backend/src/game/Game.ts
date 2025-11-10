@@ -10,30 +10,34 @@ import { Player } from "./Player.js";
 
 export class Game {
 	
+	private readonly engine: babylon.Engine;
 	private readonly scene: babylon.Scene;
 	private readonly sceneManager: SceneManager;
 	private readonly settings: GameSettings;
+	private readonly camera: babylon.ArcRotateCamera;
 	private gameInterval?: ReturnType<typeof setInterval>; // ??NodeJS.Timer;
 	private score: babylon.Vector2;
 
-	constructor (settings: GameSettings, scene: babylon.Scene) {
+	constructor (settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
+		this.engine = engine;
 		this.settings = settings;
 		this.sceneManager = new SceneManager();
 		this.scene = scene;
 		// window.addEventListener("resize", () => this.engine.resize());
 		this.setScene();
+		this.camera = new babylon.ArcRotateCamera("Camera", 0, 0, 10, new babylon.Vector3(0, 0, 0), scene);
 		this.score = new babylon.Vector2(0, 0);
 		/** @todo add new game into the DB */
 	}
 
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
 	static async create(settings: GameSettings): Promise<Game> {
-		const scene = await Game.initScene();
-		return new Game(settings, scene);
+		const engine = new babylon.NullEngine();
+		const scene = await Game.initScene(engine);
+		return new Game(settings, scene, engine);
 	}
 
-	private static async initScene(): Promise<babylon.Scene> {
-		const engine = new babylon.NullEngine();
+	private static async initScene(engine: babylon.Engine): Promise<babylon.Scene> {
 		const scene = new babylon.Scene(engine);
 
 		const nodeBuffer = fs.readFileSync("/app/node_modules/@babylonjs/havok/lib/esm/HavokPhysics.wasm");
@@ -47,21 +51,23 @@ export class Game {
 
 	start(): void {
 		/** @todo send data_transfert to both players instead of render*/
-		// this.engine.runRenderLoop(() => this.scene.render());
+		this.engine.runRenderLoop(() => this.scene.render());
 		this.startSendingGameStatus();
 	}
 
 	/**@todo usefull ? */
 	hide(): void {
-		// this.engine.stopRenderLoop();
+		this.engine.stopRenderLoop();
 	}
 
 	stop(): void {
 		this.stopSendingGameStatus();
 		this.sceneManager.destroyEnvironnement(this.scene);
-		// this.engine.stopRenderLoop();
+		this.engine.stopRenderLoop();
 		this.scene.onAfterRenderObservable.clear();
+		this.camera.dispose();
 		this.scene.dispose();
+		this.engine.dispose();
 	}
 
 	private setScene(): void {
@@ -103,7 +109,10 @@ export class Game {
 		}
 	}
 
-	private getGameStatus(player: Player, enemy: Player): GameStatus {
+	private getGameStatus(player: Player, enemy: Player): GameStatus | null {
+		const ballPos = this.sceneManager.getBalls().at(0)?.mesh.position;
+		if (ballPos === undefined)
+			return null;
 		const status: GameStatus = {
 			status: "pending",
 			env: {
@@ -119,14 +128,14 @@ export class Game {
 			},
 			player: {
 				pseudo: player.username,
-				pos: player.mesh.absolutePosition
+				pos: player.mesh.position
 			},
 			enemy: {
 				pseudo: enemy.username,
-				pos: enemy.mesh.absolutePosition
+				pos: enemy.mesh.position
 			},
 			ball: {
-				pos: enemy.mesh.absolutePosition /** @todo get ball position */
+				pos: ballPos
 			}
 		};
 		return status;
