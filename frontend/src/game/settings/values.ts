@@ -26,25 +26,33 @@ export const COLORS3 = {
 	lightColorDefault: babylon.Color3.FromHexString("#FFE699"),
 
 	// VOLCANO
-	volcanoEmissiveSun:       babylon.Color3.FromHexString("#FF7A2A"),
-	volcanoDiffuseLight:      babylon.Color3.FromHexString("#FF9442"),
-	volcanoDiffuseGround:     babylon.Color3.FromHexString("#3A1A16"),
-	volcanoEmissiveGround:    babylon.Color3.FromHexString("#59261C"),
-	volcanoDiffuseMeteor:     babylon.Color3.FromHexString("#5A2A1A"),
-	volcanoEmissiveMeteor:    babylon.Color3.FromHexString("#FF6128"),
-	volcanoDiffuseMeteorLight:babylon.Color3.FromHexString("#FF6A2A"),
-	volcanoDiffuseWall:       babylon.Color3.FromHexString("#D19A2E"),
+	volcanoEmissiveSun:				babylon.Color3.FromHexString("#FF7A2A"),
+	volcanoDiffuseLight:			babylon.Color3.FromHexString("#FF9442"),
+	volcanoDiffuseGround:			babylon.Color3.FromHexString("#3A1A16"),
+	volcanoEmissiveGround:			babylon.Color3.FromHexString("#59261C"),
+	volcanoDiffuseMeteor:			babylon.Color3.FromHexString("#5A2A1A"),
+	volcanoEmissiveMeteor:			babylon.Color3.FromHexString("#FF6128"),
+	volcanoDiffuseMeteorLight:		babylon.Color3.FromHexString("#FF6A2A"),
+	volcanoDiffuseWall:				babylon.Color3.FromHexString("#D19A2E"),
 
 	// RAINY
-	rainyEmissiveSun:         babylon.Color3.FromHexString("#FFA50F"),
-	rainyDiffuseLight:        babylon.Color3.FromHexString("#FFA50F"),
-	rainyDiffuseGround:       babylon.Color3.FromHexString("#8da087"),
-	rainyEmissiveGround:      babylon.Color3.FromHexString("#757c6d"),
-	rainyDiffuseWall:         babylon.Color3.FromHexString("#003d38"), 
-	rainyEmissiveLightning:   babylon.Color3.FromHexString("#bceefc"),
-	rainySparksC1:            babylon.Color3.FromHexString("#FFFFFF"),
-	rainySparksC2:            babylon.Color3.FromHexString("#3898B0"),
-	rainySparksC3:            babylon.Color3.FromHexString("#11C5F0")
+	rainyEmissiveSun:				babylon.Color3.FromHexString("#FFA50F"),
+	rainyDiffuseLight:				babylon.Color3.FromHexString("#f0ece5"),
+	rainyDiffuseGround:				babylon.Color3.FromHexString("#8da087"),
+	rainyEmissiveGround:			babylon.Color3.FromHexString("#757c6d"),
+	rainyDiffuseWall:				babylon.Color3.FromHexString("#ffffff"),
+	rainyEmissiveWall:				babylon.Color3.FromHexString("#92b3eb"),
+	rainyEmissiveLightning:			babylon.Color3.FromHexString("#bceefc"),
+	rainySparksC1:					babylon.Color3.FromHexString("#FFFFFF"),
+	rainySparksC2:					babylon.Color3.FromHexString("#3898B0"),
+	rainySparksC3:					babylon.Color3.FromHexString("#11C5F0"),
+
+	// WINDY
+	windyDiffuseGround:				babylon.Color3.FromHexString("#b46601"),
+	windyEmissiveGround:			babylon.Color3.FromHexString("#7a4602"),
+	windyEmissiveSun:				babylon.Color3.FromHexString("#f89430"),
+	windyDiffuseLight:				babylon.Color3.FromHexString("#f8f5f2"),
+	windyDiffuseWall:				babylon.Color3.FromHexString("#703c00")
 };
 
 function convertToColor4(hex: string, a: number): babylon.Color4 {
@@ -53,24 +61,32 @@ function convertToColor4(hex: string, a: number): babylon.Color4 {
 };
 
 export const COLORS4 = {
-	volcanoDiffuseAsh1:      convertToColor4("#FF7828", 1),
-	volcanoDiffuseAsh2:      convertToColor4("#FF7828", 0.55),
-	volcanoDiffuseAshDead:   convertToColor4("#FF7828", 0),
-	volcanoDiffuseSky:       convertToColor4("#574D47", 1),
-	volcanoDiffuseTrail1:    convertToColor4("#FF7716", 1),
-	volcanoDiffuseTrail2:    convertToColor4("#B32700", 0.6),
-	volcanoDiffuseTrailDead: convertToColor4("#FF5020", 0.2),
-	volcanoDiffuseDust1:     convertToColor4("#4C1F14", 0.9),
-	volcanoDiffuseDust2:     convertToColor4("#401A12", 0.9),
-	volcanoDiffuseDustDead:  convertToColor4("#33140D", 0.7),
+	volcanoDiffuseAsh1:			convertToColor4("#FF7828", 1),
+	volcanoDiffuseAsh2:			convertToColor4("#FF7828", 0.55),
+	volcanoDiffuseAshDead:		convertToColor4("#FF7828", 0),
+	volcanoDiffuseSky:			convertToColor4("#574D47", 1),
+	volcanoDiffuseTrail1:		convertToColor4("#FF7716", 1),
+	volcanoDiffuseTrail2:		convertToColor4("#B32700", 0.6),
+	volcanoDiffuseTrailDead:	convertToColor4("#FF5020", 0.2),
+	volcanoDiffuseDust1:		convertToColor4("#4C1F14", 0.9),
+	volcanoDiffuseDust2:		convertToColor4("#401A12", 0.9),
+	volcanoDiffuseDustDead:		convertToColor4("#33140D", 0.7),
 
-	rainyDiffuseSky:         convertToColor4("#A1AA96", 1),
-	rainyRain1:              convertToColor4("#D9E6FF", 0.85),
-	rainyRain2:              convertToColor4("#D9E6FF", 0.60),
-	rainyRainDead:           convertToColor4("#D9E6FF", 0.00),
-	rainyLightningSpark1:    convertToColor4("#FFFFFF", 1.00),
-	rainyLightningSpark2:    convertToColor4("#99CCFF", 0.85),
-	rainyLightningSpark3:    convertToColor4("#3380FF", 0.00)
+	rainyDiffuseSky:			convertToColor4("#A1AA96", 1),
+	rainyRain1:					convertToColor4("#D9E6FF", 0.85),
+	rainyRain2:					convertToColor4("#D9E6FF", 0.60),
+	rainyRainDead:				convertToColor4("#D9E6FF", 0.00),
+	rainyLightningSpark1:		convertToColor4("#FFFFFF", 1.00),
+	rainyLightningSpark2:		convertToColor4("#99CCFF", 0.85),
+	rainyLightningSpark3:		convertToColor4("#3380FF", 0.00),
+
+	windyWind1:					convertToColor4("#D9E6FF", 0.85),
+	windyWind2:					convertToColor4("#D9E6FF", 0.65),
+	windyWindDead:				convertToColor4("#D9E6FF", 0.00),
+	windyTornado1:				convertToColor4("#ebffc5", 0.40),
+	windyTornado2:				convertToColor4("#ebffc5", 0.20),
+	windyTornadoDead:			convertToColor4("#ebffc5", 0.00),
+	windySky:					convertToColor4("#8ba7fc", 1)
 };
 
 
@@ -102,7 +118,7 @@ export const LIGHTNING_LIFETIME = 1200;
 export const LIGHTNING_FRAMES_TO_DISAPPEAR = 30;
 export const LIGHTNING_COLLISION_RADIUS = 5;
 export const LIGHTNING_COLLISION_STRENGTH = 30;
-export const R_GLOW_INTENSITY = 0.45;
+export const R_GLOW_INTENSITY = 0.3;
 
 /**VOLCANO MAP */
 export const V_PARTICLE_NUMBER = 4000;
@@ -123,7 +139,7 @@ export const WIND_FORCE = 5;
 export const TORNADO_ATTRACTION_STRENGTH = 100;
 export const TORNADO_COLLISION_RADIUS = 3;
 export const TORNADO_HEIGHT = 40;
-export const W_GLOW_INTENSITY = 0.6;
+export const W_GLOW_INTENSITY = 0.3;
 
 
 /**PLAYER */
@@ -154,7 +170,6 @@ export const BALL_ANGULAR_FORCE = 0.5;
 export const BALL_ANGULAR_INTERVAL = 45;
 
 
-/** @todo rainymap design WALL*/
 /** @todo windymap design + tornados*/
 /** @todo defaultmap design*/
 /** @todo do something highlights */

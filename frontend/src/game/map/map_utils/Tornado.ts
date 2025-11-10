@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { MAP_SIZE, TORNADO_ATTRACTION_STRENGTH, TORNADO_COLLISION_RADIUS, TORNADO_HEIGHT, TORNADO_LIFETIME, WALL_WIDTH } from "../../settings/values.js";
+import { COLORS4, MAP_SIZE, TORNADO_ATTRACTION_STRENGTH, TORNADO_COLLISION_RADIUS, TORNADO_HEIGHT, TORNADO_LIFETIME, WALL_WIDTH } from "../../settings/values.js";
 
 export class Tornado {
 	private tornado: babylon.Mesh;
@@ -67,11 +67,11 @@ export class Tornado {
 		particles.maxEmitPower = 25;
 		particles.minLifeTime = 0.2;
 		particles.maxLifeTime = 0.2;
-		particles.minSize = 1;
-		particles.maxSize = 2;
-		particles.color1 = new babylon.Color4(0.8, 0.9, 1, 0.4);
-		particles.color2 = new babylon.Color4(0.5, 0.6, 1, 0.2);
-		particles.colorDead = new babylon.Color4(0.2, 0.4, 1, 0);
+		particles.minSize = 0.25;
+		particles.maxSize = 0.5;
+		particles.color1 = COLORS4.windyTornado1;
+		particles.color2 = COLORS4.windyTornado2;
+		particles.colorDead = COLORS4.windyTornadoDead;
 		particles.emitRate = 4000;
 		emitter.startPositionFunction = (worldMatrix, position): void => {
 			const positionY = Math.random();
