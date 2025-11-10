@@ -4,27 +4,26 @@ import { addHandler } from "../routes/event.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 import { exitDialog } from "./dialog_utils.js";
 
-const DIALOG_STYLE = `
-flex flex-col justify-center items-center
-`;
-
 const BTN_STYLE = `
 font-park font-bold
 rounded-[10px]
 text-[20px] text-primary
 w-[150px] h-[40px]
+bg-secondary
 `;
 
 const SIGN_IN = `
-<div class="${DIALOG_STYLE}">
-	<form name="Login" class="flex flex-col">
-		${createInputHtml(["user_name"], "text", "login_id", { "autofocus": "true" })}
-		${createInputHtml(["password"], "password", "login_password")}
-	</form>
-	${createButtonHtml(["connect"], `btn-connect`, { "class": `${BTN_STYLE} bg-secondary` })}
-	<hr>
-	${createButtonHtml(["continue_as_guest"], `btn-guest`, { "class": `${BTN_STYLE} bg-secondary` })}
-	${createButtonHtml(["create_account"], `btn-register`, { "class": `${BTN_STYLE} bg-secondary` })}
+<div class="bg-pink-500 rounded-2xl p-6">
+	<div class="flex flex-col gap-4">
+		<form name="Login" class="flex flex-col gap-3">
+			${createInputHtml(["user_name"], "text", "login_id", { "autofocus": "true" })}
+			${createInputHtml(["password"], "password", "login_password")}
+		</form>
+		${createButtonHtml(["connect"], `btn-connect`, { "class": `${BTN_STYLE}` })}
+		<hr>
+		${createButtonHtml(["continue_as_guest"], `btn-guest`, { "class": `${BTN_STYLE}` })}
+		${createButtonHtml(["create_account"], `btn-register`, { "class": `${BTN_STYLE}` })}
+	</div>
 </div>
 `;
 

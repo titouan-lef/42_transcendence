@@ -50,11 +50,9 @@ const FRIENDLIST = [
 ];
 
 const MAIN_MENU = `
-<div class="flex flex-col justify-center items-center">
-	<dialog id="modal">
-		${SIGN_IN}
-	</dialog>
-</div>
+<dialog id="modal" class="m-auto backdrop:bg-primary/30 backdrop:backdrop-blur-sm bg-transparent p-0 max-w-md">
+	${SIGN_IN}
+</dialog>
 <div class="${ROW_STYLE}">
 	<main class="${MAIN_STYLE}">
 		<div class="flex flex-col items-center gap-[10px]">
@@ -115,7 +113,6 @@ function popLoginPage(): void {
 	const modal = getSafeElement("modal", HTMLDialogElement);
 
 	modal.showModal();
-
 
 	signInHandler(modal);
 }
