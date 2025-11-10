@@ -1,4 +1,4 @@
-export type MapOption = "default" | "random" | "volcano" | "rainy" | "windy";
+export type MapOption = "default" | "random" | "volcano" | "sky" | "desert";
 export type BallOption = "default" | "random" | "invisible" | "tricky" | "pulse" | "snake";
 export type PlayerKeys = [KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"]];
 

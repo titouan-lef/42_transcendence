@@ -1,9 +1,9 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Tornado } from "./map_utils/Tornado.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS3, W_PARTICLE_NUMBER, TORNADO_INTERVAL, TORNADO_LIFETIME, WIND_FORCE, W_GLOW_INTENSITY, COLORS4 } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS3, W_PARTICLE_NUMBER, TORNADO_INTERVAL, TORNADO_LIFETIME, WIND_FORCE, W_GLOW_INTENSITY, COLORS4, START_TIMEOUT } from "../settings/values.js";
 
-export class WindyMap extends MapTemplate {
+export class DesertMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
 	private readonly tornadoIntervalId: ReturnType<typeof setInterval>;
 	private readonly tornados: Tornado[] = [];
@@ -12,7 +12,7 @@ export class WindyMap extends MapTemplate {
 	private readonly windObserver: babylon.Observer<babylon.Scene>;
 
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
-		super(scene, "windy");
+		super(scene, "desert");
 		this.glow.intensity = W_GLOW_INTENSITY;
 		this.windForce = new babylon.Vector3(
 			(Math.random() - 0.5) * WIND_FORCE,
@@ -23,6 +23,10 @@ export class WindyMap extends MapTemplate {
 		this.windObserver = this.applyWind(scene);
 		this.particles = this.createParticles(scene, texture.flare);
 		this.tornadoIntervalId = this.tornadoInterval(scene, texture.flare);
+		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
+		this.highlightTimeout = setTimeout(() => {
+			this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.desertHighlightWall));
+		}, START_TIMEOUT);
 	}
 
 	private applyWind(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
@@ -46,12 +50,12 @@ export class WindyMap extends MapTemplate {
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
-		const ground = babylon.MeshBuilder.CreateGround("windyground",
+		const ground = babylon.MeshBuilder.CreateGround("desertground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
 		ground.metadata = { type: "ground" };
 		const material = new babylon.StandardMaterial("groundMat", scene);
-		material.diffuseColor  = COLORS3.windyDiffuseGround;
-		material.emissiveColor  = COLORS3.windyEmissiveGround;
+		material.diffuseColor  = COLORS3.desertDiffuseGround;
+		material.emissiveColor  = COLORS3.desertEmissiveGround;
 		const noise = new babylon.NoiseProceduralTexture("groundNoise", 256, scene, undefined, false);
 		noise.animationSpeedFactor = 0;
 		noise.octaves = 4;
@@ -65,7 +69,7 @@ export class WindyMap extends MapTemplate {
 	createSun(scene: babylon.Scene): babylon.Mesh {
 		const sun = babylon.MeshBuilder.CreateSphere("sun", { diameter: SUN_DIAMETER }, scene);
 		const sunMaterial = new babylon.StandardMaterial("sunMat", scene);
-		sunMaterial.emissiveColor = COLORS3.windyEmissiveSun;
+		sunMaterial.emissiveColor = COLORS3.desertEmissiveSun;
 		sun.material = sunMaterial;
 		sun.position = this.sunPosition.clone();
 		sun.position.z -= MAP_SIZE.z / 2;
@@ -78,28 +82,27 @@ export class WindyMap extends MapTemplate {
 		const light: babylon.DirectionalLight = new babylon.DirectionalLight("sunLight", directionCenter, scene);
 		light.position = this.sun.position;
 		light.intensity = 0.7;
-		light.diffuse = COLORS3.windyDiffuseLight;
+		light.diffuse = COLORS3.desertDiffuseLight;
 		return light;
 	}
 
-	/** the rain */
 	private createParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
-		scene.clearColor = COLORS4.windySky; // sky
+		scene.clearColor = COLORS4.desertSky; // sky
 		const particles = new babylon.ParticleSystem("wind", W_PARTICLE_NUMBER, scene);
 		particles.particleTexture = texture;
 		particles.emitter = new babylon.Vector3(0, 0, 0);
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
 		particles.minEmitBox = new babylon.Vector3(-MAP_SIZE.x * 1.4, -MAP_SIZE.y * 1, -MAP_SIZE.z * 1.4);
 		particles.maxEmitBox = new babylon.Vector3(MAP_SIZE.x * 1.4, MAP_SIZE.y * 2, MAP_SIZE.y * 1.4);
-		particles.color1 = COLORS4.windyWind1;
-		particles.color2 = COLORS4.windyWind2;
-		particles.colorDead = COLORS4.windyWindDead;
+		particles.color1 = COLORS4.desertWind1;
+		particles.color2 = COLORS4.desertWind2;
+		particles.colorDead = COLORS4.desertWindDead;
 		particles.emitRate = 1800;
 		particles.renderingGroupId = 1; //
 		particles.minEmitPower = 35;
 		particles.maxEmitPower = 45;
-		particles.minSize = 0.1;
-		particles.maxSize = 0.2;
+		particles.minSize = 0.25;
+		particles.maxSize = 0.5;
 		particles.direction1 = this.windForce;
 		particles.direction2 = this.windForce;
 		particles.minLifeTime = 1;
@@ -110,7 +113,6 @@ export class WindyMap extends MapTemplate {
 		return particles;
 	}
 
-	/** will stack lighting till the end of the point */
 	private tornadoInterval(scene: babylon.Scene, texture: babylon.Texture): ReturnType<typeof setInterval> {
 		const tornadoIntervalId = setInterval( () => {
 			if (this.gameStopped) {
@@ -132,7 +134,7 @@ export class WindyMap extends MapTemplate {
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
 		const material = new babylon.StandardMaterial('wallcolor', scene);
-		material.diffuseColor =  COLORS3.windyDiffuseWall;
+		material.diffuseColor =  COLORS3.desertDiffuseWall;
 		newMesh.material = material;
 		return newMesh;
 	}

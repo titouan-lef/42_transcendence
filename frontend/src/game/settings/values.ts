@@ -31,25 +31,27 @@ export const COLORS3 = {
 	volcanoEmissiveMeteor:			babylon.Color3.FromHexString("#FF6128"),
 	volcanoDiffuseMeteorLight:		babylon.Color3.FromHexString("#FF6A2A"),
 	volcanoDiffuseWall:				babylon.Color3.FromHexString("#D19A2E"),
+	volcanoHighlightWall:			babylon.Color3.FromHexString("#ff5e00"),
 
-	// RAINY
-	rainyEmissiveSun:				babylon.Color3.FromHexString("#FFA50F"),
-	rainyDiffuseLight:				babylon.Color3.FromHexString("#f0ece5"),
-	rainyDiffuseGround:				babylon.Color3.FromHexString("#8da087"),
-	rainyEmissiveGround:			babylon.Color3.FromHexString("#757c6d"),
-	rainyDiffuseWall:				babylon.Color3.FromHexString("#ffffff"),
-	rainyEmissiveWall:				babylon.Color3.FromHexString("#92b3eb"),
-	rainyEmissiveLightning:			babylon.Color3.FromHexString("#bceefc"),
-	rainySparksC1:					babylon.Color3.FromHexString("#FFFFFF"),
-	rainySparksC2:					babylon.Color3.FromHexString("#3898B0"),
-	rainySparksC3:					babylon.Color3.FromHexString("#11C5F0"),
+	// SKY
+	skyEmissiveSun:					babylon.Color3.FromHexString("#FFA50F"),
+	skyDiffuseLight:				babylon.Color3.FromHexString("#f0ece5"),
+	skyDiffuseGround:				babylon.Color3.FromHexString("#8da087"),
+	skyEmissiveGround:				babylon.Color3.FromHexString("#757c6d"),
+	skyDiffuseWall:					babylon.Color3.FromHexString("#ffffff"),
+	skyEmissiveWall:				babylon.Color3.FromHexString("#92b3eb"),
+	skyEmissiveLightning:			babylon.Color3.FromHexString("#bceefc"),
+	skySparksC1:					babylon.Color3.FromHexString("#FFFFFF"),
+	skySparksC2:					babylon.Color3.FromHexString("#3898B0"),
+	skySparksC3:					babylon.Color3.FromHexString("#11C5F0"),
 
-	// WINDY
-	windyDiffuseGround:				babylon.Color3.FromHexString("#b46601"),
-	windyEmissiveGround:			babylon.Color3.FromHexString("#7a4602"),
-	windyEmissiveSun:				babylon.Color3.FromHexString("#f89430"),
-	windyDiffuseLight:				babylon.Color3.FromHexString("#f8f5f2"),
-	windyDiffuseWall:				babylon.Color3.FromHexString("#703c00"),
+	// DESERT
+	desertDiffuseGround:			babylon.Color3.FromHexString("#e98502"),
+	desertEmissiveGround:			babylon.Color3.FromHexString("#d87a00"),
+	desertEmissiveSun:				babylon.Color3.FromHexString("#f89430"),
+	desertDiffuseLight:				babylon.Color3.FromHexString("#f8f5f2"),
+	desertDiffuseWall:				babylon.Color3.FromHexString("#ac5c00"),
+	desertHighlightWall:			babylon.Color3.FromHexString("#ffbb00"),
 
 	//DEFAULT
 	defaultDiffuseGround:			babylon.Color3.FromHexString("#000000"),
@@ -77,21 +79,21 @@ export const COLORS4 = {
 	volcanoDiffuseDust2:		convertToColor4("#401A12", 0.9),
 	volcanoDiffuseDustDead:		convertToColor4("#33140D", 0.7),
 
-	rainyDiffuseSky:			convertToColor4("#A1AA96", 1),
-	rainyRain1:					convertToColor4("#D9E6FF", 0.85),
-	rainyRain2:					convertToColor4("#D9E6FF", 0.60),
-	rainyRainDead:				convertToColor4("#D9E6FF", 0.00),
-	rainyLightningSpark1:		convertToColor4("#FFFFFF", 1.00),
-	rainyLightningSpark2:		convertToColor4("#99CCFF", 0.85),
-	rainyLightningSpark3:		convertToColor4("#3380FF", 0.00),
+	skyDiffuseSky:				convertToColor4("#A1AA96", 1),
+	skyRain1:					convertToColor4("#D9E6FF", 0.85),
+	skyRain2:					convertToColor4("#D9E6FF", 0.60),
+	skyRainDead:				convertToColor4("#D9E6FF", 0.00),
+	skyLightningSpark1:			convertToColor4("#FFFFFF", 1.00),
+	skyLightningSpark2:			convertToColor4("#99CCFF", 0.85),
+	skyLightningSpark3:			convertToColor4("#3380FF", 0.00),
 
-	windyWind1:					convertToColor4("#D9E6FF", 0.85),
-	windyWind2:					convertToColor4("#D9E6FF", 0.65),
-	windyWindDead:				convertToColor4("#D9E6FF", 0.00),
-	windyTornado1:				convertToColor4("#ebffc5", 0.40),
-	windyTornado2:				convertToColor4("#ebffc5", 0.20),
-	windyTornadoDead:			convertToColor4("#ebffc5", 0.00),
-	windySky:					convertToColor4("#8ba7fc", 1),
+	desertWind1:				convertToColor4("#5c3502", 0.85),
+	desertWind2:				convertToColor4("#5c3502", 0.65),
+	desertWindDead:				convertToColor4("#5c3502", 0.00),
+	desertTornado1:				convertToColor4("#5c3502", 0.40),
+	desertTornado2:				convertToColor4("#5c3502", 0.20),
+	desertTornadoDead:			convertToColor4("#5c3502", 0.00),
+	desertSky:					convertToColor4("#af8145", 1),
 
 	defaultStar1:				convertToColor4("#ffffff", 1),
 	defaultStar2:				convertToColor4("#ffffff", 0.7),
@@ -126,7 +128,7 @@ export const SUN_DIAMETER = 20;
 export const D_PARTICLE_NUMBER = 500;
 export const D_GLOW_INTENSITY = 0.6;
 
-/**RAINY MAP */
+/**SKY MAP */
 export const R_PARTICLE_NUMBER = 4000;
 export const LIGHTNING_INTERVAL = 600;
 export const LIGHTNING_LIFETIME = 1200;
@@ -146,11 +148,11 @@ export const METEOR_COLLISION_STRENGTH = 30;
 export const METEOR_SPEED = 100;
 export const V_GLOW_INTENSITY = 0.7;
 
-/**WINDY MAP */
+/**DESERT MAP */
 export const W_PARTICLE_NUMBER = 3000;
 export const TORNADO_INTERVAL = 3000;
 export const TORNADO_LIFETIME = 8000;
-export const WIND_FORCE = 5;
+export const WIND_FORCE = 10;
 export const TORNADO_ATTRACTION_STRENGTH = 100;
 export const TORNADO_COLLISION_RADIUS = 3;
 export const TORNADO_HEIGHT = 40;

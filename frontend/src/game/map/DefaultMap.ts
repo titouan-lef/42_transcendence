@@ -5,8 +5,6 @@ import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS3, COLORS4
 export class DefaultMap extends MapTemplate {
 	private readonly bars: babylon.Mesh[];
 	private readonly particles: babylon.ParticleSystem;
-	private readonly wallHighlight: babylon.HighlightLayer;
-	private readonly highlightTimeout: ReturnType<typeof setTimeout>;
 
 	constructor(scene: babylon.Scene, texture: babylon.Texture) {
 		super(scene, "default");
@@ -15,7 +13,7 @@ export class DefaultMap extends MapTemplate {
 		this.particles = this.createParticles(scene, texture);
 		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
 		this.highlightTimeout = setTimeout(() => {
-			this.limits.forEach(limit => this.wallHighlight.addMesh(limit, COLORS3.defaultHighlightWall));
+			this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.defaultHighlightWall));
 		}, START_TIMEOUT);
 	}
 
@@ -97,7 +95,6 @@ export class DefaultMap extends MapTemplate {
 	}
 
 	destroyRest(): void {
-		clearTimeout(this.highlightTimeout);
 		this.bars.forEach(bar => {
 			bar.material?.dispose();
 			bar?.dispose();
@@ -105,6 +102,5 @@ export class DefaultMap extends MapTemplate {
 		this.particles?.stop();
 		this.particles?.particleTexture?.dispose();
 		this.particles?.dispose();
-		this.wallHighlight?.dispose();
 	}
 }
