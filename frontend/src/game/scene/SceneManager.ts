@@ -13,7 +13,7 @@ import { DesertMap } from "../map/DesertMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
-import { MAP_SIZE, PLAYER_DIMENSION, SHOW_DISPOSE_LOGS, WALL_WIDTH } from "../settings/values.js";
+import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
 
 export class SceneManager {

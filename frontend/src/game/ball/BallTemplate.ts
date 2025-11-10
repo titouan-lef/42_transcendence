@@ -5,44 +5,46 @@ import { BallTrail } from "./BallTrail.js";
 type ParticlesType = "explosion" | "collision" | "impulse";
 
 export abstract class BallTemplate {
-	protected readonly mesh: babylon.Mesh;
-	protected readonly physic: babylon.PhysicsAggregate;
-	private readonly type: BallOption;
-	protected color: babylon.Color3;
+	//Graphic
+	protected readonly color: babylon.Color3;
 	private readonly ballTrails: BallTrail[] = [];
 	private trailIntervalId: ReturnType<typeof setInterval> | null = null;
 	protected readonly particles: babylon.ParticleSystem[] = [];
+	private readonly textures: Record<string, babylon.Texture>;
+
+	//Physic
+	protected readonly physic: babylon.PhysicsAggregate;
 	private readonly collisionObservable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
 	private readonly collisionObserver: babylon.Observer<babylon.IPhysicsCollisionEvent>;
 	private isInGoal: "player1" | "player2" | null = null;
 	private goalPosition: babylon.Vector3 | null = null;
 	protected justCollided = false;
 	protected realDirection: babylon.Vector3;
-	private readonly textures: Record<string, babylon.Texture>;
 	private spinningLeft = false;
 	private spinningRight = false;
 	protected force = BALL_ANGULAR_FORCE;
 	protected forceDirection = -1;
 	protected readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	protected readonly sceneObserver: babylon.Observer<babylon.Scene>;
-	private readonly hitPoints: number[] = [];
 	private readonly yObservable: babylon.Observable<babylon.Scene>;
 	private readonly yObserver: babylon.Observer<babylon.Scene>;
 	private readonly launchBallTimeoutId: ReturnType<typeof setTimeout>;
+	
+	//Both
+	protected readonly mesh: babylon.Mesh;
 	protected gameStopped = true;
+	
 
 	constructor(scene: babylon.Scene, type: BallOption, textures: Record<string, babylon.Texture>, color: babylon.Color3) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
-		this.textures = textures;
-		this.color = color;
-		this.setMaterial(scene);
-		this.mesh.position.y = BALL_DIAMETER / 2;
-		this.physic = this.setPhysic(scene);
-		this.physic.body.setCollisionCallbackEnabled(true);
-		this.mesh.renderingGroupId = 1;
-		this.type = type;
-
 		this.mesh.metadata = { type: "collider", pushable: true };
+		this.mesh.renderingGroupId = 1;
+		this.color = color;
+		this.textures = textures;
+		this.setMaterial(scene);
+		this.physic = this.setPhysic(scene);
+		
+		this.physic.body.setCollisionCallbackEnabled(true);
 		this.collisionObservable = this.physic.body.getCollisionObservable();
 		this.collisionObserver = this.checkBallCollision();
 
@@ -61,7 +63,7 @@ export abstract class BallTemplate {
 	/**block the ball from having a Y velocity */
 	private blockVelocityY(): babylon.Observer<babylon.Scene> {
 		const yObserver = this.yObservable.add(() => {
-			const velocity = this.physic.body.getLinearVelocity(); // Vector3
+			const velocity = this.physic.body.getLinearVelocity();
 			if (velocity) {
 				velocity.y = 0;
 				this.physic.body.setLinearVelocity(velocity);
@@ -69,7 +71,6 @@ export abstract class BallTemplate {
 		});
 		return yObserver;
 	}
-	//
 
 	/**launch ball */
 	private launchBall(scene: babylon.Scene): ReturnType<typeof setTimeout> {
@@ -117,7 +118,7 @@ export abstract class BallTemplate {
 	/** Spin doesn't apply to snake ball for obvious reasons */
 	protected applyMovementChanges(): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
-			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y
+			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y (only visual)
 			if (this.justCollided) {
 				this.realDirection = this.physic.body.getLinearVelocity(); // remember original velocity, to apply movement changes on it
 				this.justCollided = false; 
@@ -133,7 +134,7 @@ export abstract class BallTemplate {
 	}
 
 	/** applies two contradictory forces on either side of the ball */
-	protected applyEffect(): void {
+	private applyEffect(): void {
 		this.force -= (BALL_ANGULAR_FORCE / BALL_ANGULAR_INTERVAL) * this.forceDirection; // Angular interval is the number of step it will take to reach maximum value
 		this.force = Math.max(this.force, BALL_ANGULAR_FORCE); // to deny force to go higher than BALL_ANGULAR_FORCE
 		if (this.spinningRight) {
@@ -185,8 +186,6 @@ export abstract class BallTemplate {
 		explosionParticles.minEmitPower = 5;
 		explosionParticles.maxEmitPower = 15;
 		explosionParticles.updateSpeed = 0.02;
-		
-		//does a burst
 		explosionParticles.emitRate = 0;
 		explosionParticles.manualEmitCount = 200;
 		return explosionParticles;
@@ -205,8 +204,6 @@ export abstract class BallTemplate {
 		explosionParticles.minEmitPower = 2;
 		explosionParticles.maxEmitPower = 4;
 		explosionParticles.updateSpeed = 0.02;
-
-		// does a burst
 		explosionParticles.emitRate = 0;
 		explosionParticles.manualEmitCount = 100;
 		return explosionParticles;
@@ -237,7 +234,7 @@ export abstract class BallTemplate {
 			return;
 		if (metadata?.playerSpinning) {
 			const collisionPointZ = collisionEvent.point?.z;
-			if (collisionPointZ === undefined ) // forced to do that because point can be null, but cant happen here
+			if (collisionPointZ === undefined )
 				return;
 			switch (collisionPointZ - collisionEvent.collidedAgainst.transformNode.position.z <= 0) { // colliding right or left of the player
 				case (true):
@@ -299,7 +296,7 @@ export abstract class BallTemplate {
 			particle?.stop();
 			const index = this.particles?.indexOf(particle);
 			particle?.dispose();
-			if (index !== -1) // protection in case destroy() and the end of timeOut occur at the same time
+			if (index !== -1)
 				this.particles?.splice(index, 1);
 		}, 2000);
 	}
@@ -334,9 +331,6 @@ export abstract class BallTemplate {
 		while (this.ballTrails.length) {
 			this.ballTrails[0].destroy();
 			this.ballTrails.splice(0, 1);
-		}
-		while (this.hitPoints.length) {
-			this.hitPoints.splice(0, 1);
 		}
 		this.physic?.dispose();
 		this.particles.forEach(particle => {

@@ -87,7 +87,7 @@ export class DesertMap extends MapTemplate {
 	}
 
 	private createParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
-		scene.clearColor = COLORS4.desertSky; // sky
+		scene.clearColor = COLORS4.desertSky;
 		const particles = new babylon.ParticleSystem("wind", W_PARTICLE_NUMBER, scene);
 		particles.particleTexture = texture;
 		particles.emitter = new babylon.Vector3(0, 0, 0);
@@ -98,7 +98,7 @@ export class DesertMap extends MapTemplate {
 		particles.color2 = COLORS4.desertWind2;
 		particles.colorDead = COLORS4.desertWindDead;
 		particles.emitRate = 1800;
-		particles.renderingGroupId = 1; //
+		particles.renderingGroupId = 1;
 		particles.minEmitPower = 35;
 		particles.maxEmitPower = 45;
 		particles.minSize = 0.25;

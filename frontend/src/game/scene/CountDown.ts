@@ -12,7 +12,7 @@ export class CountDown {
 		this.countDown = babylon.MeshBuilder.CreatePlane("scorePlane", { width: MAP_SIZE.z * 0.4, height: MAP_SIZE.z * 0.2 }, scene);
 		this.countDown.renderingGroupId = 2;
 		this.setMaterial(scene);
-		this.countDown.billboardMode = babylon.Mesh.BILLBOARDMODE_ALL; // so it faces camera
+		this.countDown.billboardMode = babylon.Mesh.BILLBOARDMODE_ALL;
 		this.countDown.position = new babylon.Vector3(0, COUNTDOWN_POS_Y, 0);
 		let i = 3;
 		this.changeText(i);

@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Lightning } from "./map_utils/Lightning.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME, R_GLOW_INTENSITY, START_TIMEOUT } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME, R_GLOW_INTENSITY } from "../settings/values.js";
 
 export class RainyMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
@@ -54,7 +54,7 @@ export class RainyMap extends MapTemplate {
 
 	/** the rain */
 	private createParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
-		scene.clearColor = COLORS4.skyDiffuseSky; //sky
+		scene.clearColor = COLORS4.skyDiffuseSky;
 		const particles = new babylon.ParticleSystem("rain", R_PARTICLE_NUMBER, scene);
 		particles.particleTexture = texture;
 		particles.emitter = new babylon.Vector3(0, 0, 0);
@@ -65,7 +65,7 @@ export class RainyMap extends MapTemplate {
 		particles.color2    = COLORS4.skyRain2;
 		particles.colorDead = COLORS4.skyRainDead;
 		particles.emitRate = 1800;
-		particles.renderingGroupId = 1; //
+		particles.renderingGroupId = 1;
 		particles.minEmitPower = 35;
 		particles.maxEmitPower = 45;
 		particles.minSize = 1;
