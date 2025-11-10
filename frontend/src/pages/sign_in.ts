@@ -20,16 +20,16 @@ focus:outline-2 focus:text-dark
 `;
 
 const SIGN_IN = `
-<div class="bg-primary rounded-2xl p-6">
+<div class="bg-primary rounded-2xl p-6 h-full">
 	<div class="flex flex-col gap-4">
 		<form name="Login" class="flex flex-col justify-center items-center gap-3">
 			${createInputHtml(["user_name"], "text", "login_id", { "autofocus": "true", "class": `${INPUT_STYLE}` })}
 			${createInputHtml(["password"], "password", "login_password", { "class": `${INPUT_STYLE}` })}
 		</form>
-		${createButtonHtml(["connect"], `btn-connect`, { "class": `${BTN_STYLE}` })}
+		${createButtonHtml(["sign_in"], `btn-sign-in`, { "class": `${BTN_STYLE}` })}
 		<hr>
 		${createButtonHtml(["continue_as_guest"], `btn-guest`, { "class": `${BTN_STYLE}` })}
-		${createButtonHtml(["create_account"], `btn-register`, { "class": `${BTN_STYLE}` })}
+		${createButtonHtml(["sign_up"], `btn-sign-up`, { "class": `${BTN_STYLE}` })}
 	</div>
 </div>
 `;
@@ -38,13 +38,13 @@ function connectUser(): void {
 	const userId: HTMLInputElement = getSafeElement("login_id", HTMLInputElement);
 	const userPassword: HTMLInputElement = getSafeElement("login_password", HTMLInputElement);
 
-	console.log(`connect button clicked with ${userId.value} and ${userPassword.value}`); /** @todo remove debug logs */
+	console.log(`sign-in button clicked with ${userId.value} and ${userPassword.value}`); /** @todo remove debug logs */
 }
 
 function signInHandler(modal: HTMLDialogElement): void {
-	addHandler('btn-connect', 'click', () => connectUser());
+	addHandler('btn-sign-in', 'click', () => connectUser());
 	addHandler('btn-guest', 'click', () => console.log("guest button clicked.")); /** @todo remove debug logs */
-	addHandler('btn-register', 'click', () => console.log("register button clicked.")); /** @todo remove debug logs */
+	addHandler('btn-sign-up', 'click', () => console.log("sign-up button clicked.")); /** @todo remove debug logs */
 	addHandler('modal', 'click', (e) => exitDialog('modal', modal, e));
 }
 
