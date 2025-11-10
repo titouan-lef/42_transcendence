@@ -26,16 +26,17 @@ const ASIDE_STYLE = `
 w-[200px]
 grow-0
 rounded-2xl bg-primary
+flex
 `;
 const ASIDE_MAINBOX_STYLE = `
-h-full flex flex-col items-center gap-[10px] justify-center
+grow flex flex-col items-center gap-[10px] justify-stretch first:mt-[25px] last:mb-[25px]
 `;
 const AVATAR_STYLE = `
-grow-0 rounded-2xl bg-white my-[25px]
+grow-0 rounded-2xl bg-white
 `;
 const FRIENDLIST_STYLE = `
-scrollbar-none overflow-y-scroll overflow-hidden
-grow-0 h-full w-[150px] rounded-2xl bg-light
+grow scrollbar-none overflow-y-scroll overflow-hidden
+w-[150px] rounded-2xl bg-light
 flex flex-col gap-[10px] items-center justify-start p-[10px]
 `;
 
@@ -50,7 +51,7 @@ const FRIENDLIST = [
 ];
 
 const MAIN_MENU = `
-<dialog id="modal" class="m-auto backdrop:bg-black/50 backdrop:backdrop-blur-sm bg-transparent p-0 w-full max-w-[500px]">
+<dialog id="modal" class="m-auto rounded-2xl shadow-[0_0_25px_0] shadow-shadow backdrop:bg-black/50 backdrop:backdrop-blur-sm bg-transparent p-0 w-full max-w-[500px]">
 	${SIGN_IN}
 </dialog>
 <div class="${ROW_STYLE}">
@@ -69,7 +70,7 @@ const MAIN_MENU = `
 			<div id="friendlist" class="${FRIENDLIST_STYLE}">
 			</div>
 			<input id="add-friend" type="button" value="add friend" class="${BTN_STYLE} bg-secondary"/>
-			<input id="temp" type="button" value="log out" class="${BTN_STYLE} bg-variant mb-[25px]"/>
+			<input id="temp" type="button" value="log out" class="${BTN_STYLE} bg-variant"/>
 		</div>
 	</aside>
 </div>
