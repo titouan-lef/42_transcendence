@@ -13,6 +13,8 @@ export abstract class MapTemplate {
 	readonly type: MapOption;
 	protected readonly sunPosition: babylon.Vector3;
 	private readonly startTimeout: ReturnType<typeof setTimeout>;
+	protected highlightTimeout: ReturnType<typeof setTimeout> | null = null;
+	protected wallHighlight: babylon.HighlightLayer | null = null;
 	protected gameStopped = true;
 
 	constructor(scene: babylon.Scene, type: MapOption) {
@@ -87,6 +89,8 @@ export abstract class MapTemplate {
 
 	destroy(): void {
 		clearTimeout(this.startTimeout);
+		if (this.highlightTimeout)
+			clearTimeout(this.highlightTimeout);
 		this.destroyRest();
 		this.groundPhysic?.dispose();
 		if (this.ground.material && this.ground.material instanceof babylon.StandardMaterial) {
@@ -104,6 +108,7 @@ export abstract class MapTemplate {
 		this.sun?.dispose();
 		this.light?.dispose();
 		this.glow?.dispose();
+		this.wallHighlight?.dispose();
 	}
 
 	abstract createGround(scene: babylon.Scene): babylon.Mesh;

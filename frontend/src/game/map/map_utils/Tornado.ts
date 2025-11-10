@@ -67,11 +67,11 @@ export class Tornado {
 		particles.maxEmitPower = 25;
 		particles.minLifeTime = 0.2;
 		particles.maxLifeTime = 0.2;
-		particles.minSize = 0.25;
-		particles.maxSize = 0.5;
-		particles.color1 = COLORS4.windyTornado1;
-		particles.color2 = COLORS4.windyTornado2;
-		particles.colorDead = COLORS4.windyTornadoDead;
+		particles.minSize = 0.4;
+		particles.maxSize = 0.7;
+		particles.color1 = COLORS4.desertTornado1;
+		particles.color2 = COLORS4.desertTornado2;
+		particles.colorDead = COLORS4.desertTornadoDead;
 		particles.emitRate = 4000;
 		emitter.startPositionFunction = (worldMatrix, position): void => {
 			const positionY = Math.random();

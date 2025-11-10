@@ -17,7 +17,7 @@ export class Lightning {
 
 		this.lightning = this.spawnLightning(scene, start, end);
 		const material = new babylon.StandardMaterial("lightningMat", scene);
-		material.emissiveColor = COLORS3.rainyEmissiveLightning;
+		material.emissiveColor = COLORS3.skyEmissiveLightning;
 		material.alpha = 1;
 		this.lightning.material = material;
 		this.lightning.renderingGroupId = 1;
@@ -59,10 +59,10 @@ export class Lightning {
 		let fade = 1.0;
 		const lightningIntervalId = setInterval(() => {
 			fade -= 1 / LIGHTNING_FRAMES_TO_DISAPPEAR;
-			material.emissiveColor = COLORS3.rainyEmissiveLightning.scale(fade);
+			material.emissiveColor = COLORS3.skyEmissiveLightning.scale(fade);
 			material.alpha = fade;
 			if (fade <= 0) {
-				material.emissiveColor = COLORS3.rainyEmissiveLightning.scale(0);
+				material.emissiveColor = COLORS3.skyEmissiveLightning.scale(0);
 				this.lightning.visibility = 0;
 				this.destroy();
 			}
@@ -101,9 +101,9 @@ export class Lightning {
 		particles.particleEmitterType = emitter;
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_STRETCHED;
 		particles.blendMode = babylon.ParticleSystem.BLENDMODE_ADD;
-		particles.addColorGradient(0.0, COLORS4.rainyLightningSpark1);
-		particles.addColorGradient(0.3, COLORS4.rainyLightningSpark2);
-		particles.addColorGradient(1.0, COLORS4.rainyLightningSpark3);
+		particles.addColorGradient(0.0, COLORS4.skyLightningSpark1);
+		particles.addColorGradient(0.3, COLORS4.skyLightningSpark2);
+		particles.addColorGradient(1.0, COLORS4.skyLightningSpark3);
 		particles.minSize = 3;
 		particles.maxSize = 4;
 		particles.minLifeTime = 0.4;

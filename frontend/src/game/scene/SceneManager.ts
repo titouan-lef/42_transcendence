@@ -8,8 +8,8 @@ import { TrickyBall } from "../ball/TrickyBall.js";
 import { SnakeBall } from "../ball/SnakeBall.js";
 import { MapTemplate } from "../map/MapTemplate.js";
 import { DefaultMap } from "../map/DefaultMap.js";
-import { RainyMap } from "../map/RainyMap.js";
-import { WindyMap } from "../map/WindyMap.js";
+import { RainyMap as SkyMap } from "../map/SkyMap.js";
+import { DesertMap } from "../map/DesertMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
@@ -59,7 +59,7 @@ export class SceneManager {
 	}
 
 	private createMap(scene: babylon.Scene, map: MapOption): void {
-		const mapList: MapOption[] = ["default", "volcano", "rainy", "windy"];
+		const mapList: MapOption[] = ["default", "volcano", "sky", "desert"];
 		if (map === "random") {
 			map = mapList[Math.floor(Math.random() * 4)];
 		}
@@ -70,11 +70,11 @@ export class SceneManager {
 			case "volcano":
 				this.map = new VolcanoMap(scene, this.textures);
 				break;
-			case "rainy":
-				this.map = new RainyMap(scene, this.textures);
+			case "sky":
+				this.map = new SkyMap(scene, this.textures);
 				break;
-			case "windy":
-				this.map = new WindyMap(scene, this.textures);
+			case "desert":
+				this.map = new DesertMap(scene, this.textures);
 				break;
 			default: throw new Error("switch map fail");
 		}
@@ -95,18 +95,12 @@ export class SceneManager {
 	}
 
 	createTextures(scene: babylon.Scene): void {
-		this.textures.spark = new babylon.Texture("textures/sparks.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
-		this.textures.flare = new babylon.Texture("textures/flare.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
-		this.textures.stars = new babylon.Texture("textures/particle.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
-		this.textures.rain = new babylon.Texture("textures/rain.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
-		this.textures.smoke = new babylon.Texture("textures/smoke.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
-		this.textures.electricity = new babylon.Texture("textures/electricity.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
-		/**@todonow necessary ? */
-		for (const key in this.textures) {
-			this.textures[key].hasAlpha = true;
-			this.textures[key].wrapU = babylon.Texture.CLAMP_ADDRESSMODE;
-			this.textures[key].wrapV = babylon.Texture.CLAMP_ADDRESSMODE;
-		}
+		this.textures.spark = new babylon.Texture("textures/sparks.png", scene, true);
+		this.textures.flare = new babylon.Texture("textures/flare.png", scene, true);
+		this.textures.stars = new babylon.Texture("textures/particle.png", scene, true);
+		this.textures.rain = new babylon.Texture("textures/rain.png", scene, true);
+		this.textures.smoke = new babylon.Texture("textures/smoke.png", scene, true);
+		this.textures.electricity = new babylon.Texture("textures/electricity.png", scene, true);
 	}
 
 	/** @todo Titouan gaming */

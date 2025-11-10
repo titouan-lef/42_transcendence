@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Meteor } from "./map_utils/Meteor.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER, V_GLOW_INTENSITY } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER, V_GLOW_INTENSITY, START_TIMEOUT } from "../settings/values.js";
 
 export class VolcanoMap extends MapTemplate {
 	private readonly meteors: Meteor[] = [];
@@ -13,6 +13,10 @@ export class VolcanoMap extends MapTemplate {
 		this.glow.intensity = V_GLOW_INTENSITY;
 		this.particles = this.createParticles(scene, texture.flare);
 		this.meteorIntervalId = this.meteorInterval(scene, texture);
+		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
+		this.highlightTimeout = setTimeout(() => {
+			this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.volcanoHighlightWall));
+		}, START_TIMEOUT);
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
