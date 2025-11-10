@@ -3,7 +3,6 @@ import { MapTemplate } from "./MapTemplate.js";
 import { Meteor } from "./map_utils/Meteor.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER, V_GLOW_INTENSITY } from "../settings/values.js";
 
-/**@todo this map is not configured dont mind the code */
 export class VolcanoMap extends MapTemplate {
 	private readonly meteors: Meteor[] = [];
 	private readonly meteorIntervalId: ReturnType<typeof setInterval>;

@@ -55,7 +55,6 @@ export abstract class BallTemplate {
 		this.sceneObserver = this.applyMovementChanges();
 		if (BALL_TRAIL_ON)
 			this.trailIntervalId = this.setTrail(scene);
-		/**@todo protect this against instaclose game */
 		this.launchBallTimeoutId = this.launchBall(scene);
 	}
 
@@ -134,7 +133,7 @@ export abstract class BallTemplate {
 	}
 
 	/** applies two contradictory forces on either side of the ball */
-	private applyEffect(): void {
+	protected applyEffect(): void {
 		this.force -= (BALL_ANGULAR_FORCE / BALL_ANGULAR_INTERVAL) * this.forceDirection; // Angular interval is the number of step it will take to reach maximum value
 		this.force = Math.max(this.force, BALL_ANGULAR_FORCE); // to deny force to go higher than BALL_ANGULAR_FORCE
 		if (this.spinningRight) {
@@ -213,13 +212,11 @@ export abstract class BallTemplate {
 		return explosionParticles;
 	}
 
-	/**@todo refacto */
 	private checkBallCollision(): babylon.Observer<babylon.IPhysicsCollisionEvent> {
 		const collisionObserver = this.collisionObservable.add((collisionEvent) => {
 			const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
 			if (!metadata)
 				return;
-			//if has a metadata (ground doesn t have one)
 			if (metadata.type === "goal") {
 				this.isInGoal = metadata.player === 1 ? "player1" : "player2";
 				this.goalPosition = collisionEvent.point;
@@ -307,7 +304,6 @@ export abstract class BallTemplate {
 		}, 2000);
 	}
 
-	/**@todo To remove */
 	setJustCollide(): void {
 		this.justCollided = true;
 	}
@@ -319,8 +315,8 @@ export abstract class BallTemplate {
 		return { goal, position };
 	}
 
-	/**@todo remove */
-	testMove(): void {
+	/**debug function*/
+	moveBall(): void {
 		this.physic.body.applyImpulse(
 			new babylon.Vector3(25, 0, 0),
 			this.mesh.position

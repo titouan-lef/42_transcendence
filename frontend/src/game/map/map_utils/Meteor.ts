@@ -64,7 +64,6 @@ export class Meteor {
 				this.trail.stop();
 				this.particles.start();
 				this.setBody(scene);
-				/**@todo no protection here ? */
 				setTimeout( () => {
 					this?.destroy();
 				}, METEOR_LIFETIME);
@@ -160,12 +159,10 @@ export class Meteor {
 		this.body?.dispose();
 		this.meteorLight?.dispose();
 		this.trail?.stop();
-		//this.trail?.particleTexture?.dispose();
 		if (this.trail && this.trail.particleTexture)
 			this.trail.particleTexture = null;
 		this.trail?.dispose();
 		this.particles?.stop();
-		//this.particles?.particleTexture?.dispose();
 		if (this.particles && this.particles.particleTexture)
 			this.particles.particleTexture = null;
 		this.particles?.dispose();

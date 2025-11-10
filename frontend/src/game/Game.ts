@@ -3,7 +3,7 @@ import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { HavokPlugin } from "@babylonjs/core/Physics";
 import havokPhysics from "@babylonjs/havok";
-import { CAMERA_POS_X, POINTS_TO_WIN } from "./settings/values.js";
+import { CAMERA_POS_X, MOVE_BALL_ONCLICK, MOVE_CAMERA_ONCLICK, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 
 export class Game {
 	private readonly engine: babylon.Engine;
@@ -70,23 +70,13 @@ export class Game {
 
 	stop(): void {
 		this.sceneManager.destroyTextures();
-		this.sceneManager.destroyEnvironnement();
+		this.sceneManager.destroyEnvironnement(this.scene);
 		this.sceneManager.destroyScore();
 		this.scene.onAfterRenderObservable.clear();
 		this.camera.dispose();
+		if (SHOW_DISPOSE_LOGS)
+			this.sceneManager.showDisposeLogs(this.scene);
 		this.engine.stopRenderLoop();
-		// this.scene.materials.forEach(mat => mat.dispose()); // these are the defualt materials, not sure if i have to dispose them since they are created auto
-		// console.log("meshes : " + this.scene.meshes);
-		// console.log("materials : " + this.scene.materials);
-		// this.scene.materials.forEach(mat => {
-		// 	console.log("mat name : " + mat.name);
-		// });
-		// console.log("textures : " + this.scene.textures);
-		// this.scene.textures.forEach(texture => {
-		// 	console.log("texture name : " + texture.name);
-		// });
-		// console.log("lights : " + this.scene.lights);
-		// console.log("particle system: " + this.scene.particleSystems);
 		this.scene.dispose();
 		this.engine.dispose();
 		this.canvas.remove();
@@ -97,16 +87,13 @@ export class Game {
 	private setScene(): void {
 		this.sceneManager.createTextures(this.scene);
 		this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
-		/**@todo text GOAL?*/
-
-		/**@todo just to make the ball move, will be removed*/
-		const sceneManager = this.sceneManager;
-		this.scene.onPointerDown = (): void => {
-			const ball = sceneManager.getBall();
-			ball?.testMove();
-			ball?.setJustCollide();
-		};
-
+		if (MOVE_BALL_ONCLICK) { //debug function
+			this.scene.onPointerDown = (): void => {
+				const ball = this.sceneManager.getBall();
+				ball?.moveBall();
+				ball?.setJustCollide();
+			};
+		}
 		this.scene.onAfterRenderObservable.add(() => {
 			if (this.inAnimation === false) {
 				this.checkEndOfPoint();
@@ -131,13 +118,14 @@ export class Game {
 				this.stop();
 			} else {
 				this.inAnimation = false;
-				this.sceneManager.destroyEnvironnement();
+				this.sceneManager.destroyEnvironnement(this.scene);
+				if (SHOW_DISPOSE_LOGS)
+					this.sceneManager.showDisposeLogs(this.scene);
 				this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
 			}
 		}
 	}
 
-	/**@todo see if camera can be moved via mouse or keyboard or none */
 	private createCamera(): babylon.ArcRotateCamera {
 		const cameraAxeLat = 1;
 		let cameraAxeLong;
@@ -149,9 +137,10 @@ export class Game {
 		const camera = new babylon.ArcRotateCamera("camera",
 			cameraAxeLong, cameraAxeLat,
 			CAMERA_POS_X, babylon.Vector3.Zero(), this.scene);
-		/**@todo will be removed, wont be able to move the camera */
-		camera.attachControl(this.canvas, true);
-		camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
+		if (MOVE_CAMERA_ONCLICK) { //debug function
+			camera.attachControl(this.canvas, true);
+			camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
+		}
 		return camera;
 	}
 }

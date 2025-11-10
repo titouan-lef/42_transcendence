@@ -13,7 +13,7 @@ import { WindyMap } from "../map/WindyMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
-import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
+import { MAP_SIZE, PLAYER_DIMENSION, SHOW_DISPOSE_LOGS, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
 
 export class SceneManager {
@@ -28,12 +28,10 @@ export class SceneManager {
 		this.score = new Score(scene, camera);
 	}
 
-	/**@todo will be removed */
 	getBall(): BallTemplate | null {
 		return this.ball;
 	}
 
-	/**@todo Enum here is kinda hard to use because each class is different */
 	private createBall(scene: babylon.Scene, settings: GameSettings): void {
 		const ballList: BallOption[] = ["default", "invisible", "tricky", "pulse", "snake"];
 		let ball = settings.ball;
@@ -103,6 +101,7 @@ export class SceneManager {
 		this.textures.rain = new babylon.Texture("textures/rain.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
 		this.textures.smoke = new babylon.Texture("textures/smoke.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
 		this.textures.electricity = new babylon.Texture("textures/electricity.png", scene, true, false, babylon.Texture.BILINEAR_SAMPLINGMODE);
+		/**@todonow necessary ? */
 		for (const key in this.textures) {
 			this.textures[key].hasAlpha = true;
 			this.textures[key].wrapU = babylon.Texture.CLAMP_ADDRESSMODE;
@@ -124,7 +123,7 @@ export class SceneManager {
 		if (this.map)
 			this.map.predeath();
 		this.ball?.preDeath();
-		this.ball?.showParticles(position, scene, "explosion"); /**@todo change position here */
+		this.ball?.showParticles(position, scene, "explosion");
 		this.score.changeScore([score.x, score.y]);
 		const originalGetDelta = engine.getDeltaTime; // keep original delta
 		engine.getDeltaTime = function(): number {
@@ -146,7 +145,7 @@ export class SceneManager {
 		this.score.changeScore([score.x, score.y]);
 	}
 
-	destroyEnvironnement(): void {
+	destroyEnvironnement(scene: babylon.Scene): void {
 		this.destroyCountDown();	
 		this.destroyBall();
 		this.destroyMap();
@@ -156,18 +155,21 @@ export class SceneManager {
 		while(this.players.length > 0) {
 			this.players.pop();
 		}
-		/**@todo Debugging logs */
-		// console.log("meshes : " + scene.meshes);
-		// console.log("materials : " + scene.materials);
-		// scene.materials.forEach(mat => {
-		// 	console.log("mat name : " + mat.name);
-		// });
-		// console.log("textures : " + scene.textures);
-		// scene.textures.forEach(texture => {
-		// 	console.log("texture name : " + texture.name);
-		// });
-		// console.log("lights : " + scene.lights);
-		// console.log("particle system: " + scene.particleSystems);
+	}
+
+	/** debug function */
+	showDisposeLogs(scene: babylon.Scene): void {
+		console.log("meshes : " + scene.meshes);
+		console.log("materials : " + scene.materials);
+		scene.materials.forEach(mat => {
+			console.log("mat name : " + mat.name);
+		});
+		console.log("textures : " + scene.textures);
+		scene.textures.forEach(texture => {
+			console.log("texture name : " + texture.name);
+		});
+		console.log("lights : " + scene.lights);
+		console.log("particle system: " + scene.particleSystems);
 	}
 
 	private destroyBall(): void {
