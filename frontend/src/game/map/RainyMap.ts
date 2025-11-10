@@ -102,6 +102,8 @@ export class RainyMap extends MapTemplate {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
 		const material = new babylon.StandardMaterial('wallcolor', scene);
 		material.diffuseColor = COLORS3.rainyDiffuseWall;
+		material.emissiveColor = COLORS3.rainyEmissiveWall;
+		material.alpha = 0.8;
 		newMesh.material = material;
 		return newMesh;
 	}

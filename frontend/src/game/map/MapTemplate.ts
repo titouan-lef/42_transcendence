@@ -58,13 +58,13 @@ export abstract class MapTemplate {
 		limits.push(newLimit);
 
 		newLimit = this.createLimit(scene,
-			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z));
+			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z - WALL_WIDTH * 2));
 		newLimit.position = new babylon.Vector3((-MAP_SIZE.x/2 + WALL_WIDTH/2), WALL_HEIGHT/2, 0);
 		newLimit.metadata = { type: "goal", player: 1 };
 		limits.push(newLimit);
 
 		newLimit = this.createLimit(scene,
-			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z));
+			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z - WALL_WIDTH * 2));
 		newLimit.position = new babylon.Vector3((MAP_SIZE.x/2 - WALL_WIDTH/2), WALL_HEIGHT/2, 0);
 		newLimit.metadata = { type: "goal", player: 2 };
 		limits.push(newLimit);
