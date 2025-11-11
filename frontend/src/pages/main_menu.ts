@@ -53,7 +53,7 @@ const FRIENDLIST = [
 const DIALOG_STYLE = `
 m-auto p-0 rounded-2xl
 shadow-[0_0_25px_0] shadow-shadow
-backdrop:bg-black/50 backdrop:backdrop-blur-sm bg-transparent
+backdrop:bg-white/25 backdrop:backdrop-blur-sm bg-transparent
 w-full max-w-[500px]
 h-1/2
 `;
@@ -69,7 +69,7 @@ const MAIN_MENU = `
 			<input id="btn-api" type="button" value="play" class="${BTN_STYLE} bg-secondary"/>
 		</div>
 	</main>
-	<aside class="${ASIDE_STYLE}">
+	<aside id="" class="${ASIDE_STYLE}">
 		<div class="${ASIDE_MAINBOX_STYLE}">
 			<div class="${AVATAR_STYLE}">
 				<img src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
@@ -112,7 +112,7 @@ function generateFriendList(): void {
 }
 
 function addFriend(): void {
-	setLang('fr');
+	setLang('fr'); /** @todo remove here */
 	console.log("CLICK ADD FRIEND");
 	// FRIENDLIST.push("new_friend");
 	// generateFriendList();
