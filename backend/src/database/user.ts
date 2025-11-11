@@ -1,12 +1,12 @@
 import { getDB } from "./init.js";
 
 export interface User {
-  username: string;
-  pseudo: string;
-  createdAt?: string; //c est sqlite ou nous gerons cette variable ?
-  hashedPassword: string;
-  ppLink: string;
-  themeId?: number | null;
+	username: string;
+	pseudo: string;
+	createdAt?: string; //c est sqlite ou nous gerons cette variable ?
+	hashedPassword: string;
+	ppLink: string;
+	themeId?: number | null;
 }
 
 export async function createUser(user: User): Promise<void> {
@@ -34,7 +34,7 @@ export async function getAllUsers(): Promise<User[]> {
 export async function getUserByUsername(username: string): Promise<User | undefined> {
 	const db = await getDB();
 	try {
-		const user: User = await db.get(`SELECT * FROM User WHERE username = ?`, [username]);
+		const user: User | undefined = await db.get(`SELECT * FROM User WHERE username = ?`, [username]);
 		return user;
 	} finally {
 		await db.close();

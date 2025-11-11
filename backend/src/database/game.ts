@@ -1,20 +1,18 @@
 import { getDB } from "./init.js";
 
 export interface Game {
-  id?: number;
-  beganAt?: string;
-  mapId?: number;
-  ballId?: number;
-  seasonId?: number;
+	id?: number;
+	beganAt?: string;
+	mapId?: number;
+	ballId?: number;
+	seasonId?: number;
 }
 
 export async function createGame(game: Game): Promise<void> {
 	const db = await getDB();
 	try {
-		await db.run(
-		`INSERT INTO Game (mapId, ballId, seasonId) VALUES (?, ?, ?)`,
-		[game.mapId, game.ballId, game.seasonId]
-	);
+		await db.run(`INSERT INTO Game (mapId, ballId, seasonId) VALUES (?, ?, ?)`,
+			[game.mapId, game.ballId, game.seasonId]);
 	} finally {
 		await db.close();
 	}
