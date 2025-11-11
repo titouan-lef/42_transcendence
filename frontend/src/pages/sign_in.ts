@@ -32,6 +32,22 @@ const SIGN_IN = `
 </div>
 `;
 
+const SIGN_UP = `
+<div class="bg-primary rounded-2xl h-full flex justify-center m-auto p-6 w-full">
+	<div class="flex flex-col justify-center items-center gap-4 min-w-[100px] max-w-[250px]">
+		<form name="Login" class="flex flex-col justify-center items-center gap-3">
+			${createInputHtml(["user_name"], "text", "login_id", { "autofocus": "true", "class": `${INPUT_STYLE}` })}
+			${createInputHtml(["nick_name"], "text", "login_nick", { "class": `${INPUT_STYLE}` })}
+			${createInputHtml(["password"], "password", "login_password", { "class": `${INPUT_STYLE}` })}
+			${createInputHtml(["confirm_password"], "password", "login_confirm_password", { "class": `${INPUT_STYLE}` })}
+		</form>
+		${createButtonHtml(["sign_up"], `btn-sign-up`, { "class": `${BTN_STYLE}` })}
+		<hr class="border-2 rounded-2xl border-dark w-1/2">
+		${createButtonHtml(["go_back"], `btn-guest`, { "class": `${BTN_STYLE}` })}
+	</div>
+</div>
+`;
+
 function connectUser(): void {
 	const userId: HTMLInputElement = getSafeElement("login_id", HTMLInputElement);
 	const userPassword: HTMLInputElement = getSafeElement("login_password", HTMLInputElement);
@@ -39,10 +55,16 @@ function connectUser(): void {
 	console.log(`sign-in button clicked with ${userId.value} and ${userPassword.value}`); /** @todo remove debug logs */
 }
 
+function loadSignUp(): void {
+	const elem = getSafeElement('modal', HTMLDialogElement);
+
+	elem.innerHTML = SIGN_UP;
+}
+
 function signInHandler(modal: HTMLDialogElement): void {
 	addHandler('btn-sign-in', 'click', () => connectUser());
 	addHandler('btn-guest', 'click', () => console.log("guest button clicked.")); /** @todo remove debug logs */
-	addHandler('btn-sign-up', 'click', () => console.log("sign-up button clicked.")); /** @todo remove debug logs */
+	addHandler('btn-sign-up', 'click', () => loadSignUp()); /** @todo remove debug logs */
 	addHandler('modal', 'click', (e) => exitDialog('modal', modal, e));
 }
 

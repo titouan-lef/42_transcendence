@@ -45,6 +45,22 @@ const TRANSLATOR = {
 		en: "sign up",
 		fr: "s'inscrire"
 	},
+	nick_name: {
+		en: "nick name",
+		fr: "pseudo"
+	},
+	confirm: {
+		en: "confirm",
+		fr: "confirmer"
+	},
+	confirm_password: {
+		en: "{confirm} {password}",
+		fr: "{confirm} le {password}"
+	},
+	go_back: {
+		en: "go back",
+		fr: "revenir"
+	},
 } as const satisfies Record<string, Expression>;
 
 export { CodeLang, TRANSLATOR };
