@@ -9,10 +9,8 @@ export interface GameRule {
 export async function createGameRule(gameRule: GameRule): Promise<void> {
 	const db = await getDB();
 	try {
-		await db.run(
-		`INSERT INTO Game_rule (gameId, ruleId, isActive) VALUES (? ,? , ?)`,
-		[gameRule.gameId, gameRule.ruleId, gameRule.isActive]
-	);
+		await db.run(`INSERT INTO Game_rule (gameId, ruleId, isActive) VALUES (? ,? , ?)`,
+			[gameRule.gameId, gameRule.ruleId, gameRule.isActive]);
 	} finally {
 		await db.close();
 	}
@@ -42,12 +40,11 @@ export async function updateGameRule(gameId: number, ruleId: number, updates: Pa
 	const db = await getDB();
 	try {
 		const fields = Object.keys(updates).map((key) => `${key} = ?`).join(", ");
-		if (!fields) return;
+		if (!fields) 
+			return;
 		const values = Object.values(updates);
-		await db.run(
-			`UPDATE Game_rule SET ${fields} WHERE gameId = ? AND ruleId = ?`,
-			[...values, gameId, ruleId]
-		);
+		await db.run(`UPDATE Game_rule SET ${fields} WHERE gameId = ? AND ruleId = ?`,
+			[...values, gameId, ruleId]);
 	} finally {
 		await db.close();
 	}
@@ -55,7 +52,7 @@ export async function updateGameRule(gameId: number, ruleId: number, updates: Pa
 
 export async function deleteGameRule(gameId: number, ruleId: number): Promise<void> {
 	const db = await getDB();
-		try {
+	try {
 		await db.run(`DELETE FROM Game_rule WHERE gameId = ? AND ruleId = ?`, [gameId, ruleId]);
 	} finally {
 		await db.close();
