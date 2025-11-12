@@ -24,12 +24,6 @@ APP.register(fastifyStatic, {
 	index: ["index.html"]
 });
 
-APP.register(fastifyStatic, {
-	root: path.join("/app/node_modules/@babylonjs/"),
-	prefix: "/babylonjs/",
-	decorateReply: false
-});
-
 // --- Start server ---
 async function start(): Promise<void> {
 	try {
