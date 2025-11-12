@@ -86,7 +86,10 @@ export class Game {
 			const controls = player.handleKeyDown(event);
 			this.socket.send(JSON.stringify(controls));
 		});
-		window.addEventListener("keyup", player.handleKeyUp);
+		window.addEventListener("keyup", (event: KeyboardEvent) => {
+			const controls = player.handleKeyUp(event);
+			this.socket.send(JSON.stringify(controls));
+		});
 
 		// window.removeEventListener("keydown", this.handleKeyDown);
 		// window.removeEventListener("keyup", this.handleKeyUp);

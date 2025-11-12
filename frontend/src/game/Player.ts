@@ -47,14 +47,7 @@ export class Player {
 		this.mesh.material = material;
 	}
 
-	handleKeyDown = (event: KeyboardEvent): PlayerControls => {
-		/**@todo a enlever avec serverside */
-		event.preventDefault(); // prevent the action from the navigator (ex: space)
-		for (let i = 0; i < this.controls.length; i++) {
-			if (event.code === this.controls[i] && !this.keyPressed[i]) {
-				this.keyPressed[i] = true;
-			}
-		}
+	getPressedKeys(): PlayerControls {
 		const controls: PlayerControls = {
 			mov_right: this.keyPressed[0],
 			mov_left: this.keyPressed[1],
@@ -63,18 +56,27 @@ export class Player {
 			apply_effect: this.keyPressed[4],
 		};
 		return controls;
-	};
+	}
 
-	handleKeyUp = (event: KeyboardEvent): void => {
+	handleKeyDown(event: KeyboardEvent): PlayerControls {
 		/**@todo a enlever avec serverside */
 		event.preventDefault(); // prevent the action from the navigator (ex: space)
 		for (let i = 0; i < this.controls.length; i++) {
-			if (event.code === this.controls[i] && this.keyPressed[i]) {
-				//console.log(this.controls[i] + "up");
-				this.keyPressed[i] = false;
-			}
+			if (event.code === this.controls[i] && !this.keyPressed[i])
+				this.keyPressed[i] = true;
 		}
-	};
+		return this.getPressedKeys();
+	}
+
+	handleKeyUp(event: KeyboardEvent): PlayerControls {
+		/**@todo a enlever avec serverside */
+		event.preventDefault(); // prevent the action from the navigator (ex: space)
+		for (let i = 0; i < this.controls.length; i++) {
+			if (event.code === this.controls[i] && this.keyPressed[i])
+				this.keyPressed[i] = false;
+		}
+		return this.getPressedKeys();
+	}
 
 	/**@todo in case we want to Lock player on Z axe */
 	// private observeXY(): babylon.Observer<babylon.Scene>{

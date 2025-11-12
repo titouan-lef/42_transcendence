@@ -47,7 +47,7 @@ async function disconnectUser(req: FastifyRequest, reply: FastifyReply): Promise
 
 async function whoami(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	sendReply(reply, 200, true, req.user);
-} 
+}
 
 async function verifyAuth(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const token = req.cookies?.token;
