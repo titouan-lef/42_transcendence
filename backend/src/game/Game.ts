@@ -99,7 +99,7 @@ export class Game {
 			}
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
 				this.stop();
-			} else{
+			} else {
 				this.sceneManager.destroyEnvironnement(this.scene);
 				this.sceneManager.setEnvironnement(this.scene, this.settings);
 			}
@@ -173,6 +173,10 @@ export class Game {
 		this.sendGameStatus("start", player1, player2);
 		
 		this.gameInterval = setInterval(() => {
+			const player1 = this.sceneManager.players.at(0);
+			const player2 = this.sceneManager.players.at(1);
+			if (!player1 || !player2 )
+				return;
 			this.sendGameStatus("pending", player1, player2);
 		}, intervalMs);
 
@@ -215,6 +219,5 @@ export class Game {
 		player.keyPressed[3] = controls.rot_right;
 		player.keyPressed[4] = controls.apply_effect;
 		player.handleAction();
-		/** @todo check with Tim if that is enougth  ?? */
 	}
 }
