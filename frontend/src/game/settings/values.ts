@@ -105,7 +105,7 @@ export const COLORS4 = {
 /**@todo should be false */
 export const MOVE_BALL_ONCLICK = true;
 export const MOVE_CAMERA_ONCLICK = false;
-export const SHOW_DISPOSE_LOGS = false;
+export const SHOW_DISPOSE_LOGS = true;
 
 /**GAMEPLAY GENERAL SETTINGS */
 export const POINTS_TO_WIN = 11;

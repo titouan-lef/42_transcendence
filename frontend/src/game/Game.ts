@@ -69,9 +69,7 @@ export class Game {
 	}
 
 	stop(): void {
-		this.sceneManager.destroyTextures();
-		this.sceneManager.destroyEnvironnement(this.scene);
-		this.sceneManager.destroyScore();
+		this.sceneManager.destroyScene(this.scene);
 		this.scene.onAfterRenderObservable.clear();
 		this.camera.dispose();
 		if (SHOW_DISPOSE_LOGS)
@@ -86,6 +84,7 @@ export class Game {
 
 	private setScene(): void {
 		this.sceneManager.createTextures(this.scene);
+		this.sceneManager.createPlayers(this.scene, this.settings);
 		this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
 		if (MOVE_BALL_ONCLICK) { //debug function
 			this.scene.onPointerDown = (): void => {

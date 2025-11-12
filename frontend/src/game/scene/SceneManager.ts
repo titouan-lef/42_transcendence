@@ -80,7 +80,7 @@ export class SceneManager {
 		}
 	}
 
-	private createPlayers(scene: babylon.Scene, settings: GameSettings): void {
+	createPlayers(scene: babylon.Scene, settings: GameSettings): void {
 		const player1PosX = MAP_SIZE.x / 2 - (PLAYER_DIMENSION.z + WALL_WIDTH);
 		const player2PosX = (PLAYER_DIMENSION.z + WALL_WIDTH) -(MAP_SIZE.x / 2);
 		const playersPoxY = PLAYER_DIMENSION.y / 2;
@@ -132,18 +132,16 @@ export class SceneManager {
 	}
 
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void {
-		this.createPlayers(scene, settings);
 		this.createBall(scene, settings);
 		this.createMap(scene, settings.map);
-		this.createCountDown(scene);
 		this.score.changeScore([score.x, score.y]);
+		this.createCountDown(scene);
 	}
 
 	destroyEnvironnement(scene: babylon.Scene): void {
 		this.destroyCountDown();	
 		this.destroyBall();
 		this.destroyMap();
-		this.destroyPlayers();
 		this.ball = null;
 		this.map = null;
 		while(this.players.length > 0) {
@@ -185,13 +183,20 @@ export class SceneManager {
 		this.countDown = null;
 	}
 
-	destroyTextures(): void {
+	private destroyTextures(): void {
 		for (const texture in this.textures) {
 			this.textures[texture].dispose();
 		}
 	}
 
-	destroyScore(): void {
+	private destroyScore(): void {
 		this.score.destroy();
+	}
+
+	destroyScene(scene: babylon.Scene): void {
+		this.destroyTextures();
+		this.destroyPlayers();
+		this.destroyEnvironnement(scene);
+		this.destroyScore();
 	}
 }
