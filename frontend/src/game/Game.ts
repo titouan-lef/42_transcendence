@@ -1,20 +1,21 @@
 import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./SceneManager.js";
 import { GameSettings } from "./GameSettings.js";
-import { HavokPlugin } from "@babylonjs/core/Physics";
-import havokPhysics from "@babylonjs/havok";
-import { MAP_SIZE, POINTS_TO_WIN } from "./values.js";
+import { MAP_SIZE } from "./values.js";
+import { GameStatus, Position } from "./data_transfert.js";
 
 export class Game {
+	private readonly socket: WebSocket;
 	private readonly engine: babylon.Engine;
 	private readonly scene: babylon.Scene;
-	private readonly sceneManager: SceneManager;
+	readonly sceneManager: SceneManager;
 	private readonly settings: GameSettings;
 	private readonly camera: babylon.ArcRotateCamera;
 	private canvas: HTMLCanvasElement;
 	private score: babylon.Vector2;
 
-	constructor (canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
+	constructor (socket: WebSocket, canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
+		this.socket = socket;
 		this.engine = engine;
 		this.canvas = canvas;
 		this.settings = settings;
@@ -27,11 +28,11 @@ export class Game {
 	}
 
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
-	static async create(settings: GameSettings): Promise<Game> {
+	static async create(socket: WebSocket, settings: GameSettings): Promise<Game> {
 		const canvas = Game.createCanvas();
 		const engine = new babylon.Engine(canvas, true);
 		const scene = await Game.initScene(engine);
-		return new Game(canvas, settings, scene, engine);
+		return new Game(socket, canvas, settings, scene, engine);
 	}
 
 	/** creating the canvas here because each time a game is created, a new canvas should also be created */
@@ -48,12 +49,6 @@ export class Game {
 
 	private static async initScene(engine: babylon.Engine): Promise<babylon.Scene> {
 		const scene = new babylon.Scene(engine);
-
-		const havokInstance = await havokPhysics({
-			locateFile: (fileName) => `/dist/public/${fileName}` // tells havok where to fetch the WASM file
-		});
-		const havokPlugin = new HavokPlugin(true, havokInstance);
-		scene.enablePhysics(new babylon.Vector3(0, -9.81, 0), havokPlugin);
 		return scene;
 	};
 
@@ -78,41 +73,25 @@ export class Game {
 
 	private setScene(): void {
 		this.sceneManager.setEnvironnement(this.scene, this.settings);
-		/**@todo text GOAL?*/
 
-		/**@todo just to make the ball move, will be removed*/
-		const sceneManager = this.sceneManager;
-		this.scene.onPointerDown = (): void => {
-			sceneManager.getBalls().forEach(ball => {
-				ball.testMove();
-				ball.setJustCollide();
-			});
-		};
-
-		this.scene.onAfterRenderObservable.add(() => {
-			this.checkEndOfPoint();
-		});
-	}
-
-	/**check collision for each balls */
-	checkEndOfPoint(): void {
-		const goal = this.sceneManager.checkGoal();
-		if (goal !== null) {
-			/**@todo inscrire goal */
-			if (goal === "player2") {
-				this.score.x += 1;
-				//console.log("player 2 goaled");
-			} else{
-				this.score.y += 1;
-				//console.log("player 1 goaled");
-			}
-			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
-				this.stop();
-			} else{
-				this.sceneManager.destroyEnvironnement(this.scene);
-				this.sceneManager.setEnvironnement(this.scene, this.settings);
-			}
+		const player = this.sceneManager.players.find(
+			(p) => p.username === this.settings.player1.username
+		);
+		if (!player) {
+			console.error(`Player ${this.settings.player1.username} not found`);
+			return;
 		}
+
+		window.addEventListener("keydown", (event: KeyboardEvent) => {
+			const controls = player.handleKeyDown(event);
+			this.socket.send(JSON.stringify(controls));
+		});
+		window.addEventListener("keyup", player.handleKeyUp);
+
+		// window.removeEventListener("keydown", this.handleKeyDown);
+		// window.removeEventListener("keyup", this.handleKeyUp);
+
+		/**@todo text GOAL?*/
 	}
 
 	/**@todo see if camera can be moved via mouse or keyboard or none */
@@ -124,5 +103,29 @@ export class Game {
 		camera.attachControl(this.canvas, true);
 		camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
 		return camera;
+	}
+
+	updatePlayerPositions(username: string, position: Position): void {
+		const player = this.sceneManager.players.find(
+			(p) => p.username === username
+		);
+		if (!player) {
+			console.error(`Player ${username} not found`);
+			return;
+		}
+		player.mesh.position.x = position.x;
+		player.mesh.position.y = position.y;
+		player.mesh.position.z = position.z;
+	}
+
+	updateBallPositions(position: Position): void {
+		const ball = this.sceneManager.getBalls().at(0);
+		if (!ball) {
+			console.error(`ERROR !!! Ball not found ...`);
+			return;
+		}
+		ball.mesh.position.x = position.x;
+		ball.mesh.position.y = position.y;
+		ball.mesh.position.z = position.z;
 	}
 }

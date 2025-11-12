@@ -58,7 +58,7 @@ async function openWebSocketConnection(): Promise<void> {
 
 		const status : GameStatus = JSON.parse(event.data);
 		if (status.status === "start") {
-			showCanvas();
+			showCanvas(ws, status);
 		} else if (status.status === "stop") {
 			hideCanvas();
 			return ;

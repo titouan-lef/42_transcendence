@@ -19,7 +19,7 @@ import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "./values.js";
 export class SceneManager {
 	private readonly balls: BallTemplate[] = [];
 	private readonly maps: MapTemplate[] = [];
-	private readonly players: Player[] = [];
+	readonly players: Player[] = [];
 
 	/**@todo will be removed */
 	getBalls(): BallTemplate[] {
@@ -82,20 +82,12 @@ export class SceneManager {
 		const player1PosX = MAP_SIZE.x / 2 - (PLAYER_DIMENSION.z + WALL_WIDTH);
 		const player2PosX = (PLAYER_DIMENSION.z + WALL_WIDTH) -(MAP_SIZE.x / 2);
 		const playersPoxY = PLAYER_DIMENSION.y / 2;
-		const player1 = new Player(scene, new babylon.Vector2(player1PosX, playersPoxY), settings, settings.player1Keys);
-		const player2 = new Player(scene, new babylon.Vector2(player2PosX, playersPoxY), settings, settings.player2Keys);
+		const player1 = new Player(scene, new babylon.Vector2(player1PosX, playersPoxY), settings, settings.player1);
+		const player2 = new Player(scene, new babylon.Vector2(player2PosX, playersPoxY), settings, settings.player2);
 		this.players.push(player1);
+		console.log(`Player ${settings.player1.username} created`);
 		this.players.push(player2);
-	}
-
-	checkGoal(): "player1" | "player2" | null {
-		for (const ball of this.balls) {
-			const goal = ball.getGoal();
-			if (goal !== null) {
-				return goal;
-			}
-		};
-		return null;
+		console.log(`Player ${settings.player2.username} created`);
 	}
 
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
@@ -115,7 +107,7 @@ export class SceneManager {
 		while(this.players.length > 0) {
 			this.players.pop();
 		}
-		scene.materials.forEach(mat => mat.dispose()); // these are the defualt materials, not sure if i have to dispose them since they are created auto
+		scene.materials.forEach(mat => mat.dispose()); // these are the default materials, not sure if i have to dispose them since they are created auto
 		/**@todo Debugging logs */
 		// console.log("meshes : " + scene.meshes);
 		// console.log("materials : " + scene.materials);

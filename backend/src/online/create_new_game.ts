@@ -49,6 +49,8 @@ async function initWebSocketConnection(socket: WebSocket, req: FastifyRequest): 
 	const user = payload.id;
 	console.log("Identified", user);
 	if (ACTIVES_SOCKETS.has(user))
+		return socket.close(1008, "Already playing");
+	if (WAITING_PLAYERS.includes(user))
 		return socket.close(1008, "Already looking for a game");
 	ACTIVES_SOCKETS.set(user, socket);
 	WAITING_PLAYERS.push(user);
@@ -61,13 +63,12 @@ async function initWebSocketConnection(socket: WebSocket, req: FastifyRequest): 
 		newGame(players1, players2);
 	}
 
-	socket.on("message", (message: Buffer | string) => {
-		console.log("Received message from", user, ":", message.toString());
-		/** @todo handler for the game */
-	});
 
 	socket.on("close", () => {
 		ACTIVES_SOCKETS.delete(user);
+		const index = WAITING_PLAYERS.indexOf(user);
+		if (index !== -1)
+			WAITING_PLAYERS.splice(index, 1);
 	});
 }
 
@@ -76,8 +77,13 @@ function newGame(player1: string, player2: string): void {
 	const socket1 = ACTIVES_SOCKETS.get(player1);
 	const socket2 = ACTIVES_SOCKETS.get(player2);
 
-	if (!socket1 || !socket2)
+	if (!socket1 || !socket2) {
+		if (!socket1)
+			WAITING_PLAYERS.push(player2);
+		else
+			WAITING_PLAYERS.push(player1);
 		return console.error("One of the players is no longer connected.");
+	}
 
 	startGame(player1, player2, socket1, socket2);
 }

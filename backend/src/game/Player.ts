@@ -1,6 +1,5 @@
 import * as babylon from "@babylonjs/core";
 import { GameSettings, PlayerSettings } from "./GameSettings.js";
-import { PlayerKeys } from "./GameSettings.js";
 import { PLAYER_DIMENSION, COLORS, MAP_SIZE, WALL_WIDTH, PLAYER_MOVEMENT_IMPULSE, PLAYER_ROTATION_IMPULSE, PLAYER_MASS } from "./values.js";
 import { WebSocket } from "ws";
 
@@ -10,9 +9,8 @@ export class Player {
 	readonly socket: WebSocket;
 	private readonly color: babylon.Color3 = COLORS.white;
 	private readonly physic: babylon.PhysicsAggregate;
-	private readonly controls: PlayerKeys; /** @todo replace with username ?? and always use AWDS */
 	private readonly rotatingPlayer: boolean;
-	private readonly keyPressed: boolean[] = [false, false, false, false, false];
+	readonly keyPressed: boolean[] = [false, false, false, false, false];
 
 	private readonly axeZ: babylon.Mesh;
 	private readonly axeZPhysic: babylon.PhysicsAggregate;
@@ -58,7 +56,6 @@ export class Player {
 
 		this.username = settings.username;
 		this.socket = settings.socket;
-		this.controls = settings.playerKeys;
 
 		/**@todo in case we want to Lock player on Z axe */
 		// this.sceneObservable = scene.onBeforeRenderObservable;
@@ -163,62 +160,35 @@ export class Player {
 		}
 	}
 
-	private handleKeyDown = (event: KeyboardEvent): void => {
-		/**@todo a enlever avec serverside */
-		event.preventDefault(); // prevent the action from the navigator (ex: space)
-		for (let i = 0; i < this.controls.length; i++) {
-			if (event.code === this.controls[i] && !this.keyPressed[i]) {
-				this.handleAction(event.code);
-				this.keyPressed[i] = true;
+	/**@todo change direction for second player */
+	handleAction(): void {
+		if (this.keyPressed[0])
+			this.impulse(-1);
+		if (this.keyPressed[1])
+			this.impulse(1);
+		if (this.keyPressed[2]) {
+			if (this.rotatingPlayer) {
+				this.physic.body.applyImpulse(
+					new babylon.Vector3(PLAYER_ROTATION_IMPULSE, 0, 0),
+					new babylon.Vector3(this.mesh.absolutePosition.x, this.mesh.absolutePosition.y,
+						this.mesh.absolutePosition.z - (PLAYER_DIMENSION.z / 2))
+				);
 			}
 		}
-	};
-
-	private handleKeyUp = (event: KeyboardEvent): void => {
-		/**@todo a enlever avec serverside */
-		event.preventDefault(); // prevent the action from the navigator (ex: space)
-		for (let i = 0; i < this.controls.length; i++) {
-			if (event.code === this.controls[i] && this.keyPressed[i]) {
-				//console.log(this.controls[i] + "up");
-				this.keyPressed[i] = false;
+		if (this.keyPressed[3]) {
+			if (this.rotatingPlayer) {
+				this.physic.body.applyImpulse(
+					new babylon.Vector3(PLAYER_ROTATION_IMPULSE, 0, 0),
+					new babylon.Vector3(this.mesh.absolutePosition.x, this.mesh.absolutePosition.y,
+						this.mesh.absolutePosition.z + (PLAYER_DIMENSION.z / 2))
+				);
 			}
 		}
-	};
-
-	/**@todo c'est sale mais ca va changer avec le serverside. Envoie de la key au server */
-	private handleAction(event: KeyboardEvent["code"]): void {
-		switch (event) {
-			case this.controls[0]:
-				this.impulse(-1);
-				break;
-			case this.controls[1]:
-				this.impulse(1);
-				break;
-			case this.controls[2]:
-				if (this.rotatingPlayer) {
-					this.physic.body.applyImpulse(
-						new babylon.Vector3(PLAYER_ROTATION_IMPULSE, 0, 0),
-						new babylon.Vector3(this.mesh.absolutePosition.x, this.mesh.absolutePosition.y,
-							this.mesh.absolutePosition.z - (PLAYER_DIMENSION.z / 2))
-					);
-				}
-				break;
-			case this.controls[3]:
-				if (this.rotatingPlayer) {
-					this.physic.body.applyImpulse(
-						new babylon.Vector3(PLAYER_ROTATION_IMPULSE, 0, 0),
-						new babylon.Vector3(this.mesh.absolutePosition.x, this.mesh.absolutePosition.y,
-							this.mesh.absolutePosition.z + (PLAYER_DIMENSION.z / 2))
-					);
-				}
-				break;
-			case this.controls[4]:
-				if (this.applyingSpin) {
-					this.mesh.metadata.playerSpinning = this.mesh.metadata.playerSpinning ? false : true;
-					/**@todo make a visual effect to show if effect is activated or not */
-				}
-				break;
-			default: ;
+		if (this.keyPressed[3]) {
+			if (this.applyingSpin) {
+				this.mesh.metadata.playerSpinning = this.mesh.metadata.playerSpinning ? false : true;
+				/**@todo make a visual effect to show if effect is activated or not */
+			}
 		}
 	}
 
@@ -269,7 +239,5 @@ export class Player {
 		this.physic.dispose();
 		this.mesh.material?.dispose();
 		this.mesh.dispose();
-		// window.removeEventListener("keydown", this.handleKeyDown);
-		// window.removeEventListener("keyup", this.handleKeyUp);
 	}
 }

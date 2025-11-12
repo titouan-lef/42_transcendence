@@ -1,8 +1,16 @@
 import { BallOption, MapOption } from "./GameSettings.js";
 
+interface Position {
+	x: number;
+	y: number;
+	z: number
+}
+
+/**@todo split positions for rendering and data used only once (options, score, pseudos...) */
+/**@todo change string `status` into an enum */
 interface GameStatus {
 	status: string;
-	env : {
+	options : {
 		map: MapOption;
 		ball: BallOption;
 		rotatingPlayer: boolean;
@@ -15,18 +23,18 @@ interface GameStatus {
 	};
 	player : {
 		pseudo: string;
-		pos : { x: number, y: number, z: number };
+		pos : Position;
 	};
 	enemy : {
 		pseudo: string;
-		pos : { x: number, y: number, z: number };
+		pos : Position;
 	};
 	ball : {
-		pos : { x: number, y: number, z: number };
+		pos : Position;
 	}
 }
 
-interface GlayerControls {
+interface PlayerControls {
 	mov_right: boolean;
 	mov_left: boolean;
 	rot_right: boolean;
@@ -34,4 +42,4 @@ interface GlayerControls {
 	apply_effect: boolean;
 }
 
-export { GameStatus, GlayerControls };
+export { Position, GameStatus, PlayerControls };

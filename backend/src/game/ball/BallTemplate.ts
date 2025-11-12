@@ -6,7 +6,7 @@ import { BallTrail } from "./BallTrail.js";
 export abstract class BallTemplate {
 	readonly mesh: babylon.Mesh;
 	protected readonly physic: babylon.PhysicsAggregate;
-	private readonly type: BallOption;
+	readonly type: BallOption;
 	protected readonly ballTrails: BallTrail[] = [];
 	private readonly collisionObservable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
 	private readonly collisionObserver: babylon.Observer<babylon.IPhysicsCollisionEvent>;

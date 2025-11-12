@@ -5,7 +5,7 @@ import { GameSettings, PlayerSettings } from "./GameSettings.js";
 import havokPhysics from "@babylonjs/havok";
 import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import { POINTS_TO_WIN } from "./values.js";
-import { GameStatus } from "./data_transfert.js";
+import { GameStatus, PlayerControls } from "./data_transfert.js";
 import { Player } from "./Player.js";
 
 export class Game {
@@ -25,7 +25,7 @@ export class Game {
 		this.scene = scene;
 		// window.addEventListener("resize", () => this.engine.resize());
 		this.setScene();
-		this.camera = new babylon.ArcRotateCamera("Camera", 0, 0, 10, new babylon.Vector3(0, 0, 0), scene);
+		this.camera = new babylon.ArcRotateCamera("Camera", 0, 0, 0, new babylon.Vector3(0, 0, 0), scene);
 		this.score = new babylon.Vector2(0, 0);
 		/** @todo add new game into the DB */
 	}
@@ -68,20 +68,17 @@ export class Game {
 		this.camera.dispose();
 		this.scene.dispose();
 		this.engine.dispose();
+		const player1 = this.sceneManager.players.at(0);
+		const player2 = this.sceneManager.players.at(1);
+		if (player1)
+			player1.socket.close();
+		if (player2)
+			player2.socket.close();
 	}
 
 	private setScene(): void {
 		this.sceneManager.setEnvironnement(this.scene, this.settings);
 		/**@todo text GOAL?*/
-
-		/**@todo just to make the ball move, will be removed*/
-		const sceneManager = this.sceneManager;
-		this.scene.onPointerDown = (): void => {
-			sceneManager.getBalls().forEach(ball => {
-				ball.testMove();
-				ball.setJustCollide();
-			});
-		};
 
 		this.scene.onAfterRenderObservable.add(() => {
 			this.checkEndOfPoint();
@@ -109,15 +106,29 @@ export class Game {
 		}
 	}
 
-	private getGameStatus(player: Player, enemy: Player): GameStatus | null {
-		const ballPos = this.sceneManager.getBalls().at(0)?.mesh.position;
+	private getGameStatus(status: string, player: Player, enemy: Player): GameStatus | null {
+		const ball = this.sceneManager.getBalls().at(0);
+		if (!ball)
+			return null;
+		const ballPos = ball.mesh.position;
+		const playerPos = { x: player.mesh.position.x, y: player.mesh.position.y, z: player.mesh.position.z };
+		const enemyPos = { x: enemy.mesh.position.x, y: enemy.mesh.position.y, z: enemy.mesh.position.z };
 		if (ballPos === undefined)
 			return null;
-		const status: GameStatus = {
-			status: "pending",
-			env: {
+		if (player.username === this.sceneManager.players.at(1)?.username) {
+			ballPos.x = -ballPos.x;
+			ballPos.z = -ballPos.z;
+			playerPos.x = -playerPos.x;
+			playerPos.z = -playerPos.z;
+			enemyPos.x = -enemyPos.x;
+			enemyPos.z = -enemyPos.z;
+		}
+
+		const gameStatus: GameStatus = {
+			status: status,
+			options: {
 				map: this.settings.map,
-				ball: this.settings.ball,
+				ball: ball.type,
 				rotatingPlayer: this.settings.rotatingPlayer,
 				spin: this.settings.spin
 			},
@@ -128,22 +139,27 @@ export class Game {
 			},
 			player: {
 				pseudo: player.username,
-				pos: player.mesh.position
+				pos: playerPos
 			},
 			enemy: {
 				pseudo: enemy.username,
-				pos: enemy.mesh.position
+				pos: enemyPos
 			},
 			ball: {
-				pos: ballPos
+				pos: { x: ballPos.x, y: ballPos.y, z: ballPos.z }
 			}
 		};
-		return status;
+		return gameStatus;
 	}
 
-	private async sendGameStatus(player1: Player, player2: Player) : Promise<void> {
-		player1.socket.send(JSON.stringify(this.getGameStatus(player1, player2)));
-		player2.socket.send(JSON.stringify(this.getGameStatus(player2, player1)));
+	private async sendGameStatus(status: string, player1: Player, player2: Player) : Promise<void> {
+		let gameStatus: GameStatus | null = null;
+		gameStatus = this.getGameStatus(status, player1, player2);
+		if (gameStatus)
+			player1.socket.send(JSON.stringify(gameStatus));
+		gameStatus = this.getGameStatus(status, player2, player1);
+		if (gameStatus)
+			player2.socket.send(JSON.stringify(gameStatus));
 	}
 
 	startSendingGameStatus(): void {
@@ -154,15 +170,20 @@ export class Game {
 		const player2 = this.sceneManager.players.at(1);
 		if (!player1 || !player2 )
 			return;
-		player1.socket.send(JSON.stringify({ status: "start" }));
-		player2.socket.send(JSON.stringify({ status: "start" }));
+		this.sendGameStatus("start", player1, player2);
 		
 		this.gameInterval = setInterval(() => {
-			this.sendGameStatus(player1, player2);
+			this.sendGameStatus("pending", player1, player2);
 		}, intervalMs);
 
-		player1.socket.on("close", () => this.stop());
-		player2.socket.on("close", () => this.stop());
+		player1.socket.on("close", () => {
+			this.stop();
+			player2.socket.close();
+		});
+		player2.socket.on("close", () => {
+			this.stop();
+			player1.socket.close();
+		});
 	}
 
 	stopSendingGameStatus(): void {
@@ -178,5 +199,22 @@ export class Game {
 			player2.socket.send(JSON.stringify({ status: "stop" }));
 		}
 	}
-	
+
+	receiveDataFrom(playerName: string, message: string): void {
+		const controls: PlayerControls = JSON.parse(message);
+		const player = this.sceneManager.players.find(
+			(p) => p.username === playerName
+		);
+		if (!player) {
+			console.error(`Player ${playerName} not found`);
+			return;
+		}
+		player.keyPressed[0] = controls.mov_left;
+		player.keyPressed[1] = controls.mov_right;
+		player.keyPressed[2] = controls.rot_left;
+		player.keyPressed[3] = controls.rot_right;
+		player.keyPressed[4] = controls.apply_effect;
+		player.handleAction();
+		/** @todo check with Tim if that is enougth  ?? */
+	}
 }
