@@ -153,7 +153,6 @@ export class Meteor {
 		return trail;
 	}
 
-
 	destroy(): void {
 		this.sceneObservable?.remove(this.sceneObserver);
 		this.body?.dispose();

@@ -54,7 +54,8 @@ export class SceneManager {
 			case "snake":
 				this.ball = new SnakeBall(scene, this.textures);
 				break;
-			default: throw new Error("switch ball fail");
+			default: 
+				throw new Error("switch ball fail");
 		}
 	}
 
@@ -76,7 +77,8 @@ export class SceneManager {
 			case "desert":
 				this.map = new DesertMap(scene, this.textures);
 				break;
-			default: throw new Error("switch map fail");
+			default: 
+				throw new Error("switch map fail");
 		}
 	}
 
