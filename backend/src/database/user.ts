@@ -3,10 +3,10 @@ import { getDB } from "./init.js";
 export interface User {
 	username: string;
 	pseudo: string;
-	createdAt?: string; //c est sqlite ou nous gerons cette variable ?
+	createdAt?: string;
 	hashedPassword: string;
 	ppLink: string;
-	themeId?: number | null;
+	themeId: number | null;
 }
 
 export async function createUser(user: User): Promise<void> {
@@ -14,7 +14,7 @@ export async function createUser(user: User): Promise<void> {
 	try {
 		await db.run(
 			`INSERT INTO User (username, pseudo, hashedPassword, ppLink, themeId) VALUES (?, ?, ?, ?, ?)`,
-			[user.username, user.pseudo, user.hashedPassword, user.ppLink, user.themeId ?? null,]
+			[user.username, user.pseudo, user.hashedPassword, user.ppLink, user.themeId]
 		);
 	} finally {
 		await db.close();
@@ -41,7 +41,7 @@ export async function getUserByUsername(username: string): Promise<User | undefi
 	}
 }
 
-export async function updateUser(username: string, updates: Partial<Omit<User, "username" | "created_at">>): Promise<void> {
+export async function updateUser(username: string, updates: Partial<Omit<User, "username" | "createdAt">>): Promise<void> {
 	const db = await getDB();
 	try {
 		const fields = Object.keys(updates).map((key) => `${key} = ?`).join(", ");
