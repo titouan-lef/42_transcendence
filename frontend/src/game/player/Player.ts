@@ -2,40 +2,32 @@ import * as babylon from "@babylonjs/core";
 import { GameSettings, PlayerKeys } from "../settings/GameSettings.js";
 import { PLAYER_DIMENSION, COLORS3, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY, PLAYER_TRAIL_INTERVAL, PLAYER_TRAIL_ON } from "../settings/values.js";
 import { PlayerTrail } from "./PlayerTrail.js";
+//import { PhysicsBody } from "babylonjs";
 
 export class Player {
-	private readonly mesh: babylon.Mesh;
-	private readonly color: babylon.Color3 = COLORS3.white;
+	private readonly player: babylon.TransformNode;
+	private readonly body: babylon.PhysicsBody;
 	private readonly controls: PlayerKeys;
 	private readonly keyPressed: boolean[] = [false, false, false, false, false];
 	private readonly rotatingPlayer: boolean;
 	private readonly applyingSpin;
-	private readonly highlight: babylon.HighlightLayer;
+	private readonly baseRotation: babylon.Quaternion;
 	private readonly playerTrails: PlayerTrail[] = [];
 	private trailIntervalId: ReturnType<typeof setInterval> | null = null;
 
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	private readonly positionObserver: babylon.Observer<babylon.Scene>;
-	private readonly body: babylon.PhysicsBody;
 	private linearVelocityZ = 0;
 	private angularVelocityY = 0;
 
-	constructor(scene: babylon.Scene, position: babylon.Vector2, settings: GameSettings, controls: PlayerKeys) {
-		this.mesh = this.setPlayer(scene, position);
-		this.highlight = new babylon.HighlightLayer("highlight", scene);
-		this.body = new babylon.PhysicsBody(this.mesh, babylon.PhysicsMotionType.ANIMATED, false, scene);
-		this.body.setMassProperties({
-			mass: PLAYER_MASS,
-			centerOfMass: babylon.Vector3.Zero()
-		});
-		this.body.shape = new babylon.PhysicsShapeBox(babylon.Vector3.Zero(), babylon.Quaternion.Identity(),
-			PLAYER_DIMENSION, scene);
-		this.body.shape.material = { restitution: PLAYER_RESTITUTION, friction: 0 };
-		this.setMaterial(scene, this.color);
-		this.rotatingPlayer = settings.rotatingPlayer;
+	constructor(scene: babylon.Scene, position: babylon.Vector2, settings: GameSettings, controls: PlayerKeys, playersNumber: number) {
 		this.applyingSpin = settings.spin;
-		
+		this.rotatingPlayer = settings.rotatingPlayer;
 		this.controls = controls;
+		this.player = this.setPlayer(scene, position);
+		this.body = this.setPlayerPhysic(scene);
+		this.baseRotation = this.setBaseRotation(playersNumber);
+		this.resetPlayerRotation();
 		
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.positionObserver = this.playerObserver();
@@ -47,27 +39,70 @@ export class Player {
 			this.trailIntervalId = this.setTrail(scene);
 	}
 
-	private setPlayer(scene: babylon.Scene, position: babylon.Vector2): babylon.Mesh {
-		const player = babylon.MeshBuilder.CreateBox("player",
-			{ width: PLAYER_DIMENSION.x, height: PLAYER_DIMENSION.y, depth: PLAYER_DIMENSION.z }, scene);
+	private setPlayer(scene: babylon.Scene, position: babylon.Vector2): babylon.TransformNode {
+		const player = new babylon.TransformNode("player", scene);
+
+		const normal = babylon.MeshBuilder.CreateBox("normal", { width: PLAYER_DIMENSION.x / 2, height: PLAYER_DIMENSION.y, depth: PLAYER_DIMENSION.z }, scene);
+		const normalMaterial = new babylon.StandardMaterial("normalMat", scene);;
+		normalMaterial.emissiveColor = COLORS3.playerEmissiveNormalFace;
+		normal.material = normalMaterial;
+		normal.position.x = -PLAYER_DIMENSION.x / 4;
+		normal.renderingGroupId = 1;
+		normal.metadata = { face: "normal" };
+		normal.parent = player;
+
+		const spinEffect = babylon.MeshBuilder.CreateBox("spinEffect", { width: PLAYER_DIMENSION.x / 2, height: PLAYER_DIMENSION.y, depth: PLAYER_DIMENSION.z }, scene);
+		const spinEffectMaterial = new babylon.StandardMaterial("spinEffectMat", scene);;
+		spinEffect.material = spinEffectMaterial;
+		spinEffect.position.x = PLAYER_DIMENSION.x / 4;
+		spinEffect.renderingGroupId = 1;
+		if (this.applyingSpin) {
+			spinEffectMaterial.emissiveColor = COLORS3.playerEmissiveSpinEffectFace;
+			spinEffect.metadata = { face: "spinEffect" };
+		} else {
+			spinEffectMaterial.emissiveColor = COLORS3.playerEmissiveNormalFace;
+			spinEffect.metadata = { face: "normal" };
+		}
+		spinEffect.parent = player;
+
 		player.position.x = position.x;
 		player.position.y = position.y;
-		player.renderingGroupId = 1;
-		player.metadata = { type: "collider", playerSpinning: false };
+		player.metadata = { type: "collider" };
 		return player;
 	}
 
-	private setMaterial(scene: babylon.Scene, color: babylon.Color3): void {
-		const material = new babylon.StandardMaterial('ballcolor', scene);
-		material.emissiveColor = color;
-		this.mesh.material = material;
+	private setPlayerPhysic(scene: babylon.Scene): babylon.PhysicsBody {
+		const newBody = new babylon.PhysicsBody(this.player, babylon.PhysicsMotionType.ANIMATED, false, scene);
+		newBody.setMassProperties({ 
+			mass: PLAYER_MASS, 
+			centerOfMass: babylon.Vector3.Zero() 
+		});
+
+		const shape = new babylon.PhysicsShapeBox(babylon.Vector3.Zero(), this.baseRotation, PLAYER_DIMENSION, scene);
+		shape.material = { restitution: PLAYER_RESTITUTION, friction: 0 };
+		newBody.shape = shape;
+		return newBody;
+	}
+
+	private setBaseRotation(playersNumber: number): babylon.Quaternion {
+		let baseRotation;
+		if (playersNumber === 2)
+			baseRotation = babylon.Quaternion.FromEulerAngles(0, Math.PI, 0);
+		else
+			baseRotation = babylon.Quaternion.Identity();
+		return baseRotation;
+	}
+
+	private resetPlayerRotation(): void {
+		this.body.disablePreStep = true; // desactivate body physic for this frame so rotating doesn't cancel the reset
+		this.player.rotationQuaternion = this.baseRotation.clone();
+		this.body.setTargetTransform(this.player.position.clone(), this.baseRotation.clone());
+		this.body.disablePreStep = false;
 	}
 
 	private setTrail(scene: babylon.Scene): ReturnType<typeof setInterval> {
 		const trailIntervalId = setInterval(() => {
-			if (!this.mesh.material)
-				return;
-			this.playerTrails.push(new PlayerTrail(scene, this.mesh));
+			this.playerTrails.push(new PlayerTrail(scene, this.player));
 			while (this.playerTrails.length && this.playerTrails[0].hasDisappeared()) {
 				this.playerTrails.splice(0, 1);
 			}
@@ -121,21 +156,7 @@ export class Player {
 				break;
 			case this.controls[4]:
 				if (this.rotatingPlayer) {
-					this.body.disablePreStep = true; // desactivate body physic for this frame so rotating doesn't cancel the reset
-					this.mesh.rotationQuaternion = new babylon.Quaternion(0, 0, 0, 1);
-					this.body.setTargetTransform(this.mesh.position.clone(), new babylon.Quaternion(0, 0, 0, 1));
-					this.body.disablePreStep = false;
-				}
-				break;
-			case this.controls[5]:
-				if (this.applyingSpin && this.mesh.metadata) {
-					if (this.mesh.metadata.playerSpinning === true) {
-						this.mesh.metadata.playerSpinning = false;
-						this.highlight.removeMesh(this.mesh);
-					} else {
-						this.mesh.metadata.playerSpinning = true;
-						this.highlight.addMesh(this.mesh, COLORS3.red);
-					}
+					this.resetPlayerRotation();
 				}
 				break;
 			default: ;
@@ -145,11 +166,11 @@ export class Player {
 	private playerObserver(): babylon.Observer<babylon.Scene> {
 		const distanceFromEdge = (MAP_SIZE.z / 2) - (WALL_WIDTH * 2) - (PLAYER_DIMENSION.z / 2);
 		const positionObserver = this.sceneObservable.add(() => {
-			if (this.mesh.position.z < -distanceFromEdge && this.linearVelocityZ === -PLAYER_MOVEMENT_VELOCITY)
+			if (this.player.position.z < -distanceFromEdge && this.linearVelocityZ === -PLAYER_MOVEMENT_VELOCITY)
 				this.linearVelocityZ += PLAYER_MOVEMENT_VELOCITY;
-			if (this.mesh.position.z > distanceFromEdge && this.linearVelocityZ === PLAYER_MOVEMENT_VELOCITY)
+			if (this.player.position.z > distanceFromEdge && this.linearVelocityZ === PLAYER_MOVEMENT_VELOCITY)
 				this.linearVelocityZ -= PLAYER_MOVEMENT_VELOCITY;
-			this.body.setLinearVelocity(new babylon.Vector3(0, 0, this.linearVelocityZ)); 
+			this.body.setLinearVelocity(new babylon.Vector3(0, 0, this.linearVelocityZ));
 			this.body.setAngularVelocity(new babylon.Vector3(0, this.angularVelocityY, 0));
 		});
 		return positionObserver;
@@ -165,11 +186,11 @@ export class Player {
 		}
 		this.body?.shape?.dispose();
 		this.body?.dispose();
-		this.mesh?.material?.dispose();
-		this.highlight.isEnabled = false;
-		this.highlight?.removeMesh(this.mesh);
-		this.highlight?.dispose();
-		this.mesh?.dispose();
+		this.player?.getChildMeshes().forEach(child => {
+			child.material?.dispose();
+			child.dispose();
+		});
+		this.player?.dispose();
 		window.removeEventListener("keydown", this.handleKeyDown);
 		window.removeEventListener("keyup", this.handleKeyUp);
 	}

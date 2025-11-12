@@ -7,7 +7,7 @@ export class PlayerTrail {
 	private readonly intervalId: ReturnType<typeof setInterval>;
 	private isFaded = false;
 
-	constructor(scene: babylon.Scene, player: babylon.Mesh) {
+	constructor(scene: babylon.Scene, player: babylon.TransformNode) {
 		this.mesh = babylon.MeshBuilder.CreateBox("playerTrail", { width: PLAYER_DIMENSION.x - 0.01, height: PLAYER_DIMENSION.y - 0.01, depth: PLAYER_DIMENSION.z - 0.01 }, scene);
 		this.mesh.position = player.position.clone();
 		if (player.rotationQuaternion)
