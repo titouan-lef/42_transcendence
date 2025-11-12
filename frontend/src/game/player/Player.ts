@@ -128,7 +128,7 @@ export class Player {
 				}
 				break;
 			case this.controls[5]:
-				if (this.applyingSpin)
+				if (this.applyingSpin && this.mesh.metadata) {
 					if (this.mesh.metadata.playerSpinning === true) {
 						this.mesh.metadata.playerSpinning = false;
 						this.highlight.removeMesh(this.mesh);
@@ -136,6 +136,7 @@ export class Player {
 						this.mesh.metadata.playerSpinning = true;
 						this.highlight.addMesh(this.mesh, COLORS3.red);
 					}
+				}
 				break;
 			default: ;
 		}
@@ -159,15 +160,16 @@ export class Player {
 		if (this.trailIntervalId)
 			clearInterval(this.trailIntervalId);
 		while (this.playerTrails.length) {
-			this.playerTrails[0].destroy();
-			this.playerTrails.splice(0, 1);
+			this.playerTrails[0]?.destroy();
+			this.playerTrails?.splice(0, 1);
 		}
-		this.body.shape?.dispose();
-		this.body.dispose();
-		this.mesh.material?.dispose();
-		this.highlight.removeMesh(this.mesh);
-		this.highlight.dispose();
-		this.mesh.dispose();
+		this.body?.shape?.dispose();
+		this.body?.dispose();
+		this.mesh?.material?.dispose();
+		this.highlight.isEnabled = false;
+		this.highlight?.removeMesh(this.mesh);
+		this.highlight?.dispose();
+		this.mesh?.dispose();
 		window.removeEventListener("keydown", this.handleKeyDown);
 		window.removeEventListener("keyup", this.handleKeyUp);
 	}
