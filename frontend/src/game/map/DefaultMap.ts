@@ -97,7 +97,7 @@ export class DefaultMap extends MapTemplate {
 	destroyRest(): void {
 		this.bars.forEach(bar => {
 			bar.material?.dispose();
-			bar?.dispose();
+			bar.dispose();
 		});
 		this.particles?.stop();
 		this.particles?.particleTexture?.dispose();

@@ -75,12 +75,7 @@ export abstract class BallTemplate {
 	/**launch ball */
 	private launchBall(scene: babylon.Scene): ReturnType<typeof setTimeout> {
 		const launchBallTimeoutId = setTimeout( () => {
-			const random = Math.random();
-			let startingDirection;
-			if (random < 0.5)
-				startingDirection = 1;
-			else
-				startingDirection = -1;
+			const startingDirection = Math.random() < 0.5 ? 1 : -1;
 			this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
 			this.showParticles(this.mesh.position, scene, "impulse");
 			this.justCollided = true;
@@ -236,16 +231,11 @@ export abstract class BallTemplate {
 			const collisionPointZ = collisionEvent.point?.z;
 			if (collisionPointZ === undefined )
 				return;
-			switch (collisionPointZ - collisionEvent.collidedAgainst.transformNode.position.z <= 0) { // colliding right or left of the player
-				case (true):
-					this.spinningLeft = true;
-					break;
-				case (false):
-					this.spinningRight = true;
-					break;
-				default: ;
-			}
-		} else{
+			if (collisionPointZ - collisionEvent.collidedAgainst.transformNode.position.z <= 0) // colliding right or left of the player
+				this.spinningLeft = true;
+			else
+				this.spinningRight = true;
+		} else {
 			this.spinningLeft = false;
 			this.spinningRight = false;
 		}
@@ -276,14 +266,13 @@ export abstract class BallTemplate {
 	protected nerfSpeed(): void {
 		const velocity = this.physic.body.getLinearVelocity();
 		const speed = velocity.length();
+		let dampingFactor = 0;
 
 		if (speed > MAX_SPEED) {
 			const excessRatio = (speed - MAX_SPEED) / speed; // between 0 and 1
-			const dampingFactor = excessRatio * NERF_SPEED_FACTOR;
-			this.physic.body.setLinearDamping(dampingFactor);
-		} else {
-			this.physic.body.setLinearDamping(0);
+			dampingFactor = excessRatio * NERF_SPEED_FACTOR;
 		}
+		this.physic.body.setLinearDamping(dampingFactor);
 	}
 
 	/** hides ball on goal and stop intervals */
@@ -309,7 +298,7 @@ export abstract class BallTemplate {
 				particle = this.createImpulseParticles(scene, collisionPoint);
 				break;
 			default: 
-				return ;
+				throw new Error("Particle not known") ;
 		}
 		this.particles.push(particle);
 		particle.start();
@@ -355,9 +344,9 @@ export abstract class BallTemplate {
 		}
 		this.physic?.dispose();
 		this.particles.forEach(particle => {
-			particle?.stop();
-			particle?.particleTexture?.dispose();
-			particle?.dispose();
+			particle.stop();
+			particle.particleTexture?.dispose();
+			particle.dispose();
 		});
 		while (this.particles.length)
 			this.particles.splice(0, 1);

@@ -105,11 +105,7 @@ export class Game {
 		const goalInfos = this.sceneManager.checkGoal();
 		if (goalInfos !== null && goalInfos.position !== null) {
 			this.inAnimation = true;
-			if (goalInfos.goal === "player1") {
-				this.score.x += 1;
-			} else{
-				this.score.y += 1;
-			}
+			goalInfos.goal === "player1" ? this.score.x += 1 : this.score.y += 1;
 			await this.sceneManager.goalAnimation(this.engine, this.scene, goalInfos.position, this.score);
 			if (this.gameStopped) // if closing game while animation
 				return ;
@@ -127,12 +123,7 @@ export class Game {
 
 	private createCamera(): babylon.ArcRotateCamera {
 		const cameraAxeLat = 1;
-		let cameraAxeLong;
-		if (this.settings.playerId === 1) {
-			cameraAxeLong = 0;
-		} else {
-			cameraAxeLong = Math.PI;
-		}
+		const cameraAxeLong = this.settings.playerId === 1 ? 0 : Math.PI;
 		const camera = new babylon.ArcRotateCamera("camera",
 			cameraAxeLong, cameraAxeLat,
 			CAMERA_POS_X, babylon.Vector3.Zero(), this.scene);

@@ -85,12 +85,7 @@ export class Player {
 	}
 
 	private setBaseRotation(playersNumber: number): babylon.Quaternion {
-		let baseRotation;
-		if (playersNumber === 2)
-			baseRotation = babylon.Quaternion.FromEulerAngles(0, Math.PI, 0);
-		else
-			baseRotation = babylon.Quaternion.Identity();
-		return baseRotation;
+		return playersNumber === 2 ? babylon.Quaternion.FromEulerAngles(0, Math.PI, 0) : babylon.Quaternion.Identity();
 	}
 
 	private resetPlayerRotation(): void {
@@ -159,7 +154,8 @@ export class Player {
 					this.resetPlayerRotation();
 				}
 				break;
-			default: ;
+			default: 
+				throw new Error("Control not known") ;;
 		}
 	}
 
