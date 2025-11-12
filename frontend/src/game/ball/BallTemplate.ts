@@ -232,7 +232,7 @@ export abstract class BallTemplate {
 		const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
 		if (!metadata)
 			return;
-		if (metadata?.playerSpinning) {
+		if (this.checkSideHit(collisionEvent) === "spinEffect") {
 			const collisionPointZ = collisionEvent.point?.z;
 			if (collisionPointZ === undefined )
 				return;
@@ -249,6 +249,27 @@ export abstract class BallTemplate {
 			this.spinningLeft = false;
 			this.spinningRight = false;
 		}
+	}
+
+	private checkSideHit(collisionEvent: babylon.IPhysicsCollisionEvent): string {
+		const playerMeshes = collisionEvent.collidedAgainst.transformNode.getChildMeshes();
+		let nearestMesh = null;
+		let minDist = Infinity;
+
+		if (collisionEvent.point === null || collisionEvent.point === undefined)
+			return "";
+		for (const mesh of playerMeshes) {
+			const dist = babylon.Vector3.Distance(mesh.getAbsolutePosition(), collisionEvent.point);
+			if (dist < minDist) {
+				minDist = dist;
+				nearestMesh = mesh;
+			}
+		}
+		if (nearestMesh && nearestMesh.metadata) {
+			const face = nearestMesh.metadata.face;
+			return face;
+		}
+		return "";
 	}
 
 	/** damp ball if too fast */

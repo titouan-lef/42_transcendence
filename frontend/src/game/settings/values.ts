@@ -22,6 +22,10 @@ export const COLORS3 = {
 	teal:							babylon.Color3.FromHexString("#008080"),
 	olive:							babylon.Color3.FromHexString("#808000"),
 
+	// PLAYER
+	playerEmissiveNormalFace:		babylon.Color3.FromHexString("#ffffff"),
+	playerEmissiveSpinEffectFace:	babylon.Color3.FromHexString("#ff0000"),
+
 	// VOLCANO
 	volcanoEmissiveSun:				babylon.Color3.FromHexString("#FF7A2A"),
 	volcanoDiffuseLight:			babylon.Color3.FromHexString("#FF9442"),
@@ -103,9 +107,9 @@ export const COLORS4 = {
 
 /**DEBUG FUNCTION */
 /**@todo should be false */
-export const MOVE_BALL_ONCLICK = true;
+export const MOVE_BALL_ONCLICK = false;
 export const MOVE_CAMERA_ONCLICK = false;
-export const SHOW_DISPOSE_LOGS = true;
+export const SHOW_DISPOSE_LOGS = false;
 
 /**GAMEPLAY GENERAL SETTINGS */
 export const POINTS_TO_WIN = 11;
