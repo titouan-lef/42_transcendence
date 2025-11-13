@@ -78,7 +78,7 @@ async function initDB(): Promise<void> {
 		CREATE TABLE IF NOT EXISTS Game_rule (
 			gameId INTEGER,
 			ruleId INTEGER,
-			isActive INTEGER NOT NULL,
+			isEnable INTEGER NOT NULL,
 			PRIMARY KEY (gameId, ruleId),
 			FOREIGN KEY (gameId) REFERENCES Game(id),
 			FOREIGN KEY (ruleId) REFERENCES Rule(id)
