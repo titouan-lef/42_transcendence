@@ -1,4 +1,4 @@
-import { getDB } from "./init.js";
+import { applyQuery } from "./db_utils.js";
 
 export interface Ball {
 	id?: number;
@@ -6,48 +6,27 @@ export interface Ball {
 }
 
 export async function createBall(name: string): Promise<void> {
-	const db = await getDB();
-	try {
-		await db.run(`INSERT INTO Ball (name) VALUES (?)`, [name]);
-	} finally{
-		await db.close();
-	}
+	applyQuery(async (db) => await db.run(
+		`INSERT INTO Ball (name) VALUES (?)`,
+		[name]), "createBall");
 }
 
-export async function getAllBalls(): Promise<Ball[]> {
-	const db = await getDB();
-	try {
-		const balls: Ball[] = await db.all(`SELECT * FROM Ball`);
-		return balls;
-	} finally{
-		await db.close();
-	}
+export async function getAllBalls(): Promise<Ball[] | undefined> {
+	return applyQuery(async (db) => await db.all(`SELECT * FROM Ball`), "getAllBall");
 }
 
 export async function getBallById(id: number): Promise<Ball | undefined> {
-	const db = await getDB();
-	try {
-		const ball: Ball | undefined = await db.get(`SELECT * FROM Ball WHERE id = ?`, [id]);
-		return ball;
-	} finally{
-		await db.close();
-	}
+	return applyQuery(async (db) => await db.get(
+		`SELECT * FROM Ball WHERE id = ?`,
+		[id]), "getBallById");
 }
 
 export async function updateBall(id: number, newName: string): Promise<void> {
-	const db = await getDB();
-	try {
-		await db.run(`UPDATE Ball SET name = ? WHERE id = ?`, [newName, id]);
-	} finally{
-		await db.close();
-	}
+	applyQuery(async (db) => await db.run(
+		`UPDATE Ball SET name = ? WHERE id = ?`,
+		[newName, id]), "updateBall");
 }
 
 export async function deleteBall(id: number): Promise<void> {
-	const db = await getDB();
-	try {
-		await db.run(`DELETE FROM Ball WHERE id = ?`, [id]);
-	} finally{
-		await db.close();
-	}
+	applyQuery(async (db) => await db.run(`DELETE FROM Ball WHERE id = ?`, [id]), "deleteBall");
 }
