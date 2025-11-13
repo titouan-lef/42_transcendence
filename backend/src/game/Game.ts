@@ -1,0 +1,229 @@
+import * as babylon from "@babylonjs/core";
+import { SceneManager } from "./scene/SceneManager.js";
+import { GameSettings } from "./settings/GameSettings.js";
+import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
+import havokPhysics from "@babylonjs/havok";
+import { MOVE_BALL_ONCLICK, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
+import fs from "fs";
+import { GameStatus, PlayerControls } from "./data_transfert.js";
+import { Player } from "./player/Player.js";
+
+export class Game {
+	private readonly engine: babylon.Engine;
+	private readonly scene: babylon.Scene;
+	private readonly sceneManager: SceneManager;
+	private readonly settings: GameSettings;
+	private readonly camera: babylon.ArcRotateCamera;
+	private gameInterval?: ReturnType<typeof setInterval>; // ??NodeJS.Timer;
+	private score: babylon.Vector2;
+	private inAnimation = false;
+	private gameStopped = false;
+
+	constructor (settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
+		this.engine = engine;
+		this.settings = settings;
+		this.camera = new babylon.ArcRotateCamera("Camera", 0, 0, 0, babylon.Vector3.Zero(), scene);
+		this.sceneManager = new SceneManager();
+		this.scene = scene;
+		// window.addEventListener("resize", () => this.engine.resize());
+		this.score = new babylon.Vector2(0, 0);
+		this.setScene();
+	}
+
+	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
+	static async create(settings: GameSettings): Promise<Game> {
+		const engine =  new babylon.NullEngine();
+		const scene = await Game.initScene(engine);
+		return new Game(settings, scene, engine);
+	}
+
+	private static async initScene(engine: babylon.Engine): Promise<babylon.Scene> {
+		const scene = new babylon.Scene(engine);
+		const nodeBuffer = fs.readFileSync("/app/node_modules/@babylonjs/havok/lib/esm/HavokPhysics.wasm");
+		const wasmBinary = nodeBuffer.buffer.slice(nodeBuffer.byteOffset, nodeBuffer.byteOffset + nodeBuffer.byteLength);
+		const havokInstance = await havokPhysics({ wasmBinary });
+		const havokPlugin = new HavokPlugin(true, havokInstance);
+		scene.enablePhysics(new babylon.Vector3(0, -9.81, 0), havokPlugin);
+		return scene;
+	};
+
+	start(): void {
+		this.engine.runRenderLoop(() => {
+			this.scene.render();
+		});
+		this.startSendingGameStatus();
+	}
+
+	/**@todo usefull ? */
+	hide(): void {
+		this.engine.stopRenderLoop();
+	}
+
+	stop(): void {
+		this.stopSendingGameStatus();
+		this.sceneManager.destroyScene(this.scene);
+		this.scene.onAfterRenderObservable.clear();
+		this.camera.dispose();
+		if (SHOW_DISPOSE_LOGS)
+			this.sceneManager.showDisposeLogs(this.scene);
+		this.engine.stopRenderLoop();
+		this.scene.dispose();
+		this.engine.dispose();
+		this.gameStopped = true;
+		babylon.Tools.ClearLogCache(); // hides previous logs 
+	}
+
+	private setScene(): void {
+		// this.sceneManager.createTextures(this.scene);
+		this.sceneManager.createPlayers(this.scene, this.settings);
+		this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
+		if (MOVE_BALL_ONCLICK) { //debug function
+			this.scene.onPointerDown = (): void => {
+				const ball = this.sceneManager.getBall();
+				ball?.moveBall();
+				ball?.setJustCollide();
+			};
+		}
+		this.scene.onAfterRenderObservable.add(() => {
+			if (this.inAnimation === false) {
+				this.checkEndOfPoint();
+			}
+		});
+	}
+
+	/**check collision for each balls */
+	async checkEndOfPoint(): Promise<void> {
+		const goalInfos = this.sceneManager.checkGoal();
+		if (goalInfos !== null && goalInfos.position !== null) {
+			this.inAnimation = true;
+			goalInfos.goal === "player1" ? this.score.x += 1 : this.score.y += 1;
+			await this.sceneManager.goalAnimation(this.engine, this.scene, goalInfos.position, this.score);
+			if (this.gameStopped) // if closing game while animation
+				return ;
+			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
+				this.stop();
+			} else {
+				this.inAnimation = false;
+				this.sceneManager.destroyEnvironnement(this.scene);
+				if (SHOW_DISPOSE_LOGS)
+					this.sceneManager.showDisposeLogs(this.scene);
+				this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
+			}
+		}
+	}
+
+	private getGameStatus(status: string, player: Player, enemy: Player): GameStatus | null {
+		const ball = this.sceneManager.getBall();
+		if (!ball)
+			return null;
+		const ballPos = ball.getPosition();
+		const playerPos = player.getPosition();
+		const enemyPos = enemy.getPosition();
+		if (ballPos === undefined)
+			return null;
+		if (player.getName() === this.sceneManager.getPlayer2()?.getName()) {
+			ballPos.x = -ballPos.x;
+			ballPos.z = -ballPos.z;
+			playerPos.x = -playerPos.x;
+			playerPos.z = -playerPos.z;
+			enemyPos.x = -enemyPos.x;
+			enemyPos.z = -enemyPos.z;
+		}
+
+		const gameStatus: GameStatus = {
+			status: status,
+			options: {
+				map: this.sceneManager.getMapType(),
+				ball: ball.getType(),
+				rotatingPlayer: this.settings.rotatingPlayer,
+				spin: this.settings.spin
+			},
+			state: {
+				start_time: 0, // request from db
+				current_time: Date.now(),
+				score: { player: this.score.x, enemy: this.score.y } // wrong, alway the same / needs to differ for each player
+			},
+			player: {
+				pseudo: player.getName(),
+				pos: playerPos
+			},
+			enemy: {
+				pseudo: enemy.getName(),
+				pos: enemyPos
+			},
+			ball: {
+				pos: ballPos
+			}
+		};
+		return gameStatus;
+	}
+
+	private async sendGameStatus(status: string, player1: Player, player2: Player) : Promise<void> {
+		let gameStatus: GameStatus | null = null;
+		gameStatus = this.getGameStatus(status, player1, player2);
+		if (gameStatus)
+			player1.send(JSON.stringify(gameStatus));
+		gameStatus = this.getGameStatus(status, player2, player1);
+		if (gameStatus)
+			player2.send(JSON.stringify(gameStatus));
+	}
+
+	startSendingGameStatus(): void {
+		const intervalMs = 1000 / 30; // 30 fps
+
+		/** @todo better management of players and ball*/
+		const player1 = this.sceneManager.getPlayer1();
+		const player2 = this.sceneManager.getPlayer2();
+		if (!player1 || !player2 )
+			return;
+		this.sendGameStatus("start", player1, player2);
+		
+		this.gameInterval = setInterval(() => {
+			const player1 = this.sceneManager.getPlayer1();
+			const player2 = this.sceneManager.getPlayer2();
+			if (!player1 || !player2 )
+				return;
+			this.sendGameStatus("pending", player1, player2);
+		}, intervalMs);
+
+		player1.defineCloseAction(() => {
+			this.stop();
+			player2.closeSocket();
+		});
+		player2.defineCloseAction(() => {
+			this.stop();
+			player1.closeSocket();
+		});
+	}
+
+	stopSendingGameStatus(): void {
+		if (this.gameInterval) {
+			clearInterval(this.gameInterval);
+			this.gameInterval = undefined;
+
+			const player1 = this.sceneManager.getPlayer1();
+			const player2 = this.sceneManager.getPlayer2();
+			if (!player1 || !player2 )
+				return;
+			player1.send(JSON.stringify({ status: "stop" }));
+			player2.send(JSON.stringify({ status: "stop" }));
+		}
+	}
+
+	receiveDataFrom(playerName: string, message: string): void {
+		const controls: PlayerControls = JSON.parse(message);
+		const player1 = this.sceneManager.getPlayer1();
+		const player2 = this.sceneManager.getPlayer2();
+		let player;
+		if (player1?.getName() === playerName) {
+			player = player1;
+		} else if (player2?.getName() === playerName) {
+			player = player2;
+		} else {
+			console.error(`Player ${playerName} not found`);
+			return;
+		}
+		player.setControls(controls);
+		player.handleAction();
+	}
+}

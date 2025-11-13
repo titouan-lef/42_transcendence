@@ -96,7 +96,7 @@ export class SceneManager {
 		this.countDown = new CountDown(scene);
 	}
 
-	createTextures(scene: babylon.Scene): void {
+	createTextures(scene: babylon.Scene): void { /** @todo check if one request per texture is best practice */
 		this.textures.spark = new babylon.Texture("textures/sparks.png", scene, true);
 		this.textures.flare = new babylon.Texture("textures/flare.png", scene, true);
 		this.textures.stars = new babylon.Texture("textures/particle.png", scene, true);
