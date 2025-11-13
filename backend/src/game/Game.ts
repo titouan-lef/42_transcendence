@@ -5,7 +5,7 @@ import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
 import { MOVE_BALL_ONCLICK, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import fs from "fs";
-import { GameStatus, PlayerControls } from "./data_transfert.js";
+import { Status, PlayerControls, PositionsMessage } from "../web_sockets/types_transfert.js";
 import { Player } from "./player/Player.js";
 
 export class Game {
@@ -51,7 +51,7 @@ export class Game {
 		this.engine.runRenderLoop(() => {
 			this.scene.render();
 		});
-		this.startSendingGameStatus();
+		this.startSendingPositions();
 	}
 
 	/**@todo usefull ? */
@@ -60,7 +60,7 @@ export class Game {
 	}
 
 	stop(): void {
-		this.stopSendingGameStatus();
+		this.stopSendingPositions();
 		this.sceneManager.destroyScene(this.scene);
 		this.scene.onAfterRenderObservable.clear();
 		this.camera.dispose();
@@ -112,7 +112,7 @@ export class Game {
 		}
 	}
 
-	private getGameStatus(status: string, player: Player, enemy: Player): GameStatus | null {
+	private getPositions(player: Player, enemy: Player): PositionsMessage | null {
 		const ball = this.sceneManager.getBall();
 		if (!ball)
 			return null;
@@ -130,60 +130,65 @@ export class Game {
 			enemyPos.z = -enemyPos.z;
 		}
 
-		const gameStatus: GameStatus = {
-			status: status,
-			options: {
-				map: this.sceneManager.getMapType(),
-				ball: ball.getType(),
-				rotatingPlayer: this.settings.rotatingPlayer,
-				spin: this.settings.spin
-			},
-			state: {
-				start_time: 0, // request from db
-				current_time: Date.now(),
-				score: { player: this.score.x, enemy: this.score.y } // wrong, alway the same / needs to differ for each player
-			},
-			player: {
-				pseudo: player.getName(),
-				pos: playerPos
-			},
-			enemy: {
-				pseudo: enemy.getName(),
-				pos: enemyPos
-			},
-			ball: {
-				pos: ballPos
-			}
+		const positions: PositionsMessage = {
+			status: Status.POSITIONS,
+			ball: ballPos,
+			player: playerPos,
+			enemy: enemyPos
 		};
-		return gameStatus;
+		// 	options: {
+		// 		map: this.sceneManager.getMapType(),
+		// 		ball: ball.getType(),
+		// 		rotatingPlayer: this.settings.rotatingPlayer,
+		// 		spin: this.settings.spin
+		// 	},
+		// 	state: {
+		// 		start_time: 0, // request from db
+		// 		current_time: Date.now(),
+		// 		score: { player: this.score.x, enemy: this.score.y } // wrong, alway the same / needs to differ for each player
+		// 	},
+		// 	player: {
+		// 		pseudo: player.getName(),
+		// 		pos: playerPos
+		// 	},
+		// 	enemy: {
+		// 		pseudo: enemy.getName(),
+		// 		pos: enemyPos
+		// 	},
+		// 	ball: {
+		// 		pos: ballPos
+		// 	}
+		// };
+		return positions;
 	}
 
-	private async sendGameStatus(status: string, player1: Player, player2: Player) : Promise<void> {
-		let gameStatus: GameStatus | null = null;
-		gameStatus = this.getGameStatus(status, player1, player2);
-		if (gameStatus)
-			player1.send(JSON.stringify(gameStatus));
-		gameStatus = this.getGameStatus(status, player2, player1);
-		if (gameStatus)
-			player2.send(JSON.stringify(gameStatus));
+	private async sendPositions(player1: Player, player2: Player) : Promise<void> {
+		let positions: PositionsMessage | null = null;
+		positions = this.getPositions(player1, player2);
+		if (positions)
+			player1.send(JSON.stringify(positions));
+		positions = this.getPositions(player2, player1);
+		if (positions)
+			player2.send(JSON.stringify(positions));
 	}
 
-	startSendingGameStatus(): void {
+	startSendingPositions(): void {
 		const intervalMs = 1000 / 30; // 30 fps
 
 		/** @todo better management of players and ball*/
 		const player1 = this.sceneManager.getPlayer1();
 		const player2 = this.sceneManager.getPlayer2();
-		if (!player1 || !player2 )
+		if (!player1 || !player2)
 			return;
-		this.sendGameStatus("start", player1, player2);
-		
+		// this.sendPositions(player1, player2); send start
+		// START, OPTIONS, POSITIONS, SCORE, TIMING
+
 		this.gameInterval = setInterval(() => {
 			const player1 = this.sceneManager.getPlayer1();
 			const player2 = this.sceneManager.getPlayer2();
-			if (!player1 || !player2 )
+			if (!player1 || !player2)
 				return;
-			this.sendGameStatus("pending", player1, player2);
+			this.sendPositions(player1, player2);
 		}, intervalMs);
 
 		player1.defineCloseAction(() => {
@@ -196,14 +201,14 @@ export class Game {
 		});
 	}
 
-	stopSendingGameStatus(): void {
+	stopSendingPositions(): void {
 		if (this.gameInterval) {
 			clearInterval(this.gameInterval);
 			this.gameInterval = undefined;
 
 			const player1 = this.sceneManager.getPlayer1();
 			const player2 = this.sceneManager.getPlayer2();
-			if (!player1 || !player2 )
+			if (!player1 || !player2)
 				return;
 			player1.send(JSON.stringify({ status: "stop" }));
 			player2.send(JSON.stringify({ status: "stop" }));
