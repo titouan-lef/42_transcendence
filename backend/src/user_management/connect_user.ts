@@ -68,4 +68,4 @@ async function verifyAuth(req: FastifyRequest, reply: FastifyReply): Promise<voi
 	}
 }
 
-export { connectUser, disconnectUser, whoami, verifyAuth };
+export { connectUser, disconnectUser, whoami, verifyAuth, SECRET };
