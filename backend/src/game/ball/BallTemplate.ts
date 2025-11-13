@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { BallOption } from "../settings/GameSettings.js";
 import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, BALL_TRAIL_ON, START_TIMEOUT } from "../settings/values.js";
 import { BallTrail } from "./BallTrail.js";
-import { Position } from "../data_transfert.js";
+import { Position } from "../../web_sockets/types_transfert.js";
 type ParticlesType = "explosion" | "collision" | "impulse";
 
 export abstract class BallTemplate {
