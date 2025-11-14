@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "../ball/BallTemplate.js";
-import { Score } from "./Score.js";
+// import { Score } from "./Score.js";
 import { DefaultBall } from "../ball/DefaultBall.js";
 import { InvisibleBall } from "../ball/InvisibleBall.js";
 import { PulseBall } from "../ball/PulseBall.js";

@@ -5,7 +5,7 @@ import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
 import { MOVE_BALL_ONCLICK, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import fs from "fs";
-import { Status, PlayerControls, PositionsMessage } from "../web_sockets/types_transfert.js";
+import { Status, PlayerControls, PositionsMessage, StartMessage, StopMessage, TimingMessage, OptionMessage, ScoreMessage } from "../web_sockets/types_transfert.js";
 import { Player } from "./player/Player.js";
 
 export class Game {
@@ -51,7 +51,7 @@ export class Game {
 		this.engine.runRenderLoop(() => {
 			this.scene.render();
 		});
-		this.startSendingPositions();
+		this.startGameCommunication();
 	}
 
 	/**@todo usefull ? */
@@ -166,30 +166,103 @@ export class Game {
 		let positions: PositionsMessage | null = null;
 		positions = this.getPositions(player1, player2);
 		if (positions)
-			player1.send(JSON.stringify(positions));
+			player1.send(positions);
 		positions = this.getPositions(player2, player1);
 		if (positions)
-			player2.send(JSON.stringify(positions));
+			player2.send(positions);
 	}
 
-	startSendingPositions(): void {
+	private async sendStart(player1: Player, player2: Player) : Promise<void> {
+		let start: StartMessage;
+		start = {
+			status: Status.START,
+			playerName: player1.getName(),
+			enemyName: player2.getName()
+		};
+		player1.send(start);
+		start = {
+			status: Status.START,
+			playerName: player2.getName(),
+			enemyName: player1.getName()
+		};
+		player2.send(start);
+	}
+
+	private async sendStop(player1: Player, player2: Player) : Promise<void> {
+		const stop: StopMessage = {
+			status: Status.STOP,
+		};
+		player1.send(stop);
+		player2.send(stop);
+	}
+
+	private async sendCountDown(player1: Player, player2: Player, countdow: number) : Promise<void> {
+		const time: TimingMessage = {
+			status: Status.TIMING,
+			time : countdow
+		};
+		player1.send(time);
+		player2.send(time);
+	}
+
+	private async sendOptions(player1: Player, player2: Player) : Promise<void> {
+		const options: OptionMessage = {
+			status: Status.OPTIONS,
+			map: this.sceneManager.getMapType(),
+			ball: "default",
+			rotatingPlayer: this.settings.rotatingPlayer,
+			spin: this.settings.spin
+		};
+
+		const ball = this.sceneManager.getBall();
+		if (ball)
+			options.ball = ball.getType();
+
+		player1.send(options);
+		player2.send(options);
+	}
+
+	private async sendScore(player1: Player, player2: Player) : Promise<void> {
+		let score: ScoreMessage;
+		score = { 
+			status: Status.SCORE,
+			player: this.score.x,
+			enemy: this.score.y
+		};
+		player1.send(score);
+		score = { 
+			status: Status.SCORE,
+			player: this.score.y,
+			enemy: this.score.x
+		};
+		player2.send(score);
+	}
+
+	startSendingPostisions(): void {
 		const intervalMs = 1000 / 30; // 30 fps
 
-		/** @todo better management of players and ball*/
-		const player1 = this.sceneManager.getPlayer1();
-		const player2 = this.sceneManager.getPlayer2();
-		if (!player1 || !player2)
-			return;
-		// this.sendPositions(player1, player2); send start
-		// START, OPTIONS, POSITIONS, SCORE, TIMING
-
 		this.gameInterval = setInterval(() => {
+			// manage countdown
 			const player1 = this.sceneManager.getPlayer1();
 			const player2 = this.sceneManager.getPlayer2();
 			if (!player1 || !player2)
 				return;
 			this.sendPositions(player1, player2);
 		}, intervalMs);
+	}
+
+	startGameCommunication(): void {
+		/** @todo better management of players and ball*/
+		const player1 = this.sceneManager.getPlayer1();
+		const player2 = this.sceneManager.getPlayer2();
+		if (!player1 || !player2)
+			return;
+		// START, OPTIONS, POSITIONS, SCORE, TIMING
+		this.sendStart(player1, player2);
+		this.sendOptions(player1, player2);
+		this.sendPositions(player1, player2);
+		this.sendScore(player1, player2);
+		this.startSendingPostisions();
 
 		player1.defineCloseAction(() => {
 			this.stop();
@@ -210,8 +283,7 @@ export class Game {
 			const player2 = this.sceneManager.getPlayer2();
 			if (!player1 || !player2)
 				return;
-			player1.send(JSON.stringify({ status: "stop" }));
-			player2.send(JSON.stringify({ status: "stop" }));
+			this.sendStop(player1, player2);
 		}
 	}
 

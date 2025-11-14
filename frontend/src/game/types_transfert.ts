@@ -28,7 +28,7 @@ enum Status {
 /**
  * ------------  DATA FLOW  ------------
  * 
- * new game -> START, OPTIONS, POSITIONS, SCORE, TIMING
+ * new game -> START, OPTIONS, POSITIONS, SCORE
  * 
  * TIMING (countdown)	<-------------------
  * during rounds:	<-------------------	|
@@ -54,9 +54,7 @@ interface StartMessage {
 }
 
 interface StopMessage {
-	status: Status.STOP,
-	playerName: string,
-	enemyName: string
+	status: Status.STOP
 }
 
 interface TimingMessage {
