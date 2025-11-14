@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
-import { COLORS3, BALL_TRAIL_INTERVAL, INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL } from "../settings/values.js";
+import { COLORS3, INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL } from "../settings/values.js";
 
 export class InvisibleBall extends BallTemplate {
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
@@ -12,6 +12,7 @@ export class InvisibleBall extends BallTemplate {
 	}
 	
 	/**disappears gradually every INVISIBLE_BALL_FADING_INTERVAL ms for INVISIBLE_BALL_INVISIBILITY_INTERVAL ms */
+	/** @todo get visibility from the back ?? */
 	activateEffect(): ReturnType<typeof setInterval> {
 		const effectIntervalId = setInterval(() => {
 			if (this.gameStopped)

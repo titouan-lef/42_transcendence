@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MAP_SIZE, WALL_WIDTH, METEOR_SPEED, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, METEOR_COLLISION_STRENGTH, METEOR_LIFETIME, COLORS3, BALL_DIAMETER, COLORS4 } from "../../settings/values.js";
-import { BallTemplate } from "../../ball/BallTemplate.js";
+import { Position } from "../../types_transfert.js";
 
 export class Meteor {
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
@@ -10,15 +10,20 @@ export class Meteor {
 	private readonly direction: babylon.Vector3;
 	private body: babylon.PhysicsBody | null;
 	private readonly particles: babylon.ParticleSystem;
-	private readonly randomSize;
+	private readonly size;
 	private readonly trail: babylon.ParticleSystem;
 
-	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
-		this.randomSize = Math.random() * 5 + 1;
+	/** 
+	 * @todo be the same as the one in the front
+	 * send position each frame too ? then assosiate an id to each meteor ?
+	 */
+
+	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>, position: Position, size: number) {
+		this.size = size;
 		const positionXStart = ((Math.random() - 0.5) * 2) * MAP_SIZE.x;
 		const positionZStart = ((Math.random() - 0.5) * 2) * MAP_SIZE.z;
-		const positionXEnd = ((Math.random() - 0.5) * 2) * ((MAP_SIZE.x - WALL_WIDTH - (BALL_DIAMETER * this.randomSize)) / 2);
-		const positionZEnd = ((Math.random() - 0.5) * 2) * ((MAP_SIZE.z - WALL_WIDTH - (BALL_DIAMETER * this.randomSize)) / 2);
+		const positionXEnd = ((Math.random() - 0.5) * 2) * ((MAP_SIZE.x - WALL_WIDTH - (BALL_DIAMETER * this.size)) / 2);
+		const positionZEnd = ((Math.random() - 0.5) * 2) * ((MAP_SIZE.z - WALL_WIDTH - (BALL_DIAMETER * this.size)) / 2);
 		const start = new babylon.Vector3(positionXStart, MAP_SIZE.y, positionZStart);
 		const end = new babylon.Vector3(positionXEnd, 0, positionZEnd);
 		this.direction = end.subtract(start).normalize();
@@ -33,7 +38,7 @@ export class Meteor {
 	}
 
 	private spawnMeteor(scene: babylon.Scene, position: babylon.Vector3): babylon.Mesh {
-		const meteor = babylon.MeshBuilder.CreatePolyhedron("meteor", { type: 2, size: METEOR_DIAMETER * this.randomSize }, scene);
+		const meteor = babylon.MeshBuilder.CreatePolyhedron("meteor", { type: 2, size: METEOR_DIAMETER * this.size }, scene);
 		meteor.position = position;
 		meteor.metadata = { type: "collider" };
 		const material = new babylon.StandardMaterial("MeteorMat", scene);
@@ -48,8 +53,8 @@ export class Meteor {
 	private createMeteorLight(scene: babylon.Scene): babylon.PointLight {
 		const light = new babylon.PointLight("meteorLight", this.meteor.position, scene);
 		light.diffuse = COLORS3.volcanoDiffuseMeteorLight;
-		light.intensity = 1 * this.randomSize;
-		light.range = 30 * this.randomSize;
+		light.intensity = 1 * this.size;
+		light.range = 30 * this.size;
 		light.parent = this.meteor;
 		return light;
 	}
@@ -60,7 +65,7 @@ export class Meteor {
 			const velocity = this.direction.scale(METEOR_SPEED * ratio);
 			this.meteor.position.addInPlace(velocity);
 			if (this.meteor.position.y < 0) {
-				this.applyExplosionForce(scene, end);
+				// this.applyExplosionForce(scene, end);
 				this.trail.stop();
 				this.particles.start();
 				this.setBody(scene);
@@ -84,42 +89,42 @@ export class Meteor {
 		this.body = body;
 	}
 
-	private applyExplosionForce(scene: babylon.Scene, center: babylon.Vector3): void {
-		scene.meshes.forEach(mesh => {
-			if (!mesh.metadata?.pushable || !mesh.physicsBody)
-				return ;
-			const body = mesh.physicsBody;
-			const meshPosition = mesh.getAbsolutePosition();
-			const direction = meshPosition.subtract(center);
-			const distance = direction.length();
-			const explosionRadius = METEOR_COLLISION_RADIUS * this.randomSize * 2;
+	// private applyExplosionForce(scene: babylon.Scene, center: babylon.Vector3): void {
+	// 	scene.meshes.forEach(mesh => {
+	// 		if (!mesh.metadata?.pushable || !mesh.physicsBody)
+	// 			return ;
+	// 		const body = mesh.physicsBody;
+	// 		const meshPosition = mesh.getAbsolutePosition();
+	// 		const direction = meshPosition.subtract(center);
+	// 		const distance = direction.length();
+	// 		const explosionRadius = METEOR_COLLISION_RADIUS * this.size * 2;
 
-			if (distance < explosionRadius && distance > 0) {
-				direction.normalize();
-				const force = direction.scale(METEOR_COLLISION_STRENGTH * (1 - distance / explosionRadius) * this.randomSize);
-				force.y = 0;
-				if (mesh instanceof BallTemplate)
-					mesh.setJustCollide();
-				body.applyImpulse(force, meshPosition);
-			}
-		});
-	}
+	// 		if (distance < explosionRadius && distance > 0) {
+	// 			direction.normalize();
+	// 			const force = direction.scale(METEOR_COLLISION_STRENGTH * (1 - distance / explosionRadius) * this.size);
+	// 			force.y = 0;
+	// 			// if (mesh instanceof BallTemplate)
+	// 			// 	mesh.setJustCollide();
+	// 			body.applyImpulse(force, meshPosition);
+	// 		}
+	// 	});
+	// }
 
 	private createContactParticles(scene: babylon.Scene, texture: babylon.Texture, end: babylon.Vector3): babylon.ParticleSystem {
-		const dustParticles = new babylon.ParticleSystem("MeteorDust", Math.floor(100 * this.randomSize), scene);
+		const dustParticles = new babylon.ParticleSystem("MeteorDust", Math.floor(100 * this.size), scene);
 		dustParticles.particleTexture = texture;
 		dustParticles.blendMode = babylon.ParticleSystem.BLENDMODE_STANDARD;
 		dustParticles.emitter = end.clone();
 		dustParticles.emitter.y += 1;
 		dustParticles.renderingGroupId = 1;
 		const emitter = new babylon.ConeParticleEmitter(90);
-		emitter.radius = METEOR_COLLISION_RADIUS * this.randomSize * 2;
+		emitter.radius = METEOR_COLLISION_RADIUS * this.size * 2;
 		dustParticles.particleEmitterType = emitter;
 		dustParticles.color1 = COLORS4.volcanoDiffuseDust1;
 		dustParticles.color2 = COLORS4.volcanoDiffuseDust2;
 		dustParticles.colorDead = COLORS4.volcanoDiffuseDustDead;
-		dustParticles.minSize = 1 * this.randomSize;
-		dustParticles.maxSize = 2 * this.randomSize;
+		dustParticles.minSize = 1 * this.size;
+		dustParticles.maxSize = 2 * this.size;
 		dustParticles.minEmitPower = 0.8;
 		dustParticles.maxEmitPower = 1.8;
 		dustParticles.minLifeTime = 2.5;
@@ -127,15 +132,15 @@ export class Meteor {
 		dustParticles.gravity = new babylon.Vector3(0, -1.5, 0);
 		dustParticles.updateSpeed = 0.02;
 		dustParticles.emitRate = 0;
-		dustParticles.manualEmitCount = Math.floor(100 * this.randomSize);
+		dustParticles.manualEmitCount = Math.floor(100 * this.size);
 		return dustParticles;
 	}
 
 	private createTrail(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
-		const trail = new babylon.ParticleSystem("meteorTrail", Math.floor(400 * this.randomSize), scene);
+		const trail = new babylon.ParticleSystem("meteorTrail", Math.floor(400 * this.size), scene);
 		trail.particleTexture = texture;
 		trail.emitter = this.meteor;
-		trail.particleEmitterType = new babylon.SphereParticleEmitter(METEOR_COLLISION_RADIUS * this.randomSize * 1.5);
+		trail.particleEmitterType = new babylon.SphereParticleEmitter(METEOR_COLLISION_RADIUS * this.size * 1.5);
 		trail.renderingGroupId = 1;
 		trail.color1 = COLORS4.volcanoDiffuseTrail1;
 		trail.color2 = COLORS4.volcanoDiffuseTrail2;
@@ -148,7 +153,7 @@ export class Meteor {
 		trail.maxEmitPower = 0;
 		trail.updateSpeed = 0.02;
 		trail.gravity = new babylon.Vector3(0, 1, 0);
-		trail.emitRate = Math.floor(400 * this.randomSize);
+		trail.emitRate = Math.floor(400 * this.size);
 		trail.start();
 		return trail;
 	}

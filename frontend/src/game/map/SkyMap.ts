@@ -5,14 +5,14 @@ import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, R_PARTICLE_NUMBER, LIGHTNING_
 
 export class RainyMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
-	private readonly lightningIntervalId: ReturnType<typeof setInterval>;
+	// private readonly lightningIntervalId: ReturnType<typeof setInterval>;
 	private readonly lightnings: Lightning[] = [];
 
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
 		super(scene, "sky");
 		this.glow.intensity = R_GLOW_INTENSITY;
 		this.particles = this.createParticles(scene, texture.rain);
-		this.lightningIntervalId = this.lightningInterval(scene, texture.electricity);
+		// this.lightningIntervalId = this.lightningInterval(scene, texture.electricity);
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
@@ -80,21 +80,22 @@ export class RainyMap extends MapTemplate {
 		return particles;
 	}
 
+	/** @todo create a lightning when reiceive data from back */
 	/** will stack lighting till the end of the point */
-	private lightningInterval(scene: babylon.Scene, texture: babylon.Texture): ReturnType<typeof setInterval> {
-		const lightningIntervalId = setInterval( () => {
-			if (this.gameStopped)
-				return;
-			const lightning = new Lightning(scene, texture);
-			this.lightnings.push(lightning);
-			setTimeout(() => {
-				const index = this.lightnings?.indexOf(lightning);
-				if (index !== -1)
-					this.lightnings?.splice(index, 1);
-			}, LIGHTNING_LIFETIME + 100);
-		}, LIGHTNING_INTERVAL);
-		return lightningIntervalId;
-	}
+	// private lightningInterval(scene: babylon.Scene, texture: babylon.Texture): ReturnType<typeof setInterval> {
+	// 	const lightningIntervalId = setInterval( () => {
+	// 		if (this.gameStopped)
+	// 			return;
+	// 		const lightning = new Lightning(scene, texture);
+	// 		this.lightnings.push(lightning);
+	// 		setTimeout(() => {
+	// 			const index = this.lightnings?.indexOf(lightning);
+	// 			if (index !== -1)
+	// 				this.lightnings?.splice(index, 1);
+	// 		}, LIGHTNING_LIFETIME + 100);
+	// 	}, LIGHTNING_INTERVAL);
+	// 	return lightningIntervalId;
+	// }
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
@@ -107,7 +108,7 @@ export class RainyMap extends MapTemplate {
 	}
 
 	destroyRest(): void {
-		clearInterval(this.lightningIntervalId);
+		// clearInterval(this.lightningIntervalId);
 		while (this.lightnings.length) {
 			this.lightnings[0].destroy();
 			this.lightnings.splice(0, 1);

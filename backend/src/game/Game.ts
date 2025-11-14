@@ -208,6 +208,7 @@ export class Game {
 	private async sendOptions(player1: Player, player2: Player) : Promise<void> {
 		const options: OptionMessage = {
 			status: Status.OPTIONS,
+			playerId: 1,
 			map: this.sceneManager.getMapType(),
 			ball: "default",
 			rotatingPlayer: this.settings.rotatingPlayer,
@@ -219,6 +220,7 @@ export class Game {
 			options.ball = ball.getType();
 
 		player1.send(options);
+		options.playerId = 2;
 		player2.send(options);
 	}
 
@@ -242,12 +244,15 @@ export class Game {
 		const intervalMs = 1000 / 30; // 30 fps
 
 		this.gameInterval = setInterval(() => {
-			// manage countdown
-			const player1 = this.sceneManager.getPlayer1();
-			const player2 = this.sceneManager.getPlayer2();
-			if (!player1 || !player2)
-				return;
-			this.sendPositions(player1, player2);
+			if (!this.gameStopped) {
+				const player1 = this.sceneManager.getPlayer1();
+				const player2 = this.sceneManager.getPlayer2();
+				if (!player1 || !player2)
+					return;
+				this.sendPositions(player1, player2);
+			} else {
+				/** countdown ?? */
+			}
 		}, intervalMs);
 	}
 

@@ -32,12 +32,15 @@ export class SceneManager {
 		return this.ball;
 	}
 
+	getPlayer(number: number): Player | undefined {
+		const player = this.players.find(
+			(p) => p.getId() === number
+		);
+		return player;
+	}
+
 	private createBall(scene: babylon.Scene, settings: GameSettings): void {
-		const ballList: BallOption[] = ["default", "invisible", "tricky", "pulse", "snake"];
-		let ball = settings.ball;
-		if (settings.ball === "random") {
-			ball = ballList[Math.floor(Math.random() * 5)];
-		}
+		const ball = settings.ball; // no random in the front
 		switch (ball) {
 			case "default":
 				this.ball = new DefaultBall(scene, this.textures);
@@ -60,10 +63,6 @@ export class SceneManager {
 	}
 
 	private createMap(scene: babylon.Scene, map: MapOption): void {
-		const mapList: MapOption[] = ["default", "volcano", "sky", "desert"];
-		if (map === "random") {
-			map = mapList[Math.floor(Math.random() * 4)];
-		}
 		switch (map) {
 			case "default":
 				this.map = new DefaultMap(scene, this.textures.stars);
@@ -75,7 +74,8 @@ export class SceneManager {
 				this.map = new SkyMap(scene, this.textures);
 				break;
 			case "desert":
-				this.map = new DesertMap(scene, this.textures);
+				const windForce = new babylon.Vector3(0, 0, 0); /** @todo get windForce from back ? */
+				this.map = new DesertMap(scene, this.textures, windForce);
 				break;
 			default: 
 				throw new Error("switch map fail");
@@ -86,8 +86,8 @@ export class SceneManager {
 		const player1PosX = MAP_SIZE.x / 2 - (PLAYER_DIMENSION.z + WALL_WIDTH);
 		const player2PosX = (PLAYER_DIMENSION.z + WALL_WIDTH) -(MAP_SIZE.x / 2);
 		const playersPoxY = PLAYER_DIMENSION.y / 2;
-		const player1 = new Player(scene, new babylon.Vector2(player1PosX, playersPoxY), settings, settings.player1Keys, 1);
-		const player2 = new Player(scene, new babylon.Vector2(player2PosX, playersPoxY), settings, settings.player2Keys, 2);
+		const player1 = new Player(scene, new babylon.Vector2(player1PosX, playersPoxY), settings, settings.player1);
+		const player2 = new Player(scene, new babylon.Vector2(player2PosX, playersPoxY), settings, settings.player2);
 		this.players.push(player1);
 		this.players.push(player2);
 	}
@@ -105,14 +105,14 @@ export class SceneManager {
 		this.textures.electricity = new babylon.Texture("textures/electricity.png", scene, true);
 	}
 
-	/** @todo Titouan gaming */
-	checkGoal(): { goal: "player1" | "player2" | null, position: babylon.Vector3 | null } | null {
-		const goalInfos = this.ball?.getGoal();
-		if (goalInfos && goalInfos.goal !== null) {
-			return goalInfos;
-		}
-		return null;
-	}
+	// /** @todo Titouan gaming */
+	// checkGoal(): { goal: "player1" | "player2" | null, position: babylon.Vector3 | null } | null {
+	// 	const goalInfos = this.ball?.getGoal();
+	// 	if (goalInfos && goalInfos.goal !== null) {
+	// 		return goalInfos;
+	// 	}
+	// 	return null;
+	// }
 
 	/** ball explodes, the time slow down */
 	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3, score: babylon.Vector2): Promise<void> {
