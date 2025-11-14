@@ -23,6 +23,9 @@ async function getThemeById(id: number): Promise<Theme | undefined> {
 		[id]), "getThemeById");
 }
 
+export { createTheme, getAllThemes, getThemeById };
+/**
+ * @todo voir si on garde
 async function updateTheme(id: number, newName: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
 		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,
@@ -31,4 +34,4 @@ async function updateTheme(id: number, newName: string): Promise<void> {
 
 async function deleteTheme(id: number): Promise<void> {
 	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id]), "deleteTheme");
-}
+}*/

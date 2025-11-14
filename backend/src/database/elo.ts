@@ -30,8 +30,13 @@ async function updateElo(elo: Elo): Promise<void> {
 		[elo.variation, elo.username, elo.gameId]), "updateElo");
 }
 
+export { createElo, getAllElos, getElo, updateElo };
+/**
+ * 
+ * @todo Voir si on garde
 async function deleteElo(username: string, gameId: number): Promise<void> {
 	applyQuery(async (db) => await db.run(
 		`DELETE FROM ${TABLE_NAME} WHERE username = ? AND gameId = ?`,
 		[username, gameId]), "deleteElo");
-}
+	}
+*/

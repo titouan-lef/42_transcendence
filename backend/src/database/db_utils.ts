@@ -1,7 +1,7 @@
 import { getDB } from "./init.js";
 import { Database } from "sqlite";
 
-export async function applyQuery<T>(queryFunc: (db: Database) => Promise<T>, errorMsg: string ): Promise<T | undefined> {
+async function applyQuery<T>(queryFunc: (db: Database) => Promise<T>, errorMsg: string ): Promise<T | undefined> {
 	const db = await getDB();
 	try {
 		return await queryFunc(db);
@@ -11,3 +11,5 @@ export async function applyQuery<T>(queryFunc: (db: Database) => Promise<T>, err
 		await db.close();
 	}
 }
+
+export { applyQuery };

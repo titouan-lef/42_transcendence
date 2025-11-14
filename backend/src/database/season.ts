@@ -22,6 +22,9 @@ async function getSeasonById(id: number): Promise<Season | undefined> {
 		[id]), "getSeasonById");
 }
 
+export { createSeason, getAllSeasons, getSeasonById };
+/**
+ * @todo voir si on garde
 async function updateSeason(id: number, newName: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
 		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,
@@ -30,4 +33,4 @@ async function updateSeason(id: number, newName: string): Promise<void> {
 
 async function deleteSeason(id: number): Promise<void> {
 	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id]), "deleteSeason");
-}
+}*/
