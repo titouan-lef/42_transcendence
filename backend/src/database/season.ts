@@ -1,32 +1,33 @@
 import { applyQuery } from "./db_utils.js";
 
-export interface Season {
+const TABLE_NAME = "Season";
+interface Season {
 	id?: number;
-	name: string;
+	startedAT?: string;
 }
 
-export async function createSeason(name: string): Promise<void> {
+async function createSeason(name: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
-		`INSERT INTO Season (name) VALUES (?)`,
+		`INSERT INTO ${TABLE_NAME} (name) VALUES (?)`,
 		[name]), "createSeason");
 }
 
-export async function getAllSeasons(): Promise<Season[] | undefined> {
-	return applyQuery(async (db) => await db.all(`SELECT * FROM Season`), "getAllSeason");
+async function getAllSeasons(): Promise<Season[] | undefined> {
+	return applyQuery(async (db) => await db.all(`SELECT * FROM ${TABLE_NAME}`), "getAllSeason");
 }
 
-export async function getSeasonById(id: number): Promise<Season | undefined> {
+async function getSeasonById(id: number): Promise<Season | undefined> {
 	return applyQuery(async (db) => await db.get(
-		`SELECT * FROM Season WHERE id = ?`,
+		`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
 		[id]), "getSeasonById");
 }
 
-export async function updateSeason(id: number, newName: string): Promise<void> {
+async function updateSeason(id: number, newName: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
-		`UPDATE Season SET name = ? WHERE id = ?`,
+		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,
 		[newName, id]), "updateSeason");
 }
 
-export async function deleteSeason(id: number): Promise<void> {
-	applyQuery(async (db) => await db.run(`DELETE FROM Season WHERE id = ?`, [id]), "deleteSeason");
+async function deleteSeason(id: number): Promise<void> {
+	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id]), "deleteSeason");
 }

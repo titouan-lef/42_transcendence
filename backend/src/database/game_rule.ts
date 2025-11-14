@@ -1,40 +1,42 @@
 import { applyQuery } from "./db_utils.js";
 
-export interface GameRule {
+const TABLE_NAME = "Game_rule";
+
+interface GameRule {
 	gameId: number;
 	ruleId: number;
-	isActive: number;
+	isEnable: number;
 }
 
-export async function createGameRule(gameRule: GameRule): Promise<void> {
+async function createGameRule(gameRule: GameRule): Promise<void> {
 	applyQuery(async (db) => await db.run(
-		`INSERT INTO Game_rule (gameId, ruleId, isActive) VALUES (? ,? , ?)`,
-		[gameRule.gameId, gameRule.ruleId, gameRule.isActive]
+		`INSERT INTO ${TABLE_NAME} (gameId, ruleId, isActive) VALUES (? ,? , ?)`,
+		[gameRule.gameId, gameRule.ruleId, gameRule.isEnable]
 	),"createGameRule");
 }
 
-export async function getAllGameRules(): Promise<GameRule[] | undefined> {
-	return applyQuery(async (db) => await db.all(`SELECT * FROM Game_rule`), "getAllGameRules");
+async function getAllGameRules(): Promise<GameRule[] | undefined> {
+	return applyQuery(async (db) => await db.all(`SELECT * FROM ${TABLE_NAME}`), "getAllGameRules");
 }
 
-export async function getGameRule(gameId: number, ruleId: number): Promise<GameRule | undefined> {
+async function getGameRule(gameId: number, ruleId: number): Promise<GameRule | undefined> {
 	return applyQuery(async (db) => await db.get(
-		`SELECT * FROM Game_rule WHERE gameId = ? And ruleId = ?`,
+		`SELECT * FROM ${TABLE_NAME} WHERE gameId = ? AND ruleId = ?`,
 		[gameId, ruleId]), "getGameRule");
 }
 
-export async function updateGameRule(gameId: number, ruleId: number, updates: Partial<Omit<GameRule, "gameId" | "ruleId">>): Promise<void> {
+async function updateGameRule(gameId: number, ruleId: number, updates: Partial<Omit<GameRule, "gameId" | "ruleId">>): Promise<void> {
 	applyQuery(async (db) => {
 		const fields = Object.keys(updates).map((key) => `${key} = ?`).join(", ");
 		if (!fields) 
 			return;
 		const values = Object.values(updates);
-		await db.run(`UPDATE Game_rule SET ${fields} WHERE gameId = ? AND ruleId = ?`,
+		await db.run(`UPDATE ${TABLE_NAME} SET ${fields} WHERE gameId = ? AND ruleId = ?`,
 			[...values, gameId, ruleId]);
 	}, "updateGameRule");
 }
 
-export async function deleteGameRule(gameId: number, ruleId: number): Promise<void> {
-	applyQuery(async (db) => await db.run(`DELETE FROM Game_rule WHERE gameId = ? AND ruleId = ?`,
+async function deleteGameRule(gameId: number, ruleId: number): Promise<void> {
+	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE gameId = ? AND ruleId = ?`,
 		[gameId, ruleId]), "deleteGameRule");
 }

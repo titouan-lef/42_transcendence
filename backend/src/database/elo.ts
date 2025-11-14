@@ -1,36 +1,37 @@
 import { applyQuery } from "./db_utils.js";
 
-export interface Elo {
+const TABLE_NAME = "Elo";
+
+interface Elo {
 	username: string;
 	gameId: number;
 	variation: number;
 }
 
-export async function createElo(elo: Elo): Promise<void> {
+async function createElo(elo: Elo): Promise<void> {
 	applyQuery(async (db) => await db.run(
-		`INSERT INTO Elo (username, gameId, variation) VALUES (? ,? ,?)`,
+		`INSERT INTO ${TABLE_NAME} (username, gameId, variation) VALUES (? ,? ,?)`,
 		[elo.username, elo.gameId, elo.variation]), "createElo");
 }
 
-export async function getAllElos(): Promise<Elo[] | undefined> {
-	return applyQuery(async (db) => await db.all(`SELECT * FROM Elo`), "getAllElos");
+async function getAllElos(): Promise<Elo[] | undefined> {
+	return applyQuery(async (db) => await db.all(`SELECT * FROM ${TABLE_NAME}`), "getAllElos");
 }
 
-export async function getElo(username: string, gameId: number): Promise<Elo | undefined> {
+async function getElo(username: string, gameId: number): Promise<Elo | undefined> {
 	return applyQuery(async (db) => await db.get(
-		`SELECT * FROM Elo WHERE username = ? And gameId = ?`,
+		`SELECT * FROM ${TABLE_NAME} WHERE username = ? AND gameId = ?`,
 		[username, gameId]), "getElo");
 }
 
-
-export async function updateElo(elo: Elo): Promise<void> {
+async function updateElo(elo: Elo): Promise<void> {
 	applyQuery(async (db) => await db.run(
-		`UPDATE Elo SET variation = ? WHERE username = ? AND gameId = ?`,
+		`UPDATE ${TABLE_NAME} SET variation = ? WHERE username = ? AND gameId = ?`,
 		[elo.variation, elo.username, elo.gameId]), "updateElo");
 }
 
-export async function deleteElo(username: string, gameId: number): Promise<void> {
+async function deleteElo(username: string, gameId: number): Promise<void> {
 	applyQuery(async (db) => await db.run(
-		`DELETE FROM Elo WHERE username = ? AND gameId = ?`,
+		`DELETE FROM ${TABLE_NAME} WHERE username = ? AND gameId = ?`,
 		[username, gameId]), "deleteElo");
 }
