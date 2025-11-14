@@ -25,18 +25,22 @@ async function getGameRule(gameId: number, ruleId: number): Promise<GameRule | u
 		[gameId, ruleId]), "getGameRule");
 }
 
+export { createGameRule, getAllGameRules, getGameRule };
+/**
+ * @todo voiir si on garde
 async function updateGameRule(gameId: number, ruleId: number, updates: Partial<Omit<GameRule, "gameId" | "ruleId">>): Promise<void> {
 	applyQuery(async (db) => {
 		const fields = Object.keys(updates).map((key) => `${key} = ?`).join(", ");
-		if (!fields) 
-			return;
+		if (!fields)
+		return;
 		const values = Object.values(updates);
 		await db.run(`UPDATE ${TABLE_NAME} SET ${fields} WHERE gameId = ? AND ruleId = ?`,
-			[...values, gameId, ruleId]);
+		[...values, gameId, ruleId]);
 	}, "updateGameRule");
 }
 
 async function deleteGameRule(gameId: number, ruleId: number): Promise<void> {
 	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE gameId = ? AND ruleId = ?`,
-		[gameId, ruleId]), "deleteGameRule");
+	[gameId, ruleId]), "deleteGameRule");
 }
+*/

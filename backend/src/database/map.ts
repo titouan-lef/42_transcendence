@@ -23,6 +23,9 @@ async function getMapById(id: number): Promise<Map | undefined> {
 		[id]), "getMapById");
 }
 
+export { createMap, getAllMaps, getMapById };
+/** 
+ * @todo voir si on garde
 async function updateMap(id: number, newName: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
 		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,
@@ -32,3 +35,4 @@ async function updateMap(id: number, newName: string): Promise<void> {
 async function deleteMap(id: number): Promise<void> {
 	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id]), "deleteMap");
 }
+*/

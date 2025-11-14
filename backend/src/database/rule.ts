@@ -23,6 +23,9 @@ async function getRuleById(id: number): Promise<Rule | undefined> {
 		[id]), "getRuleById");
 }
 
+export { createRule, getAllRules, getRuleById };
+/**
+ * @todo voir si on garde
 async function updateRule(id: number, newName: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
 		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,
@@ -31,4 +34,4 @@ async function updateRule(id: number, newName: string): Promise<void> {
 
 async function deleteRule(id: number): Promise<void> {
 	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id]), "deleteRule");
-}
+}*/
