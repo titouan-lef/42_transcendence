@@ -1,32 +1,38 @@
 import { applyQuery } from "./db_utils.js";
 
-export interface Ball {
-	id?: number;
+const TABLE_NAME = "Ball";
+
+interface Ball {
+	id: number;
 	name: string;
 }
 
-export async function createBall(name: string): Promise<void> {
+async function createBall(name: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
-		`INSERT INTO Ball (name) VALUES (?)`,
+		`INSERT INTO ${TABLE_NAME} (name) VALUES (?)`,
 		[name]), "createBall");
 }
 
-export async function getAllBalls(): Promise<Ball[] | undefined> {
-	return applyQuery(async (db) => await db.all(`SELECT * FROM Ball`), "getAllBall");
+async function getAllBalls(): Promise<Ball[] | undefined> {
+	return applyQuery(async (db) => await db.all(`SELECT * FROM ${TABLE_NAME}`), "getAllBall");
 }
 
-export async function getBallById(id: number): Promise<Ball | undefined> {
+async function getBallById(id: number): Promise<Ball | undefined> {
 	return applyQuery(async (db) => await db.get(
-		`SELECT * FROM Ball WHERE id = ?`,
+		`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
 		[id]), "getBallById");
 }
 
-export async function updateBall(id: number, newName: string): Promise<void> {
+export { createBall, getAllBalls, getBallById };
+/**
+ * @todo voir si on garde
+async function updateBall(id: number, newName: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
-		`UPDATE Ball SET name = ? WHERE id = ?`,
+		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,
 		[newName, id]), "updateBall");
-}
-
-export async function deleteBall(id: number): Promise<void> {
-	applyQuery(async (db) => await db.run(`DELETE FROM Ball WHERE id = ?`, [id]), "deleteBall");
-}
+	}
+	
+	async function deleteBall(id: number): Promise<void> {
+		applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id]), "deleteBall");
+	}
+*/

@@ -1,32 +1,34 @@
 import { applyQuery } from "./db_utils.js";
 
-export interface Map {
+const TABLE_NAME = "Map";
+
+interface Map {
 	id?: number;
 	name: string;
 }
 
-export async function createMap(name: string): Promise<void> {
+async function createMap(name: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
-		`INSERT INTO Map (name) VALUES (?)`,
+		`INSERT INTO ${TABLE_NAME} (name) VALUES (?)`,
 		[name]), "createMap");
 }
 
-export async function getAllMaps(): Promise<Map[] | undefined> {
-	return applyQuery(async (db) => await db.all(`SELECT * FROM Map`), "getAllMap");
+async function getAllMaps(): Promise<Map[] | undefined> {
+	return applyQuery(async (db) => await db.all(`SELECT * FROM ${TABLE_NAME}`), "getAllMap");
 }
 
-export async function getMapById(id: number): Promise<Map | undefined> {
+async function getMapById(id: number): Promise<Map | undefined> {
 	return applyQuery(async (db) => await db.get(
-		`SELECT * FROM Map WHERE id = ?`,
+		`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
 		[id]), "getMapById");
 }
 
-export async function updateMap(id: number, newName: string): Promise<void> {
+async function updateMap(id: number, newName: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
-		`UPDATE Map SET name = ? WHERE id = ?`,
+		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,
 		[newName, id]), "updateMap");
 }
 
-export async function deleteMap(id: number): Promise<void> {
-	applyQuery(async (db) => await db.run(`DELETE FROM Map WHERE id = ?`, [id]), "deleteMap");
+async function deleteMap(id: number): Promise<void> {
+	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id]), "deleteMap");
 }

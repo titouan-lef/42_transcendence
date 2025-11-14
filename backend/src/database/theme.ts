@@ -1,32 +1,34 @@
 import { applyQuery } from "./db_utils.js";
 
-export interface Theme {
+const TABLE_NAME = "Theme";
+
+interface Theme {
 	id?: number;
 	name: string;
 }
 
-export async function createTheme(name: string): Promise<void> {
+async function createTheme(name: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
-		`INSERT INTO Theme (name) VALUES (?)`,
+		`INSERT INTO ${TABLE_NAME} (name) VALUES (?)`,
 		[name]), "createTheme");
 }
 
-export async function getAllThemes(): Promise<Theme[] | undefined> {
-	return applyQuery(async (db) => await db.all(`SELECT * FROM Theme`), "getAllTheme");
+async function getAllThemes(): Promise<Theme[] | undefined> {
+	return applyQuery(async (db) => await db.all(`SELECT * FROM ${TABLE_NAME}`), "getAllThemes");
 }
 
-export async function getThemeById(id: number): Promise<Theme | undefined> {
+async function getThemeById(id: number): Promise<Theme | undefined> {
 	return applyQuery(async (db) => await db.get(
-		`SELECT * FROM Theme WHERE id = ?`,
+		`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
 		[id]), "getThemeById");
 }
 
-export async function updateTheme(id: number, newName: string): Promise<void> {
+async function updateTheme(id: number, newName: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
-		`UPDATE Theme SET name = ? WHERE id = ?`,
+		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,
 		[newName, id]), "updateTheme");
 }
 
-export async function deleteTheme(id: number): Promise<void> {
-	applyQuery(async (db) => await db.run(`DELETE FROM Theme WHERE id = ?`, [id]), "deleteTheme");
+async function deleteTheme(id: number): Promise<void> {
+	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id]), "deleteTheme");
 }
