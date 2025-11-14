@@ -1,11 +1,11 @@
 import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
-import { HavokPlugin } from "@babylonjs/core/Physics";
-import havokPhysics from "@babylonjs/havok";
-import { CAMERA_POS_X, MOVE_BALL_ONCLICK, MOVE_CAMERA_ONCLICK, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
+import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
+import { PlanePosition } from "./types_transfert.js";
 
 export class Game {
+	private readonly socket: WebSocket;
 	private readonly engine: babylon.Engine;
 	private readonly scene: babylon.Scene;
 	private readonly sceneManager: SceneManager;
@@ -16,7 +16,8 @@ export class Game {
 	private inAnimation = false;
 	private gameStopped = false;
 
-	constructor (canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
+	constructor (socket: WebSocket, canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
+		this.socket = socket;
 		this.engine = engine;
 		this.canvas = canvas;
 		this.settings = settings;
@@ -29,11 +30,11 @@ export class Game {
 	}
 
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
-	static async create(settings: GameSettings): Promise<Game> {
+	static async create(socket: WebSocket, settings: GameSettings): Promise<Game> {
 		const canvas = Game.createCanvas();
 		const engine = new babylon.Engine(canvas, true);
 		const scene = await Game.initScene(engine);
-		return new Game(canvas, settings, scene, engine);
+		return new Game(socket, canvas, settings, scene, engine);
 	}
 
 	/** creating the canvas here because each time a game is created, a new canvas should also be created */
@@ -50,12 +51,6 @@ export class Game {
 
 	private static async initScene(engine: babylon.Engine): Promise<babylon.Scene> {
 		const scene = new babylon.Scene(engine);
-
-		const havokInstance = await havokPhysics({
-			locateFile: (fileName) => `/dist/public/${fileName}` // tells havok where to fetch the WASM file
-		});
-		const havokPlugin = new HavokPlugin(true, havokInstance);
-		scene.enablePhysics(new babylon.Vector3(0, -9.81, 0), havokPlugin);
 		return scene;
 	};
 
@@ -86,44 +81,26 @@ export class Game {
 		this.sceneManager.createTextures(this.scene);
 		this.sceneManager.createPlayers(this.scene, this.settings);
 		this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
-		if (MOVE_BALL_ONCLICK) { //debug function
-			this.scene.onPointerDown = (): void => {
-				const ball = this.sceneManager.getBall();
-				ball?.moveBall();
-				ball?.setJustCollide();
-			};
+		
+		const player = this.sceneManager.getPlayer(this.settings.player1.playerId);
+		if (!player) {
+			console.error(`Player ${this.settings.player1.playerId} not found`);
+			return;
 		}
-		this.scene.onAfterRenderObservable.add(() => {
-			if (this.inAnimation === false) {
-				this.checkEndOfPoint();
-			}
-		});
-	}
 
-	/**check collision for each balls */
-	async checkEndOfPoint(): Promise<void> {
-		const goalInfos = this.sceneManager.checkGoal();
-		if (goalInfos !== null && goalInfos.position !== null) {
-			this.inAnimation = true;
-			goalInfos.goal === "player1" ? this.score.x += 1 : this.score.y += 1;
-			await this.sceneManager.goalAnimation(this.engine, this.scene, goalInfos.position, this.score);
-			if (this.gameStopped) // if closing game while animation
-				return ;
-			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
-				this.stop();
-			} else {
-				this.inAnimation = false;
-				this.sceneManager.destroyEnvironnement(this.scene);
-				if (SHOW_DISPOSE_LOGS)
-					this.sceneManager.showDisposeLogs(this.scene);
-				this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
-			}
-		}
+		window.addEventListener("keydown", (event: KeyboardEvent) => {
+			const controls = player.handleKeyDown(event);
+			this.socket.send(JSON.stringify(controls));
+		});
+		window.addEventListener("keyup", (event: KeyboardEvent) => {
+			const controls = player.handleKeyUp(event);
+			this.socket.send(JSON.stringify(controls));
+		});
 	}
 
 	private createCamera(): babylon.ArcRotateCamera {
 		const cameraAxeLat = 1;
-		const cameraAxeLong = this.settings.playerId === 1 ? 0 : Math.PI;
+		const cameraAxeLong = this.settings.myId === 1 ? 0 : Math.PI;
 		const camera = new babylon.ArcRotateCamera("camera",
 			cameraAxeLong, cameraAxeLat,
 			CAMERA_POS_X, babylon.Vector3.Zero(), this.scene);
@@ -132,5 +109,13 @@ export class Game {
 			camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
 		}
 		return camera;
+	}
+
+	updatePlayerPositions(id: 1 | 2, position: PlanePosition): void {
+		const player = this.sceneManager.getPlayer(id)?.setPosition(position);
+	}
+
+	updateBallPositions(position: PlanePosition): void {
+		this.sceneManager.getBall()?.setPosition(position);
 	}
 }

@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { GameSettings, PlayerSettings } from "../settings/GameSettings.js";
 import { PLAYER_DIMENSION, COLORS3, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY, PLAYER_TRAIL_INTERVAL, PLAYER_TRAIL_ON } from "../settings/values.js";
 import { PlayerTrail } from "./PlayerTrail.js";
-import { PlayerControls, Position, ReicivedMessage as TransfertMessage } from "../../web_sockets/types_transfert.js";
+import { PlayerControls, Position, DataMessage } from "../../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
 //import { PhysicsBody } from "babylonjs";
 
@@ -15,8 +15,8 @@ export class Player {
 	private readonly rotatingPlayer: boolean;
 	private readonly applyingSpin;
 	private readonly baseRotation: babylon.Quaternion;
-	private readonly playerTrails: PlayerTrail[] = [];
-	private trailIntervalId: ReturnType<typeof setInterval> | null = null;
+	// private readonly playerTrails: PlayerTrail[] = [];
+	// private trailIntervalId: ReturnType<typeof setInterval> | null = null;
 
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	private readonly positionObserver: babylon.Observer<babylon.Scene>;
@@ -37,8 +37,8 @@ export class Player {
 		this.username = settings.username;
 		this.socket = settings.socket;
 
-		if (PLAYER_TRAIL_ON)
-			this.trailIntervalId = this.setTrail(scene);
+		// if (PLAYER_TRAIL_ON)
+		// 	this.trailIntervalId = this.setTrail(scene);
 	}
 
 	private setPlayer(scene: babylon.Scene, position: babylon.Vector2): babylon.TransformNode {
@@ -97,15 +97,15 @@ export class Player {
 		this.body.disablePreStep = false;
 	}
 
-	private setTrail(scene: babylon.Scene): ReturnType<typeof setInterval> {
-		const trailIntervalId = setInterval(() => {
-			this.playerTrails.push(new PlayerTrail(scene, this.player));
-			while (this.playerTrails.length && this.playerTrails[0].hasDisappeared()) {
-				this.playerTrails.splice(0, 1);
-			}
-		}, PLAYER_TRAIL_INTERVAL);
-		return trailIntervalId;
-	}
+	// private setTrail(scene: babylon.Scene): ReturnType<typeof setInterval> {
+	// 	const trailIntervalId = setInterval(() => {
+	// 		this.playerTrails.push(new PlayerTrail(scene, this.player));
+	// 		while (this.playerTrails.length && this.playerTrails[0].hasDisappeared()) {
+	// 			this.playerTrails.splice(0, 1);
+	// 		}
+	// 	}, PLAYER_TRAIL_INTERVAL);
+	// 	return trailIntervalId;
+	// }
 
 	getName(): string {
 		return this.username;
@@ -115,7 +115,7 @@ export class Player {
 		return { x: this.player.position.x, y: this.player.position.y, z: this.player.position.z };
 	}
 
-	async send(message: TransfertMessage): Promise<void> {
+	async send(message: DataMessage): Promise<void> {
 		this.socket?.send(JSON.stringify(message));
 	}
 
@@ -158,12 +158,12 @@ export class Player {
 
 	destroy(): void {
 		this.sceneObservable.remove(this.positionObserver);
-		if (this.trailIntervalId)
-			clearInterval(this.trailIntervalId);
-		while (this.playerTrails.length) {
-			this.playerTrails[0]?.destroy();
-			this.playerTrails?.splice(0, 1);
-		}
+		// if (this.trailIntervalId)
+		// 	clearInterval(this.trailIntervalId);
+		// while (this.playerTrails.length) {
+		// 	this.playerTrails[0]?.destroy();
+		// 	this.playerTrails?.splice(0, 1);
+		// }
 		this.body?.shape?.dispose();
 		this.body?.dispose();
 		this.player?.getChildMeshes().forEach(child => {

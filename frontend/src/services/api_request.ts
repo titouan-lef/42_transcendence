@@ -1,4 +1,5 @@
-import { ReicivedMessage, Status } from "../game/types_transfert.js";
+import { hideCanvas, showCanvas, updateGamePositions } from "../game/canvas_creation.js";
+import { DataMessage, Status } from "../game/types_transfert.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 
 declare const API_URL: string; // just telling the compiler that API_URL and WS_URL will exists during execution
@@ -55,16 +56,16 @@ async function openWebSocketConnection(): Promise<void> {
 	ws.onmessage = (event): void => { /** @todo handeler for game */
 		console.log("Received:", event.data);
 
-		const message : ReicivedMessage = JSON.parse(event.data);
+		const message : DataMessage = JSON.parse(event.data);
 		switch (message.status) {
-			case (Status.START):
-				// showCanvas(ws, status);
+			case (Status.OPTIONS):
+				showCanvas(ws, message);
 				break;
 			case (Status.STOP):
-				// hideCanvas();
+				hideCanvas();
 				break;
 			case (Status.POSITIONS):
-				// updateGameStatus(status);
+				updateGamePositions(message);
 				break;
 			default:
 				return ;

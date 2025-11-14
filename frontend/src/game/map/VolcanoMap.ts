@@ -5,14 +5,14 @@ import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, METEOR_INTERVAL, METEOR_LIFET
 
 export class VolcanoMap extends MapTemplate {
 	private readonly meteors: Meteor[] = [];
-	private readonly meteorIntervalId: ReturnType<typeof setInterval>;
+	// private readonly meteorIntervalId: ReturnType<typeof setInterval>;
 	private readonly particles: babylon.ParticleSystem;
 
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
 		super(scene, "volcano");
 		this.glow.intensity = V_GLOW_INTENSITY;
 		this.particles = this.createParticles(scene, texture.flare);
-		this.meteorIntervalId = this.meteorInterval(scene, texture);
+		// this.meteorIntervalId = this.meteorInterval(scene, texture);
 		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
 		this.highlightTimeout = setTimeout(() => {
 			this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.volcanoHighlightWall));
@@ -84,22 +84,23 @@ export class VolcanoMap extends MapTemplate {
 		return particles;
 	}
 
-	private meteorInterval(scene: babylon.Scene, texture: Record<string, babylon.Texture>): ReturnType<typeof setInterval> {
-		const meteorIntervalId = setInterval( () => {
-			if (this.gameStopped)
-				return;
-			const meteor = new Meteor(scene, texture);
-			this.meteors.push(meteor);
-			if (this.gameStopped)
-				clearInterval(this.meteorIntervalId);
-			setTimeout(() => {
-				const index = this.meteors?.indexOf(meteor);
-				if (index !== -1)
-					this.meteors?.splice(index, 1);
-			}, METEOR_LIFETIME + 2000);
-		}, METEOR_INTERVAL);
-		return meteorIntervalId;
-	}
+	/** @todo create a meteor when reiceive data from back */
+	// private meteorInterval(scene: babylon.Scene, texture: Record<string, babylon.Texture>): ReturnType<typeof setInterval> {
+	// 	const meteorIntervalId = setInterval( () => {
+	// 		if (this.gameStopped)
+	// 			return;
+	// 		const meteor = new Meteor(scene, texture);
+	// 		this.meteors.push(meteor);
+	// 		if (this.gameStopped)
+	// 			clearInterval(this.meteorIntervalId);
+	// 		setTimeout(() => {
+	// 			const index = this.meteors?.indexOf(meteor);
+	// 			if (index !== -1)
+	// 				this.meteors?.splice(index, 1);
+	// 		}, METEOR_LIFETIME + 2000);
+	// 	}, METEOR_INTERVAL);
+	// 	return meteorIntervalId;
+	// }
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
@@ -110,8 +111,8 @@ export class VolcanoMap extends MapTemplate {
 	}
 
 	destroyRest(): void {
-		if (this.meteorIntervalId)
-			clearInterval(this.meteorIntervalId);
+		// if (this.meteorIntervalId) /** @todo why is it proted here and not in the others maps ? */
+		//	 clearInterval(this.meteorIntervalId);
 		while (this.meteors.length) {
 			this.meteors[0].destroy();
 			this.meteors.splice(0, 1);

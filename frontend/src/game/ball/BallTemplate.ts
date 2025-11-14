@@ -1,39 +1,19 @@
 import * as babylon from "@babylonjs/core";
 import { BallOption } from "../settings/GameSettings.js";
-import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, BALL_TRAIL_ON, START_TIMEOUT } from "../settings/values.js";
+import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_TRAIL_ON } from "../settings/values.js";
 import { BallTrail } from "./BallTrail.js";
+import { PlanePosition } from "../types_transfert.js";
 type ParticlesType = "explosion" | "collision" | "impulse";
 
 export abstract class BallTemplate {
-	//Graphic
+
 	protected readonly color: babylon.Color3;
 	private readonly ballTrails: BallTrail[] = [];
 	private trailIntervalId: ReturnType<typeof setInterval> | null = null;
 	protected readonly particles: babylon.ParticleSystem[] = [];
 	private readonly textures: Record<string, babylon.Texture>;
-
-	//Physic
-	protected readonly physic: babylon.PhysicsAggregate;
-	private readonly collisionObservable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
-	private readonly collisionObserver: babylon.Observer<babylon.IPhysicsCollisionEvent>;
-	private isInGoal: "player1" | "player2" | null = null;
-	private goalPosition: babylon.Vector3 | null = null;
-	protected justCollided = false;
-	protected realDirection: babylon.Vector3;
-	private spinningLeft = false;
-	private spinningRight = false;
-	protected force = BALL_ANGULAR_FORCE;
-	protected forceDirection = -1;
-	protected readonly sceneObservable: babylon.Observable<babylon.Scene>;
-	protected readonly sceneObserver: babylon.Observer<babylon.Scene>;
-	private readonly yObservable: babylon.Observable<babylon.Scene>;
-	private readonly yObserver: babylon.Observer<babylon.Scene>;
-	private readonly launchBallTimeoutId: ReturnType<typeof setTimeout>;
-	
-	//Both
 	protected readonly mesh: babylon.Mesh;
 	protected gameStopped = true;
-	
 
 	constructor(scene: babylon.Scene, type: BallOption, textures: Record<string, babylon.Texture>, color: babylon.Color3) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
@@ -42,61 +22,14 @@ export abstract class BallTemplate {
 		this.color = color;
 		this.textures = textures;
 		this.setMaterial(scene);
-		this.physic = this.setPhysic(scene);
-		
-		this.physic.body.setCollisionCallbackEnabled(true);
-		this.collisionObservable = this.physic.body.getCollisionObservable();
-		this.collisionObserver = this.checkBallCollision();
-
-		this.yObservable = scene.onAfterPhysicsObservable;
-		this.yObserver = this.blockVelocityY();
-		
-		this.realDirection = this.physic.body.getLinearVelocity();
-		
-		this.sceneObservable = scene.onBeforeRenderObservable;
-		this.sceneObserver = this.applyMovementChanges();
 		if (BALL_TRAIL_ON)
 			this.trailIntervalId = this.setTrail(scene);
-		this.launchBallTimeoutId = this.launchBall(scene);
-	}
-
-	/**block the ball from having a Y velocity */
-	private blockVelocityY(): babylon.Observer<babylon.Scene> {
-		const yObserver = this.yObservable.add(() => {
-			const velocity = this.physic.body.getLinearVelocity();
-			if (velocity) {
-				velocity.y = 0;
-				this.physic.body.setLinearVelocity(velocity);
-			}
-		});
-		return yObserver;
-	}
-
-	/**launch ball */
-	private launchBall(scene: babylon.Scene): ReturnType<typeof setTimeout> {
-		const launchBallTimeoutId = setTimeout( () => {
-			const startingDirection = Math.random() < 0.5 ? 1 : -1;
-			this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
-			this.showParticles(this.mesh.position, scene, "impulse");
-			this.justCollided = true;
-			this.gameStopped = false;
-		}, START_TIMEOUT);
-		return launchBallTimeoutId;
 	}
 
 	private setMaterial(scene: babylon.Scene): void {
 		const material = new babylon.StandardMaterial('ballcolor', scene);
 		material.emissiveColor = this.color;
 		this.mesh.material = material;
-	}
-
-	private setPhysic(scene: babylon.Scene): babylon.PhysicsAggregate {
-		const physic = new babylon.PhysicsAggregate(this.mesh, babylon.PhysicsShapeType.SPHERE, {
-			mass: 1,
-			restitution: 0, // 0 so it always take the restitution of the object it hits
-			friction: 0 
-		}, scene);
-		return physic;
 	}
 
 	/** trail behind the ball */
@@ -108,41 +41,6 @@ export abstract class BallTemplate {
 			}
 		}, BALL_TRAIL_INTERVAL);
 		return trailIntervalId;
-	}
-
-	/** Spin doesn't apply to snake ball for obvious reasons */
-	protected applyMovementChanges(): babylon.Observer<babylon.Scene> {
-		const sceneObserver = this.sceneObservable.add(() => {
-			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y (only visual)
-			if (this.justCollided) {
-				this.realDirection = this.physic.body.getLinearVelocity(); // remember original velocity, to apply movement changes on it
-				this.justCollided = false; 
-				this.forceDirection = -1; // reset forceDirection
-				this.force = BALL_ANGULAR_FORCE; // reset angularForce
-			}
-			if (this.force <= 0)
-				this.forceDirection *= -1;
-			this.applyEffect();
-			this.nerfSpeed();
-		});
-		return sceneObserver;
-	}
-
-	/** applies two contradictory forces on either side of the ball */
-	private applyEffect(): void {
-		this.force -= (BALL_ANGULAR_FORCE / BALL_ANGULAR_INTERVAL) * this.forceDirection; // Angular interval is the number of step it will take to reach maximum value
-		this.force = Math.max(this.force, BALL_ANGULAR_FORCE); // to deny force to go higher than BALL_ANGULAR_FORCE
-		if (this.spinningRight) {
-			this.physic.body.applyForce(
-				new babylon.Vector3(this.realDirection.z * this.force, 0, -this.realDirection.x * this.force),
-				this.mesh.position
-			);
-		} else if (this.spinningLeft) {
-			this.physic.body.applyForce(
-				new babylon.Vector3(-this.realDirection.z * this.force, 0, this.realDirection.x * this.force),
-				this.mesh.position
-			);
-		}
 	}
 
 	/** particles on collides */
@@ -204,82 +102,16 @@ export abstract class BallTemplate {
 		return explosionParticles;
 	}
 
-	private checkBallCollision(): babylon.Observer<babylon.IPhysicsCollisionEvent> {
-		const collisionObserver = this.collisionObservable.add((collisionEvent) => {
-			const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
-			if (!metadata)
-				return;
-			if (metadata.type === "goal") {
-				this.isInGoal = metadata.player === 1 ? "player1" : "player2";
-				this.goalPosition = collisionEvent.point;
-			}
-			if (metadata.type === "collider") {
-				this.justCollided = true;
-				this.showParticles(collisionEvent.point, this.mesh.getScene(), "collision");
-				this.checkSpin(collisionEvent);
-			}
-		});
-		return collisionObserver;
-	}
-
-	/** check if the player has the spinEffect and change the spinning boolean of the ball if so */
-	private checkSpin(collisionEvent: babylon.IPhysicsCollisionEvent) : void {
-		const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
-		if (!metadata)
-			return;
-		if (this.checkSideHit(collisionEvent) === "spinEffect") {
-			const collisionPointZ = collisionEvent.point?.z;
-			if (collisionPointZ === undefined )
-				return;
-			if (collisionPointZ - collisionEvent.collidedAgainst.transformNode.position.z <= 0) // colliding right or left of the player
-				this.spinningLeft = true;
-			else
-				this.spinningRight = true;
-		} else {
-			this.spinningLeft = false;
-			this.spinningRight = false;
-		}
-	}
-
-	private checkSideHit(collisionEvent: babylon.IPhysicsCollisionEvent): string {
-		const playerMeshes = collisionEvent.collidedAgainst.transformNode.getChildMeshes();
-		let nearestMesh = null;
-		let minDist = Infinity;
-
-		if (collisionEvent.point === null || collisionEvent.point === undefined)
-			return "";
-		for (const mesh of playerMeshes) {
-			const dist = babylon.Vector3.Distance(mesh.getAbsolutePosition(), collisionEvent.point);
-			if (dist < minDist) {
-				minDist = dist;
-				nearestMesh = mesh;
-			}
-		}
-		if (nearestMesh && nearestMesh.metadata) {
-			const face = nearestMesh.metadata.face;
-			return face;
-		}
-		return "";
-	}
-
-	/** damp ball if too fast */
-	protected nerfSpeed(): void {
-		const velocity = this.physic.body.getLinearVelocity();
-		const speed = velocity.length();
-		let dampingFactor = 0;
-
-		if (speed > MAX_SPEED) {
-			const excessRatio = (speed - MAX_SPEED) / speed; // between 0 and 1
-			dampingFactor = excessRatio * NERF_SPEED_FACTOR;
-		}
-		this.physic.body.setLinearDamping(dampingFactor);
-	}
-
 	/** hides ball on goal and stop intervals */
 	preDeath(): void {
 		this.mesh.visibility = 0;
 		this.gameStopped = true;
 		this.destroyRest();
+	}
+
+	setPosition(position: PlanePosition): void {
+		this.mesh.position.x = position.x;
+		this.mesh.position.z = position.z;
 	}
 
 	/** Spawn particules */
@@ -311,38 +143,14 @@ export abstract class BallTemplate {
 		}, 2000);
 	}
 
-	setJustCollide(): void {
-		this.justCollided = true;
-	}
-
-	/** @todo Titouan gaming */
-	getGoal(): { goal: "player1" | "player2" | null, position: babylon.Vector3 | null } {
-		const goal = this.isInGoal;
-		const position = this.goalPosition;
-		return { goal, position };
-	}
-
-	/**debug function*/
-	moveBall(): void {
-		this.physic.body.applyImpulse(
-			new babylon.Vector3(25, 0, 0),
-			this.mesh.position
-		);
-	}
-
 	destroy(): void {
 		this.destroyRest();
-		clearTimeout(this.launchBallTimeoutId);
 		if (this.trailIntervalId)
 			clearInterval(this.trailIntervalId);
-		this.collisionObservable.remove(this.collisionObserver);
-		this.sceneObservable.remove(this.sceneObserver);
-		this.yObservable.remove(this.yObserver);
 		while (this.ballTrails.length) {
 			this.ballTrails[0].destroy();
 			this.ballTrails.splice(0, 1);
 		}
-		this.physic?.dispose();
 		this.particles.forEach(particle => {
 			particle.stop();
 			particle.particleTexture?.dispose();

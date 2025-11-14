@@ -1,19 +1,17 @@
 import * as babylon from "@babylonjs/core";
 import { MAP_SIZE, WALL_WIDTH, LIGHTNING_FRAMES_TO_DISAPPEAR, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH, LIGHTNING_LIFETIME, COLORS4, COLORS3 } from "../../settings/values.js";
-import { BallTemplate } from "../../ball/BallTemplate.js";
+import { Position } from "../../types_transfert.js";
 
 export class Lightning {
 	private readonly lightningIntervalId: ReturnType<typeof setInterval>;
 	private readonly lightning: babylon.Mesh;
 	private readonly particles: babylon.ParticleSystem;
-	private readonly randomSize;
+	private readonly size;
 
-	constructor(scene: babylon.Scene, texture: babylon.Texture) {
-		const possiblePositionX = ((Math.random() - 0.5) * 2) * ((MAP_SIZE.x - WALL_WIDTH) / 2);
-		const possiblePositionZ = ((Math.random() - 0.5) * 2) * ((MAP_SIZE.z - WALL_WIDTH) / 2);
-		const start = new babylon.Vector3(possiblePositionX, MAP_SIZE.y, possiblePositionZ);
-		const end = new babylon.Vector3(possiblePositionX, 0, possiblePositionZ);
-		this.randomSize = Math.random() * 4 + 1;
+	constructor(scene: babylon.Scene, texture: babylon.Texture, position: Position, size: number) {
+		const start = new babylon.Vector3(position.x, MAP_SIZE.y, position.z);
+		const end = new babylon.Vector3(position.x, 0, position.z);
+		this.size = size;
 
 		this.lightning = this.spawnLightning(scene, start, end);
 		const material = new babylon.StandardMaterial("lightningMat", scene);
@@ -22,7 +20,6 @@ export class Lightning {
 		this.lightning.material = material;
 		this.lightning.renderingGroupId = 1;
 		this.lightningIntervalId = this.animateLightningFade(material);
-		this.applyExplosionForce(scene, end);
 		this.particles = this.createContactParticles(scene, end, texture);
 		this.particles.start();
 	}
@@ -31,7 +28,7 @@ export class Lightning {
 		const points = this.makeLightningPoints(start, end);
 		const lightning = babylon.MeshBuilder.CreateTube("lightning", {
 			path: points,
-			radius: 0.25 * this.randomSize,              
+			radius: 0.25 * this.size,
 			tessellation: 6, // sides of the circle
 			updatable: false // less GPU ressources
 		}, scene);
@@ -70,33 +67,12 @@ export class Lightning {
 		return lightningIntervalId;
 	}
 
-	private applyExplosionForce(scene: babylon.Scene, center: babylon.Vector3): void {
-		scene.meshes.forEach(mesh => {
-			if (!mesh.metadata?.pushable || !mesh.physicsBody)
-				return ;
-			const body = mesh.physicsBody;
-			const meshPosition = mesh.getAbsolutePosition();
-			const direction = meshPosition.subtract(center);
-			const distance = direction.length();
-			const explosionRadius = LIGHTNING_COLLISION_RADIUS * this.randomSize;
-
-			if (distance < explosionRadius && distance > 0) {
-				direction.normalize();
-				const force = direction.scale(LIGHTNING_COLLISION_STRENGTH * (1 - distance / explosionRadius) * this.randomSize);
-				force.y = 0;
-				if (mesh instanceof BallTemplate)
-					mesh.setJustCollide();
-				body.applyImpulse(force, meshPosition);
-			}
-		});
-	}
-
 	private createContactParticles(scene: babylon.Scene, position: babylon.Vector3, texture: babylon.Texture): babylon.ParticleSystem {
-		const particles = new babylon.ParticleSystem("lightningSparks", Math.floor(50 * this.randomSize), scene);
+		const particles = new babylon.ParticleSystem("lightningSparks", Math.floor(50 * this.size), scene);
 		particles.particleTexture = texture;
 		particles.emitter = position;
 		const emitter = new babylon.ConeParticleEmitter();
-		emitter.radius = LIGHTNING_COLLISION_RADIUS * this.randomSize;
+		emitter.radius = LIGHTNING_COLLISION_RADIUS * this.size;
 		emitter.directionRandomizer = 0.8;
 		particles.particleEmitterType = emitter;
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_STRETCHED;
@@ -112,7 +88,7 @@ export class Lightning {
 		particles.maxEmitPower = 30;
 		particles.updateSpeed = 0.012;
 		particles.emitRate = 0;
-		particles.manualEmitCount = Math.floor(35 * this.randomSize);
+		particles.manualEmitCount = Math.floor(35 * this.size);
 		particles.renderingGroupId = 1;
 		return particles;
 	}

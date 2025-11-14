@@ -12,12 +12,12 @@ export class GameSettings {
 	readonly map: MapOption;
 	readonly ball: BallOption;
 	readonly rotatingPlayer: boolean;
-	readonly spin:  boolean;
+	readonly spin: boolean;
 
 	readonly player1: PlayerSettings;
 	readonly player2: PlayerSettings;
 
-	constructor(map:  MapOption, ball: BallOption, rotatingPlayer: boolean, spin: boolean, 
+	constructor(map: MapOption, ball: BallOption, rotatingPlayer: boolean, spin: boolean,
 		player1: WebSocket, player2: WebSocket, playerName1: string, playerName2: string) {
 		this.map = map;
 		this.ball = ball;

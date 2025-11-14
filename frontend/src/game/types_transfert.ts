@@ -70,6 +70,7 @@ interface ScoreMessage {
 
 interface OptionMessage {
 	status: Status.OPTIONS,
+	playerId: 1 | 2;
 	map: MapOption;
 	ball: BallOption;
 	rotatingPlayer: boolean;
@@ -80,7 +81,9 @@ interface PositionsMessage {
 	status: Status.POSITIONS,
 	ball: PlanePosition,
 	player: PlanePosition,
+	// player rot ?
 	enemy: PlanePosition
+	// enemy rot ?
 }
 
 type Object = Lightning | Meteor | Tornado;
@@ -89,18 +92,19 @@ type ParticlesType = "explosion" | "collision" | "impulse";
 interface ObjectMessage {
 	status: Status.OBJECT,
 	type: Object,
-	position: PlanePosition
+	position: Position,
+	size: number
 	/** @todo more (size,... ) ??*/
 }
 
 interface EventMessage {
 	status: Status.EVENT,
 	type: ParticlesType,
-	position: PlanePosition
+	position: Position
 	/** @todo more ??*/
 }
 
-type ReicivedMessage = StartMessage | StopMessage | TimingMessage | ScoreMessage | OptionMessage | PositionsMessage | ObjectMessage | EventMessage ;
+type DataMessage = StartMessage | StopMessage | TimingMessage | ScoreMessage | OptionMessage | PositionsMessage | ObjectMessage | EventMessage ;
 
 interface PlayerControls {
 	mov_right: boolean;
@@ -110,5 +114,5 @@ interface PlayerControls {
 	apply_effect: boolean;
 }
 
-export { Position, ReicivedMessage, PlayerControls, ParticlesType, Status };
+export { Position, PlanePosition, DataMessage, PlayerControls, ParticlesType, Status };
 export { StartMessage, StopMessage, TimingMessage, ScoreMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage };
