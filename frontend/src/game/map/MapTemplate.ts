@@ -1,6 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, CAMERA_POS_X, SCORE_POS_Y, START_TIMEOUT } from "../settings/values.js";
+import { ObjectMessage } from "../types_transfert.js";
 
 export abstract class MapTemplate {
 	protected glow: babylon.GlowLayer;
@@ -116,6 +117,8 @@ export abstract class MapTemplate {
 	abstract createLight(scene: babylon.Scene): babylon.DirectionalLight;
 
 	abstract createSun(scene: babylon.Scene): babylon.Mesh;
+
+	handleObject(scene: babylon.Scene, texture: babylon.Texture, lighting: ObjectMessage): void {} /** @todo abstract */
 
 	abstract createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh;
 

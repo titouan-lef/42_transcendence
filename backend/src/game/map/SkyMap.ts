@@ -1,18 +1,23 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Lightning } from "./map_utils/Lightning.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME, R_GLOW_INTENSITY } from "../settings/values.js";
+import { MAP_SIZE, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME } from "../settings/values.js";
+import { WebSocket } from "ws";
 
 export class RainyMap extends MapTemplate {
 	// private readonly particles: babylon.ParticleSystem;
 	private readonly lightningIntervalId: ReturnType<typeof setInterval>;
 	private readonly lightnings: Lightning[] = [];
+	private readonly sockets: WebSocket[] = []; // one or two socket depening on the IA...
 
-	constructor(scene: babylon.Scene) {
+	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
 		super(scene, "sky");
 		// this.glow.intensity = R_GLOW_INTENSITY;
 		// this.particles = this.createParticles(scene, texture.rain);
 		this.lightningIntervalId = this.lightningInterval(scene);
+		sockets.forEach(socket => {
+			this.sockets.push(socket);
+		});
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
@@ -85,24 +90,25 @@ export class RainyMap extends MapTemplate {
 		const lightningIntervalId = setInterval( () => {
 			if (this.gameStopped)
 				return;
-			const lightning = new Lightning(scene);
-			this.lightnings.push(lightning);
+			const lightning = new Lightning(scene, this.lightnings.length);
+			this.lightnings.push(lightning); /** @todo is this realy necessary to stack them in the back ?? */
 			setTimeout(() => {
 				const index = this.lightnings?.indexOf(lightning);
 				if (index !== -1)
 					this.lightnings?.splice(index, 1);
-			}, LIGHTNING_LIFETIME + 100);
-		}, LIGHTNING_INTERVAL);
+			}, LIGHTNING_LIFETIME + 100); /** @todo a bit of randomisation for liftime? */
+			lightning.sendObjectInfos(this.sockets);
+		}, LIGHTNING_INTERVAL); /** @todo a bit of randomisation? */
 		return lightningIntervalId;
 	}
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
-		const material = new babylon.StandardMaterial('wallcolor', scene);
-		material.diffuseColor = COLORS3.skyDiffuseWall;
-		material.emissiveColor = COLORS3.skyEmissiveWall;
-		material.alpha = 0.8;
-		newMesh.material = material;
+		// const material = new babylon.StandardMaterial('wallcolor', scene);
+		// material.diffuseColor = COLORS3.skyDiffuseWall;
+		// material.emissiveColor = COLORS3.skyEmissiveWall;
+		// material.alpha = 0.8;
+		// newMesh.material = material;
 		return newMesh;
 	}
 

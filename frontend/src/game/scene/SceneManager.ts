@@ -15,6 +15,7 @@ import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
+import { ObjectMessage } from "../types_transfert.js";
 
 export class SceneManager {
 	private ball: BallTemplate | null = null;
@@ -82,6 +83,10 @@ export class SceneManager {
 		}
 	}
 
+	updateObject(scene: babylon.Scene, object: ObjectMessage): void {
+		this.map?.handleObject(scene, this.textures.spark, object);
+	}
+
 	createPlayers(scene: babylon.Scene, settings: GameSettings): void {
 		const player1PosX = MAP_SIZE.x / 2 - (PLAYER_DIMENSION.z + WALL_WIDTH);
 		const player2PosX = (PLAYER_DIMENSION.z + WALL_WIDTH) -(MAP_SIZE.x / 2);
@@ -96,7 +101,7 @@ export class SceneManager {
 		this.countDown = new CountDown(scene);
 	}
 
-	createTextures(scene: babylon.Scene): void { /** @todo check if one request per texture is best practice */
+	createTextures(scene: babylon.Scene): void { /** @todo check if one request per texture is best practice. Do we need al texture for all the maps ??*/
 		this.textures.spark = new babylon.Texture("textures/sparks.png", scene, true);
 		this.textures.flare = new babylon.Texture("textures/flare.png", scene, true);
 		this.textures.stars = new babylon.Texture("textures/particle.png", scene, true);

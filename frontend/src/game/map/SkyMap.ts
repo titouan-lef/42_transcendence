@@ -2,6 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Lightning } from "./map_utils/Lightning.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME, R_GLOW_INTENSITY } from "../settings/values.js";
+import { ObjectMessage } from "../types_transfert.js";
 
 export class RainyMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
@@ -80,22 +81,18 @@ export class RainyMap extends MapTemplate {
 		return particles;
 	}
 
-	/** @todo create a lightning when reiceive data from back */
-	/** will stack lighting till the end of the point */
-	// private lightningInterval(scene: babylon.Scene, texture: babylon.Texture): ReturnType<typeof setInterval> {
-	// 	const lightningIntervalId = setInterval( () => {
-	// 		if (this.gameStopped)
-	// 			return;
-	// 		const lightning = new Lightning(scene, texture);
-	// 		this.lightnings.push(lightning);
-	// 		setTimeout(() => {
-	// 			const index = this.lightnings?.indexOf(lightning);
-	// 			if (index !== -1)
-	// 				this.lightnings?.splice(index, 1);
-	// 		}, LIGHTNING_LIFETIME + 100);
-	// 	}, LIGHTNING_INTERVAL);
-	// 	return lightningIntervalId;
-	// }
+	handleObject(scene: babylon.Scene, texture: babylon.Texture, lighting: ObjectMessage): void {
+		if (this.gameStopped)
+			return;
+		if (lighting.id >= this.lightnings?.length) {
+			this.lightnings?.push(new Lightning(scene, texture, lighting.position, lighting.size));
+			setTimeout(() => {
+				this.lightnings?.splice(lighting.id, 1);
+			}, LIGHTNING_LIFETIME + 100);
+		} else {
+			/** @todo nothing ?? */
+		}
+	}
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
