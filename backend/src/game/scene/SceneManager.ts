@@ -1,6 +1,5 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "../ball/BallTemplate.js";
-// import { Score } from "./Score.js";
 import { DefaultBall } from "../ball/DefaultBall.js";
 import { InvisibleBall } from "../ball/InvisibleBall.js";
 import { PulseBall } from "../ball/PulseBall.js";
@@ -15,7 +14,6 @@ import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
-// import { CountDown } from "./CountDown.js";
 
 export class SceneManager {
 	private ball: BallTemplate | null = null;
@@ -89,13 +87,13 @@ export class SceneManager {
 				this.map = new DefaultMap(scene);
 				break;
 			case "volcano":
-				this.map = new VolcanoMap(scene);
+				this.map = new VolcanoMap(scene, sockets);
 				break;
 			case "sky":
 				this.map = new SkyMap(scene, sockets);
 				break;
 			case "desert":
-				this.map = new DesertMap(scene);
+				this.map = new DesertMap(scene, sockets);
 				break;
 			default: 
 				throw new Error("switch map fail");
@@ -112,19 +110,6 @@ export class SceneManager {
 		this.players.push(player2);
 	}
 
-	// private createCountDown(scene: babylon.Scene): void {
-	// 	this.countDown = new CountDown(scene);
-	// }
-
-	// createTextures(scene: babylon.Scene): void { /** @todo check if one request per texture is best practice */
-	// 	this.textures.spark = new babylon.Texture("textures/sparks.png", scene, true);
-	// 	this.textures.flare = new babylon.Texture("textures/flare.png", scene, true);
-	// 	this.textures.stars = new babylon.Texture("textures/particle.png", scene, true);
-	// 	this.textures.rain = new babylon.Texture("textures/rain.png", scene, true);
-	// 	this.textures.smoke = new babylon.Texture("textures/smoke.png", scene, true);
-	// 	this.textures.electricity = new babylon.Texture("textures/electricity.png", scene, true);
-	// }
-
 	/** @todo Titouan gaming */
 	checkGoal(): { goal: "player1" | "player2" | null, position: babylon.Vector3 | null } | null {
 		const goalInfos = this.ball?.getGoal();
@@ -139,8 +124,6 @@ export class SceneManager {
 		if (this.map)
 			this.map.predeath();
 		this.ball?.preDeath();
-		// this.ball?.showParticles(position, scene, "explosion");
-		// this.score.changeScore([score.x, score.y]);
 		const originalGetDelta = engine.getDeltaTime; // keep original delta
 		engine.getDeltaTime = function(): number {
 			return originalGetDelta.call(this) * 0.01; // slow animations
@@ -157,19 +140,13 @@ export class SceneManager {
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void {
 		this.createBall(scene, settings);
 		this.createMap(scene, settings);
-		// this.score.changeScore([score.x, score.y]);
-		// this.createCountDown(scene);
 	}
 
 	destroyEnvironnement(scene: babylon.Scene): void {
-		// this.destroyCountDown();	
 		this.destroyBall();
 		this.destroyMap();
 		this.ball = null;
 		this.map = null;
-		// while(this.players.length > 0) { /** no player.destroy() ?? */
-		// 	this.players.pop();
-		// }
 	}
 
 	/** debug function */
@@ -180,9 +157,6 @@ export class SceneManager {
 			console.log("mat name : " + mat.name);
 		});
 		console.log("textures : " + scene.textures);
-		// scene.textures.forEach(texture => {
-		// 	console.log("texture name : " + texture.name);
-		// });
 		console.log("lights : " + scene.lights);
 		console.log("particle system: " + scene.particleSystems);
 	}
@@ -201,25 +175,8 @@ export class SceneManager {
 		this.players.forEach(player => player.destroy());
 	}
 
-	// private destroyCountDown(): void {
-	// 	this.countDown?.destroy();
-	// 	this.countDown = null;
-	// }
-
-	// private destroyTextures(): void {
-	// 	for (const texture in this.textures) {
-	// 		this.textures[texture].dispose();
-	// 	}
-	// }
-
-	// private destroyScore(): void {
-	// 	this.score.destroy();
-	// }
-
 	destroyScene(scene: babylon.Scene): void {
-		// this.destroyTextures();
 		this.destroyPlayers();
 		this.destroyEnvironnement(scene);
-		// this.destroyScore();
 	}
 }
