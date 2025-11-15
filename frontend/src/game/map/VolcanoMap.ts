@@ -2,6 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Meteor } from "./map_utils/Meteor.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER, V_GLOW_INTENSITY, START_TIMEOUT } from "../settings/values.js";
+import { ObjectMessage } from "../types_transfert.js";
 
 export class VolcanoMap extends MapTemplate {
 	private readonly meteors: Meteor[] = [];
@@ -84,23 +85,18 @@ export class VolcanoMap extends MapTemplate {
 		return particles;
 	}
 
-	/** @todo create a meteor when reiceive data from back */
-	// private meteorInterval(scene: babylon.Scene, texture: Record<string, babylon.Texture>): ReturnType<typeof setInterval> {
-	// 	const meteorIntervalId = setInterval( () => {
-	// 		if (this.gameStopped)
-	// 			return;
-	// 		const meteor = new Meteor(scene, texture);
-	// 		this.meteors.push(meteor);
-	// 		if (this.gameStopped)
-	// 			clearInterval(this.meteorIntervalId);
-	// 		setTimeout(() => {
-	// 			const index = this.meteors?.indexOf(meteor);
-	// 			if (index !== -1)
-	// 				this.meteors?.splice(index, 1);
-	// 		}, METEOR_LIFETIME + 2000);
-	// 	}, METEOR_INTERVAL);
-	// 	return meteorIntervalId;
-	// }
+	handleObject(scene: babylon.Scene, texture: babylon.Texture, meteor: ObjectMessage): void {
+		if (this.gameStopped)
+			return;
+		if (meteor.id >= this.meteors?.length) {
+			this.meteors?.push(new Meteor(scene, texture, meteor.position, meteor.size));
+			setTimeout(() => {
+				this.meteors?.splice(meteor.id, 1);
+			}, METEOR_LIFETIME + 100);
+		} else {
+			this.meteors?.at(meteor.id)?.updatePosition(meteor.position);
+		}
+	}
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);

@@ -15,7 +15,7 @@ import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
-import { ObjectMessage } from "../types_transfert.js";
+import { Object, ObjectMessage } from "../types_transfert.js";
 
 export class SceneManager {
 	private ball: BallTemplate | null = null;
@@ -84,7 +84,19 @@ export class SceneManager {
 	}
 
 	updateObject(scene: babylon.Scene, object: ObjectMessage): void {
-		this.map?.handleObject(scene, this.textures.spark, object);
+		switch (object.type) {
+			case (Object.LIGHTNING):
+				this.map?.handleObject(scene, this.textures.spark, object);
+				break;
+			case (Object.METEOR):
+				this.map?.handleObject(scene, this.textures.flare, object);
+				break;
+			case (Object.TORNADO):
+				this.map?.handleObject(scene, this.textures.flare, object);
+				break;
+			default:
+				return;
+		}
 	}
 
 	createPlayers(scene: babylon.Scene, settings: GameSettings): void {

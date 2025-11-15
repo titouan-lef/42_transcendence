@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { COLORS4, MAP_SIZE, TORNADO_ATTRACTION_STRENGTH, TORNADO_COLLISION_RADIUS, TORNADO_HEIGHT, TORNADO_LIFETIME, WALL_WIDTH } from "../../settings/values.js";
+import { COLORS4, TORNADO_COLLISION_RADIUS, TORNADO_HEIGHT, TORNADO_LIFETIME } from "../../settings/values.js";
 import { Position } from "../../types_transfert.js";
 
 export class Tornado {
@@ -7,7 +7,7 @@ export class Tornado {
 	private readonly particles: babylon.ParticleSystem;
 	private readonly timeoutId: ReturnType<typeof setTimeout>;
 	private readonly size;
-	private readonly tornadoObservable: babylon.Observable<babylon.Scene>;
+	// private readonly tornadoObservable: babylon.Observable<babylon.Scene>;
 	// private readonly tornadoObserver: babylon.Observer<babylon.Scene>;
 
 	/** 
@@ -26,7 +26,7 @@ export class Tornado {
 
 		this.particles = this.createTornadoParticles(scene, texture);
 
-		this.tornadoObservable = scene.onBeforeRenderObservable;;
+		// this.tornadoObservable = scene.onBeforeRenderObservable;;
 		// this.tornadoObserver = this.setTornadoObserver(scene, windforce);
 		this.timeoutId = setTimeout( () => {
 			this.destroy();
@@ -76,6 +76,12 @@ export class Tornado {
 		};
 		particles.start();
 		return particles;
+	}
+
+	updatePosition(position: Position): void {
+		this.tornado.position.x = position.x;
+		// this.tornado.position.y = position.y;
+		this.tornado.position.z = position.z;
 	}
 
 	destroy(): void {

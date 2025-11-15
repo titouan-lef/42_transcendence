@@ -1,15 +1,14 @@
 import * as babylon from "@babylonjs/core";
-import { MAP_SIZE, WALL_WIDTH, METEOR_SPEED, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, METEOR_COLLISION_STRENGTH, METEOR_LIFETIME, COLORS3, BALL_DIAMETER, COLORS4 } from "../../settings/values.js";
+import { MAP_SIZE, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, COLORS3, COLORS4 } from "../../settings/values.js";
 import { Position } from "../../types_transfert.js";
 
 export class Meteor {
-	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
-	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
+	// private readonly sceneObservable: babylon.Observable<babylon.Scene>;
+	// private readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly meteor: babylon.Mesh;
 	private readonly meteorLight: babylon.PointLight;
-	private readonly direction: babylon.Vector3;
 	private body: babylon.PhysicsBody | null;
-	private readonly particles: babylon.ParticleSystem;
+	// private readonly particles: babylon.ParticleSystem;
 	private readonly size;
 	private readonly trail: babylon.ParticleSystem;
 
@@ -17,24 +16,15 @@ export class Meteor {
 	 * @todo be the same as the one in the front
 	 * send position each frame too ? then assosiate an id to each meteor ?
 	 */
-
-	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>, position: Position, size: number) {
+	constructor(scene: babylon.Scene, texture: babylon.Texture, position: Position, size: number) {
 		this.size = size;
-		const positionXStart = ((Math.random() - 0.5) * 2) * MAP_SIZE.x;
-		const positionZStart = ((Math.random() - 0.5) * 2) * MAP_SIZE.z;
-		const positionXEnd = ((Math.random() - 0.5) * 2) * ((MAP_SIZE.x - WALL_WIDTH - (BALL_DIAMETER * this.size)) / 2);
-		const positionZEnd = ((Math.random() - 0.5) * 2) * ((MAP_SIZE.z - WALL_WIDTH - (BALL_DIAMETER * this.size)) / 2);
-		const start = new babylon.Vector3(positionXStart, MAP_SIZE.y, positionZStart);
-		const end = new babylon.Vector3(positionXEnd, 0, positionZEnd);
-		this.direction = end.subtract(start).normalize();
-
+		const start = new babylon.Vector3(position.x, MAP_SIZE.y, position.z);
 		this.meteor = this.spawnMeteor(scene, start);
 		this.meteorLight = this.createMeteorLight(scene);
 		this.body = null;
-		this.trail = this.createTrail(scene, texture.flare);
-		this.sceneObservable = scene.onAfterRenderObservable;
-		this.sceneObserver = this.observeScene(scene, start, end);
-		this.particles = this.createContactParticles(scene, texture.smoke, end);
+		this.trail = this.createTrail(scene, texture);
+		// this.sceneObservable = scene.onAfterRenderObservable;
+		// this.particles = this.createContactParticles(scene, texture.smoke, end);
 	}
 
 	private spawnMeteor(scene: babylon.Scene, position: babylon.Vector3): babylon.Mesh {
@@ -58,57 +48,6 @@ export class Meteor {
 		light.parent = this.meteor;
 		return light;
 	}
-
-	private observeScene(scene: babylon.Scene, start: babylon.Vector3, end: babylon.Vector3): babylon.Observer<babylon.Scene> {
-		const sceneObserver = this.sceneObservable.add(() => {
-			const ratio = scene.getAnimationRatio() / 60; //if game is slowed, meteor will also be
-			const velocity = this.direction.scale(METEOR_SPEED * ratio);
-			this.meteor.position.addInPlace(velocity);
-			if (this.meteor.position.y < 0) {
-				// this.applyExplosionForce(scene, end);
-				this.trail.stop();
-				this.particles.start();
-				this.setBody(scene);
-				setTimeout( () => {
-					this?.destroy();
-				}, METEOR_LIFETIME);
-				this.sceneObservable.remove(this.sceneObserver);
-			}
-		});
-		return sceneObserver;
-	} 
-
-	private setBody(scene:babylon.Scene): void {
-		const body = new babylon.PhysicsBody(this.meteor, babylon.PhysicsMotionType.STATIC, false, scene);
-		body.setMassProperties({
-			mass: 0,
-			centerOfMass: babylon.Vector3.Zero()
-		});
-		body.shape = new babylon.PhysicsShapeMesh(this.meteor, scene);
-		body.shape.material = { restitution: 1, friction: 0 };
-		this.body = body;
-	}
-
-	// private applyExplosionForce(scene: babylon.Scene, center: babylon.Vector3): void {
-	// 	scene.meshes.forEach(mesh => {
-	// 		if (!mesh.metadata?.pushable || !mesh.physicsBody)
-	// 			return ;
-	// 		const body = mesh.physicsBody;
-	// 		const meshPosition = mesh.getAbsolutePosition();
-	// 		const direction = meshPosition.subtract(center);
-	// 		const distance = direction.length();
-	// 		const explosionRadius = METEOR_COLLISION_RADIUS * this.size * 2;
-
-	// 		if (distance < explosionRadius && distance > 0) {
-	// 			direction.normalize();
-	// 			const force = direction.scale(METEOR_COLLISION_STRENGTH * (1 - distance / explosionRadius) * this.size);
-	// 			force.y = 0;
-	// 			// if (mesh instanceof BallTemplate)
-	// 			// 	mesh.setJustCollide();
-	// 			body.applyImpulse(force, meshPosition);
-	// 		}
-	// 	});
-	// }
 
 	private createContactParticles(scene: babylon.Scene, texture: babylon.Texture, end: babylon.Vector3): babylon.ParticleSystem {
 		const dustParticles = new babylon.ParticleSystem("MeteorDust", Math.floor(100 * this.size), scene);
@@ -136,6 +75,12 @@ export class Meteor {
 		return dustParticles;
 	}
 
+	updatePosition(position: Position): void {
+		this.meteor.position.x = position.x;
+		this.meteor.position.y = position.y;
+		this.meteor.position.z = position.z;
+	}
+
 	private createTrail(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
 		const trail = new babylon.ParticleSystem("meteorTrail", Math.floor(400 * this.size), scene);
 		trail.particleTexture = texture;
@@ -159,17 +104,17 @@ export class Meteor {
 	}
 
 	destroy(): void {
-		this.sceneObservable?.remove(this.sceneObserver);
+		// this.sceneObservable?.remove(this.sceneObserver);
 		this.body?.dispose();
 		this.meteorLight?.dispose();
 		this.trail?.stop();
 		if (this.trail && this.trail.particleTexture)
 			this.trail.particleTexture = null;
 		this.trail?.dispose();
-		this.particles?.stop();
-		if (this.particles && this.particles.particleTexture)
-			this.particles.particleTexture = null;
-		this.particles?.dispose();
+		// this.particles?.stop();
+		// if (this.particles && this.particles.particleTexture)
+		// 	this.particles.particleTexture = null;
+		// this.particles?.dispose();
 		this.meteor.material?.dispose();
 		this.meteor?.dispose();
 	}

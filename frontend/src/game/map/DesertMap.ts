@@ -2,6 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Tornado } from "./map_utils/Tornado.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, W_PARTICLE_NUMBER, TORNADO_INTERVAL, TORNADO_LIFETIME, WIND_FORCE, W_GLOW_INTENSITY, COLORS4, START_TIMEOUT } from "../settings/values.js";
+import { ObjectMessage } from "../types_transfert.js";
 
 export class DesertMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
@@ -107,24 +108,18 @@ export class DesertMap extends MapTemplate {
 	}
 
 
-	/** @todo create a tornado when reiceive data from back */
-	// private tornadoInterval(scene: babylon.Scene, texture: babylon.Texture): ReturnType<typeof setInterval> {
-	// 	const tornadoIntervalId = setInterval( () => {
-	// 		if (this.gameStopped) {
-	// 			return;
-	// 		}
-	// 		const tornado = new Tornado(scene, texture, this.windForce);
-	// 		this.tornados.push(tornado);
-	// 		if (this.gameStopped)
-	// 			clearInterval(this.tornadoIntervalId);
-	// 		setTimeout(() => {
-	// 			const index = this.tornados?.indexOf(tornado);
-	// 			if (index !== -1)
-	// 				this.tornados?.splice(index, 1);
-	// 		}, TORNADO_LIFETIME + 100);
-	// 	}, TORNADO_INTERVAL);
-	// 	return tornadoIntervalId;
-	// }
+	handleObject(scene: babylon.Scene, texture: babylon.Texture, tornado: ObjectMessage): void {
+		if (this.gameStopped)
+			return;
+		if (tornado.id >= this.tornados?.length) {
+			this.tornados?.push(new Tornado(scene, texture, tornado.position, tornado.size));
+			setTimeout(() => {
+				this.tornados?.splice(tornado.id, 1);
+			}, TORNADO_LIFETIME + 100);
+		} else {
+			this.tornados?.at(tornado.id)?.updatePosition(tornado.position);
+		}
+	}
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
