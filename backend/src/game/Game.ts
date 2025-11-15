@@ -116,49 +116,13 @@ export class Game {
 		const ball = this.sceneManager.getBall();
 		if (!ball)
 			return null;
-		const ballPos = ball.getPosition();
-		const playerPos = player.getPosition();
-		const enemyPos = enemy.getPosition();
-		if (ballPos === undefined)
-			return null;
-		if (player.getName() === this.sceneManager.getPlayer2()?.getName()) {
-			ballPos.x = -ballPos.x;
-			ballPos.z = -ballPos.z;
-			playerPos.x = -playerPos.x;
-			playerPos.z = -playerPos.z;
-			enemyPos.x = -enemyPos.x;
-			enemyPos.z = -enemyPos.z;
-		}
 
 		const positions: PositionsMessage = {
 			status: Status.POSITIONS,
-			ball: ballPos,
-			player: playerPos,
-			enemy: enemyPos
+			ball: ball.getPosition(),
+			player: player.getPosition(),
+			enemy: enemy.getPosition()
 		};
-		// 	options: {
-		// 		map: this.sceneManager.getMapType(),
-		// 		ball: ball.getType(),
-		// 		rotatingPlayer: this.settings.rotatingPlayer,
-		// 		spin: this.settings.spin
-		// 	},
-		// 	state: {
-		// 		start_time: 0, // request from db
-		// 		current_time: Date.now(),
-		// 		score: { player: this.score.x, enemy: this.score.y } // wrong, alway the same / needs to differ for each player
-		// 	},
-		// 	player: {
-		// 		pseudo: player.getName(),
-		// 		pos: playerPos
-		// 	},
-		// 	enemy: {
-		// 		pseudo: enemy.getName(),
-		// 		pos: enemyPos
-		// 	},
-		// 	ball: {
-		// 		pos: ballPos
-		// 	}
-		// };
 		return positions;
 	}
 
