@@ -4,8 +4,6 @@ import { COLORS3, MAP_SIZE, COUNTDOWN_SIZE, COUNTDOWN_CANVAS_SIZE, COUNTDOWN_POS
 export class CountDown { 
 	private readonly countDown: babylon.Mesh;
 	private readonly countDownTexture: babylon.DynamicTexture;
-	private readonly intervalOutId: ReturnType<typeof setInterval>;
-	private timeOutId: ReturnType<typeof setTimeout> | null = null;
 
 	constructor(scene: babylon.Scene) {
 		this.countDownTexture = new babylon.DynamicTexture("scoreTexture", { width: COUNTDOWN_CANVAS_SIZE.x, height: COUNTDOWN_CANVAS_SIZE.y }, scene, false);
@@ -14,19 +12,6 @@ export class CountDown {
 		this.setMaterial(scene);
 		this.countDown.billboardMode = babylon.Mesh.BILLBOARDMODE_ALL;
 		this.countDown.position = new babylon.Vector3(0, COUNTDOWN_POS_Y, 0);
-		let i = 3;
-		this.changeText(i);
-		this.intervalOutId = setInterval(() => {
-			i--;
-			if (i !== 0)
-				this.changeText(i);
-			else {
-				this.changeText("GO!");
-				this.timeOutId = setTimeout(() => {
-					this.destroy();
-				}, START_TIMEOUT / 4);
-			}
-		}, START_TIMEOUT / 4);
 	}
 	
 	private setMaterial(scene: babylon.Scene): void {
@@ -38,7 +23,16 @@ export class CountDown {
 		this.countDown.material = material;
 	}
 
-	changeText(score: string | number): void {
+	udpateTime(time: number): void {
+		if (time > 1)
+			this.changeText(time - 1);
+		else if (time > 0)
+			this.changeText("GO!");
+		else
+			this.destroy();
+	}
+
+	private changeText(score: string | number): void {
 		if (this.countDown.material === null)
 			return ;
 		const ctx = this.countDownTexture.getContext();
@@ -53,9 +47,6 @@ export class CountDown {
 	}
 
 	destroy(): void {
-		if (this.timeOutId)
-			clearTimeout(this.timeOutId);
-		clearTimeout(this.intervalOutId);
 		this.countDownTexture?.dispose();
 		this.countDown?.material?.dispose();
 		this.countDown?.dispose();

@@ -1,4 +1,4 @@
-import { hideCanvas, showCanvas, updateGamePositions, updateGameObject } from "../game/canvas_creation.js";
+import { hideCanvas, showCanvas, updateGamePositions, updateGameObject, countdow } from "../game/canvas_creation.js";
 import { DataMessage, Status } from "../game/types_transfert.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 
@@ -63,6 +63,9 @@ async function openWebSocketConnection(): Promise<void> {
 				break;
 			case (Status.STOP):
 				hideCanvas();
+				break;
+			case (Status.TIMING):
+				countdow(message);
 				break;
 			case (Status.POSITIONS):
 				updateGamePositions(message);

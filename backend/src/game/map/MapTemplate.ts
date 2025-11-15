@@ -12,7 +12,6 @@ export abstract class MapTemplate {
 	// protected readonly light: babylon.DirectionalLight;
 	private readonly type: MapOption;
 	protected readonly sunPosition: babylon.Vector3;
-	private readonly startTimeout: ReturnType<typeof setTimeout>;
 	protected highlightTimeout: ReturnType<typeof setTimeout> | null = null;
 	protected wallHighlight: babylon.HighlightLayer | null = null;
 	protected gameStopped = true;
@@ -26,12 +25,10 @@ export abstract class MapTemplate {
 		this.limits.forEach(limit => limit.renderingGroupId = 1);
 		this.limits.forEach(limit => this.setLimitPhysic(scene, limit));
 		this.sunPosition = this.getSunPosition(scene);
-		// this.sun = this.createSun(scene);
-		// this.light = this.createLight(scene);
-		// this.glow = new babylon.GlowLayer("glow", scene);
-		this.startTimeout = setTimeout(() => {
-			this.gameStopped = false;
-		}, START_TIMEOUT);
+	}
+
+	start(): void {
+		this.gameStopped = false;
 	}
 
 	predeath(): void {
@@ -92,7 +89,6 @@ export abstract class MapTemplate {
 	}
 
 	destroy(): void {
-		clearTimeout(this.startTimeout);
 		if (this.highlightTimeout)
 			clearTimeout(this.highlightTimeout);
 		this.destroyRest();

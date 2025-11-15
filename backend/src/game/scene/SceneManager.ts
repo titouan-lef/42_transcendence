@@ -12,8 +12,9 @@ import { DesertMap } from "../map/DesertMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
-import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
+import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
+import { Status, TimingMessage } from "../../web_sockets/types_transfert.js";
 
 export class SceneManager {
 	private ball: BallTemplate | null = null;
@@ -137,9 +138,36 @@ export class SceneManager {
 		/** @todo send DeltaTime to the front ? */
 	}
 
+	private async sendCountDown(player1: Player, player2: Player, countdow: number) : Promise<void> {
+		const time: TimingMessage = {
+			status: Status.TIMING,
+			time : countdow
+		};
+		player1.send(time);
+		player2.send(time);
+	}
+
+	startCountdown(time: number): void {
+		const interval = setInterval(() => {
+			const player1 = this.getPlayer1();
+			const player2 = this.getPlayer2();
+			if (!player1 || !player2)
+				return;
+			this.sendCountDown(player1, player2, time);
+			if (time <= 0) {
+				clearInterval(interval);
+				this.ball?.launchBall();
+				this.map?.start();
+			}
+			time--;
+
+		}, 1000);
+	}
+
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void {
 		this.createBall(scene, settings);
 		this.createMap(scene, settings);
+		this.startCountdown(START_TIMEOUT);
 	}
 
 	destroyEnvironnement(scene: babylon.Scene): void {
