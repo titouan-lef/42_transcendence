@@ -1,6 +1,6 @@
 import { Game } from "./Game.js";
 import { GameSettings } from "./settings/GameSettings.js";
-import { OptionMessage, PositionsMessage } from "./types_transfert.js";
+import { ObjectMessage, OptionMessage, PositionsMessage } from "./types_transfert.js";
 
 /**@todo not sure about this, do we loose reference at the end ? */
 let game: Game;
@@ -29,4 +29,9 @@ async function updateGamePositions(positions: PositionsMessage): Promise<void> {
 	game.updateBallPositions(positions.ball);
 }
 
-export { showCanvas, hideCanvas, updateGamePositions };
+async function updateGameObject(object: ObjectMessage): Promise<void> {
+	game.updateObject(object);
+}
+
+
+export { showCanvas, hideCanvas, updateGamePositions, updateGameObject };

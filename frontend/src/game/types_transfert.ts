@@ -1,6 +1,3 @@
-import { Lightning } from "./map/map_utils/Lightning.js";
-import { Meteor } from "./map/map_utils/Meteor.js";
-import { Tornado } from "./map/map_utils/Tornado.js";
 import { BallOption, MapOption } from "./settings/GameSettings.js";
 
 interface Position {
@@ -86,12 +83,13 @@ interface PositionsMessage {
 	// enemy rot ?
 }
 
-type Object = Lightning | Meteor | Tornado;
+enum Object { LIGHTNING, METEOR, TORNADO };
 type ParticlesType = "explosion" | "collision" | "impulse";
 
 interface ObjectMessage {
 	status: Status.OBJECT,
 	type: Object,
+	id: number,
 	position: Position,
 	size: number
 	/** @todo more (size,... ) ??*/
@@ -114,5 +112,5 @@ interface PlayerControls {
 	apply_effect: boolean;
 }
 
-export { Position, PlanePosition, DataMessage, PlayerControls, ParticlesType, Status };
+export { Position, PlanePosition, DataMessage, PlayerControls, ParticlesType, Status, Object };
 export { StartMessage, StopMessage, TimingMessage, ScoreMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage };

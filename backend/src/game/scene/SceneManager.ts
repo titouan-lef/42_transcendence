@@ -14,6 +14,7 @@ import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
+import { WebSocket } from "ws";
 // import { CountDown } from "./CountDown.js";
 
 export class SceneManager {
@@ -74,11 +75,15 @@ export class SceneManager {
 		}
 	}
 
-	private createMap(scene: babylon.Scene, map: MapOption): void {
+	private createMap(scene: babylon.Scene, settings: GameSettings): void {
 		const mapList: MapOption[] = ["default", "volcano", "sky", "desert"];
+		let map = settings.map;
 		if (map === "random") {
 			map = mapList[Math.floor(Math.random() * 4)];
 		}
+		const sockets: WebSocket[] = [];
+		sockets.push(settings.player1.socket); /** @todo do not add if AI */
+		sockets.push(settings.player2.socket); /** @todo do not add if AI */
 		switch (map) {
 			case "default":
 				this.map = new DefaultMap(scene);
@@ -87,7 +92,7 @@ export class SceneManager {
 				this.map = new VolcanoMap(scene);
 				break;
 			case "sky":
-				this.map = new SkyMap(scene);
+				this.map = new SkyMap(scene, sockets);
 				break;
 			case "desert":
 				this.map = new DesertMap(scene);
@@ -146,11 +151,12 @@ export class SceneManager {
 			}, 2700);
 		});
 		engine.getDeltaTime = originalGetDelta;// set back to original speed
+		/** @todo send DeltaTime to the front ? */
 	}
 
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void {
 		this.createBall(scene, settings);
-		this.createMap(scene, settings.map);
+		this.createMap(scene, settings);
 		// this.score.changeScore([score.x, score.y]);
 		// this.createCountDown(scene);
 	}

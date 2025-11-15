@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
-import { PlanePosition } from "./types_transfert.js";
+import { ObjectMessage, PlanePosition } from "./types_transfert.js";
 
 export class Game {
 	private readonly socket: WebSocket;
@@ -117,5 +117,9 @@ export class Game {
 
 	updateBallPositions(position: PlanePosition): void {
 		this.sceneManager.getBall()?.setPosition(position);
+	}
+
+	updateObject(object: ObjectMessage): void {
+		this.sceneManager.updateObject(this.scene, object);
 	}
 }
