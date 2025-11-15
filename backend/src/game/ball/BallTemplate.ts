@@ -1,20 +1,11 @@
 import * as babylon from "@babylonjs/core";
 import { BallOption } from "../settings/GameSettings.js";
-import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, BALL_TRAIL_ON, START_TIMEOUT } from "../settings/values.js";
-import { BallTrail } from "./BallTrail.js";
+import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, START_TIMEOUT } from "../settings/values.js";
 import { Position } from "../../web_sockets/types_transfert.js";
-type ParticlesType = "explosion" | "collision" | "impulse";
 
 export abstract class BallTemplate {
-	//Graphic
-	// protected readonly color: babylon.Color3;
-	// private readonly ballTrails: BallTrail[] = [];
-	private trailIntervalId: ReturnType<typeof setInterval> | null = null;
-	// protected readonly particles: babylon.ParticleSystem[] = [];
-	// private readonly textures: Record<string, babylon.Texture>;
-	private readonly type: BallOption;
 
-	//Physic
+	private readonly type: BallOption;
 	protected readonly physic: babylon.PhysicsAggregate;
 	private readonly collisionObservable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
 	private readonly collisionObserver: babylon.Observer<babylon.IPhysicsCollisionEvent>;
@@ -30,9 +21,7 @@ export abstract class BallTemplate {
 	protected readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly yObservable: babylon.Observable<babylon.Scene>;
 	private readonly yObserver: babylon.Observer<babylon.Scene>;
-	private readonly launchBallTimeoutId: ReturnType<typeof setTimeout>;
-	
-	//Both
+
 	protected readonly mesh: babylon.Mesh;
 	protected gameStopped = true;
 
@@ -59,7 +48,6 @@ export abstract class BallTemplate {
 		this.sceneObserver = this.applyMovementChanges();
 		// if (BALL_TRAIL_ON)
 		// 	this.trailIntervalId = this.setTrail(scene);
-		this.launchBallTimeoutId = this.launchBall(scene);
 	}
 
 	/**block the ball from having a Y velocity */
@@ -75,15 +63,11 @@ export abstract class BallTemplate {
 	}
 
 	/**launch ball */
-	private launchBall(scene: babylon.Scene): ReturnType<typeof setTimeout> {
-		const launchBallTimeoutId = setTimeout( () => {
-			const startingDirection = Math.random() < 0.5 ? 1 : -1;
-			this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
-			// this.showParticles(this.mesh.position, scene, "impulse");
-			this.justCollided = true;
-			this.gameStopped = false;
-		}, START_TIMEOUT);
-		return launchBallTimeoutId;
+	launchBall(): void {
+		const startingDirection = Math.random() < 0.5 ? 1 : -1;
+		this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
+		this.justCollided = true;
+		this.gameStopped = false;
 	}
 
 	// private setMaterial(scene: babylon.Scene): void {
@@ -100,17 +84,6 @@ export abstract class BallTemplate {
 		}, scene);
 		return physic;
 	}
-
-	/** trail behind the ball */
-	// private setTrail(scene: babylon.Scene): ReturnType<typeof setInterval> {
-	// 	const trailIntervalId = setInterval(() => {
-	// 		this.ballTrails.push(new BallTrail(scene, this.mesh.position, this.color, this.mesh.visibility));
-	// 		while (this.ballTrails.length && this.ballTrails[0].hasDisappeared()) {
-	// 			this.ballTrails.splice(0, 1);
-	// 		}
-	// 	}, BALL_TRAIL_INTERVAL);
-	// 	return trailIntervalId;
-	// }
 
 	/** Spin doesn't apply to snake ball for obvious reasons */
 	protected applyMovementChanges(): babylon.Observer<babylon.Scene> {
@@ -146,65 +119,6 @@ export abstract class BallTemplate {
 			);
 		}
 	}
-
-	// /** particles on collides */
-	// private createCollisionParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
-	// 	const collisionParticles = new babylon.ParticleSystem("collision", 300, scene);
-	// 	collisionParticles.particleTexture = this.textures.spark.clone();
-	// 	collisionParticles.emitter = position;
-	// 	collisionParticles.createSphereEmitter(BALL_DIAMETER * 2);
-	// 	collisionParticles.renderingGroupId = 1;
-	// 	collisionParticles.color1 = new babylon.Color4(this.color.r, this.color.g, this.color.b, 1.0);
-	// 	collisionParticles.colorDead = new babylon.Color4(this.color.r, this.color.g, this.color.b, 1.0);
-	// 	collisionParticles.minSize = 0.3;
-	// 	collisionParticles.maxSize = 0.3;
-	// 	collisionParticles.minLifeTime = 0.5;
-	// 	collisionParticles.maxLifeTime = 0.5;
-	// 	collisionParticles.emitRate = 300;
-	// 	collisionParticles.minEmitPower = 6;
-	// 	collisionParticles.maxEmitPower = 12;
-	// 	collisionParticles.emitRate = 0;
-	// 	collisionParticles.manualEmitCount = 200;
-	// 	return collisionParticles;
-	// }
-
-	/** particles on goal */
-	// private createExplosionParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
-	// 	const explosionParticles = new babylon.ParticleSystem("explosion", 200, scene);
-	// 	// explosionParticles.particleTexture = this.textures.flare.clone();
-	// 	explosionParticles.emitter = position;
-	// 	explosionParticles.createSphereEmitter(BALL_DIAMETER * 10);
-	// 	explosionParticles.renderingGroupId = 1;
-	// 	explosionParticles.color1 = new babylon.Color4(1, 0.5, 0, 1);
-	// 	explosionParticles.color2 = new babylon.Color4(1, 0.2, 0, 1);
-	// 	explosionParticles.colorDead = new babylon.Color4(0, 0, 0, 0);
-	// 	explosionParticles.minSize = 5;
-	// 	explosionParticles.maxSize = 10;
-	// 	explosionParticles.minEmitPower = 5;
-	// 	explosionParticles.maxEmitPower = 15;
-	// 	explosionParticles.updateSpeed = 0.02;
-	// 	explosionParticles.emitRate = 0;
-	// 	explosionParticles.manualEmitCount = 200;
-	// 	return explosionParticles;
-	// }
-
-	/** particles on impulses */
-	// protected createImpulseParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
-	// 	const explosionParticles = new babylon.ParticleSystem("impulse", 100, scene);
-	// 	// explosionParticles.particleTexture = this.textures.flare.clone();
-	// 	explosionParticles.emitter = position;
-	// 	explosionParticles.createSphereEmitter(BALL_DIAMETER * 2);
-	// 	explosionParticles.renderingGroupId = 1;
-	// 	explosionParticles.color1 = new babylon.Color4(this.color.r, this.color.g, this.color.b, 1.0);
-	// 	explosionParticles.minSize = 3;
-	// 	explosionParticles.maxSize = 3;
-	// 	explosionParticles.minEmitPower = 2;
-	// 	explosionParticles.maxEmitPower = 4;
-	// 	explosionParticles.updateSpeed = 0.02;
-	// 	explosionParticles.emitRate = 0;
-	// 	explosionParticles.manualEmitCount = 100;
-	// 	return explosionParticles;
-	// }
 
 	private checkBallCollision(): babylon.Observer<babylon.IPhysicsCollisionEvent> {
 		const collisionObserver = this.collisionObservable.add((collisionEvent) => {
@@ -342,9 +256,6 @@ export abstract class BallTemplate {
 
 	destroy(): void {
 		this.destroyRest();
-		clearTimeout(this.launchBallTimeoutId);
-		if (this.trailIntervalId)
-			clearInterval(this.trailIntervalId);
 		this.collisionObservable.remove(this.collisionObserver);
 		this.sceneObservable.remove(this.sceneObserver);
 		this.yObservable.remove(this.yObserver);

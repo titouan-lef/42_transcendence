@@ -113,7 +113,7 @@ export const SHOW_DISPOSE_LOGS = false;
 
 /**GAMEPLAY GENERAL SETTINGS */
 export const POINTS_TO_WIN = 11;
-export const START_TIMEOUT = 4000;
+export const START_TIMEOUT = 4; // in seconds
 
 /**MAP GENERAL SETTINGS */
 export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100);

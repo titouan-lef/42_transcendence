@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
-import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
+import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS, START_TIMEOUT } from "./settings/values.js";
 import { ObjectMessage, PlanePosition } from "./types_transfert.js";
 
 export class Game {
@@ -64,7 +64,7 @@ export class Game {
 	}
 
 	stop(): void {
-		this.sceneManager.destroyScene(this.scene);
+		this.sceneManager.destroyScene();
 		this.scene.onAfterRenderObservable.clear();
 		this.camera.dispose();
 		if (SHOW_DISPOSE_LOGS)
@@ -109,6 +109,12 @@ export class Game {
 			camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
 		}
 		return camera;
+	}
+
+	countdown(time: number): void {
+		if (time === START_TIMEOUT) 
+			this.sceneManager.clearObjects();
+		this.sceneManager.updateCountDown(time);
 	}
 
 	updatePlayerPositions(id: 1 | 2, position: PlanePosition): void {

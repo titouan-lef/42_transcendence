@@ -12,8 +12,8 @@ import { RainyMap as SkyMap } from "../map/SkyMap.js";
 import { DesertMap } from "../map/DesertMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
-import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
-import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
+import { GameSettings, MapOption } from "../settings/GameSettings.js";
+import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
 import { Object, ObjectMessage } from "../types_transfert.js";
 
@@ -21,11 +21,13 @@ export class SceneManager {
 	private ball: BallTemplate | null = null;
 	private map: MapTemplate | null = null;
 	private countDown: CountDown | null = null;
+	private readonly scene: babylon.Scene;
 	private readonly players: Player[] = [];
 	private readonly textures: Record<string, babylon.Texture> = {};
 	private score: Score;
 
 	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera) {
+		this.scene = scene;
 		this.score = new Score(scene, camera);
 	}
 
@@ -109,10 +111,6 @@ export class SceneManager {
 		this.players.push(player2);
 	}
 
-	private createCountDown(scene: babylon.Scene): void {
-		this.countDown = new CountDown(scene);
-	}
-
 	createTextures(scene: babylon.Scene): void { /** @todo check if one request per texture is best practice. Do we need al texture for all the maps ??*/
 		this.textures.spark = new babylon.Texture("textures/sparks.png", scene, true);
 		this.textures.flare = new babylon.Texture("textures/flare.png", scene, true);
@@ -121,15 +119,6 @@ export class SceneManager {
 		this.textures.smoke = new babylon.Texture("textures/smoke.png", scene, true);
 		this.textures.electricity = new babylon.Texture("textures/electricity.png", scene, true);
 	}
-
-	// /** @todo Titouan gaming */
-	// checkGoal(): { goal: "player1" | "player2" | null, position: babylon.Vector3 | null } | null {
-	// 	const goalInfos = this.ball?.getGoal();
-	// 	if (goalInfos && goalInfos.goal !== null) {
-	// 		return goalInfos;
-	// 	}
-	// 	return null;
-	// }
 
 	/** ball explodes, the time slow down */
 	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3, score: babylon.Vector2): Promise<void> {
@@ -150,19 +139,25 @@ export class SceneManager {
 		engine.getDeltaTime = originalGetDelta;// set back to original speed
 	}
 
+	updateCountDown(time: number): void {
+		if (!this.countDown)
+			this.countDown = new CountDown(this.scene);
+		this.countDown.udpateTime(time);
+	}
+ 
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void {
 		this.createBall(scene, settings);
 		this.createMap(scene, settings.map);
 		this.score.changeScore([score.x, score.y]);
-		this.createCountDown(scene);
+		this.countDown = new CountDown(this.scene);
 	}
 
-	destroyEnvironnement(scene: babylon.Scene): void {
+	destroyEnvironnement(): void {
 		this.destroyCountDown();	
 		this.destroyBall();
 		this.destroyMap();
-		this.ball = null;
-		this.map = null;
+		// this.ball = null; // repetition
+		// this.map = null;
 		while(this.players.length > 0) {
 			this.players.pop();
 		}
@@ -181,6 +176,10 @@ export class SceneManager {
 		});
 		console.log("lights : " + scene.lights);
 		console.log("particle system: " + scene.particleSystems);
+	}
+
+	clearObjects():void {
+		this.map?.destroyRest();
 	}
 
 	private destroyBall(): void {
@@ -212,10 +211,10 @@ export class SceneManager {
 		this.score.destroy();
 	}
 
-	destroyScene(scene: babylon.Scene): void {
+	destroyScene(): void {
 		this.destroyTextures();
 		this.destroyPlayers();
-		this.destroyEnvironnement(scene);
+		this.destroyEnvironnement();
 		this.destroyScore();
 	}
 }

@@ -1,6 +1,6 @@
 import { Game } from "./Game.js";
 import { GameSettings } from "./settings/GameSettings.js";
-import { ObjectMessage, OptionMessage, PositionsMessage } from "./types_transfert.js";
+import { ObjectMessage, OptionMessage, PositionsMessage, TimingMessage } from "./types_transfert.js";
 
 /**@todo not sure about this, do we loose reference at the end ? */
 let game: Game;
@@ -22,6 +22,11 @@ async function hideCanvas(): Promise<void> {
 		game.stop();
 }
 
+async function countdow(time: TimingMessage): Promise<void> {
+	/** @todo apply position to the game */
+	game.countdown(time.time);
+}
+
 async function updateGamePositions(positions: PositionsMessage): Promise<void> {
 	/** @todo apply position to the game */
 	game.updatePlayerPositions(1, positions.player);
@@ -34,4 +39,4 @@ async function updateGameObject(object: ObjectMessage): Promise<void> {
 }
 
 
-export { showCanvas, hideCanvas, updateGamePositions, updateGameObject };
+export { showCanvas, hideCanvas, countdow, updateGamePositions, updateGameObject };
