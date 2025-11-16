@@ -16,7 +16,7 @@ export abstract class MapTemplate {
 	// private readonly startTimeout: ReturnType<typeof setTimeout>;
 	protected highlightTimeout: ReturnType<typeof setTimeout> | null = null;
 	protected wallHighlight: babylon.HighlightLayer | null = null;
-	protected gameStopped = true;
+	protected gameStopped = false;
 
 	constructor(scene: babylon.Scene, type: MapOption) {
 		this.type = type;
