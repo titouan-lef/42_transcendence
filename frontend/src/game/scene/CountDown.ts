@@ -23,13 +23,16 @@ export class CountDown {
 		this.countDown.material = material;
 	}
 
-	udpateTime(time: number): void {
+	udpateTime(time: number): CountDown | null {
 		if (time > 1)
 			this.changeText(time - 1);
 		else if (time > 0)
 			this.changeText("GO!");
-		else
+		else {
 			this.destroy();
+			return null;
+		}
+		return this;
 	}
 
 	private changeText(score: string | number): void {

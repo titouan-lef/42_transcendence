@@ -140,9 +140,11 @@ export class SceneManager {
 	}
 
 	updateCountDown(time: number): void {
-		if (!this.countDown)
+		if (!this.countDown) {
 			this.countDown = new CountDown(this.scene);
-		this.countDown.udpateTime(time);
+			console.log("New countdown");
+		}
+		this.countDown = this.countDown.udpateTime(time);
 	}
  
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void {
@@ -153,7 +155,7 @@ export class SceneManager {
 	}
 
 	destroyEnvironnement(): void {
-		this.destroyCountDown();	
+		this.destroyCountDown();
 		this.destroyBall();
 		this.destroyMap();
 		// this.ball = null; // repetition
