@@ -194,7 +194,7 @@ export class SceneManager {
 		this.ball = null;
 	}
 
-	private destroyMap(): void  {
+	private destroyMap(): void {
 		this.map?.destroy();
 		this.map = null;
 	}

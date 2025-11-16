@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { BallOption } from "../settings/GameSettings.js";
-import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, START_TIMEOUT } from "../settings/values.js";
+import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED } from "../settings/values.js";
 import { Position } from "../../web_sockets/types_transfert.js";
 
 export abstract class BallTemplate {

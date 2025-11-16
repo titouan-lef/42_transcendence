@@ -3,9 +3,9 @@ import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
-import { MOVE_BALL_ONCLICK, POINTS_TO_WIN, SHOW_DISPOSE_LOGS, START_TIMEOUT } from "./settings/values.js";
+import { MOVE_BALL_ONCLICK, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import fs from "fs";
-import { Status, PlayerControls, PositionsMessage, StartMessage, StopMessage, TimingMessage, OptionMessage, ScoreMessage } from "../web_sockets/types_transfert.js";
+import { Status, PlayerControls, PositionsMessage, StartMessage, StopMessage, OptionMessage, ScoreMessage } from "../web_sockets/types_transfert.js";
 import { Player } from "./player/Player.js";
 
 export class Game {
@@ -160,14 +160,14 @@ export class Game {
 		player2.send(stop);
 	}
 
-	private async sendCountDown(player1: Player, player2: Player, countdow: number) : Promise<void> {
-		const time: TimingMessage = {
-			status: Status.TIMING,
-			time : countdow
-		};
-		player1.send(time);
-		player2.send(time);
-	}
+	// private async sendCountDown(player1: Player, player2: Player, countdow: number) : Promise<void> {
+	// 	const time: TimingMessage = {
+	// 		status: Status.TIMING,
+	// 		time : countdow
+	// 	};
+	// 	player1.send(time);
+	// 	player2.send(time);
+	// }
 
 	private async sendOptions(player1: Player, player2: Player) : Promise<void> {
 		const options: OptionMessage = {

@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Meteor } from "./map_utils/Meteor.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER, V_GLOW_INTENSITY, START_TIMEOUT } from "../settings/values.js";
+import { MAP_SIZE, METEOR_INTERVAL, METEOR_LIFETIME } from "../settings/values.js";
 import { WebSocket } from "ws";
 
 export class VolcanoMap extends MapTemplate {
@@ -15,10 +15,10 @@ export class VolcanoMap extends MapTemplate {
 		// this.glow.intensity = V_GLOW_INTENSITY;
 		// this.particles = this.createParticles(scene, texture.flare);
 		this.meteorIntervalId = this.meteorInterval(scene);
-		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
-		this.highlightTimeout = setTimeout(() => {
-			this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.volcanoHighlightWall));
-		}, START_TIMEOUT);
+		// this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
+		// this.highlightTimeout = setTimeout(() => {
+		// 	this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.volcanoHighlightWall));
+		// }, START_TIMEOUT);
 		sockets.forEach(socket => {
 			this.sockets.push(socket);
 		});
@@ -50,9 +50,9 @@ export class VolcanoMap extends MapTemplate {
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
-		const material = new babylon.StandardMaterial('wallcolor', scene);
-		material.diffuseColor =  COLORS3.volcanoDiffuseWall;
-		newMesh.material = material;
+		// const material = new babylon.StandardMaterial('wallcolor', scene);
+		// material.diffuseColor =  COLORS3.volcanoDiffuseWall;
+		// newMesh.material = material;
 		return newMesh;
 	}
 

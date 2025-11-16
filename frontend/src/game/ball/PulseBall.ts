@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
-import { COLORS3, MAX_SPEED, PULSE_BALL_EFFECT_INTERVAL } from "../settings/values.js";
+import { COLORS3 } from "../settings/values.js";
 
 export class PulseBall extends BallTemplate {
 	

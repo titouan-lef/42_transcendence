@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Tornado } from "./map_utils/Tornado.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS3, W_PARTICLE_NUMBER, TORNADO_INTERVAL, TORNADO_LIFETIME, WIND_FORCE, W_GLOW_INTENSITY, COLORS4, START_TIMEOUT } from "../settings/values.js";
+import { MAP_SIZE, TORNADO_INTERVAL, TORNADO_LIFETIME, WIND_FORCE } from "../settings/values.js";
 import { WebSocket } from "ws";
 
 export class DesertMap extends MapTemplate {
@@ -25,10 +25,10 @@ export class DesertMap extends MapTemplate {
 		this.windObserver = this.applyWind(scene);
 		// this.particles = this.createParticles(scene, texture.flare);
 		this.tornadoIntervalId = this.tornadoInterval(scene);
-		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
-		this.highlightTimeout = setTimeout(() => {
-			this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.desertHighlightWall));
-		}, START_TIMEOUT);
+		// this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
+		// this.highlightTimeout = setTimeout(() => {
+		// 	this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.desertHighlightWall));
+		// }, START_TIMEOUT);
 		sockets.forEach(socket => {
 			this.sockets.push(socket);
 		});

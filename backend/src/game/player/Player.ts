@@ -74,8 +74,8 @@ export class Player {
 
 	private setPlayerPhysic(scene: babylon.Scene): babylon.PhysicsBody {
 		const newBody = new babylon.PhysicsBody(this.player, babylon.PhysicsMotionType.ANIMATED, false, scene);
-		newBody.setMassProperties({ 
-			mass: PLAYER_MASS, 
+		newBody.setMassProperties({
+			mass: PLAYER_MASS,
 			centerOfMass: babylon.Vector3.Zero()
 		});
 
