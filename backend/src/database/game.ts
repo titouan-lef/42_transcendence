@@ -3,28 +3,40 @@ import { applyQuery } from "./db_utils.js";
 const TABLE_NAME = "Game";
 
 interface Game {
-	id?: number;
-	beganAt?: string;
-	mapId: number;
-	ballId: number;
-	seasonId?: number;
+	id: number;
+	beganAt: string;
+	mapId: number; /** @todo null ? */
+	ballId: number; /** @todo null ? */
+	seasonId: number; /** @todo null ? */
 }
 
-async function createGame(game: Game): Promise<void> {
-	applyQuery(async (db) => await db.run(
-		`INSERT INTO ${TABLE_NAME} (mapId, ballId, seasonId) VALUES (?, ?, ?)`,
-		[game.mapId, game.ballId, game.seasonId]), "createGame");
+async function createGame(mapId: number, ballId: number, seasonId: number): Promise<void> {
+	applyQuery(
+		async (db) => await db.run(
+			`INSERT INTO ${TABLE_NAME} (mapId, ballId, seasonId) VALUES (?, ?, ?)`,
+			[mapId, ballId, seasonId]
+		), "createGame"
+	);
 }
 
 async function getAllGames(): Promise<Game[] | undefined> {
-	return applyQuery(async (db) => await db.all(`SELECT * FROM ${TABLE_NAME}`), "getAllGames");
+	return applyQuery(
+		async (db) => await db.all(
+			`SELECT * FROM ${TABLE_NAME}`
+		), "getAllGames"
+	);
 }
 
 async function getGameById(id: number): Promise<Game | undefined> {
-	return applyQuery(async (db) => await db.get(`SELECT * FROM ${TABLE_NAME} WHERE id = ?`, [id]), "getGameById");
+	return applyQuery(
+		async (db) => await db.get(
+			`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
+			[id]
+		), "getGameById"
+	);
 }
 
-export { createGame, getAllGames, getGameById };
+export { Game };
 /**
  * 
  * @todo voir si on garde

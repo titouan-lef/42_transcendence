@@ -9,9 +9,12 @@ interface Elo {
 }
 
 async function createElo(elo: Elo): Promise<void> {
-	applyQuery(async (db) => await db.run(
-		`INSERT INTO ${TABLE_NAME} (username, gameId, variation) VALUES (? ,? ,?)`,
-		[elo.username, elo.gameId, elo.variation]), "createElo");
+	applyQuery(
+		async (db) => await db.run(
+			`INSERT INTO ${TABLE_NAME} (username, gameId, variation) VALUES (? ,? ,?)`,
+			[elo.username, elo.gameId, elo.variation]
+		), "createElo"
+	);
 }
 
 async function getAllElos(): Promise<Elo[] | undefined> {
@@ -24,16 +27,17 @@ async function getElo(username: string, gameId: number): Promise<Elo | undefined
 		[username, gameId]), "getElo");
 }
 
+export { Elo };
+/**
+ * 
+ * @todo Voir si on garde
+ * 
 async function updateElo(elo: Elo): Promise<void> {
 	applyQuery(async (db) => await db.run(
 		`UPDATE ${TABLE_NAME} SET variation = ? WHERE username = ? AND gameId = ?`,
 		[elo.variation, elo.username, elo.gameId]), "updateElo");
 }
 
-export { createElo, getAllElos, getElo, updateElo };
-/**
- * 
- * @todo Voir si on garde
 async function deleteElo(username: string, gameId: number): Promise<void> {
 	applyQuery(async (db) => await db.run(
 		`DELETE FROM ${TABLE_NAME} WHERE username = ? AND gameId = ?`,

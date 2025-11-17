@@ -8,22 +8,30 @@ interface Ball {
 }
 
 async function createBall(name: string): Promise<void> {
-	applyQuery(async (db) => await db.run(
-		`INSERT INTO ${TABLE_NAME} (name) VALUES (?)`,
-		[name]), "createBall");
+	applyQuery(
+		async (db) => await db.run(
+			`INSERT INTO ${TABLE_NAME} (name) VALUES (?)`, [name]
+		), "createBall"
+	);
 }
 
 async function getAllBalls(): Promise<Ball[] | undefined> {
-	return applyQuery(async (db) => await db.all(`SELECT * FROM ${TABLE_NAME}`), "getAllBall");
+	return applyQuery(
+		async (db) => await db.all(
+			`SELECT * FROM ${TABLE_NAME}`
+		), "getAllBall"
+	);
 }
 
 async function getBallById(id: number): Promise<Ball | undefined> {
-	return applyQuery(async (db) => await db.get(
-		`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
-		[id]), "getBallById");
+	return applyQuery(
+		async (db) => await db.get(
+			`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,[id]
+		), "getBallById"
+	);
 }
 
-export { createBall, getAllBalls, getBallById };
+export { Ball };
 /**
  * @todo voir si on garde
 async function updateBall(id: number, newName: string): Promise<void> {
