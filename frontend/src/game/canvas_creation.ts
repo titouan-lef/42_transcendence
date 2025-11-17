@@ -17,26 +17,8 @@ async function showCanvas(socket: WebSocket, options: OptionMessage): Promise<vo
 	game.show();
 }
 
-async function hideCanvas(): Promise<void> {
-	if (game)
-		game.stop();
-}
-
-async function countdow(time: TimingMessage): Promise<void> {
-	/** @todo apply position to the game */
-	game.countdown(time.time);
-}
-
-async function updateGamePositions(positions: PositionsMessage): Promise<void> {
-	/** @todo apply position to the game */
-	game.updatePlayerPositions(1, positions.player);
-	game.updatePlayerPositions(2, positions.enemy);
-	game.updateBallPositions(positions.ball);
-}
-
 async function updateGameObject(object: ObjectMessage): Promise<void> {
 	game.updateObject(object);
-}
+} /** @todo change this in the scene manager directly after objects refacto */
 
-
-export { showCanvas, hideCanvas, countdow, updateGamePositions, updateGameObject };
+export { showCanvas, updateGameObject };

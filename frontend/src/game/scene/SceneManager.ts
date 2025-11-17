@@ -12,23 +12,42 @@ import { RainyMap as SkyMap } from "../map/SkyMap.js";
 import { DesertMap } from "../map/DesertMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
-import { GameSettings, MapOption } from "../settings/GameSettings.js";
-import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
+import { BallOption, GameSettings, MapOption } from "../settings/GameSettings.js";
+import { MAP_SIZE, PLAYER_DIMENSION, POINTS_TO_WIN, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
-import { Object, ObjectMessage } from "../types_transfert.js";
+import { DataMessage, GoalMessage, Object, ObjectMessage, PositionsMessage, Status } from "../types_transfert.js";
 
 export class SceneManager {
 	private ball: BallTemplate | null = null;
 	private map: MapTemplate | null = null;
 	private countDown: CountDown | null = null;
+	private readonly socket: WebSocket;
 	private readonly scene: babylon.Scene;
 	private readonly players: Player[] = [];
 	private readonly textures: Record<string, babylon.Texture> = {};
 	private score: Score;
 
-	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera) {
+	constructor(socket: WebSocket, scene: babylon.Scene, camera: babylon.ArcRotateCamera, settings: GameSettings) {
+		this.socket = socket;
 		this.scene = scene;
 		this.score = new Score(scene, camera);
+
+		socket.addEventListener("message", (event) => { /** @todo check if removeEventListener is necesseray and the end of the game */
+			const message : DataMessage = JSON.parse(event.data);
+			switch (message.status) {
+				case (Status.TIMING):
+					this.setCountDown(message.time);
+					break;
+				case (Status.GOAL):
+					this.setGoalCheck(message, settings);
+					break;
+				case (Status.POSITIONS):
+					this.setPositionUpdater(message);
+					break;
+				default:
+					return; /** do nothing / not an error*/
+			}
+		});
 	}
 
 	getBall(): BallTemplate | null {
@@ -42,8 +61,8 @@ export class SceneManager {
 		return player;
 	}
 
-	private createBall(scene: babylon.Scene, settings: GameSettings): void {
-		const ball = settings.ball; // no random in the front
+	private createBall(scene: babylon.Scene, ballType: BallOption): void {
+		const ball = ballType; // no random in the front
 		switch (ball) {
 			case "default":
 				this.ball = new DefaultBall(scene, this.textures);
@@ -139,21 +158,36 @@ export class SceneManager {
 		engine.getDeltaTime = originalGetDelta;// set back to original speed
 	}
 
-	updateCountDown(time: number): void {
-		this.countDown = this.countDown?.udpateTime(time) || null;
+	private setCountDown(time: number): void {
+		this.countDown = this.countDown?.udpateCountDown(time) || null;
+	}
+
+	private setGoalCheck(message: GoalMessage, settings: GameSettings): void {
+		this.destroyEnvironnement(new babylon.Vector2(message.player, message.enemy));
+		if (message.player !== POINTS_TO_WIN && message.enemy !== POINTS_TO_WIN)
+			this.setEnvironnement(this.scene, settings);
+		/** @todo review manegement of this, maebe it should be handle int he Game ?? */
+		/** @todo animation win / loose */
+	}
+
+	private setPositionUpdater(message : PositionsMessage): void {
+		this.getPlayer(1)?.setPosition(message.player);
+		this.getPlayer(2)?.setPosition(message.enemy);
+		this.ball?.setPosition(message.ball);
 	}
  
-	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void {
-		this.createBall(scene, settings);
+	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
+		this.createBall(scene, settings.ball);
 		this.createMap(scene, settings.map);
-		this.score.changeScore([score.x, score.y]);
 		this.countDown = new CountDown(this.scene);
 	}
 
-	destroyEnvironnement(): void {
+	destroyEnvironnement(score: babylon.Vector2 | null): void {
 		this.destroyCountDown();
 		this.destroyBall();
 		this.destroyMap();
+		if (score)
+			this.score.changeScore([score.x, score.y]);
 		// this.ball = null; // repetition
 		// this.map = null;
 		// while(this.players.length > 0) { //maybe needed but somwhere else
@@ -212,7 +246,7 @@ export class SceneManager {
 	destroyScene(): void {
 		this.destroyTextures();
 		this.destroyPlayers();
-		this.destroyEnvironnement();
+		this.destroyEnvironnement(null);
 		this.destroyScore();
 	}
 }

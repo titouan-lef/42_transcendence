@@ -39,7 +39,7 @@ export class SceneManager {
 		return type;
 	}
 
-	getPlayer1(): Player | undefined {
+	getPlayer1(): Player | undefined { /** @todo same player management that in the front */
 		return this.players.at(0);
 	}
 

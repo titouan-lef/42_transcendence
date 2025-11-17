@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS, START_TIMEOUT } from "./settings/values.js";
-import { ObjectMessage, PlanePosition } from "./types_transfert.js";
+import { DataMessage, ObjectMessage, PlanePosition, Status } from "./types_transfert.js";
 
 export class Game {
 	private readonly socket: WebSocket;
@@ -22,11 +22,17 @@ export class Game {
 		this.canvas = canvas;
 		this.settings = settings;
 		this.camera = this.createCamera();
-		this.sceneManager = new SceneManager(scene, this.camera);
+		this.sceneManager = new SceneManager(socket, scene, this.camera, settings);
 		this.scene = scene;
 		window.addEventListener("resize", () => this.engine.resize());
 		this.score = new babylon.Vector2(0, 0);
 		this.setScene();
+
+		socket.addEventListener("message", (event) => { /** @todo check if removeEventListener is necesseray and the end of the game */
+			const message : DataMessage = JSON.parse(event.data);
+			if (message.status === Status.STOP)
+				this.stop();
+		});
 	}
 
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
@@ -80,7 +86,7 @@ export class Game {
 	private setScene(): void {
 		this.sceneManager.createTextures(this.scene);
 		this.sceneManager.createPlayers(this.scene, this.settings);
-		this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
+		this.sceneManager.setEnvironnement(this.scene, this.settings);
 		
 		const player = this.sceneManager.getPlayer(this.settings.player1.playerId);
 		if (!player) {
@@ -111,21 +117,6 @@ export class Game {
 		return camera;
 	}
 
-	countdown(time: number): void {
-		if (time === START_TIMEOUT) {
-			this.sceneManager.destroyEnvironnement();
-			this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
-		}
-		this.sceneManager.updateCountDown(time);
-	}
-
-	updatePlayerPositions(id: 1 | 2, position: PlanePosition): void {
-		const player = this.sceneManager.getPlayer(id)?.setPosition(position);
-	}
-
-	updateBallPositions(position: PlanePosition): void {
-		this.sceneManager.getBall()?.setPosition(position);
-	}
 
 	updateObject(object: ObjectMessage): void {
 		this.sceneManager.updateObject(this.scene, object);

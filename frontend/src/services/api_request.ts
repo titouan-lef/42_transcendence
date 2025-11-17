@@ -1,4 +1,4 @@
-import { hideCanvas, showCanvas, updateGamePositions, updateGameObject, countdow } from "../game/canvas_creation.js";
+import { showCanvas, updateGameObject } from "../game/canvas_creation.js";
 import { DataMessage, Status } from "../game/types_transfert.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 
@@ -61,16 +61,7 @@ async function openWebSocketConnection(): Promise<void> {
 			case (Status.OPTIONS):
 				showCanvas(ws, message);
 				break;
-			case (Status.STOP):
-				hideCanvas();
-				break;
-			case (Status.TIMING):
-				countdow(message);
-				break;
-			case (Status.POSITIONS):
-				updateGamePositions(message);
-				break;
-			case (Status.OBJECT):
+			case (Status.OBJECT): /** @todo remove after object refacto */
 				updateGameObject(message);
 				break;
 			default:
