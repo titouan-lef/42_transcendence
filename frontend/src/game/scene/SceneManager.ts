@@ -140,11 +140,7 @@ export class SceneManager {
 	}
 
 	updateCountDown(time: number): void {
-		if (!this.countDown) {
-			this.countDown = new CountDown(this.scene);
-			console.log("New countdown");
-		}
-		this.countDown = this.countDown.udpateTime(time);
+		this.countDown = this.countDown?.udpateTime(time) || null;
 	}
  
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void {
@@ -160,9 +156,9 @@ export class SceneManager {
 		this.destroyMap();
 		// this.ball = null; // repetition
 		// this.map = null;
-		while(this.players.length > 0) {
-			this.players.pop();
-		}
+		// while(this.players.length > 0) { //maybe needed but somwhere else
+		// 	this.players.pop();
+		// }
 	}
 
 	/** debug function */

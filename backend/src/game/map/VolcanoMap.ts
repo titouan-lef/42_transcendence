@@ -43,7 +43,7 @@ export class VolcanoMap extends MapTemplate {
 				const index = this.meteors?.indexOf(meteor);
 				if (index !== -1)
 					this.meteors?.splice(index, 1);
-			}, METEOR_LIFETIME + 2000);
+			}, METEOR_LIFETIME + 100);
 		}, METEOR_INTERVAL);
 		return meteorIntervalId;
 	}

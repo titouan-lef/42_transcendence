@@ -173,8 +173,8 @@ export class SceneManager {
 	destroyEnvironnement(scene: babylon.Scene): void {
 		this.destroyBall();
 		this.destroyMap();
-		this.ball = null;
-		this.map = null;
+		// this.ball = null; // repetition
+		// this.map = null;
 	}
 
 	/** debug function */
