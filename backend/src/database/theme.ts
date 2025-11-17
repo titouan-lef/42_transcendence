@@ -1,4 +1,4 @@
-import { applyQuery } from "./db_utils.js";
+import { applyQuery, fetchAll } from "./db_utils.js";
 
 const TABLE_NAME = "Theme";
 
@@ -17,11 +17,7 @@ async function createTheme(name: string): Promise<void> {
 }
 
 async function getAllThemes(): Promise<Theme[] | undefined> {
-	return applyQuery(
-		async (db) => await db.all(
-			`SELECT * FROM ${TABLE_NAME}`
-		), "getAllThemes"
-	);
+	return fetchAll(TABLE_NAME);
 }
 
 async function getThemeById(id: number): Promise<Theme | undefined> {

@@ -12,4 +12,13 @@ async function applyQuery<T>(queryFunc: (db: Database) => Promise<T>, errorMsg: 
 	}
 }
 
-export { applyQuery };
+async function fetchAll<T>(tableName: string): Promise<T | undefined>
+{
+	return applyQuery(
+		async (db) => await db.all(
+			`SELECT * FROM ${tableName}`
+		), "getAll" + tableName
+	);
+}
+
+export { applyQuery, fetchAll };

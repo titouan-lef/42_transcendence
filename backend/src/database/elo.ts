@@ -1,4 +1,4 @@
-import { applyQuery } from "./db_utils.js";
+import { applyQuery, fetchAll } from "./db_utils.js";
 
 const TABLE_NAME = "Elo";
 
@@ -18,7 +18,7 @@ async function createElo(elo: Elo): Promise<void> {
 }
 
 async function getAllElos(): Promise<Elo[] | undefined> {
-	return applyQuery(async (db) => await db.all(`SELECT * FROM ${TABLE_NAME}`), "getAllElos");
+	return fetchAll(TABLE_NAME);
 }
 
 async function getElo(username: string, gameId: number): Promise<Elo | undefined> {
