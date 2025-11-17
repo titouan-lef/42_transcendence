@@ -112,8 +112,10 @@ export class Game {
 	}
 
 	countdown(time: number): void {
-		if (time === START_TIMEOUT) 
-			this.sceneManager.clearObjects();
+		if (time === START_TIMEOUT) {
+			this.sceneManager.destroyEnvironnement();
+			this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
+		}
 		this.sceneManager.updateCountDown(time);
 	}
 

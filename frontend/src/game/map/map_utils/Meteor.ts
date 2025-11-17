@@ -1,10 +1,10 @@
 import * as babylon from "@babylonjs/core";
-import { MAP_SIZE, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, COLORS3, COLORS4 } from "../../settings/values.js";
+import { MAP_SIZE, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, COLORS3, COLORS4, METEOR_LIFETIME } from "../../settings/values.js";
 import { Position } from "../../types_transfert.js";
 
 export class Meteor {
-	// private readonly sceneObservable: babylon.Observable<babylon.Scene>;
-	// private readonly sceneObserver: babylon.Observer<babylon.Scene>;
+	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
+	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly meteor: babylon.Mesh;
 	private readonly meteorLight: babylon.PointLight;
 	private body: babylon.PhysicsBody | null;
@@ -23,8 +23,21 @@ export class Meteor {
 		this.meteorLight = this.createMeteorLight(scene);
 		this.body = null;
 		this.trail = this.createTrail(scene, texture);
-		// this.sceneObservable = scene.onAfterRenderObservable;
+		this.sceneObservable = scene.onAfterRenderObservable;
+		this.sceneObserver = this.observeScene(scene);
 		// this.particles = this.createContactParticles(scene, texture.smoke, end);
+	}
+
+	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
+		const sceneObserver = this.sceneObservable.add(() => {
+			if (this.meteor.position.y < 0) {
+				setTimeout( () => {
+					this?.destroy();
+				}, METEOR_LIFETIME);
+				this.sceneObservable.remove(this.sceneObserver);
+			}
+		});
+		return sceneObserver;
 	}
 
 	private spawnMeteor(scene: babylon.Scene, position: babylon.Vector3): babylon.Mesh {
@@ -104,7 +117,7 @@ export class Meteor {
 	}
 
 	destroy(): void {
-		// this.sceneObservable?.remove(this.sceneObserver);
+		this.sceneObservable?.remove(this.sceneObserver);
 		this.body?.dispose();
 		this.meteorLight?.dispose();
 		this.trail?.stop();
