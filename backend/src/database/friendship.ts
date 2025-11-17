@@ -1,4 +1,4 @@
-import { applyQuery } from "./db_utils.js";
+import { applyQuery, fetchAll } from "./db_utils.js";
 
 const TABLE_NAME = "Friendship";
 
@@ -17,11 +17,7 @@ async function createFriendship(friendship: Friendship): Promise<void> {
 }
 
 async function getAllFriendship(): Promise<Friendship[] | undefined> {
-	return applyQuery(
-		async (db) => await db.all(
-			`SELECT * FROM ${TABLE_NAME}`
-		), "getAllFriendship"
-	);
+	return fetchAll(TABLE_NAME);
 }
 
 async function getFriendship(username: string): Promise<Friendship | undefined> {

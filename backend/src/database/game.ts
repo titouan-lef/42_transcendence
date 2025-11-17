@@ -1,4 +1,4 @@
-import { applyQuery } from "./db_utils.js";
+import { applyQuery, fetchAll } from "./db_utils.js";
 
 const TABLE_NAME = "Game";
 
@@ -20,11 +20,7 @@ async function createGame(mapId: number, ballId: number, seasonId: number): Prom
 }
 
 async function getAllGames(): Promise<Game[] | undefined> {
-	return applyQuery(
-		async (db) => await db.all(
-			`SELECT * FROM ${TABLE_NAME}`
-		), "getAllGames"
-	);
+	return fetchAll(TABLE_NAME);
 }
 
 async function getGameById(id: number): Promise<Game | undefined> {

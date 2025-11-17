@@ -1,4 +1,4 @@
-import { applyQuery } from "./db_utils.js";
+import { applyQuery, fetchAll } from "./db_utils.js";
 
 const TABLE_NAME = "Map";
 
@@ -17,11 +17,7 @@ async function createMap(name: string): Promise<void> {
 }
 
 async function getAllMaps(): Promise<Map[] | undefined> {
-	return applyQuery(
-		async (db) => await db.all(
-			`SELECT * FROM ${TABLE_NAME}`
-		), "getAllMap"
-	);
+	return fetchAll(TABLE_NAME);
 }
 
 async function getMapById(id: number): Promise<Map | undefined> {
