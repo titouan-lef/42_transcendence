@@ -2,7 +2,7 @@ import { createButtonHtml } from "../components/button.js";
 import { createInputHtml } from "../components/input.js";
 import { addHandler } from "../routes/event.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
-import { exitDialog } from "./dialog_utils.js";
+import { loadDialog, exitDialog } from "./dialog_utils.js";
 
 const BTN_STYLE = `
 rounded-xl p-[5px] w-full
@@ -35,7 +35,7 @@ const SIGN_IN = `
 const SIGN_UP = `
 <div class="bg-primary rounded-2xl h-full flex justify-center m-auto p-6 w-full">
 	<div class="flex flex-col justify-center items-center gap-4 min-w-[100px] max-w-[250px]">
-		<form name="Login" class="flex flex-col justify-center items-center gap-3">
+		<form name="Register" class="flex flex-col justify-center items-center gap-3">
 			${createInputHtml(["user_name"], "text", "login_id", { "autofocus": "true", "class": `${INPUT_STYLE}` })}
 			${createInputHtml(["nick_name"], "text", "login_nick", { "class": `${INPUT_STYLE}` })}
 			${createInputHtml(["password"], "password", "login_password", { "class": `${INPUT_STYLE}` })}
@@ -43,7 +43,7 @@ const SIGN_UP = `
 		</form>
 		${createButtonHtml(["sign_up"], `btn-sign-up`, { "class": `${BTN_STYLE}` })}
 		<hr class="border-2 rounded-2xl border-dark w-1/2">
-		${createButtonHtml(["go_back"], `btn-guest`, { "class": `${BTN_STYLE}` })}
+		${createButtonHtml(["go_back"], `btn-back`, { "class": `${BTN_STYLE}` })}
 	</div>
 </div>
 `;
@@ -55,17 +55,19 @@ function connectUser(): void {
 	console.log(`sign-in button clicked with ${userId.value} and ${userPassword.value}`); /** @todo remove debug logs */
 }
 
-function loadSignUp(): void {
-	const elem = getSafeElement('modal', HTMLDialogElement);
-
-	elem.innerHTML = SIGN_UP;
-}
-
+/** @todo remove all handlers while switching dialogs ? */
 function signInHandler(modal: HTMLDialogElement): void {
 	addHandler('btn-sign-in', 'click', () => connectUser());
 	addHandler('btn-guest', 'click', () => console.log("guest button clicked.")); /** @todo remove debug logs */
-	addHandler('btn-sign-up', 'click', () => loadSignUp()); /** @todo remove debug logs */
+	addHandler('btn-sign-up', 'click', () => loadDialog(signUpHandler, SIGN_UP));
 	addHandler('modal', 'click', (e) => exitDialog('modal', modal, e));
 }
 
-export { SIGN_IN, signInHandler };
+/** @todo remove all handlers while switching dialogs ? */
+function signUpHandler(modal: HTMLDialogElement): void {
+	addHandler('btn-sign-up', 'click', () => console.log("sign up button clicked.")); /** @todo remove debug logs */
+	addHandler('btn-back', 'click', () => loadDialog(signInHandler, SIGN_IN));
+	addHandler('modal', 'click', (e) => exitDialog('modal', modal, e));
+}
+
+export { SIGN_IN, loadDialog, signInHandler };

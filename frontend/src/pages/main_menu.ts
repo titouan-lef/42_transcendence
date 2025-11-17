@@ -3,7 +3,7 @@ import { setLang } from "../lang/lang.js";
 import { addHandler } from "../routes/event.js";
 import { navigate, PageID } from "../routes/page.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
-import { SIGN_IN, signInHandler } from "./sign_in.js";
+import { SIGN_IN, loadDialog, signInHandler } from "./sign_in.js";
 
 const ROW_STYLE = "min-h-screen max-h-screen flex flex-row gap-[10px] p-[10px] bg-dark";
 const MAIN_STYLE = `
@@ -84,7 +84,13 @@ const MAIN_MENU = `
 </div>
 `;
 
-//
+function closeAllDetails(): void {
+	FRIENDLIST.forEach(friend => {
+		const elem = getSafeElement(friend, HTMLDetailsElement);
+
+		elem.open = false;
+	});
+}
 
 function generateFriendList(): void {
 	const elem = getSafeElement("friendlist", HTMLElement);
@@ -108,27 +114,20 @@ function generateFriendList(): void {
 	FRIENDLIST.forEach(friend => {
 		addHandler(`btn-profile-${friend}`, "click", () => console.log(`je consulte le profil de ${friend}`));
 		addHandler(`delete-friend-${friend}`, "click", () => console.log(`je delete ${friend}`));
+		addHandler(friend, "click", () => closeAllDetails());
 	});
 }
 
 function addFriend(): void {
-	setLang('fr'); /** @todo remove here */
+	//setLang('fr'); /** @todo remove here */
 	console.log("CLICK ADD FRIEND");
 	// FRIENDLIST.push("new_friend");
-	// generateFriendList();
-}
-
-function popLoginPage(): void {
-	const modal = getSafeElement("modal", HTMLDialogElement);
-
-	modal.showModal();
-
-	signInHandler(modal);
+	generateFriendList();
 }
 
 function mainMenuEvents(): void {
 	addHandler("btn-api", "click", () => navigate(PageID.API));
-	addHandler("btn-profile", "click", () => popLoginPage());
+	addHandler("btn-profile", "click", () => loadDialog(signInHandler, SIGN_IN));
 	addHandler("add-friend", "click", () => addFriend());
 };
 
