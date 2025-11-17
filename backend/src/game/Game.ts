@@ -5,7 +5,7 @@ import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
 import { MOVE_BALL_ONCLICK, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import fs from "fs";
-import { Status, PlayerControls, PositionsMessage, StartMessage, StopMessage, OptionMessage, ScoreMessage } from "../web_sockets/types_transfert.js";
+import { Status, PlayerControls, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage } from "../web_sockets/types_transfert.js";
 import { Player } from "./player/Player.js";
 
 export class Game {
@@ -98,6 +98,7 @@ export class Game {
 			this.inAnimation = true;
 			goalInfos.goal === "player1" ? this.score.x += 1 : this.score.y += 1;
 			await this.sceneManager.goalAnimation(this.engine, this.scene, goalInfos.position, this.score);
+			this.sendScore();
 			if (this.gameStopped) // if closing game while animation
 				return ;
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
@@ -188,16 +189,21 @@ export class Game {
 		player2.send(options);
 	}
 
-	private async sendScore(player1: Player, player2: Player) : Promise<void> {
-		let score: ScoreMessage;
+	private async sendScore() : Promise<void> {
+		const player1 = this.sceneManager.getPlayer1();
+		const player2 = this.sceneManager.getPlayer2();
+		if (!player1 || !player2)
+			return;
+
+		let score: GoalMessage;
 		score = { 
-			status: Status.SCORE,
+			status: Status.GOAL,
 			player: this.score.x,
 			enemy: this.score.y
 		};
 		player1.send(score);
 		score = { 
-			status: Status.SCORE,
+			status: Status.GOAL,
 			player: this.score.y,
 			enemy: this.score.x
 		};
@@ -230,7 +236,7 @@ export class Game {
 		this.sendStart(player1, player2);
 		this.sendOptions(player1, player2);
 		this.sendPositions(player1, player2);
-		this.sendScore(player1, player2);
+		// this.sendScore(player1, player2);
 		this.startSendingPostisions();
 
 		player1.defineCloseAction(() => {

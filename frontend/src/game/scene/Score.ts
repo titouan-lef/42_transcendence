@@ -11,6 +11,7 @@ export class Score {
 		this.setMaterial(scene);
 		this.score.billboardMode = babylon.Mesh.BILLBOARDMODE_ALL;
 		this.placeScore(camera);
+		this.changeScore([0, 0]);
 	}
 	
 	private setMaterial(scene: babylon.Scene): void {

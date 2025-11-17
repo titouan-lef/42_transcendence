@@ -107,7 +107,6 @@ export class DesertMap extends MapTemplate {
 		return particles;
 	}
 
-
 	handleObject(scene: babylon.Scene, texture: babylon.Texture, tornado: ObjectMessage): void {
 		if (this.gameStopped)
 			return;

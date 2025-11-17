@@ -23,7 +23,7 @@ export class CountDown {
 		this.countDown.material = material;
 	}
 
-	udpateTime(time: number): CountDown | null {
+	udpateCountDown(time: number): CountDown | null {
 		if (time > 1)
 			this.changeText(time - 1);
 		else if (time > 0)

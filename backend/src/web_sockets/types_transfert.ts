@@ -15,7 +15,7 @@ enum Status {
 	START,			// game begins
 	STOP,			// game finished
 	TIMING,			// countdowns
-	SCORE,			// score
+	GOAL,			// score
 	OPTIONS,		// precise game options
 	POSITIONS,		// positions of ball and players
 	OBJECT,			// tornados / meteors / thunders
@@ -25,7 +25,7 @@ enum Status {
 /**
  * ------------  DATA FLOW  ------------
  * 
- * new game -> START, OPTIONS, POSITIONS, SCORE
+ * new game -> START, OPTIONS, POSITIONS
  * 
  * TIMING (countdown)	<-------------------
  * during rounds:	<-------------------	|
@@ -34,8 +34,8 @@ enum Status {
  * 		EVENT if any	----------------	|
  * 											|
  * on goal:									|
+ * 		GOAL								|
  * 		EVENT (goal -> explosion, pause)	|
- * 		SCORE								|
  *		OPTIONS if changed					|	(case of random map or ball ?? or is it just define at the begining of the game ?)
  * 		go back to countdown ---------------
  * 
@@ -59,8 +59,8 @@ interface TimingMessage {
 	time : number
 }
 
-interface ScoreMessage {
-	status: Status.SCORE,
+interface GoalMessage {
+	status: Status.GOAL,
 	player: number,
 	enemy: number
 }
@@ -102,7 +102,7 @@ interface EventMessage {
 	/** @todo more ??*/
 }
 
-type DataMessage = StartMessage | StopMessage | TimingMessage | ScoreMessage | OptionMessage | PositionsMessage | ObjectMessage | EventMessage ;
+type DataMessage = StartMessage | StopMessage | TimingMessage | GoalMessage | OptionMessage | PositionsMessage | ObjectMessage | EventMessage ;
 
 interface PlayerControls {
 	mov_right: boolean;
@@ -113,4 +113,4 @@ interface PlayerControls {
 }
 
 export { Position, PlanePosition, DataMessage, PlayerControls, ParticlesType, Status, Object };
-export { StartMessage, StopMessage, TimingMessage, ScoreMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage };
+export { StartMessage, StopMessage, TimingMessage, GoalMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage };
