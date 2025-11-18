@@ -61,6 +61,14 @@ const TRANSLATOR = {
 		en: "go back",
 		fr: "revenir"
 	},
+	log_out: {
+		en: "log out",
+		fr: "se déconnecter"
+	},
+	add_friend: {
+		en: "add friend",
+		fr: "ajouter un ami"
+	},
 } as const satisfies Record<string, Expression>;
 
 export { CodeLang, TRANSLATOR };
