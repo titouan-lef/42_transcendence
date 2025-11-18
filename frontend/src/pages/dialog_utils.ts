@@ -15,7 +15,7 @@ function exitDialog(id: string, modal: HTMLDialogElement, event: Event): void {
 		console.log("clicked out of the dialog."); /** @todo remove debug logs */
 		modal.close();
 		deleteHandlerByID(id);
-		modal.innerHTML = SIGN_IN;
+		// modal.innerHTML = SIGN_IN;
 	}
 }
 
