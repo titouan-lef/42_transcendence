@@ -7,16 +7,26 @@ interface Map {
 	name: string;
 }
 
-async function createMap(name: string): Promise<void> {
+async function createMapTable(): Promise<void> {
+	applyQuery(
+		async (db) => await db.exec(
+			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL);`
+		), "create" + TABLE_NAME + "Table"
+	);
+}
+
+async function insertMap(name: string): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (name) VALUES (?)`,
 			[name]
-		), "createMap"
+		), "insert" + TABLE_NAME
 	);
 }
 
-async function getAllMaps(): Promise<Map[] | undefined> {
+async function getAllMap(): Promise<Map[] | undefined> {
 	return fetchAll(TABLE_NAME);
 }
 
@@ -29,7 +39,7 @@ async function getMapById(id: number): Promise<Map | undefined> {
 	);
 }
 
-export { Map };
+export { Map, createMapTable };
 /** 
  * @todo voir si on garde
 async function updateMap(id: number, newName: string): Promise<void> {

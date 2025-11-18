@@ -6,15 +6,25 @@ interface Season {
 	startedAT: string;
 }
 
-async function createSeason(): Promise<void> {
+async function createSeasonTable(): Promise<void> {
 	applyQuery(
-		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} DEFAULT VALUES;`
-		), "createSeason"
+		async (db) => await db.exec(
+			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			beganAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL);`
+		), "create" + TABLE_NAME + "Table"
 	);
 }
 
-async function getAllSeasons(): Promise<Season[] | undefined> {
+async function insertSeason(): Promise<void> {
+	applyQuery(
+		async (db) => await db.run(
+			`INSERT INTO ${TABLE_NAME} DEFAULT VALUES;`
+		), "insert" + TABLE_NAME
+	);
+}
+
+async function getAllSeason(): Promise<Season[] | undefined> {
 	return fetchAll(TABLE_NAME);
 }
 
@@ -23,11 +33,11 @@ async function getSeasonById(id: number): Promise<Season | undefined> {
 		async (db) => await db.get(
 			`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
 			[id]
-		), "getSeasonById"
+		), "get" + TABLE_NAME + "ById"
 	);
 }
 
-export { Season };
+export { Season, createSeasonTable };
 /**
  * @todo voir si on garde
 async function updateSeason(id: number, newName: string): Promise<void> {

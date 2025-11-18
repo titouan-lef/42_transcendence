@@ -8,12 +8,26 @@ interface GameRule {
 	isEnable: number;
 }
 
-async function createGameRule(gameRule: GameRule): Promise<void> {
+async function createGameRuleTable(): Promise<void> {
+	applyQuery(
+		async (db) => await db.exec(
+			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
+			gameId INTEGER,
+			ruleId INTEGER,
+			isEnable INTEGER NOT NULL,
+			PRIMARY KEY (gameId, ruleId),
+			FOREIGN KEY (gameId) REFERENCES Game(id),
+			FOREIGN KEY (ruleId) REFERENCES Rule(id));`
+		), "create" + TABLE_NAME + "Table"
+	);
+}
+
+async function inserrtGameRule(gameRule: GameRule): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (gameId, ruleId, isActive) VALUES (? ,? , ?)`,
 			[gameRule.gameId, gameRule.ruleId, gameRule.isEnable]
-		), "createGameRule"
+		), "insert" + TABLE_NAME
 	);
 }
 
@@ -26,11 +40,11 @@ async function getGameRule(gameId: number, ruleId: number): Promise<GameRule | u
 		async (db) => await db.get(
 			`SELECT * FROM ${TABLE_NAME} WHERE gameId = ? AND ruleId = ?`,
 			[gameId, ruleId]
-		), "getGameRule"
+		), "get" + TABLE_NAME
 	);
 }
 
-export { GameRule };
+export { GameRule, createGameRuleTable };
 /**
  * @todo voir si on garde
 async function updateGameRule(gameId: number, ruleId: number, updates: Partial<Omit<GameRule, "gameId" | "ruleId">>): Promise<void> {

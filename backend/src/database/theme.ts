@@ -7,16 +7,26 @@ interface Theme {
 	name: string;
 }
 
-async function createTheme(name: string): Promise<void> {
+async function createThemeTable(): Promise<void> {
+	applyQuery(
+		async (db) => await db.exec(
+			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL);`
+		), "create" + TABLE_NAME + "Table"
+	);
+}
+
+async function insertTheme(name: string): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (name) VALUES (?)`,
 			[name]
-		), "createTheme"
+		), "insert" + TABLE_NAME
 	);
 }
 
-async function getAllThemes(): Promise<Theme[] | undefined> {
+async function getAllTheme(): Promise<Theme[] | undefined> {
 	return fetchAll(TABLE_NAME);
 }
 
@@ -25,11 +35,11 @@ async function getThemeById(id: number): Promise<Theme | undefined> {
 		async (db) => await db.get(
 			`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
 			[id]
-		), "getThemeById"
+		), "get" + TABLE_NAME + "ById"
 	);
 }
 
-export { Theme };
+export { Theme, createThemeTable };
 /**
  * @todo voir si on garde
 async function updateTheme(id: number, newName: string): Promise<void> {

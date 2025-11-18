@@ -7,7 +7,17 @@ interface Friendship {
 	friendName: string;
 }
 
-async function createFriendship(friendship: Friendship): Promise<void> {
+async function createFriendshipTable(): Promise<void> {
+	applyQuery(
+		async (db) => await db.exec(
+			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
+			username TEXT PRIMARY KEY,
+			friendName TEXT NOT NULL);`
+		), "create" + TABLE_NAME + "Table"
+	);
+}
+
+async function insertFriendship(friendship: Friendship): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (username, friendName) VALUES (? ,?)`,
@@ -38,7 +48,7 @@ async function deleteFriendship(username: string): Promise<void> {
 	);
 }
 
-export { Friendship };
+export { Friendship, createFriendshipTable };
 
 /**
  * @todo voir si on garde
