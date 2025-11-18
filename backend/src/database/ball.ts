@@ -7,11 +7,21 @@ interface Ball {
 	name: string;
 }
 
-async function createBall(name: string): Promise<void> {
+async function createBallTable(): Promise<void> {
+	applyQuery(
+		async (db) => await db.exec(
+			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			name TEXT NOT NULL);`
+		), "create" + TABLE_NAME + "Table"
+	);
+}
+
+async function insertBall(name: string): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (name) VALUES (?)`, [name]
-		), "createBall"
+		), "insert" + TABLE_NAME
 	);
 }
 
@@ -23,11 +33,11 @@ async function getBallById(id: number): Promise<Ball | undefined> {
 	return applyQuery(
 		async (db) => await db.get(
 			`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,[id]
-		), "getBallById"
+		), "get" + TABLE_NAME + "ById"
 	);
 }
 
-export { Ball };
+export { Ball, createBallTable };
 /**
  * @todo voir si on garde
 async function updateBall(id: number, newName: string): Promise<void> {

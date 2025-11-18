@@ -10,12 +10,25 @@ interface Game {
 	seasonId: number; /** @todo null ? */
 }
 
-async function createGame(mapId: number, ballId: number, seasonId: number): Promise<void> {
+async function createGameTable(): Promise<void> {
+	applyQuery(
+		async (db) => await db.exec(
+			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			beganAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+			mapId INTEGER REFERENCES Map(id),
+			ballId INTEGER REFERENCES Ball(id),
+			seasonId INTEGER REFERENCES Season(id));`
+		), "create" + TABLE_NAME + "Table"
+	);
+}
+
+async function insertGame(mapId: number, ballId: number, seasonId: number): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (mapId, ballId, seasonId) VALUES (?, ?, ?)`,
 			[mapId, ballId, seasonId]
-		), "createGame"
+		), "insert" + TABLE_NAME
 	);
 }
 
@@ -28,11 +41,20 @@ async function getGameById(id: number): Promise<Game | undefined> {
 		async (db) => await db.get(
 			`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
 			[id]
-		), "getGameById"
+		), "get" + TABLE_NAME + "ById"
 	);
 }
 
-export { Game };
+async function getGamesBySeason(seasonId: number):Promise<Game[] | undefined> {
+	return applyQuery(
+		async (db) => await db.all(
+			`SELECT * FROM ${TABLE_NAME} WHERE seasonId = ?`,
+			[seasonId]
+		), "get" + TABLE_NAME + "BySeason"
+	);
+}
+
+export { Game, createGameTable };
 /**
  * 
  * @todo voir si on garde

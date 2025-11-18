@@ -9,12 +9,24 @@ interface Goal {
 	username: string;
 }
 
-async function createGoal(gameId: number, username: string): Promise<void> {
+async function createGoalTable(): Promise<void> {
+	applyQuery(
+		async (db) => await db.exec(
+			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			scoredAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+			gameId INTEGER REFERENCES Game(id),
+			by TEXT REFERENCES User(pseudo));`
+		), "create" + TABLE_NAME + "Table"
+	);
+}
+
+async function insertGoal(gameId: number, username: string): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (gameId, by) VALUES (?, ?)`,
 			[gameId, username]
-		), "createGoal"
+		), "insert" + TABLE_NAME
 	);
 }
 
@@ -31,7 +43,7 @@ async function getGoalById(id: number): Promise<Goal | undefined> {
 	);
 }
 
-export { Goal };
+export { Goal, createGoalTable };
 /**
  * 
  * @todo voir si on garde 
