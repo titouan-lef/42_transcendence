@@ -22,7 +22,7 @@ async function insertFriendship(friendship: Friendship): Promise<void> {
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (username, friendName) VALUES (? ,?)`,
 			[friendship.username, friendship.friendName]
-		), "createFriendship"
+		), "create" + TABLE_NAME
 	);
 }
 
@@ -35,7 +35,7 @@ async function getFriendship(username: string): Promise<Friendship | undefined> 
 		async (db) => await db.get(
 			`SELECT * FROM ${TABLE_NAME} WHERE USERNAME = ?`,
 			[username]
-		), "getFriendship"
+		), "get" + TABLE_NAME
 	);	
 }
 
@@ -44,7 +44,7 @@ async function deleteFriendship(username: string): Promise<void> {
 		async (db) => await db.run(
 			`DELETE FROM ${TABLE_NAME} WHERE username = ?`,
 			[username]
-		), "deleteFriendship"
+		), "delete" + TABLE_NAME
 	);
 }
 

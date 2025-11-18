@@ -39,7 +39,7 @@ async function getGoalById(id: number): Promise<Goal | undefined> {
 		async (db) => await db.get(
 			`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
 			[id]
-		), "getGoalById"
+		), "get" + TABLE_NAME + "ById"
 	);
 }
 
