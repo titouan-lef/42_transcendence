@@ -84,12 +84,15 @@ const ASIDE_CONNECTED = `
 	${createButtonHtml(["profile"], `btn-profile`, { "class": `${BTN_STYLE} bg-secondary` })}
 	<div id="friendlist" class="${FRIENDLIST_STYLE}">
 	</div>
-	<input id="add-friend" type="button" value="add friend" class="${BTN_STYLE} bg-secondary"/>
-	<input id="temp" type="button" value="log out" class="${BTN_STYLE} bg-variant"/>
+	${createButtonHtml(["add_friend"], `add-friend`, { "class": `${BTN_STYLE} bg-secondary` })}
+	${createButtonHtml(["log_out"], `btn-log-out`, { "class": `${BTN_STYLE} bg-variant` })}
 </div>
 `;
 
-const ASIDE_NOT_CONNECTED = `
+// <input id="add-friend" type="button" value="add friend" class="${BTN_STYLE} bg-secondary"/>
+// <input id="temp" type="button" value="log out" class="${BTN_STYLE} bg-variant"/>
+
+export const ASIDE_NOT_CONNECTED = `
 <div class="${ASIDE_MAINBOX_STYLE}">
 	<div class="${AVATAR_STYLE}">
 		<img src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
@@ -165,6 +168,7 @@ function mainMenuEvents(): void {
 	addHandler("main-play-btn", "click", () => navigate(PageID.API));
 	// addHandler("btn-profile", "click", () => loadDialog(signInHandler, SIGN_IN));
 	// addHandler("add-friend", "click", () => addFriend());
+
 	addHandler("btn-sign-up", "click", () => loadDialog(signUpHandler, SIGN_UP));
 	addHandler("btn-sign-in", "click", () => loadDialog(signInHandler, SIGN_IN));
 };

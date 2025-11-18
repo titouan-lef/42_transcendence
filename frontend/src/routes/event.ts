@@ -30,12 +30,15 @@ function addHandler(id: string, type: keyof GlobalEventHandlersEventMap, func: E
 }
 
 function deleteHandlerByID(id: string): void {
-	const i = activeHandlers.findIndex((handler) => handler.id === id);
-	if (i === -1)
-		throw new Error("no event handler for this id found.");
-
-	activeHandlers[i].elem.removeEventListener(activeHandlers[i].type, activeHandlers[i].func);
-	activeHandlers.splice(i, 1);
+	let i = 0;
+	while (i < activeHandlers.length) {
+		if (activeHandlers[i].id === id) {
+			activeHandlers[i].elem.removeEventListener(activeHandlers[i].type, activeHandlers[i].func);
+			activeHandlers.splice(i, 1);
+			continue;
+		}
+		i++;
+	}
 }
 
 function loadEvent(id: PageID): void {
@@ -77,4 +80,4 @@ function clearHandlers(): void {
 	activeHandlers = [];
 }
 
-export { addHandler, loadEvent, deleteHandlerByID };
+export { addHandler, loadEvent, deleteHandlerByID, clearHandlers };

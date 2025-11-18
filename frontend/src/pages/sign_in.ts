@@ -1,10 +1,11 @@
 import { getModeForUsageLocation } from "typescript";
 import { createButtonHtml } from "../components/button.js";
 import { createInputHtml } from "../components/input.js";
-import { addHandler } from "../routes/event.js";
+import { addHandler, clearHandlers } from "../routes/event.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 import { loadDialog, exitDialog } from "./dialog_utils.js";
-import { ASIDE_CONNECTED, COLOR_ALT, COLOR_BASE, MAIN_STYLE, PLAY_BTN_STYLE } from "./main_menu.js";
+import { ASIDE_CONNECTED, ASIDE_NOT_CONNECTED, COLOR_ALT, COLOR_BASE, MAIN_STYLE, PLAY_BTN_STYLE } from "./main_menu.js";
+import { navigate, PageID } from "../routes/page.js";
 
 const BTN_STYLE = `
 rounded-xl p-[5px] w-full
@@ -73,12 +74,31 @@ function connectUser(userID: HTMLInputElement, password: HTMLInputElement, confi
 	mainElem.className = `${MAIN_STYLE} ${COLOR_ALT}`;
 	mainPlayButtonElem.className = `${PLAY_BTN_STYLE} ${COLOR_BASE}`;
 	// mainelem.attributeStyleMap.set("bg-color", "bg-secondary");
+
 	addHandler("btn-profile", "click", () => loadDialog(signInHandler, SIGN_IN));
-	addHandler("add-friend", "click", () => console.log("adding friend..."));
+	addHandler("add-friend", "click", () => console.log("adding friend...")); /** @todo remove debug logs */
+	addHandler("btn-log-out", "click", () => disconnectUser());
+}
+
+function disconnectUser():void {
+	console.log("user logging out..."); /** @todo remove debug logs */
+
+	const modal = getSafeElement('modal', HTMLDialogElement);
+	const asideElem = getSafeElement('aside', HTMLElement);
+	const mainElem = getSafeElement('main', HTMLElement);
+	const mainPlayButtonElem = getSafeElement('main-play-btn', HTMLInputElement);
+
+	asideElem.innerHTML = ASIDE_NOT_CONNECTED;
+	mainElem.className = `${MAIN_STYLE} ${COLOR_BASE}`;
+	mainPlayButtonElem.className = `${PLAY_BTN_STYLE} ${COLOR_ALT}`;
+
+	// signInHandler(modal);
+	// signUpHandler(modal);
 }
 
 /** @todo remove all handlers while switching dialogs ? */
 function signInHandler(modal: HTMLDialogElement): void {
+	// clearHandlers();
 	addHandler('btn-sign-in', 'click', () => connectUser(getSafeElement("userID", HTMLInputElement), getSafeElement("password", HTMLInputElement)));
 	addHandler('btn-guest', 'click', () => console.log("guest button clicked.")); /** @todo remove debug logs */
 	addHandler('btn-sign-up', 'click', () => loadDialog(signUpHandler, SIGN_UP));
@@ -87,10 +107,15 @@ function signInHandler(modal: HTMLDialogElement): void {
 
 /** @todo remove all handlers while switching dialogs ? */
 function signUpHandler(modal: HTMLDialogElement): void {
+	// clearHandlers();
 	addHandler('btn-sign-up', 'click', () => connectUser(getSafeElement("userID", HTMLInputElement), getSafeElement("password", HTMLInputElement), getSafeElement("confirmPassword", HTMLInputElement), getSafeElement("publicID", HTMLInputElement))); /** @todo remove debug logs */
 	addHandler('btn-sign-in', 'click', () => loadDialog(signInHandler, SIGN_IN));
 	addHandler('modal', 'click', (e) => exitDialog('modal', modal, e));
 }
+
+// addHandler("main-play-btn", "click", () => navigate(PageID.API));
+// addHandler("btn-sign-up", "click", () => loadDialog(signUpHandler, SIGN_UP));
+// addHandler("btn-sign-in", "click", () => loadDialog(signInHandler, SIGN_IN));
 
 export { SIGN_IN, loadDialog, signInHandler };
 export { SIGN_UP, signUpHandler };
