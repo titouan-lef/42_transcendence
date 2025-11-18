@@ -122,7 +122,9 @@ export class Game {
 			status: Status.POSITIONS,
 			ball: ball.getPosition(),
 			player: player.getPosition(),
-			enemy: enemy.getPosition()
+			playerRotation: player.getRotation(),
+			enemy: enemy.getPosition(),
+			enemyRotation: enemy.getRotation()
 		};
 		return positions;
 	}

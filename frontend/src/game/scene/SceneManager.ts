@@ -172,7 +172,9 @@ export class SceneManager {
 
 	private setPositionUpdater(message : PositionsMessage): void {
 		this.getPlayer(1)?.setPosition(message.player);
+		this.getPlayer(1)?.setRotatiton(message.playerRotation);
 		this.getPlayer(2)?.setPosition(message.enemy);
+		this.getPlayer(2)?.setRotatiton(message.enemyRotation);
 		this.ball?.setPosition(message.ball);
 	}
  

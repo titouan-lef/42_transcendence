@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { GameSettings, PlayerKeys, PlayerSettings } from "../settings/GameSettings.js";
 import { PLAYER_DIMENSION, COLORS3, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY, PLAYER_TRAIL_INTERVAL, PLAYER_TRAIL_ON } from "../settings/values.js";
 import { PlayerTrail } from "./PlayerTrail.js";
-import { PlanePosition, PlayerControls } from "../types_transfert.js";
+import { PlanePosition, PlayerControls, Rotation } from "../types_transfert.js";
 
 export class Player {
 	private readonly player: babylon.TransformNode;
@@ -75,6 +75,12 @@ export class Player {
 	setPosition(position: PlanePosition): void {
 		this.player.position.x = position.x;
 		this.player.position.z = position.z;
+	}
+
+	setRotatiton(rotation: Rotation ): void {
+		if (!this.player.rotationQuaternion)
+			this.player.rotationQuaternion = new babylon.Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
+		this.player.rotationQuaternion.set(rotation.x, rotation.y, rotation.z, rotation.w);
 	}
 
 	getPressedKeys(): PlayerControls {
