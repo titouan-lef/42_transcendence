@@ -3,25 +3,43 @@ import { setLang } from "../lang/lang.js";
 import { addHandler } from "../routes/event.js";
 import { navigate, PageID } from "../routes/page.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
-import { SIGN_IN, loadDialog, signInHandler } from "./sign_in.js";
+import { SIGN_IN, SIGN_UP, loadDialog, signInHandler, signUpHandler } from "./sign_in.js";
+
+export const COLOR_BASE = `
+bg-primary text-secondary
+`;
+
+export const COLOR_ALT = `
+bg-secondary text-primary
+`;
 
 const ROW_STYLE = "min-h-screen max-h-screen flex flex-row gap-[10px] p-[10px] bg-dark";
 const MAIN_STYLE = `
 grow
-rounded-2xl bg-primary
+rounded-2xl
 flex justify-center items-center flex-col
 `;
 const PONG_STYLE = `
 font-jaro
-text-tx-prim
 text-[clamp(100px,40vmin,400px)] text-balance leading-none
 `;
+
+export const PLAY_BTN_STYLE = `
+font-park font-bold
+rounded-[10px]
+text-[20px]
+w-[150px] h-[40px]
+animate-pulse
+`;
+
 const BTN_STYLE = `
 font-park font-bold
 rounded-[10px]
-text-[20px] text-primary
+text-[20px]
 w-[150px] h-[40px]
+text-primary
 `;
+
 const ASIDE_STYLE = `
 w-[200px]
 grow-0
@@ -58,28 +76,42 @@ w-full max-w-[500px]
 h-1/2
 `;
 
+const ASIDE_CONNECTED = `
+<div class="${ASIDE_MAINBOX_STYLE}">
+	<div class="${AVATAR_STYLE}">
+		<img src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
+	</div>
+	${createButtonHtml(["profile"], `btn-profile`, { "class": `${BTN_STYLE} bg-secondary` })}
+	<div id="friendlist" class="${FRIENDLIST_STYLE}">
+	</div>
+	<input id="add-friend" type="button" value="add friend" class="${BTN_STYLE} bg-secondary"/>
+	<input id="temp" type="button" value="log out" class="${BTN_STYLE} bg-variant"/>
+</div>
+`;
+
+const ASIDE_NOT_CONNECTED = `
+<div class="${ASIDE_MAINBOX_STYLE}">
+	<div class="${AVATAR_STYLE}">
+		<img src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
+	</div>
+	${createButtonHtml(["sign_in"], `btn-sign-in`, { "class": `${BTN_STYLE} bg-secondary` })}
+	${createButtonHtml(["sign_up"], `btn-sign-up`, { "class": `${BTN_STYLE} bg-secondary` })}
+</div>
+`;
+
 const MAIN_MENU = `
 <dialog id="modal" class="${DIALOG_STYLE}">
-	${SIGN_IN}
+
 </dialog>
 <div class="${ROW_STYLE}">
-	<main class="${MAIN_STYLE}">
+	<main id="main" class="${MAIN_STYLE} ${COLOR_BASE}">
 		<div class="flex flex-col items-center gap-[10px]">
 			<h1 class="${PONG_STYLE}">PONG</h1>
-			<input id="btn-api" type="button" value="play" class="${BTN_STYLE} bg-secondary"/>
+			<input id="main-play-btn" type="button" value="play" class="${PLAY_BTN_STYLE} ${COLOR_ALT}"/>
 		</div>
 	</main>
-	<aside id="" class="${ASIDE_STYLE}">
-		<div class="${ASIDE_MAINBOX_STYLE}">
-			<div class="${AVATAR_STYLE}">
-				<img src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
-			</div>
-			${createButtonHtml(["profile"], `btn-profile`, { "class": `${BTN_STYLE} bg-secondary` })}
-			<div id="friendlist" class="${FRIENDLIST_STYLE}">
-			</div>
-			<input id="add-friend" type="button" value="add friend" class="${BTN_STYLE} bg-secondary"/>
-			<input id="temp" type="button" value="log out" class="${BTN_STYLE} bg-variant"/>
-		</div>
+	<aside id="aside" class="${ASIDE_STYLE}">
+		${ASIDE_NOT_CONNECTED}
 	</aside>
 </div>
 `;
@@ -88,9 +120,13 @@ function closeAllDetails(): void {
 	FRIENDLIST.forEach(friend => {
 		const elem = getSafeElement(friend, HTMLDetailsElement);
 
-		elem.open = false;
+		if (elem.open) {
+			elem.open = false;
+		}
 	});
 }
+
+
 
 function generateFriendList(): void {
 	const elem = getSafeElement("friendlist", HTMLElement);
@@ -126,11 +162,15 @@ function addFriend(): void {
 }
 
 function mainMenuEvents(): void {
-	addHandler("btn-api", "click", () => navigate(PageID.API));
-	addHandler("btn-profile", "click", () => loadDialog(signInHandler, SIGN_IN));
-	addHandler("add-friend", "click", () => addFriend());
+	addHandler("main-play-btn", "click", () => navigate(PageID.API));
+	// addHandler("btn-profile", "click", () => loadDialog(signInHandler, SIGN_IN));
+	// addHandler("add-friend", "click", () => addFriend());
+	addHandler("btn-sign-up", "click", () => loadDialog(signUpHandler, SIGN_UP));
+	addHandler("btn-sign-in", "click", () => loadDialog(signInHandler, SIGN_IN));
 };
 
 // generateFriendList();
 
 export { MAIN_MENU, mainMenuEvents };
+export { ASIDE_CONNECTED };
+export { MAIN_STYLE };
