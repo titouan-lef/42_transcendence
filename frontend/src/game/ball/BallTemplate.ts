@@ -2,8 +2,8 @@ import * as babylon from "@babylonjs/core";
 import { BallOption } from "../settings/GameSettings.js";
 import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_TRAIL_ON } from "../settings/values.js";
 import { BallTrail } from "./BallTrail.js";
-import { PlanePosition } from "../types_transfert.js";
-type ParticlesType = "explosion" | "collision" | "impulse";
+import { PlanePosition, Position } from "../types_transfert.js";
+import { ParticlesType } from "../types_transfert.js";
 
 export abstract class BallTemplate {
 
@@ -44,10 +44,10 @@ export abstract class BallTemplate {
 	}
 
 	/** particles on collides */
-	private createCollisionParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
+	private createCollisionParticles(scene: babylon.Scene, position: Position): babylon.ParticleSystem {
 		const collisionParticles = new babylon.ParticleSystem("collision", 300, scene);
 		collisionParticles.particleTexture = this.textures.spark.clone();
-		collisionParticles.emitter = position;
+		collisionParticles.emitter = new babylon.Vector3(position.x, position.y, position.z);
 		collisionParticles.createSphereEmitter(BALL_DIAMETER * 2);
 		collisionParticles.renderingGroupId = 1;
 		collisionParticles.color1 = new babylon.Color4(this.color.r, this.color.g, this.color.b, 1.0);
@@ -65,10 +65,10 @@ export abstract class BallTemplate {
 	}
 
 	/** particles on goal */
-	private createExplosionParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
+	private createExplosionParticles(scene: babylon.Scene, position: Position): babylon.ParticleSystem {
 		const explosionParticles = new babylon.ParticleSystem("explosion", 200, scene);
 		explosionParticles.particleTexture = this.textures.flare.clone();
-		explosionParticles.emitter = position;
+		explosionParticles.emitter = new babylon.Vector3(position.x, position.y, position.z);
 		explosionParticles.createSphereEmitter(BALL_DIAMETER * 10);
 		explosionParticles.renderingGroupId = 1;
 		explosionParticles.color1 = new babylon.Color4(1, 0.5, 0, 1);
@@ -85,10 +85,10 @@ export abstract class BallTemplate {
 	}
 
 	/** particles on impulses */
-	protected createImpulseParticles(scene: babylon.Scene, position: babylon.Vector3): babylon.ParticleSystem {
+	protected createImpulseParticles(scene: babylon.Scene, position: Position): babylon.ParticleSystem {
 		const explosionParticles = new babylon.ParticleSystem("impulse", 100, scene);
 		explosionParticles.particleTexture = this.textures.flare.clone();
-		explosionParticles.emitter = position;
+		explosionParticles.emitter = new babylon.Vector3(position.x, position.y, position.z);
 		explosionParticles.createSphereEmitter(BALL_DIAMETER * 2);
 		explosionParticles.renderingGroupId = 1;
 		explosionParticles.color1 = new babylon.Color4(this.color.r, this.color.g, this.color.b, 1.0);
@@ -115,7 +115,7 @@ export abstract class BallTemplate {
 	}
 
 	/** Spawn particules */
-	showParticles(collisionPoint: null | babylon.Vector3, scene: babylon.Scene, type: ParticlesType): void {
+	showParticles(collisionPoint: Position, scene: babylon.Scene, type: ParticlesType): void {
 		if (collisionPoint === null)
 			return ;
 		let particle: babylon.ParticleSystem;
@@ -129,7 +129,7 @@ export abstract class BallTemplate {
 			case "impulse":
 				particle = this.createImpulseParticles(scene, collisionPoint);
 				break;
-			default: 
+			default:
 				throw new Error("Particle not known") ;
 		}
 		this.particles.push(particle);

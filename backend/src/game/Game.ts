@@ -77,13 +77,13 @@ export class Game {
 		// this.sceneManager.createTextures(this.scene);
 		this.sceneManager.createPlayers(this.scene, this.settings);
 		this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
-		if (MOVE_BALL_ONCLICK) { //debug function
-			this.scene.onPointerDown = (): void => {
-				const ball = this.sceneManager.getBall();
-				ball?.moveBall();
-				ball?.setJustCollide();
-			};
-		}
+		// if (MOVE_BALL_ONCLICK) { //debug function
+		// 	this.scene.onPointerDown = (): void => {
+		// 		const ball = this.sceneManager.getBall();
+		// 		ball?.moveBall();
+		// 		ball?.setJustCollide();
+		// 	};
+		// }
 		this.scene.onAfterRenderObservable.add(() => {
 			if (this.inAnimation === false) {
 				this.checkEndOfPoint();
@@ -97,7 +97,7 @@ export class Game {
 		if (goalInfos !== null && goalInfos.position !== null) {
 			this.inAnimation = true;
 			goalInfos.goal === "player1" ? this.score.x += 1 : this.score.y += 1;
-			await this.sceneManager.goalAnimation(this.engine, this.scene, goalInfos.position, this.score);
+			await this.sceneManager.goalAnimation(this.engine, this.scene, goalInfos.position);
 			this.sendScore();
 			if (this.gameStopped) // if closing game while animation
 				return ;
@@ -162,15 +162,6 @@ export class Game {
 		player1.send(stop);
 		player2.send(stop);
 	}
-
-	// private async sendCountDown(player1: Player, player2: Player, countdow: number) : Promise<void> {
-	// 	const time: TimingMessage = {
-	// 		status: Status.TIMING,
-	// 		time : countdow
-	// 	};
-	// 	player1.send(time);
-	// 	player2.send(time);
-	// }
 
 	private async sendOptions(player1: Player, player2: Player) : Promise<void> {
 		const options: OptionMessage = {

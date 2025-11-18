@@ -1,7 +1,9 @@
 import * as babylon from "@babylonjs/core";
 import { BallOption } from "../settings/GameSettings.js";
 import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED } from "../settings/values.js";
-import { Position } from "../../web_sockets/types_transfert.js";
+import { EventMessage, ParticlesType, Position, Status } from "../../web_sockets/types_transfert.js";
+import { WebSocket } from "ws";
+import { vec3ToPos } from "../utils.js";
 
 export abstract class BallTemplate {
 
@@ -25,7 +27,7 @@ export abstract class BallTemplate {
 	protected readonly mesh: babylon.Mesh;
 	protected gameStopped = true;
 
-	constructor(scene: babylon.Scene, type: BallOption) {
+	constructor(scene: babylon.Scene, type: BallOption, sockets: WebSocket[]) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.type = type;
 		this.mesh.metadata = { type: "collider", pushable: true };
@@ -37,7 +39,7 @@ export abstract class BallTemplate {
 		
 		this.physic.body.setCollisionCallbackEnabled(true);
 		this.collisionObservable = this.physic.body.getCollisionObservable();
-		this.collisionObserver = this.checkBallCollision();
+		this.collisionObserver = this.checkBallCollision(sockets);
 
 		this.yObservable = scene.onAfterPhysicsObservable;
 		this.yObserver = this.blockVelocityY();
@@ -120,7 +122,18 @@ export abstract class BallTemplate {
 		}
 	}
 
-	private checkBallCollision(): babylon.Observer<babylon.IPhysicsCollisionEvent> {
+	private async sendParticuleEvent(sockets: WebSocket[], type: ParticlesType, position: Position) : Promise<void> {
+		const time: EventMessage = {
+			status: Status.EVENT,
+			type : type,
+			position: position
+		};
+		sockets.forEach((socket) => {
+			socket.send(JSON.stringify(time));
+		});
+	}
+
+	private checkBallCollision(sockets: WebSocket[]): babylon.Observer<babylon.IPhysicsCollisionEvent> {
 		const collisionObserver = this.collisionObservable.add((collisionEvent) => {
 			const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
 			if (!metadata)
@@ -131,7 +144,8 @@ export abstract class BallTemplate {
 			}
 			if (metadata.type === "collider") {
 				this.justCollided = true;
-				// this.showParticles(collisionEvent.point, this.mesh.getScene(), "collision");
+				if (collisionEvent.point)
+					this.sendParticuleEvent(sockets, "collision", vec3ToPos(collisionEvent.point));
 				this.checkSpin(collisionEvent);
 			}
 		});
@@ -198,43 +212,18 @@ export abstract class BallTemplate {
 		this.destroyRest();
 	}
 
-	/** Spawn particules */
-	// showParticles(collisionPoint: null | babylon.Vector3, scene: babylon.Scene, type: ParticlesType): void {
-	// 	if (collisionPoint === null)
-	// 		return ;
-	// 	let particle: babylon.ParticleSystem;
-	// 	switch (type) {
-	// 		case "collision":
-	// 			particle = this.createCollisionParticles(scene, collisionPoint);
-	// 			break;
-	// 		case "explosion":
-	// 			particle = this.createExplosionParticles(scene, collisionPoint);
-	// 			break;
-	// 		case "impulse":
-	// 			particle = this.createImpulseParticles(scene, collisionPoint);
-	// 			break;
-	// 		default: 
-	// 			throw new Error("Particle not known") ;
-	// 	}
-	// 	this.particles.push(particle);
-	// 	particle.start();
-	// 	setTimeout( () => {
-	// 		particle?.stop();
-	// 		const index = this.particles?.indexOf(particle);
-	// 		particle?.dispose();
-	// 		if (index !== -1)
-	// 			this.particles?.splice(index, 1);
-	// 	}, 2000);
-	// }
-
 	setJustCollide(): void {
 		this.justCollided = true;
 	}
 
 	/** @todo Titouan gaming */
-	getGoal(): { goal: "player1" | "player2" | null, position: babylon.Vector3 | null } {
+	getGoal(): { goal: "player1" | "player2" | null, position: Position | null } {
 		const goal = this.isInGoal;
-		const position = this.goalPosition;
+		let position;
+		if (!this.goalPosition)
+			position = null;
+		else
+			position = vec3ToPos(this.goalPosition);
 		return { goal, position };
 	}
 
@@ -246,31 +235,20 @@ export abstract class BallTemplate {
 		return this.type;
 	}
 
-	/**debug function*/
-	moveBall(): void {
-		this.physic.body.applyImpulse(
-			new babylon.Vector3(25, 0, 0),
-			this.mesh.position
-		);
-	}
+	// /**debug function*/
+	// moveBall(): void {
+	// 	this.physic.body.applyImpulse(
+	// 		new babylon.Vector3(25, 0, 0),
+	// 		this.mesh.position
+	// 	);
+	// }
 
 	destroy(): void {
 		this.destroyRest();
 		this.collisionObservable.remove(this.collisionObserver);
 		this.sceneObservable.remove(this.sceneObserver);
 		this.yObservable.remove(this.yObserver);
-		// while (this.ballTrails.length) {
-		// 	this.ballTrails[0].destroy();
-		// 	this.ballTrails.splice(0, 1);
-		// }
 		this.physic?.dispose();
-		// this.particles.forEach(particle => {
-		// 	particle.stop();
-		// 	particle.particleTexture?.dispose();
-		// 	particle.dispose();
-		// });
-		// while (this.particles.length)
-		// 	this.particles.splice(0, 1);
 		this.mesh?.material?.dispose();
 		this.mesh?.dispose();
 	}

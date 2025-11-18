@@ -14,19 +14,14 @@ import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
-import { Status, TimingMessage } from "../../web_sockets/types_transfert.js";
+import { EventMessage, ParticlesType, Position, Status, TimingMessage } from "../../web_sockets/types_transfert.js";
 
 export class SceneManager {
 	private ball: BallTemplate | null = null;
 	private map: MapTemplate | null = null;
-	// private countDown: CountDown | null = null;
 	private readonly players: Player[] = [];
-	// private readonly textures: Record<string, babylon.Texture> = {};
-	// private score: Score;
 
-	constructor() {
-		// this.score = new Score(scene, camera);
-	}
+	constructor() {}
 
 	getBall(): BallTemplate | null {
 		return this.ball;
@@ -53,21 +48,24 @@ export class SceneManager {
 		if (settings.ball === "random") {
 			ball = ballList[Math.floor(Math.random() * 5)];
 		}
+		const sockets: WebSocket[] = [];
+		sockets.push(settings.player1.socket); /** @todo do not add if AI */
+		sockets.push(settings.player2.socket);
 		switch (ball) {
 			case "default":
-				this.ball = new DefaultBall(scene);
+				this.ball = new DefaultBall(scene, sockets);
 				break;
 			case "invisible":
-				this.ball = new InvisibleBall(scene);
+				this.ball = new InvisibleBall(scene, sockets);
 				break;
 			case "tricky":
-				this.ball = new TrickyBall(scene);
+				this.ball = new TrickyBall(scene, sockets);
 				break;
 			case "pulse":
-				this.ball = new PulseBall(scene);
+				this.ball = new PulseBall(scene, sockets);
 				break;
 			case "snake":
-				this.ball = new SnakeBall(scene);
+				this.ball = new SnakeBall(scene, sockets);
 				break;
 			default: 
 				throw new Error("switch ball fail");
@@ -112,7 +110,7 @@ export class SceneManager {
 	}
 
 	/** @todo Titouan gaming */
-	checkGoal(): { goal: "player1" | "player2" | null, position: babylon.Vector3 | null } | null {
+	checkGoal(): { goal: "player1" | "player2" | null, position: Position | null } | null {
 		const goalInfos = this.ball?.getGoal();
 		if (goalInfos && goalInfos.goal !== null) {
 			return goalInfos;
@@ -121,10 +119,14 @@ export class SceneManager {
 	}
 
 	/** ball explodes, the time slow down */
-	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3, score: babylon.Vector2): Promise<void> {
+	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: Position): Promise<void> {
 		if (this.map)
 			this.map.predeath();
 		this.ball?.preDeath();
+		const player1 = this.getPlayer1();
+		const player2 = this.getPlayer2();
+		if (player1 && player2)
+			this.sendParticuleEvent(player1, player2, "explosion", position);
 		const originalGetDelta = engine.getDeltaTime; // keep original delta
 		engine.getDeltaTime = function(): number {
 			return originalGetDelta.call(this) * 0.01; // slow animations
@@ -136,6 +138,16 @@ export class SceneManager {
 		});
 		engine.getDeltaTime = originalGetDelta;// set back to original speed
 		/** @todo send DeltaTime to the front ? */
+	}
+
+	private async sendParticuleEvent(player1: Player, player2: Player, type: ParticlesType, position: Position) : Promise<void> {
+		const time: EventMessage = {
+			status: Status.EVENT,
+			type : type,
+			position: position
+		};
+		player1.send(time);
+		player2.send(time);
 	}
 
 	private async sendCountDown(player1: Player, player2: Player, countdow: number) : Promise<void> {
@@ -173,8 +185,6 @@ export class SceneManager {
 	destroyEnvironnement(scene: babylon.Scene): void {
 		this.destroyBall();
 		this.destroyMap();
-		// this.ball = null; // repetition
-		// this.map = null;
 	}
 
 	/** debug function */

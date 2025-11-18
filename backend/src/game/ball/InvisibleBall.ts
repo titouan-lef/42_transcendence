@@ -1,13 +1,14 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
-import { COLORS3, BALL_TRAIL_INTERVAL, INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL } from "../settings/values.js";
+import { INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL } from "../settings/values.js";
+import { WebSocket } from "ws";
 
 export class InvisibleBall extends BallTemplate {
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 	private effectTimeOutId: ReturnType<typeof setTimeout> | null = null;
 		
-	constructor(scene: babylon.Scene) {
-		super(scene, "invisible");
+	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
+		super(scene, "invisible", sockets);
 		this.effectIntervalId = this.activateEffect();
 	}
 	
