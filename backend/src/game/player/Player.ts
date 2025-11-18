@@ -7,6 +7,7 @@ import { WebSocket } from "ws";
 
 export class Player {
 	private readonly player: babylon.TransformNode;
+	private readonly id: 1 | 2;
 	private readonly username: string;
 	private readonly socket: WebSocket;
 	private readonly body: babylon.PhysicsBody;
@@ -14,8 +15,6 @@ export class Player {
 	private readonly rotatingPlayer: boolean;
 	private readonly applyingSpin;
 	private readonly baseRotation: babylon.Quaternion;
-	// private readonly playerTrails: PlayerTrail[] = [];
-	// private trailIntervalId: ReturnType<typeof setInterval> | null = null;
 
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	private readonly positionObserver: babylon.Observer<babylon.Scene>;
@@ -35,9 +34,8 @@ export class Player {
 
 		this.username = settings.username;
 		this.socket = settings.socket;
+		this.id = settings.playerId;
 
-		// if (PLAYER_TRAIL_ON)
-		// 	this.trailIntervalId = this.setTrail(scene);
 	}
 
 	private setPlayer(scene: babylon.Scene, position: babylon.Vector2): babylon.TransformNode {
@@ -96,18 +94,12 @@ export class Player {
 		this.body.disablePreStep = false;
 	}
 
-	// private setTrail(scene: babylon.Scene): ReturnType<typeof setInterval> {
-	// 	const trailIntervalId = setInterval(() => {
-	// 		this.playerTrails.push(new PlayerTrail(scene, this.player));
-	// 		while (this.playerTrails.length && this.playerTrails[0].hasDisappeared()) {
-	// 			this.playerTrails.splice(0, 1);
-	// 		}
-	// 	}, PLAYER_TRAIL_INTERVAL);
-	// 	return trailIntervalId;
-	// }
-
 	getName(): string {
 		return this.username;
+	}
+
+	getId(): 1 | 2 {
+		return this.id;
 	}
 
 	getPosition(): Position {
@@ -164,12 +156,6 @@ export class Player {
 
 	destroy(): void {
 		this.sceneObservable.remove(this.positionObserver);
-		// if (this.trailIntervalId)
-		// 	clearInterval(this.trailIntervalId);
-		// while (this.playerTrails.length) {
-		// 	this.playerTrails[0]?.destroy();
-		// 	this.playerTrails?.splice(0, 1);
-		// }
 		this.body?.shape?.dispose();
 		this.body?.dispose();
 		this.player?.getChildMeshes().forEach(child => {

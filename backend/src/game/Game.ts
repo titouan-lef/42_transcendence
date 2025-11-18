@@ -183,8 +183,8 @@ export class Game {
 	}
 
 	private async sendScore() : Promise<void> {
-		const player1 = this.sceneManager.getPlayer1();
-		const player2 = this.sceneManager.getPlayer2();
+		const player1 = this.sceneManager.getPlayer(1);
+		const player2 = this.sceneManager.getPlayer(2);
 		if (!player1 || !player2)
 			return;
 
@@ -208,8 +208,8 @@ export class Game {
 
 		this.gameInterval = setInterval(() => {
 			if (!this.gameStopped) {
-				const player1 = this.sceneManager.getPlayer1();
-				const player2 = this.sceneManager.getPlayer2();
+				const player1 = this.sceneManager.getPlayer(1);
+				const player2 = this.sceneManager.getPlayer(2);
 				if (!player1 || !player2)
 					return;
 				this.sendPositions(player1, player2);
@@ -221,8 +221,8 @@ export class Game {
 
 	startGameCommunication(): void {
 		/** @todo better management of players and ball*/
-		const player1 = this.sceneManager.getPlayer1();
-		const player2 = this.sceneManager.getPlayer2();
+		const player1 = this.sceneManager.getPlayer(1);
+		const player2 = this.sceneManager.getPlayer(2);
 		if (!player1 || !player2)
 			return;
 		// START, OPTIONS, POSITIONS, SCORE, TIMING
@@ -247,8 +247,8 @@ export class Game {
 			clearInterval(this.gameInterval);
 			this.gameInterval = undefined;
 
-			const player1 = this.sceneManager.getPlayer1();
-			const player2 = this.sceneManager.getPlayer2();
+			const player1 = this.sceneManager.getPlayer(1);
+			const player2 = this.sceneManager.getPlayer(2);
 			if (!player1 || !player2)
 				return;
 			this.sendStop(player1, player2);
@@ -257,8 +257,8 @@ export class Game {
 
 	receiveDataFrom(playerName: string, message: string): void {
 		const controls: PlayerControls = JSON.parse(message);
-		const player1 = this.sceneManager.getPlayer1();
-		const player2 = this.sceneManager.getPlayer2();
+		const player1 = this.sceneManager.getPlayer(1);
+		const player2 = this.sceneManager.getPlayer(2);
 		let player;
 		if (player1?.getName() === playerName) {
 			player = player1;
