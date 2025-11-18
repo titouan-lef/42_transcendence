@@ -81,16 +81,17 @@ export class RainyMap extends MapTemplate {
 		return particles;
 	}
 
-	handleObject(scene: babylon.Scene, texture: babylon.Texture, lighting: ObjectMessage): void {
+	handleObject(scene: babylon.Scene, texture: Record<string, babylon.Texture>, lightning: ObjectMessage): void {
 		if (this.gameStopped)
 			return;
-		if (lighting.id >= this.lightnings?.length) {
-			this.lightnings?.push(new Lightning(scene, texture, lighting.position, lighting.size));
-			setTimeout(() => {
-				this.lightnings?.splice(lighting.id, 1);
-			}, LIGHTNING_LIFETIME + 100);
+		if (lightning.id >= this.lightnings?.length) {
+			this.lightnings?.push(new Lightning(scene, texture.spark, lightning.position, lightning.size));
 		} else {
-			/** @todo nothing ?? */
+			if (lightning.currentLifetime === 0) {
+				this.lightnings?.at(lightning.id)?.destroy();
+				return;
+			}
+			this.lightnings?.at(lightning.id)?.changeVisibility(lightning.currentLifetime);
 		}
 	}
 

@@ -118,7 +118,7 @@ export abstract class MapTemplate {
 
 	abstract createSun(scene: babylon.Scene): babylon.Mesh;
 
-	handleObject(scene: babylon.Scene, texture: babylon.Texture, object: ObjectMessage): void {} /** @todo abstract */
+	handleObject(scene: babylon.Scene, texture: Record<string, babylon.Texture>, object: ObjectMessage): void {} /** @todo abstract */
 
 	abstract createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh;
 

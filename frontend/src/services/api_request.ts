@@ -54,7 +54,7 @@ async function openWebSocketConnection(): Promise<void> {
 	};
 
 	ws.onmessage = (event): void => { /** @todo handeler for game */
-		console.log("Received:", event.data);
+		//console.log("Received:", event.data);
 
 		const message : DataMessage = JSON.parse(event.data);
 		switch (message.status) {

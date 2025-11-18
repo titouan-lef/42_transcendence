@@ -6,19 +6,14 @@ import { WebSocket } from "ws";
 
 export class VolcanoMap extends MapTemplate {
 	private readonly meteors: Meteor[] = [];
-	private readonly meteorIntervalId: ReturnType<typeof setInterval>;
+	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
+	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly sockets: WebSocket[] = []; // one or two socket depening on the IA...
-	// private readonly particles: babylon.ParticleSystem;
 
 	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
 		super(scene, "volcano");
-		// this.glow.intensity = V_GLOW_INTENSITY;
-		// this.particles = this.createParticles(scene, texture.flare);
-		this.meteorIntervalId = this.meteorInterval(scene);
-		// this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
-		// this.highlightTimeout = setTimeout(() => {
-		// 	this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.volcanoHighlightWall));
-		// }, START_TIMEOUT);
+		this.sceneObservable = scene.onBeforeRenderObservable;
+		this.sceneObserver = this.observeScene(scene);
 		sockets.forEach(socket => {
 			this.sockets.push(socket);
 		});
@@ -31,41 +26,32 @@ export class VolcanoMap extends MapTemplate {
 		return ground;
 	}
 
-	private meteorInterval(scene: babylon.Scene): ReturnType<typeof setInterval> {
-		const meteorIntervalId = setInterval( () => {
+	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
+		let meteorTimer = 0;
+		const sceneObserver = this.sceneObservable.add(() => {
 			if (this.gameStopped)
 				return;
-			const meteor = new Meteor(scene, this.meteors.length, this.sockets);
-			this.meteors.push(meteor);
-			if (this.gameStopped)
-				clearInterval(this.meteorIntervalId);
-			setTimeout(() => {
-				const index = this.meteors?.indexOf(meteor);
-				if (index !== -1)
-					this.meteors?.splice(index, 1);
-			}, METEOR_LIFETIME + 100);
-		}, METEOR_INTERVAL);
-		return meteorIntervalId;
+			meteorTimer += scene.getEngine().getDeltaTime();
+			if (meteorTimer >= METEOR_INTERVAL) {
+				meteorTimer -= METEOR_INTERVAL;
+				const meteor = new Meteor(scene, this.meteors.length, this.sockets);
+				this.meteors.push(meteor);
+			}
+			/**@todo DO NOT empty the array */
+		});
+		return sceneObserver;
 	}
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
-		// const material = new babylon.StandardMaterial('wallcolor', scene);
-		// material.diffuseColor =  COLORS3.volcanoDiffuseWall;
-		// newMesh.material = material;
 		return newMesh;
 	}
 
 	destroyRest(): void {
-		if (this.meteorIntervalId)
-			clearInterval(this.meteorIntervalId);
+		this.sceneObservable.remove(this.sceneObserver);
 		while (this.meteors.length) {
 			this.meteors[0].destroy();
 			this.meteors.splice(0, 1);
 		}
-		// this.particles?.stop();
-		// if (this.particles && this.particles.particleTexture)
-		// 	this.particles.particleTexture = null;
-		// this.particles?.dispose();
 	}
 }

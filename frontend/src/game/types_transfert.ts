@@ -98,7 +98,8 @@ interface ObjectMessage {
 	type: Object,
 	id: number,
 	position: Position,
-	size: number
+	size: number,
+	currentLifetime: number
 	/** @todo more (size,... ) ??*/
 }
 

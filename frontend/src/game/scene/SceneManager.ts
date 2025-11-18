@@ -107,13 +107,13 @@ export class SceneManager {
 	updateObject(scene: babylon.Scene, object: ObjectMessage): void {
 		switch (object.type) {
 			case (Object.LIGHTNING):
-				this.map?.handleObject(scene, this.textures.spark, object);
+				this.map?.handleObject(scene, this.textures, object);//spark
 				break;
 			case (Object.METEOR):
-				this.map?.handleObject(scene, this.textures.flare, object);
+				this.map?.handleObject(scene, this.textures, object);//flare smoke
 				break;
 			case (Object.TORNADO):
-				this.map?.handleObject(scene, this.textures.flare, object);
+				this.map?.handleObject(scene, this.textures, object);//flare
 				break;
 			default:
 				return;

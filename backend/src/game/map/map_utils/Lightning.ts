@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { MAP_SIZE, WALL_WIDTH, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH } from "../../settings/values.js";
+import { MAP_SIZE, WALL_WIDTH, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH, LIGHTNING_FRAMES_TO_DISAPPEAR, LIGHTNING_LIFETIME } from "../../settings/values.js";
 import { BallTemplate } from "../../ball/BallTemplate.js";
 import { Object, ObjectMessage, Status } from "../../../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
@@ -9,6 +9,9 @@ export class Lightning {
 	private readonly sockets: WebSocket[];
 	private readonly position: babylon.Vector3;
 	private readonly randomSize: number;
+	private currentLifetime = 1;
+	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
+	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
 
 	constructor(scene: babylon.Scene, id: number, sockets: WebSocket[]) {
 		this.id = id;
@@ -18,6 +21,12 @@ export class Lightning {
 		this.position = new babylon.Vector3(possiblePositionX, 0, possiblePositionZ);
 		this.randomSize = Math.random() * 4 + 1;
 		this.applyExplosionForce(scene, this.position);
+		this.sceneObservable = scene.onBeforeRenderObservable;
+		this.sceneObserver = this.observeScene(scene);
+	}
+
+	getCurrentLifetime(): number {
+		return this.currentLifetime;
 	}
 
 	sendObjectInfos(): void {
@@ -31,12 +40,25 @@ export class Lightning {
 					y: this.position.y,
 					z: this.position.z
 				},
-				size: this.randomSize
+				size: this.randomSize,
+				currentLifetime: this.currentLifetime
 			};
 
 			socket.send(JSON.stringify(infos));
 		});
 	}
+
+	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
+		const sceneObserver = this.sceneObservable.add(() => {
+			this.currentLifetime -= scene.getEngine().getDeltaTime() / LIGHTNING_LIFETIME;
+			if (this.currentLifetime <= 0) {
+				this.destroy();
+				return ;
+			}
+			this.sendObjectInfos(); /** @todo send at 30 fps */
+		});
+		return sceneObserver;
+	} 
 
 	private applyExplosionForce(scene: babylon.Scene, center: babylon.Vector3): void {
 		scene.meshes.forEach(mesh => {
@@ -59,5 +81,9 @@ export class Lightning {
 		});
 	}
 
-	destroy(): void {}
+	destroy(): void {
+		this.sceneObservable.remove(this.sceneObserver);
+		this.currentLifetime = 0;
+		this.sendObjectInfos();
+	}
 }

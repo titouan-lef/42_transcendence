@@ -5,7 +5,7 @@ import { Position } from "../../types_transfert.js";
 export class Tornado {
 	private tornado: babylon.Mesh;
 	private readonly particles: babylon.ParticleSystem;
-	private readonly timeoutId: ReturnType<typeof setTimeout>;
+	//private readonly timeoutId: ReturnType<typeof setTimeout>;
 	private readonly size;
 	// private readonly tornadoObservable: babylon.Observable<babylon.Scene>;
 	// private readonly tornadoObserver: babylon.Observer<babylon.Scene>;
@@ -27,10 +27,10 @@ export class Tornado {
 		this.particles = this.createTornadoParticles(scene, texture);
 
 		// this.tornadoObservable = scene.onBeforeRenderObservable;;
-		// this.tornadoObserver = this.setTornadoObserver(scene, windforce);
-		this.timeoutId = setTimeout( () => {
-			this.destroy();
-		}, TORNADO_LIFETIME);
+		// // this.tornadoObserver = this.setTornadoObserver(scene, windforce);
+		// this.timeoutId = setTimeout( () => {
+		// 	this.destroy();
+		// }, TORNADO_LIFETIME);
 	}
 
 	stopParticles(): void {
@@ -85,7 +85,7 @@ export class Tornado {
 	}
 
 	destroy(): void {
-		clearTimeout(this.timeoutId);
+		//clearTimeout(this.timeoutId);
 		// this.tornadoObservable.remove(this.tornadoObserver);
 		this.particles?.stop();
 		if (this.particles && this.particles.particleTexture)

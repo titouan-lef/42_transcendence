@@ -107,15 +107,16 @@ export class DesertMap extends MapTemplate {
 		return particles;
 	}
 
-	handleObject(scene: babylon.Scene, texture: babylon.Texture, tornado: ObjectMessage): void {
+	handleObject(scene: babylon.Scene, texture: Record<string, babylon.Texture>, tornado: ObjectMessage): void {
 		if (this.gameStopped)
 			return;
 		if (tornado.id >= this.tornados?.length) {
-			this.tornados?.push(new Tornado(scene, texture, tornado.position, tornado.size));
-			setTimeout(() => {
-				this.tornados?.splice(tornado.id, 1);
-			}, TORNADO_LIFETIME + 100);
+			this.tornados?.push(new Tornado(scene, texture.flare, tornado.position, tornado.size));
 		} else {
+			if (tornado.currentLifetime === 0) {
+				this.tornados?.at(tornado.id)?.destroy();
+				return;
+			}
 			this.tornados?.at(tornado.id)?.updatePosition(tornado.position);
 		}
 	}

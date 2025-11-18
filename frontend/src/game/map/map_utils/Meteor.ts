@@ -8,7 +8,7 @@ export class Meteor {
 	private readonly meteor: babylon.Mesh;
 	private readonly meteorLight: babylon.PointLight;
 	private body: babylon.PhysicsBody | null;
-	// private readonly particles: babylon.ParticleSystem;
+	private contactParticles: babylon.ParticleSystem | null = null;
 	private readonly size;
 	private readonly trail: babylon.ParticleSystem;
 
@@ -16,24 +16,23 @@ export class Meteor {
 	 * @todo be the same as the one in the front
 	 * send position each frame too ? then assosiate an id to each meteor ?
 	 */
-	constructor(scene: babylon.Scene, texture: babylon.Texture, position: Position, size: number) {
+	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>, position: Position, size: number) {
 		this.size = size;
 		const start = new babylon.Vector3(position.x, MAP_SIZE.y, position.z);
 		this.meteor = this.spawnMeteor(scene, start);
 		this.meteorLight = this.createMeteorLight(scene);
 		this.body = null;
-		this.trail = this.createTrail(scene, texture);
-		this.sceneObservable = scene.onAfterRenderObservable;
-		this.sceneObserver = this.observeScene(scene);
-		// this.particles = this.createContactParticles(scene, texture.smoke, end);
+		this.trail = this.createTrail(scene, texture.flare);
+		this.sceneObservable = scene.onBeforeRenderObservable;
+		this.sceneObserver = this.observeScene(scene, texture.smoke);
 	}
 
-	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
+	private observeScene(scene: babylon.Scene, texture: babylon.Texture): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
-			if (this.meteor.position.y < 0) {
-				setTimeout( () => {
-					this?.destroy();
-				}, METEOR_LIFETIME);
+			if (this.meteor.position.y <= 0) {
+				this.trail.stop();
+				this.contactParticles = this.createContactParticles(scene, texture, this.meteor.position);
+				this.contactParticles.start();
 				this.sceneObservable.remove(this.sceneObserver);
 			}
 		});
@@ -124,10 +123,10 @@ export class Meteor {
 		if (this.trail && this.trail.particleTexture)
 			this.trail.particleTexture = null;
 		this.trail?.dispose();
-		// this.particles?.stop();
-		// if (this.particles && this.particles.particleTexture)
-		// 	this.particles.particleTexture = null;
-		// this.particles?.dispose();
+		this.contactParticles?.stop();
+		if (this.contactParticles && this.contactParticles.particleTexture)
+			this.contactParticles.particleTexture = null;
+		this.contactParticles?.dispose();
 		this.meteor.material?.dispose();
 		this.meteor?.dispose();
 	}
