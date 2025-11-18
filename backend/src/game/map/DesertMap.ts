@@ -6,11 +6,11 @@ import { WebSocket } from "ws";
 
 export class DesertMap extends MapTemplate {
 	// private readonly particles: babylon.ParticleSystem;
-	private readonly tornadoIntervalId: ReturnType<typeof setInterval>;
+	//private readonly tornadoIntervalId: ReturnType<typeof setInterval>;
 	private readonly tornados: Tornado[] = [];
 	private readonly windForce;
-	private readonly windObservable: babylon.Observable<babylon.Scene>;
-	private readonly windObserver: babylon.Observer<babylon.Scene>;
+	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
+	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly sockets: WebSocket[] = []; // one or two socket depening on the IA...
 
 	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
@@ -21,10 +21,10 @@ export class DesertMap extends MapTemplate {
 			0,
 			(Math.random() - 0.5) * WIND_FORCE
 		);
-		this.windObservable = scene.onBeforeRenderObservable;
-		this.windObserver = this.applyWind(scene);
+		this.sceneObservable = scene.onBeforeRenderObservable;
+		this.sceneObserver = this.observeScene(scene);
 		// this.particles = this.createParticles(scene, texture.flare);
-		this.tornadoIntervalId = this.tornadoInterval(scene);
+		//this.tornadoIntervalId = this.tornadoInterval(scene);
 		// this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
 		// this.highlightTimeout = setTimeout(() => {
 		// 	this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.desertHighlightWall));
@@ -34,14 +34,11 @@ export class DesertMap extends MapTemplate {
 		});
 	}
 
-	private applyWind(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
-		const windObserver = this.windObservable.add(() => {
-			if (this.gameStopped) {
-				// this.tornados.forEach(tornado => {
-				// 	tornado.stopParticles();
-				// });
+	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
+		let tornadoTimer = 0;
+		const sceneObserver = this.sceneObservable.add(() => {
+			if (this.gameStopped)
 				return ;
-			}
 			scene.meshes.forEach(mesh => {
 				if (!mesh.physicsBody)
 					return;
@@ -50,8 +47,15 @@ export class DesertMap extends MapTemplate {
 					mesh.getAbsolutePosition()
 				);
 			});
+			tornadoTimer += scene.getEngine().getDeltaTime();
+			if (tornadoTimer >= TORNADO_INTERVAL) {
+				tornadoTimer -= TORNADO_INTERVAL;
+				const tornado = new Tornado(scene,this.tornados.length, this.windForce, this.sockets);
+				this.tornados.push(tornado);
+			}
+			/**@todo DO NOT empty the array */
 		});
-		return windObserver;
+		return sceneObserver;
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
@@ -62,24 +66,41 @@ export class DesertMap extends MapTemplate {
 	}
 
 
-	private tornadoInterval(scene: babylon.Scene): ReturnType<typeof setInterval> {
-		const tornadoIntervalId = setInterval( () => {
-			if (this.gameStopped) {
-				return;
-			}
-			const tornado = new Tornado(scene,this.tornados.length, this.windForce, this.sockets);
-			this.tornados.push(tornado);
-			if (this.gameStopped)
-				clearInterval(this.tornadoIntervalId);
-			setTimeout(() => {
-				const index = this.tornados?.indexOf(tornado);
-				if (index !== -1)
-					this.tornados?.splice(index, 1);
-			}, TORNADO_LIFETIME + 100);
-			tornado.sendObjectInfos();
-		}, TORNADO_INTERVAL);
-		return tornadoIntervalId;
-	}
+	// private tornadoInterval(scene: babylon.Scene): ReturnType<typeof setInterval> {
+	// 	const tornadoIntervalId = setInterval( () => {
+	// 		if (this.gameStopped) {
+	// 			return;
+	// 		}
+	// 		const tornado = new Tornado(scene,this.tornados.length, this.windForce, this.sockets);
+	// 		this.tornados.push(tornado);
+	// 		if (this.gameStopped)
+	// 			clearInterval(this.tornadoIntervalId);
+	// 		setTimeout(() => {
+	// 			const index = this.tornados?.indexOf(tornado);
+	// 			if (index !== -1)
+	// 				this.tornados?.splice(index, 1);
+	// 		}, TORNADO_LIFETIME + 100);
+	// 		tornado.sendObjectInfos();
+	// 	}, TORNADO_INTERVAL);
+	// 	return tornadoIntervalId;
+	// }
+
+	// private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
+	// 	let tornadoTimer = 0;
+	// 	const sceneObserver = this.sceneObservable.add(() => {
+	// 		if (this.gameStopped)
+	// 			return;
+	// 		tornadoTimer += scene.getEngine().getDeltaTime();
+	// 		if (tornadoTimer >= TORNADO_INTERVAL) {
+	// 			tornadoTimer -= TORNADO_INTERVAL;
+	// 			const tornado = new Tornado(scene,this.tornados.length, this.windForce, this.sockets);
+	// 			this.tornados.push(tornado);
+	// 		}
+	// 		while (this.tornados.length > 0 && this.tornados[0].isDestroyed())
+	// 			this.tornados.splice(0, 1);
+	// 	});
+	// 	return sceneObserver;
+	// }
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {
 		const newMesh = babylon.MeshBuilder.CreateBox("limit", { width: dimension.x, height: dimension.y, depth: dimension.z }, scene);
@@ -87,11 +108,11 @@ export class DesertMap extends MapTemplate {
 	}
 
 	destroyRest(): void {
-		clearInterval(this.tornadoIntervalId);
+		//clearInterval(this.tornadoIntervalId);
 		while (this.tornados.length) {
 			this.tornados[0].destroy();
 			this.tornados.splice(0, 1);
 		}
-		this.windObservable.remove(this.windObserver);
+		this.sceneObservable.remove(this.sceneObserver);
 	}
 }

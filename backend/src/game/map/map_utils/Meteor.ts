@@ -12,6 +12,7 @@ export class Meteor {
 	private readonly direction: babylon.Vector3;
 	private body: babylon.PhysicsBody | null;
 	private readonly randomSize;
+	private currentLifetime = 1;
 
 	constructor(scene: babylon.Scene, id: number, sockets: WebSocket[]) {
 		this.id = id;
@@ -27,8 +28,8 @@ export class Meteor {
 
 		this.meteor = this.spawnMeteor(scene, start);
 		this.body = null;
-		this.sceneObservable = scene.onAfterRenderObservable;
-		this.sceneObserver = this.observeScene(scene, start, end);
+		this.sceneObservable = scene.onBeforeRenderObservable;
+		this.sceneObserver = this.observeScene(scene, end);
 	}
 
 	private spawnMeteor(scene: babylon.Scene, position: babylon.Vector3): babylon.Mesh {
@@ -49,27 +50,31 @@ export class Meteor {
 					y: this.meteor.position.y,
 					z: this.meteor.position.z
 				},
-				size: this.randomSize
+				size: this.randomSize,
+				currentLifetime: this.currentLifetime
 			};
 
 			socket.send(JSON.stringify(infos));
 		});
 	}
 
-	private observeScene(scene: babylon.Scene, start: babylon.Vector3, end: babylon.Vector3): babylon.Observer<babylon.Scene> {
+	private observeScene(scene: babylon.Scene, end: babylon.Vector3): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
-			const ratio = scene.getAnimationRatio() / 60; //if game is slowed, meteor will also be
-			const velocity = this.direction.scale(METEOR_SPEED * ratio);
-			this.meteor.position.addInPlace(velocity);
-			this.sendObjectInfos(); /** @todo send at 30 fps */
 			if (this.meteor.position.y < 0) {
-				this.applyExplosionForce(scene, end);
+				if (this.currentLifetime === 1)
+					this.applyExplosionForce(scene, end);
+				this.currentLifetime -= scene.getEngine().getDeltaTime() / METEOR_LIFETIME;
 				this.setBody(scene);
-				setTimeout( () => {
+				if (this.currentLifetime <= 0) {
 					this?.destroy();
-				}, METEOR_LIFETIME);
-				this.sceneObservable.remove(this.sceneObserver);
+					return ;
+				}
+			} else {
+				const ratio = scene.getAnimationRatio() / 60; //if game is slowed, meteor will also be
+				const velocity = this.direction.scale(METEOR_SPEED * ratio);
+				this.meteor.position.addInPlace(velocity);
 			}
+			this.sendObjectInfos(); /** @todo send at 30 fps */
 		});
 		return sceneObserver;
 	} 
@@ -106,9 +111,15 @@ export class Meteor {
 		});
 	}
 
+	getCurrentLifetime(): number {
+		return this.currentLifetime;
+	}
+
 	destroy(): void {
 		this.sceneObservable?.remove(this.sceneObserver);
 		this.body?.dispose();
 		this.meteor?.dispose();
+		this.currentLifetime = 0;
+		this.sendObjectInfos();
 	}
 }

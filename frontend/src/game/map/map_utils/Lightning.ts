@@ -3,7 +3,7 @@ import { MAP_SIZE, LIGHTNING_FRAMES_TO_DISAPPEAR, LIGHTNING_COLLISION_RADIUS, LI
 import { Position } from "../../types_transfert.js";
 
 export class Lightning {
-	private readonly lightningIntervalId: ReturnType<typeof setInterval>;
+	//private readonly lightningIntervalId: ReturnType<typeof setInterval>;
 	private readonly lightning: babylon.Mesh;
 	private readonly particles: babylon.ParticleSystem;
 	private readonly size;
@@ -19,7 +19,8 @@ export class Lightning {
 		material.alpha = 1;
 		this.lightning.material = material;
 		this.lightning.renderingGroupId = 1;
-		this.lightningIntervalId = this.animateLightningFade(material);
+		//this.lightningIntervalId = this.animateLightningFade(material);
+		this.changeVisibility(1);
 		this.particles = this.createContactParticles(scene, end, texture);
 		this.particles.start();
 	}
@@ -52,19 +53,13 @@ export class Lightning {
 	}
 
 	/** fades slowly */
-	private animateLightningFade(material: babylon.StandardMaterial): ReturnType<typeof setInterval> {
-		let fade = 1.0;
-		const lightningIntervalId = setInterval(() => {
-			fade -= 1 / LIGHTNING_FRAMES_TO_DISAPPEAR;
-			material.emissiveColor = COLORS3.skyEmissiveLightning.scale(fade);
-			material.alpha = fade;
-			if (fade <= 0) {
-				material.emissiveColor = COLORS3.skyEmissiveLightning.scale(0);
-				this.lightning.visibility = 0;
-				this.destroy();
-			}
-		}, LIGHTNING_LIFETIME / LIGHTNING_FRAMES_TO_DISAPPEAR);
-		return lightningIntervalId;
+	changeVisibility(currentLifetime: number): void {
+		if (currentLifetime <= 0)
+			return;
+		else if (this.lightning.material && this.lightning.material instanceof babylon.StandardMaterial) {
+			this.lightning.material.emissiveColor = COLORS3.skyEmissiveLightning.scale(currentLifetime);
+			this.lightning.material.alpha = currentLifetime;
+		}
 	}
 
 	private createContactParticles(scene: babylon.Scene, position: babylon.Vector3, texture: babylon.Texture): babylon.ParticleSystem {
@@ -95,7 +90,7 @@ export class Lightning {
 
 
 	destroy(): void {
-		clearInterval(this.lightningIntervalId);
+		//clearInterval(this.lightningIntervalId);
 		this.particles?.stop();
 		if (this.particles && this.particles.particleTexture)
 			this.particles.particleTexture = null;

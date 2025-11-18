@@ -11,6 +11,7 @@ export class Tornado {
 	private readonly randomSize;
 	private readonly tornadoObservable: babylon.Observable<babylon.Scene>;
 	private readonly tornadoObserver: babylon.Observer<babylon.Scene>;
+	private currentLifetime = 1;
 
 	constructor(scene: babylon.Scene, id: number, windforce: babylon.Vector3, sockets: WebSocket[]) {
 		this.id = id;
@@ -30,10 +31,13 @@ export class Tornado {
 		}, TORNADO_LIFETIME);
 	}
 
+	getCurrentLifetime(): number {
+		return this.currentLifetime;
+	}
+
 	private setTornadoObserver(scene: babylon.Scene, windforce: babylon.Vector3): babylon.Observer<babylon.Scene> {
 		const tornadoObserver = this.tornadoObservable.add(() => {
 			this.tornado.position = this.tornado.absolutePosition.addInPlace(windforce.scale(0.05));
-			this.sendObjectInfos(); /** @todo send at 30 fps */
 			scene.meshes.forEach(mesh => {
 				if (!mesh.metadata?.pushable || !mesh.physicsBody)
 					return;
@@ -52,6 +56,12 @@ export class Tornado {
 					body.applyForce(totalForce, meshPosition);
 				}
 			});
+			this.currentLifetime += scene.getEngine().getDeltaTime() / TORNADO_LIFETIME;
+			if (this.currentLifetime <= 0) {
+				this.destroy();
+				return ;
+			}
+			this.sendObjectInfos(); /** @todo send at 30 fps */
 		});
 		return tornadoObserver;
 	}
@@ -67,7 +77,8 @@ export class Tornado {
 					y: this.tornado.position.y,
 					z: this.tornado.position.z
 				},
-				size: this.randomSize
+				size: this.randomSize,
+				currentLifetime: this.currentLifetime
 			};
 
 			socket.send(JSON.stringify(infos));
@@ -78,5 +89,6 @@ export class Tornado {
 		clearTimeout(this.timeoutId);
 		this.tornadoObservable.remove(this.tornadoObserver);
 		this.tornado?.dispose();
+		this.currentLifetime = 0;
 	}
 }

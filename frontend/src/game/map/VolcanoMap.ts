@@ -85,15 +85,16 @@ export class VolcanoMap extends MapTemplate {
 		return particles;
 	}
 
-	handleObject(scene: babylon.Scene, texture: babylon.Texture, meteor: ObjectMessage): void {
+	handleObject(scene: babylon.Scene, texture: Record<string, babylon.Texture>, meteor: ObjectMessage): void {
 		if (this.gameStopped)
 			return;
 		if (meteor.id >= this.meteors?.length) {
 			this.meteors?.push(new Meteor(scene, texture, meteor.position, meteor.size));
-			setTimeout(() => {
-				this.meteors?.splice(meteor.id, 1);
-			}, METEOR_LIFETIME + 100);
 		} else {
+			if (meteor.currentLifetime === 0) {
+				this.meteors?.at(meteor.id)?.destroy();
+				return;
+			}
 			this.meteors?.at(meteor.id)?.updatePosition(meteor.position);
 		}
 	}
