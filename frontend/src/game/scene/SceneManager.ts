@@ -15,7 +15,7 @@ import { Player } from "../player/Player.js";
 import { BallOption, GameSettings, MapOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, POINTS_TO_WIN, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
-import { DataMessage, GoalMessage, Object, ObjectMessage, PositionsMessage, Status } from "../types_transfert.js";
+import { DataMessage, EventMessage, GoalMessage, Object, ObjectMessage, PositionsMessage, Status } from "../types_transfert.js";
 
 export class SceneManager {
 	private ball: BallTemplate | null = null;
@@ -43,6 +43,9 @@ export class SceneManager {
 					break;
 				case (Status.POSITIONS):
 					this.setPositionUpdater(message);
+					break;
+				case (Status.EVENT):
+					this.handleParticules(message);
 					break;
 				default:
 					return; /** do nothing / not an error*/
@@ -139,6 +142,11 @@ export class SceneManager {
 		this.textures.electricity = new babylon.Texture("textures/electricity.png", scene, true);
 	}
 
+	private handleParticules(message: EventMessage): void { /** @todo a class Particule hadeler for all particules (ball, objects) */
+		/** @todo bigger collisison particules if the impact if stronger ? */
+		this.ball?.showParticles(message.position, this.scene, message.type);
+	}
+
 	/** ball explodes, the time slow down */
 	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3, score: babylon.Vector2): Promise<void> {
 		if (this.map)
@@ -150,7 +158,7 @@ export class SceneManager {
 		engine.getDeltaTime = function(): number {
 			return originalGetDelta.call(this) * 0.01; // slow animations
 		};
-		await new Promise<void>(resolve => { 	
+		await new Promise<void>(resolve => {
 			setTimeout( () => {
 				resolve();
 			}, 2700);

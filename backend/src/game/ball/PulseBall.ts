@@ -1,12 +1,13 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
 import { MAX_SPEED, PULSE_BALL_EFFECT_INTERVAL } from "../settings/values.js";
+import { WebSocket } from "ws";
 
 export class PulseBall extends BallTemplate {
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 	
-	constructor(scene: babylon.Scene) {
-		super(scene, "pulse");
+	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
+		super(scene, "pulse", sockets);
 		this.effectIntervalId = this.activateEffect();
 	}
 

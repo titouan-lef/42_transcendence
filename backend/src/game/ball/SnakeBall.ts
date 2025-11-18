@@ -1,10 +1,11 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
-import { COLORS3, SNAKE_BALL_ANGULAR_FORCE, SNAKE_BALL_ANGULAR_INTERVAL } from "../settings/values.js";
+import { SNAKE_BALL_ANGULAR_FORCE, SNAKE_BALL_ANGULAR_INTERVAL } from "../settings/values.js";
+import { WebSocket } from "ws";
 
 export class SnakeBall extends BallTemplate {
-	constructor(scene: babylon.Scene) {
-		super(scene, "snake");
+	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
+		super(scene, "snake", sockets);
 		this.force = SNAKE_BALL_ANGULAR_FORCE;
 	}
 

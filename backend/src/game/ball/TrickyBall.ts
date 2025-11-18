@@ -1,12 +1,14 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
 import { TRICKY_BALL_EFFECT_INTERVAL, TRICKY_BALL_FORWARD_ONLY } from "../settings/values.js";
+import { WebSocket } from "ws";
+
 
 export class TrickyBall extends BallTemplate {
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
 		
-	constructor(scene: babylon.Scene) {
-		super(scene, "tricky");
+	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
+		super(scene, "tricky", sockets);
 		this.effectIntervalId = this.activateEffect();
 	}
 	
