@@ -3,12 +3,19 @@ import { BallOption, MapOption } from "./settings/GameSettings.js";
 interface Position {
 	x: number;
 	y: number;
-	z: number
+	z: number;
+}
+
+interface Rotation {
+	x: number;
+	y: number;
+	z: number;
+	w: number;
 }
 
 interface PlanePosition {
 	x: number;
-	z: number
+	z: number;
 }
 
 enum Status {
@@ -78,9 +85,9 @@ interface PositionsMessage {
 	status: Status.POSITIONS,
 	ball: PlanePosition,
 	player: PlanePosition,
-	// player rot ?
-	enemy: PlanePosition
-	// enemy rot ?
+	playerRotation : Rotation,
+	enemy: PlanePosition,
+	enemyRotation: Rotation
 }
 
 enum Object { LIGHTNING, METEOR, TORNADO };
@@ -112,5 +119,5 @@ interface PlayerControls {
 	apply_effect: boolean;
 }
 
-export { Position, PlanePosition, DataMessage, PlayerControls, ParticlesType, Status, Object };
+export { Position, PlanePosition, Rotation, DataMessage, PlayerControls, ParticlesType, Status, Object };
 export { StartMessage, StopMessage, TimingMessage, GoalMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage };

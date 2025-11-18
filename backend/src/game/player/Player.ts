@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { GameSettings, PlayerSettings } from "../settings/GameSettings.js";
 import { PLAYER_DIMENSION, COLORS3, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY, PLAYER_TRAIL_INTERVAL, PLAYER_TRAIL_ON } from "../settings/values.js";
-import { PlayerControls, Position, DataMessage } from "../../web_sockets/types_transfert.js";
+import { PlayerControls, Position, DataMessage, Rotation } from "../../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
 //import { PhysicsBody } from "babylonjs";
 
@@ -114,6 +114,13 @@ export class Player {
 		return { x: this.player.position.x, y: this.player.position.y, z: this.player.position.z };
 	}
 
+	getRotation(): Rotation {
+		const q = this.player.rotationQuaternion;
+		if (!q)
+			return { x: 0, y: 0, z: 0, w: 1 };
+		return { x: q.x, y: q.y, z: q.z, w: q.w };
+	}
+
 	async send(message: DataMessage): Promise<void> {
 		this.socket?.send(JSON.stringify(message));
 	}
@@ -140,7 +147,7 @@ export class Player {
 			this.angularVelocityY = (+this.keyPressed[3] - +this.keyPressed[2]) * PLAYER_ROTATION_VELOCITY;
 		if (this.keyPressed[4] && this.rotatingPlayer)
 			this.resetPlayerRotation();
-	}
+	} 	
 
 	private playerObserver(): babylon.Observer<babylon.Scene> {
 		const distanceFromEdge = (MAP_SIZE.z / 2) - (WALL_WIDTH * 2) - (PLAYER_DIMENSION.z / 2);
