@@ -1,6 +1,8 @@
 import { applyQuery, fetchAll } from "./db_utils.js";
 
 const TABLE_NAME = "User";
+const DEFAULT_PPLINK = "";/**@todo to complete*/
+const DEFAULT_THEME = "";/**@todo to complete*/
 
 interface User {
 	username: string;
@@ -25,11 +27,11 @@ async function createUserTable(): Promise<void> {
 	);
 }
 
-async function insertUser(user: User): Promise<void> {
+async function insertUser(username: string, pseudo: string, hashedPassword: string): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (username, pseudo, hashedPassword, ppLink, themeId) VALUES (?, ?, ?, ?, ?)`,
-			[user.username, user.pseudo, user.hashedPassword, user.ppLink ?? "NULL", user.themeId]
+			`INSERT INTO ${TABLE_NAME} (username, pseudo, hashedPassword, ppLINK, themeId) VALUES (?, ?, ?, ?, ?)`,
+			[username, pseudo, hashedPassword, DEFAULT_PPLINK, DEFAULT_THEME]
 		), "insert" + TABLE_NAME
 	);
 }
@@ -47,6 +49,20 @@ async function getUserByUsername(username: string): Promise<User | undefined> {
 	);
 }
 
+async function doesUserExist(name: string) : Promise<boolean> {
+	return !!(await getUserByUsername(name));
+}
+
+async function getUserPassword(username: string): Promise<string> {
+	const row = await applyQuery(
+		async (db) => await db.get(
+			`SELECT hashedPassword FROM ${TABLE_NAME} WHERE username = ?;`,
+			[username]
+		), "get" + TABLE_NAME + "Password"
+	);
+	return row?.hashedPassword ?? "";
+}
+
 async function deleteUser(username: string): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
@@ -56,7 +72,7 @@ async function deleteUser(username: string): Promise<void> {
 	);
 }
 
-export { User, createUserTable };
+export { User, createUserTable, getUserPassword, doesUserExist, insertUser };
 /**
  * 
  * @todo will be used, but must be modified
