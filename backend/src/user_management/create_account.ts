@@ -1,13 +1,12 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { insertUser } from "../database/insert_data.js";
 import { hashString } from "../utils/hash_string.js";
 import { sendReply } from "../utils/reply.js";
+import { User, insertUser } from "../database/user.js";
 
 interface NewUserBody {
 	id: string;
 	pseudo: string;
 	password: string;
-	ppLink: string;
 }
 
 function isSQLConstraintError(err: unknown) : boolean {
@@ -16,9 +15,10 @@ function isSQLConstraintError(err: unknown) : boolean {
 
 async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
 	try {
-		const { id, pseudo, password, ppLink } = req.body;
+		const { id, pseudo, password } = req.body;
 
-		await insertUser(id, pseudo, hashString(password), ppLink);
+	
+		await insertUser(id, pseudo, hashString(password));
 		sendReply(reply, 201, true, "User created");
 
 	} catch (err: unknown) {
