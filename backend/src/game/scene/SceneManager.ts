@@ -34,12 +34,11 @@ export class SceneManager {
 		return type;
 	}
 
-	getPlayer1(): Player | undefined { /** @todo same player management that in the front */
-		return this.players.at(0);
-	}
-
-	getPlayer2(): Player | undefined {
-		return this.players.at(1);
+	getPlayer(number: number): Player | undefined {
+		const player = this.players.find(
+			(p) => p.getId() === number
+		);
+		return player;
 	}
 
 	private createBall(scene: babylon.Scene, settings: GameSettings): void {
@@ -123,8 +122,8 @@ export class SceneManager {
 		if (this.map)
 			this.map.predeath();
 		this.ball?.preDeath();
-		const player1 = this.getPlayer1();
-		const player2 = this.getPlayer2();
+		const player1 = this.getPlayer(1);
+		const player2 = this.getPlayer(2);
 		if (player1 && player2)
 			this.sendParticuleEvent(player1, player2, "explosion", position);
 		const originalGetDelta = engine.getDeltaTime; // keep original delta
@@ -161,8 +160,8 @@ export class SceneManager {
 
 	startCountdown(time: number): void {
 		const interval = setInterval(() => {
-			const player1 = this.getPlayer1();
-			const player2 = this.getPlayer2();
+			const player1 = this.getPlayer(1);
+			const player2 = this.getPlayer(2);
 			if (!player1 || !player2)
 				return;
 			this.sendCountDown(player1, player2, time);
