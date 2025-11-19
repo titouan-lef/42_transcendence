@@ -171,11 +171,8 @@ export class SceneManager {
 	}
 
 	private setGoalCheck(message: GoalMessage, settings: GameSettings): void {
-		this.destroyEnvironnement(new babylon.Vector2(message.player, message.enemy));
-		if (message.player !== POINTS_TO_WIN && message.enemy !== POINTS_TO_WIN)
-			this.setEnvironnement(this.scene, settings);
-		/** @todo review manegement of this, maebe it should be handle int he Game ?? */
 		/** @todo animation win / loose */
+		this.destroyEnvironnement(new babylon.Vector2(message.player, message.enemy));
 	}
 
 	private setPositionUpdater(message : PositionsMessage): void {

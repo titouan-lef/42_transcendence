@@ -13,8 +13,12 @@ async function showCanvas(socket: WebSocket, options: OptionMessage): Promise<vo
 		["KeyJ", "KeyL", "KeyI", "KeyK", "KeyP"]
 	);
 
-	game = await Game.create(socket, settings);
-	game.show();
+	if (game) {
+		game.updateOptions(options);
+	} else {
+		game = await Game.create(socket, settings);
+		game.show();
+	}
 }
 
 async function updateGameObject(object: ObjectMessage): Promise<void> {

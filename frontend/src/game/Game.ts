@@ -2,16 +2,16 @@ import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS, START_TIMEOUT } from "./settings/values.js";
-import { DataMessage, ObjectMessage, Status } from "./types_transfert.js";
+import { DataMessage, ObjectMessage, OptionMessage, Status } from "./types_transfert.js";
 
 export class Game {
 	private readonly socket: WebSocket;
 	private readonly engine: babylon.Engine;
 	private readonly scene: babylon.Scene;
 	private readonly sceneManager: SceneManager;
-	private readonly settings: GameSettings;
 	private readonly camera: babylon.ArcRotateCamera;
 	private readonly canvas: HTMLCanvasElement;
+	private settings: GameSettings;
 	// private score: babylon.Vector2;
 	// private inAnimation = false;
 	// private gameStopped = false;
@@ -61,6 +61,8 @@ export class Game {
 	};
 
 	show(): void {
+		if (!this.settings)
+			return;
 		this.engine.runRenderLoop(() => this.scene.render());
 	}
 
@@ -117,8 +119,16 @@ export class Game {
 		return camera;
 	}
 
-
 	updateObject(object: ObjectMessage): void {
 		this.sceneManager.updateObject(this.scene, object);
 	}
+
+	updateOptions(options: OptionMessage): void {
+		this.settings.ball = options.ball;
+		this.settings.map = options.map;
+		this.settings.rotatingPlayer = options.rotatingPlayer;
+		this.settings.spin = options.spin;
+		this.sceneManager.setEnvironnement(this.scene, this.settings);
+	}
+
 }

@@ -107,6 +107,11 @@ export class Game {
 				if (SHOW_DISPOSE_LOGS)
 					this.sceneManager.showDisposeLogs(this.scene);
 				this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
+				const player1 = this.sceneManager.getPlayer(1);
+				const player2 = this.sceneManager.getPlayer(2);
+				if (!player1 || !player2)
+					return;
+				this.sendOptions(player1, player2);
 			}
 		}
 	}
