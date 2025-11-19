@@ -184,7 +184,7 @@ export class SceneManager {
 				this.allowSending = true;
 				this.allowReceiving = true;
 				this.ball?.launchBall();
-				// this.map?.start();
+				this.map?.start();
 				clearInterval(interval);
 			}
 			time--;
