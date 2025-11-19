@@ -49,7 +49,6 @@ async function deleteFriendship(username: string): Promise<void> {
 }
 
 export { Friendship, createFriendshipTable };
-
 /**
  * @todo voir si on garde
 async function updateFriendship(friendName: string, update: Partial<Omit<Friendship, "friendName">>): Promise<void> {
