@@ -5,9 +5,9 @@ min-h-screen max-h-screen
 bg-dark
 `;
 
-const BASE_PAGE = `
+const MODULAR = `
 <dialog id="modal"></dialog>
 <div id="content" class="${ROW_STYLE}"></div>
 `;
 
-export { BASE_PAGE };
+export { MODULAR };
