@@ -39,7 +39,7 @@ const MAIN_MENU = `
 
 /** @wip changing event */
 function mainMenuEvents(): void {
-	addHandler("main-play-btn", "click", () => navigate(PageID.API));
+	// addHandler("main-play-btn", "click", () => navigate(PageID.API));
 	// addHandler("btn-profile", "click", () => loadDialog(signInHandler, SIGN_IN));
 	// addHandler("add-friend", "click", () => addFriend());
 	// addHandler("btn-sign-up", "click", () => loadDialog(signUpHandler, SIGN_UP));
