@@ -1,180 +1,49 @@
 import { createButtonHtml } from "../components/button.js";
-import { setLang } from "../lang/lang.js";
 import { addHandler } from "../routes/event.js";
 import { navigate, PageID } from "../routes/page.js";
-import { getSafeElement } from "../utils/getSafeElement.js";
-import { SIGN_IN, SIGN_UP, loadDialog, signInHandler, signUpHandler } from "./sign_in.js";
+import { applyColor } from "../utils/applyColor.js";
 
-export const COLOR_BASE = `
-bg-primary text-secondary
-`;
-
-export const COLOR_ALT = `
-bg-secondary text-primary
-`;
-
-const ROW_STYLE = "min-h-screen max-h-screen flex flex-row gap-[10px] p-[10px] bg-dark";
-const MAIN_STYLE = `
+const MAIN_BOX_STYLE = `
 grow
-rounded-2xl
 flex justify-center items-center flex-col
+rounded-2xl
+${applyColor('alt')}
 `;
+
+const MAIN_STYLE = `
+flex flex-col items-center gap-[10px]
+`;
+
 const PONG_STYLE = `
 font-jaro
 text-[clamp(100px,40vmin,400px)] text-balance leading-none
 `;
 
-export const PLAY_BTN_STYLE = `
+const PLAY_BTN_STYLE = `
 font-park font-bold
 rounded-[10px]
 text-[20px]
 w-[150px] h-[40px]
 animate-pulse
-`;
-
-const BTN_STYLE = `
-font-park font-bold
-rounded-[10px]
-text-[20px]
-w-[150px] h-[40px]
-text-primary
-`;
-
-const ASIDE_STYLE = `
-w-[200px]
-grow-0
-rounded-2xl bg-primary
-flex
-`;
-const ASIDE_MAINBOX_STYLE = `
-grow flex flex-col items-center gap-[10px] justify-stretch first:mt-[25px] last:mb-[25px]
-`;
-const AVATAR_STYLE = `
-grow-0 rounded-2xl bg-white
-`;
-const FRIENDLIST_STYLE = `
-grow scrollbar-none overflow-y-scroll overflow-hidden
-w-[150px] rounded-2xl bg-light
-flex flex-col gap-[10px] items-center justify-start p-[10px]
-`;
-
-const FRIENDLIST = [
-	"friend_1",
-	"fd_2",
-	"friend_3",
-	"friend_4_with_too_long_name",
-	"friend_5",
-	"friend_6",
-	"friendd_7",
-];
-
-const DIALOG_STYLE = `
-m-auto p-0 rounded-2xl
-shadow-[0_0_25px_0] shadow-shadow
-backdrop:bg-white/25 backdrop:backdrop-blur-sm bg-transparent
-w-full max-w-[500px]
-h-1/2
-`;
-
-const ASIDE_CONNECTED = `
-<div class="${ASIDE_MAINBOX_STYLE}">
-	<div class="${AVATAR_STYLE}">
-		<img src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
-	</div>
-	${createButtonHtml(["profile"], `btn-profile`, { "class": `${BTN_STYLE} bg-secondary` })}
-	<div id="friendlist" class="${FRIENDLIST_STYLE}">
-	</div>
-	${createButtonHtml(["add_friend"], `add-friend`, { "class": `${BTN_STYLE} bg-secondary` })}
-	${createButtonHtml(["log_out"], `btn-log-out`, { "class": `${BTN_STYLE} bg-variant` })}
-</div>
-`;
-
-// <input id="add-friend" type="button" value="add friend" class="${BTN_STYLE} bg-secondary"/>
-// <input id="temp" type="button" value="log out" class="${BTN_STYLE} bg-variant"/>
-
-export const ASIDE_NOT_CONNECTED = `
-<div class="${ASIDE_MAINBOX_STYLE}">
-	<div class="${AVATAR_STYLE}">
-		<img src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
-	</div>
-	${createButtonHtml(["sign_in"], `btn-sign-in`, { "class": `${BTN_STYLE} bg-secondary` })}
-	${createButtonHtml(["sign_up"], `btn-sign-up`, { "class": `${BTN_STYLE} bg-secondary` })}
-</div>
+${applyColor()}
 `;
 
 const MAIN_MENU = `
-<dialog id="modal" class="${DIALOG_STYLE}">
-
-</dialog>
-<div class="${ROW_STYLE}">
-	<main id="main" class="${MAIN_STYLE} ${COLOR_BASE}">
-		<div class="flex flex-col items-center gap-[10px]">
-			<h1 class="${PONG_STYLE}">PONG</h1>
-			<input id="main-play-btn" type="button" value="play" class="${PLAY_BTN_STYLE} ${COLOR_ALT}"/>
-		</div>
-	</main>
-	<aside id="aside" class="${ASIDE_STYLE}">
-		${ASIDE_NOT_CONNECTED}
-	</aside>
-</div>
+<main id="main" class="${MAIN_BOX_STYLE}">
+	<div class="${MAIN_STYLE}">
+		<h1 class="${PONG_STYLE}">PONG</h1>
+		${createButtonHtml(["play"], "main-play-btn", { "class": `${PLAY_BTN_STYLE}` })}
+	</div>
+</main>
 `;
 
-function closeAllDetails(): void {
-	FRIENDLIST.forEach(friend => {
-		const elem = getSafeElement(friend, HTMLDetailsElement);
-
-		if (elem.open) {
-			elem.open = false;
-		}
-	});
-}
-
-
-
-function generateFriendList(): void {
-	const elem = getSafeElement("friendlist", HTMLElement);
-
-	FRIENDLIST.forEach(friend => {
-		elem.innerHTML += `
-			<details id="${friend}" class="rounded-2xl bg-secondary w-full">
-				<summary class="list-none cursor-pointer p-[5px]">
-					<p class="text-center overflow-hidden text-ellipsis" title="${friend}">${friend}</p>
-				</summary>
-				<div class="rounded-xl bg-primary w-auto p-[5px] m-[5px] flex flex-col justify-center items-center">
-					${createButtonHtml(["profile"], `btn-profile-${friend}`, { "class": "text-tx-prim text-center w-full" })}
-					<button class="text-tx-prim text-center w-full">invite</button>
-					<hr class="border-1 border-variant w-full my-1">
-					<input id="delete-friend-${friend}" type="button" value="delete" class="text-warning font-bold text-center w-full"/>
-				</div>
-			</details>
-		`;
-	});
-
-	FRIENDLIST.forEach(friend => {
-		addHandler(`btn-profile-${friend}`, "click", () => console.log(`je consulte le profil de ${friend}`));
-		addHandler(`delete-friend-${friend}`, "click", () => console.log(`je delete ${friend}`));
-		addHandler(friend, "click", () => closeAllDetails());
-	});
-}
-
-function addFriend(): void {
-	//setLang('fr'); /** @todo remove here */
-	console.log("CLICK ADD FRIEND");
-	// FRIENDLIST.push("new_friend");
-	generateFriendList();
-}
-
+/** @wip changing event */
 function mainMenuEvents(): void {
 	addHandler("main-play-btn", "click", () => navigate(PageID.API));
 	// addHandler("btn-profile", "click", () => loadDialog(signInHandler, SIGN_IN));
 	// addHandler("add-friend", "click", () => addFriend());
-
-	addHandler("btn-sign-up", "click", () => loadDialog(signUpHandler, SIGN_UP));
-	addHandler("btn-sign-in", "click", () => loadDialog(signInHandler, SIGN_IN));
+	// addHandler("btn-sign-up", "click", () => loadDialog(signUpHandler, SIGN_UP));
+	// addHandler("btn-sign-in", "click", () => loadDialog(signInHandler, SIGN_IN));
 };
 
-// generateFriendList();
-
 export { MAIN_MENU, mainMenuEvents };
-export { ASIDE_CONNECTED };
-export { MAIN_STYLE };
