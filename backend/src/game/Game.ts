@@ -17,13 +17,12 @@ export class Game {
 	private gameInterval?: ReturnType<typeof setInterval>; // ??NodeJS.Timer;
 	private score: babylon.Vector2;
 	private inAnimation = false;
-	private gameStopped = false;
 
 	constructor (settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.engine = engine;
 		this.settings = settings;
 		this.camera = new babylon.ArcRotateCamera("Camera", 0, 0, 0, babylon.Vector3.Zero(), scene);
-		this.sceneManager = new SceneManager();
+		this.sceneManager = new SceneManager(engine);
 		this.scene = scene;
 		// window.addEventListener("resize", () => this.engine.resize());
 		this.score = new babylon.Vector2(0, 0);
@@ -69,7 +68,6 @@ export class Game {
 		this.engine.stopRenderLoop();
 		this.scene.dispose();
 		this.engine.dispose();
-		this.gameStopped = true;
 		babylon.Tools.ClearLogCache(); // hides previous logs 
 	}
 
@@ -97,10 +95,10 @@ export class Game {
 		if (goalInfos !== null && goalInfos.position !== null) {
 			this.inAnimation = true;
 			goalInfos.goal === "player1" ? this.score.x += 1 : this.score.y += 1;
-			await this.sceneManager.goalAnimation(this.engine, this.scene, goalInfos.position);
+			await this.sceneManager.goalAnimation(goalInfos.position);
 			this.sendScore();
-			if (this.gameStopped) // if closing game while animation
-				return ;
+			// if (this.sceneManager.isSendingAllowed()) // if closing game while animation
+			// 	return ;
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
 				this.stop();
 			} else {
@@ -207,29 +205,24 @@ export class Game {
 		const intervalMs = 1000 / 30; // 30 fps
 
 		this.gameInterval = setInterval(() => {
-			if (!this.gameStopped) {
+			if (this.sceneManager.isSendingAllowed()) {
 				const player1 = this.sceneManager.getPlayer(1);
 				const player2 = this.sceneManager.getPlayer(2);
 				if (!player1 || !player2)
 					return;
 				this.sendPositions(player1, player2);
-			} else {
-				/** countdown ?? */
 			}
 		}, intervalMs);
 	}
 
 	startGameCommunication(): void {
-		/** @todo better management of players and ball*/
 		const player1 = this.sceneManager.getPlayer(1);
 		const player2 = this.sceneManager.getPlayer(2);
 		if (!player1 || !player2)
 			return;
-		// START, OPTIONS, POSITIONS, SCORE, TIMING
 		this.sendStart(player1, player2);
 		this.sendOptions(player1, player2);
 		this.sendPositions(player1, player2);
-		// this.sendScore(player1, player2);
 		this.startSendingPostisions();
 
 		player1.defineCloseAction(() => {
@@ -256,6 +249,8 @@ export class Game {
 	}
 
 	receiveDataFrom(playerName: string, message: string): void {
+		if (!this.sceneManager.isReceivingAllowed())
+			return ;
 		const controls: PlayerControls = JSON.parse(message);
 		const player1 = this.sceneManager.getPlayer(1);
 		const player2 = this.sceneManager.getPlayer(2);
@@ -269,6 +264,5 @@ export class Game {
 			return;
 		}
 		player.setControls(controls);
-		player.handleAction();
 	}
 }

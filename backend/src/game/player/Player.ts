@@ -131,15 +131,25 @@ export class Player {
 		this.keyPressed[2] = controls.rot_left;
 		this.keyPressed[3] = controls.rot_right;
 		this.keyPressed[4] = controls.apply_effect;
+		this.handleAction();
 	}
 
-	handleAction(): void {
+	clearControls(): void {
+		this.keyPressed[0] = false;
+		this.keyPressed[1] = false;
+		this.keyPressed[2] = false;
+		this.keyPressed[3] = false;
+		this.keyPressed[4] = false;
+		this.handleAction();
+	}
+
+	private handleAction(): void {
 		this.linearVelocityZ = (+this.keyPressed[1] - +this.keyPressed[0]) * PLAYER_MOVEMENT_VELOCITY;
 		if (this.rotatingPlayer)
 			this.angularVelocityY = (+this.keyPressed[3] - +this.keyPressed[2]) * PLAYER_ROTATION_VELOCITY;
 		if (this.keyPressed[4] && this.rotatingPlayer)
 			this.resetPlayerRotation();
-	} 	
+	}
 
 	private playerObserver(): babylon.Observer<babylon.Scene> {
 		const distanceFromEdge = (MAP_SIZE.z / 2) - (WALL_WIDTH * 2) - (PLAYER_DIMENSION.z / 2);

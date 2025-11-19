@@ -20,8 +20,15 @@ export class SceneManager {
 	private ball: BallTemplate | null = null;
 	private map: MapTemplate | null = null;
 	private readonly players: Player[] = [];
+	private engine: babylon.Engine;
+	private originalGetDelta: () => number;
+	private allowReceiving = false;
+	private allowSending = false;
 
-	constructor() {}
+	constructor(engine: babylon.Engine) {
+		this.engine = engine;
+		this.originalGetDelta = engine.getDeltaTime; // keep original delta
+	}
 
 	getBall(): BallTemplate | null {
 		return this.ball;
@@ -118,7 +125,7 @@ export class SceneManager {
 	}
 
 	/** ball explodes, the time slow down */
-	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: Position): Promise<void> {
+	async goalAnimation(position: Position): Promise<void> {
 		if (this.map)
 			this.map.predeath();
 		this.ball?.preDeath();
@@ -126,8 +133,8 @@ export class SceneManager {
 		const player2 = this.getPlayer(2);
 		if (player1 && player2)
 			this.sendParticuleEvent(player1, player2, "explosion", position);
-		const originalGetDelta = engine.getDeltaTime; // keep original delta
-		engine.getDeltaTime = function(): number {
+		const originalGetDelta = this.originalGetDelta; // keep original delta
+		this.engine.getDeltaTime = function(): number {
 			return originalGetDelta.call(this) * 0.01; // slow animations
 		};
 		await new Promise<void>(resolve => {
@@ -135,7 +142,6 @@ export class SceneManager {
 				resolve();
 			}, 2700);
 		});
-		engine.getDeltaTime = originalGetDelta;// set back to original speed
 		/** @todo send DeltaTime to the front ? */
 	}
 
@@ -158,30 +164,45 @@ export class SceneManager {
 		player2.send(time);
 	}
 
+	isSendingAllowed(): boolean {
+		return this.allowSending;
+	}
+
+	isReceivingAllowed(): boolean {
+		return this.allowReceiving;
+	}
+
 	startCountdown(time: number): void {
 		const interval = setInterval(() => {
 			const player1 = this.getPlayer(1);
 			const player2 = this.getPlayer(2);
 			if (!player1 || !player2)
 				return;
+			this.allowSending = false;
 			this.sendCountDown(player1, player2, time);
 			if (time <= 0) {
-				clearInterval(interval);
+				this.allowSending = true;
+				this.allowReceiving = true;
 				this.ball?.launchBall();
-				this.map?.start();
+				// this.map?.start();
+				clearInterval(interval);
 			}
 			time--;
-
 		}, 1000);
 	}
 
-	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void {
+	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void { /** @todo remove score */
 		this.createBall(scene, settings);
 		this.createMap(scene, settings);
 		this.startCountdown(START_TIMEOUT);
+		this.engine.getDeltaTime = this.originalGetDelta;
 	}
 
-	destroyEnvironnement(scene: babylon.Scene): void {
+	destroyEnvironnement(scene: babylon.Scene): void { /** @todo remove scene */
+		this.allowReceiving = false;
+		this.players.forEach((player) => {
+			player.clearControls();
+		});
 		this.destroyBall();
 		this.destroyMap();
 	}
