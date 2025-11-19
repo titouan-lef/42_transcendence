@@ -12,7 +12,6 @@ import { createEloTable } from "./elo.js";
 import { createGoalTable } from "./goal.js";
 import { createGameRuleTable } from "./game_rule.js";
 
-
 async function getDB(): Promise<Database> {
 	return open({
 		filename: "./database.db",
@@ -21,17 +20,20 @@ async function getDB(): Promise<Database> {
 }
 
 async function initDB(): Promise<void> {
-	createThemeTable();
-	createUserTable();
-	createFriendshipTable();
-	createSeasonTable();
-	createMapTable();
-	createBallTable();
-	createRuleTable();
-	createGameTable();
-	createGoalTable();
-	createGameRuleTable();
-	createEloTable();
+	// No foreign key.
+	await createSeasonTable();
+	await createRuleTable();
+	await createBallTable();
+	await createMapTable();
+	await createThemeTable();
+
+	// Foreign key.
+	await createUserTable();
+	await createFriendshipTable();
+	await createGameTable();
+	await createGoalTable();
+	await createGameRuleTable();
+	await createEloTable();
 }
 
 export { getDB, initDB };
