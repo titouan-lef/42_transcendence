@@ -1,9 +1,5 @@
 import { applyQuery, fetchAll } from "./db_utils.js";
 
-const TABLE_NAME = "User";
-const DEFAULT_PPLINK = "";/**@todo to complete*/
-const DEFAULT_THEME = "";/**@todo to complete*/
-
 interface User {
 	username: string;
 	pseudo: string;
@@ -12,6 +8,10 @@ interface User {
 	ppLink: string | null;
 	themeId: number | null; /** @todo null for the random  or default theme ?*/ 
 }
+
+const TABLE_NAME = "User";
+const DEFAULT_PPLINK = "";/**@todo to complete*/
+const DEFAULT_THEME = "";/**@todo to complete*/
 
 async function createUserTable(): Promise<void> {
 	applyQuery(

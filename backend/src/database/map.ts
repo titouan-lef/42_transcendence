@@ -1,11 +1,11 @@
 import { applyQuery, fetchAll } from "./db_utils.js";
 
-const TABLE_NAME = "Map";
-
 interface Map {
 	id: number;
 	name: string;
 }
+
+const TABLE_NAME = "Map";
 
 async function createMapTable(): Promise<void> {
 	applyQuery(

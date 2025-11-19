@@ -1,12 +1,12 @@
 import { applyQuery, fetchAll } from "./db_utils.js";
 
-const TABLE_NAME = "Game_rule";
-
 interface GameRule {
 	gameId: number;
 	ruleId: number;
 	isEnable: number;
 }
+
+const TABLE_NAME = "Game_rule";
 
 async function createGameRuleTable(): Promise<void> {
 	applyQuery(

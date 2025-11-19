@@ -1,12 +1,12 @@
 import { applyQuery, fetchAll } from "./db_utils.js";
 
-const TABLE_NAME = "Elo";
-
 interface Elo {
 	username: string;
 	gameId: number;
 	variation: number;
 }
+
+const TABLE_NAME = "Elo";
 
 async function createEloTable(): Promise<void> {
 	applyQuery(
@@ -21,6 +21,7 @@ async function createEloTable(): Promise<void> {
 		), "create" + TABLE_NAME + "Table"
 	);
 }
+
 async function insertElo(elo: Elo): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
