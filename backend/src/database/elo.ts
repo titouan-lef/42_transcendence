@@ -47,7 +47,7 @@ async function getElo(username: string, gameId: number): Promise<Elo | undefined
 export { Elo, createEloTable };
 /**
  * 
- * @todo Voir si on garde
+ * @todo see if we keep it
  * 
 async function updateElo(elo: Elo): Promise<void> {
 	applyQuery(async (db) => await db.run(

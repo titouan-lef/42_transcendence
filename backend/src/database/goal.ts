@@ -46,7 +46,7 @@ async function getGoalById(id: number): Promise<Goal | undefined> {
 export { Goal, createGoalTable };
 /**
  * 
- * @todo voir si on garde 
+ * @todo see if we keep it 
 async function updateGoal(id: number, updates: Partial<Omit<Goal, "id" | "scoredAt">>): Promise<void> {
 	applyQuery(async (db) => {
 		const fields = Object.keys(updates).map((key) => `${key} = ?`).join(", ");

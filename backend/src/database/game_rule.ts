@@ -46,7 +46,7 @@ async function getGameRuleById(gameId: number, ruleId: number): Promise<GameRule
 
 export { GameRule, createGameRuleTable };
 /**
- * @todo voir si on garde
+ * @todo see if we keep it
 async function updateGameRule(gameId: number, ruleId: number, updates: Partial<Omit<GameRule, "gameId" | "ruleId">>): Promise<void> {
 	applyQuery(async (db) => {
 		const fields = Object.keys(updates).map((key) => `${key} = ?`).join(", ");

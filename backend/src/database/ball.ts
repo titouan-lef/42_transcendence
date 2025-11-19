@@ -39,7 +39,7 @@ async function getBallById(id: number): Promise<Ball | undefined> {
 
 export { Ball, createBallTable };
 /**
- * @todo voir si on garde
+ * @todo see if we keep it
 async function updateBall(id: number, newName: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
 		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,

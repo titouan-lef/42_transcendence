@@ -41,7 +41,7 @@ async function getThemeById(id: number): Promise<Theme | undefined> {
 
 export { Theme, createThemeTable };
 /**
- * @todo voir si on garde
+ * @todo see if we keep it
 async function updateTheme(id: number, newName: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
 		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,

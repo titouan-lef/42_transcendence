@@ -33,7 +33,7 @@ async function getAllFriendship(): Promise<Friendship[] | undefined> {
 async function getFriendship(username: string): Promise<Friendship | undefined> {
 	return applyQuery(
 		async (db) => await db.get(
-			`SELECT * FROM ${TABLE_NAME} WHERE USERNAME = ?`,
+			`SELECT * FROM ${TABLE_NAME} WHERE username = ?`,
 			[username]
 		), "get" + TABLE_NAME
 	);	
@@ -50,7 +50,7 @@ async function deleteFriendship(username: string): Promise<void> {
 
 export { Friendship, createFriendshipTable };
 /**
- * @todo voir si on garde
+ * @todo see if we keep it
 async function updateFriendship(friendName: string, update: Partial<Omit<Friendship, "friendName">>): Promise<void> {
 	applyQuery(async (db) => {
 		const fields = Object.keys(update).map((k) => `${k} = ?`).join(", ");
