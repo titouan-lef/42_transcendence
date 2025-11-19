@@ -1,7 +1,5 @@
-import { createButtonHtml } from "../components/button.js";
-import { addHandler } from "../routes/event.js";
-import { navigate, PageID } from "../routes/page.js";
-import { applyColor } from "../utils/applyColor.js";
+import { createButtonHtml } from "../../components/button.js";
+import { applyColor } from "../../utils/applyColor.js";
 
 const MAIN_BOX_STYLE = `
 grow
@@ -28,7 +26,7 @@ animate-pulse
 ${applyColor()}
 `;
 
-const MAIN_MENU = `
+const MAIN_BOX = `
 <main id="main" class="${MAIN_BOX_STYLE}">
 	<div class="${MAIN_STYLE}">
 		<h1 class="${PONG_STYLE}">PONG</h1>
@@ -46,4 +44,4 @@ function mainMenuEvents(): void {
 	// addHandler("btn-sign-in", "click", () => loadDialog(signInHandler, SIGN_IN));
 };
 
-export { MAIN_MENU, mainMenuEvents };
+export { MAIN_BOX, mainMenuEvents };

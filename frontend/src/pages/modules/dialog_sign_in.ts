@@ -1,5 +1,5 @@
-import { createButtonHtml } from "../components/button.js";
-import { createInputHtml } from "../components/input.js";
+import { createButtonHtml } from "../../components/button.js";
+import { createInputHtml } from "../../components/input.js";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_SEPARATOR_STYLE, DIALOG_FORM_STYLE } from "./dialog_style.js";
 
 const SIGN_IN = `

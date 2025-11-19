@@ -1,5 +1,5 @@
-import { createButtonHtml } from "../components/button";
-import { applyColor } from "../utils/applyColor";
+import { createButtonHtml } from "../../components/button";
+import { applyColor } from "../../utils/applyColor";
 
 const ASIDE_BOX_STYLE = `
 grow
@@ -11,7 +11,7 @@ const ASIDE_STYLE = `
 grow-0
 flex
 rounded-2xl
-w-[200px]
+w-[200px] p-[5px]
 ${applyColor('alt')}
 `;
 
@@ -50,17 +50,17 @@ const ASIDE_NOT_CONNECTED = `
 	${createButtonHtml(["sign_up"], `btn-sign-up`, { "class": `${ASIDE_BTN_STYLE}` })}
 `;
 
-const ASIDE_BAR = `
+const ASIDE_BOX = `
 <aside id="aside" class="${ASIDE_STYLE}">
 	<div class="${ASIDE_BOX_STYLE}">
 		<div class="${AVATAR_STYLE}">
 			<img src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
 		</div>
-		<div id="aside-status">
+		<div id="aside-status" class="${ASIDE_BOX_STYLE}">
 			${ASIDE_NOT_CONNECTED}
 		</div>
 	</div>
 </aside>
 `;
 
-export { ASIDE_BAR, ASIDE_CONNECTED, ASIDE_NOT_CONNECTED };
+export { ASIDE_BOX, ASIDE_CONNECTED, ASIDE_NOT_CONNECTED };
