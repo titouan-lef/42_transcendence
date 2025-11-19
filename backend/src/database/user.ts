@@ -86,4 +86,4 @@ async function updateUser(username: string, updates: Partial<Omit<User, "usernam
 		await db.run(`UPDATE ${TABLE_NAME} SET ${fields} WHERE username = ?`,[...values, username,]);
 	}, "updateUser");
 }
-	*/
+*/
