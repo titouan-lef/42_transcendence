@@ -8,10 +8,10 @@ export interface PlayerSettings {
 }
 
 export class GameSettings {
-	readonly map: MapOption;
-	readonly ball: BallOption;
-	readonly rotatingPlayer: boolean;
-	readonly spin: boolean;
+	map: MapOption;
+	ball: BallOption;
+	rotatingPlayer: boolean;
+	spin: boolean;
 
 	readonly myId: 1 | 2;
 	readonly player1: PlayerSettings;
