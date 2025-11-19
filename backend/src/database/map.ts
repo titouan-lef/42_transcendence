@@ -41,7 +41,7 @@ async function getMapById(id: number): Promise<Map | undefined> {
 
 export { Map, createMapTable };
 /** 
- * @todo voir si on garde
+ * @todo see if we keep it
 async function updateMap(id: number, newName: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
 		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,

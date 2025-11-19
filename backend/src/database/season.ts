@@ -40,7 +40,7 @@ async function getSeasonById(id: number): Promise<Season | undefined> {
 
 export { Season, createSeasonTable };
 /**
- * @todo voir si on garde
+ * @todo see if we keep it
 async function updateSeason(id: number, newName: string): Promise<void> {
 	applyQuery(async (db) => await db.run(
 		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,
