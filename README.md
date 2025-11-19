@@ -3,9 +3,13 @@
 ## Contents
 * [Coding](#coding-%EF%B8%8F)
    * [Common Rules](#common-rules)
+     * [Organisation rules](#organisation-rules)
+       * [Folder names](#folder-names)
+       * [File names](#file-names)
+       * [File Organisation](#file-organisation)
+       * [File Class Organisation](#file-class-organisation)
      * [General Rules](#general-rules)
-     * [How and why avoid using getters and setters](#how-and-why-avoid-using-getters-and-setters)
-     * [File Organisation](#file-organisation)
+       * [How and why avoid using getters and setters](#how-and-why-avoid-using-getters-and-setters)
    * [TypeScript](#typescript)
      * [Syntax](#syntax)
      * [Visibility](#visibility)
@@ -57,7 +61,7 @@
 
 ### Common Rules
 
-#### File organisation rules
+#### Organisation rules
 
 ##### Folder names
 - Use `snake_case` to name folders.
@@ -79,6 +83,21 @@
 - Use `kebab-case` for _docker-compose_ files.
 - Use `Capitalized` for _Makefile_ and _Dockerfile_.
 - Use `flatcase` for all config files (_.json, .config.js_).
+
+##### File Organisation
+1. Import
+2. Interface/Type
+3. Constant/Function call
+4. Function
+5. Export
+
+##### File Class Organisation
+1. public/protected/private types (typedef, using, enum)
+2. protected/private member declaration
+3. Constructor/Destructor
+4. Getters/Setters
+5. Overload operator
+6. Methods (public/protected/private) written in the read direction.
 
 #### General Rules
 - Names must be descriptive and clear to a new reader (scientific/technical names first, and if none exist, use computer science terms related to the problem).
@@ -103,7 +122,7 @@
 - Extract `try/catch` blocks using throws to have a single statement in `try/catch` and so that the function starts with the `try` and ends with the `catch`.
 - Rather than using enums or classes for all error codes, use multiple classes inheriting from the `Exception` class : this will avoid recompilation when adding errors.
 
-#### How and why avoid using getters and setters
+##### How and why avoid using getters and setters
 Two example in pseudo code :
 ```ts
 // Don't do
@@ -194,14 +213,6 @@ class Player {
     }
 }
 ```
-
-#### File Organisation
-1. public/protected/private types (typedef, using, enum)
-2. protected/private member declaration
-3. Constructor/Destructor
-4. Getters/Setters
-5. Overload operator
-6. Methods (public/protected/private) written in the read direction.
 
 ### TypeScript
 
