@@ -48,8 +48,10 @@
    * [Commit Rules](#commit-rules)
    * [Branch Rules](#branch-rules)
 * [Links](#links)
+   * [Documentation](#documentation)
    * [Convention](#convention)
    * [Utils](#utils)
+   * [Elo](#elo)
 
 ## Coding ⌨️
 
@@ -563,3 +565,9 @@ Other | `WIP`<br>`DOCS`<br>`TEST` | Work In Progress.<br>Add or update documenta
 - Figma : https://www.figma.com/design/wg7bGU0KpypDmY3oOYij7i/Squelette?node-id=0-1&t=qWQYNu3hxw5eczve-1
 - Excalidraw : https://excalidraw.com/#room=5d70f3e7c32fd3e972c9,rHn_zBCNQYGJspL2u9MZBQ
 - Google Sheets : https://docs.google.com/spreadsheets/d/1ktLkwKtNEt1qTSRgfhirjpgNRBK502MYdi7dMi4ijN4/edit?usp=sharing
+
+### Elo
+- The Glicko system : https://www.glicko.net/glicko/glicko.pdf
+- Glicko rating system : https://en.wikipedia.org/wiki/Glicko_rating_system
+- Elo rating system : https://fr.wikipedia.org/wiki/Classement_Elo
+- Glicko (1 & 2) documentation : https://www.glicko.net/glicko.html
