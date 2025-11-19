@@ -1,10 +1,11 @@
 import { applyQuery, fetchAll } from "./db_utils.js";
 
-const TABLE_NAME = "Season";
 interface Season {
 	id: number;
 	startedAT: string;
 }
+
+const TABLE_NAME = "Season";
 
 async function createSeasonTable(): Promise<void> {
 	applyQuery(

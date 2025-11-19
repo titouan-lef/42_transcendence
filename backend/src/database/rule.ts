@@ -1,11 +1,11 @@
 import { applyQuery, fetchAll } from "./db_utils.js";
 
-const TABLE_NAME = "Rule";
-
 interface Rule {
 	id: number;
 	name: string;
 }
+
+const TABLE_NAME = "Rule";
 
 async function createRuleTable(): Promise<void> {
 	applyQuery(

@@ -1,13 +1,13 @@
 import { applyQuery, fetchAll } from "./db_utils.js";
 
-const TABLE_NAME = "Goal";
-
 interface Goal {
 	id: number;
 	scoredAt: string;
 	gameId: number;
 	username: string;
 }
+
+const TABLE_NAME = "Goal";
 
 async function createGoalTable(): Promise<void> {
 	applyQuery(

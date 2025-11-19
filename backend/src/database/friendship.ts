@@ -1,11 +1,11 @@
 import { applyQuery, fetchAll } from "./db_utils.js";
 
-const TABLE_NAME = "Friendship";
-
 interface Friendship {
 	username: string;
 	friendName: string;
 }
+
+const TABLE_NAME = "Friendship";
 
 async function createFriendshipTable(): Promise<void> {
 	applyQuery(

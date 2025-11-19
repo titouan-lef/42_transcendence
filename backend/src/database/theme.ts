@@ -1,11 +1,11 @@
 import { applyQuery, fetchAll } from "./db_utils.js";
 
-const TABLE_NAME = "Theme";
-
 interface Theme {
 	id: number;
 	name: string;
 }
+
+const TABLE_NAME = "Theme";
 
 async function createThemeTable(): Promise<void> {
 	applyQuery(

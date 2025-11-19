@@ -1,7 +1,5 @@
 import { applyQuery, fetchAll } from "./db_utils.js";
 
-const TABLE_NAME = "Game";
-
 interface Game {
 	id: number;
 	beganAt: string;
@@ -9,6 +7,8 @@ interface Game {
 	ballId: number; /** @todo null ? */
 	seasonId: number; /** @todo null ? */
 }
+
+const TABLE_NAME = "Game";
 
 async function createGameTable(): Promise<void> {
 	applyQuery(
