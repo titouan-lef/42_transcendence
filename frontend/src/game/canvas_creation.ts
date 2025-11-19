@@ -2,8 +2,8 @@ import { Game } from "./Game.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { ObjectMessage, OptionMessage, PositionsMessage, TimingMessage } from "./types_transfert.js";
 
-/**@todo not sure about this, do we loose reference at the end ? */
-let game: Game;
+/**@todo gameManager to handle several games and reconect a user tha has been disconected for a few seconds */
+let game: Game | null = null;
 
 /**@todo will see how we pop the game */
 async function showCanvas(socket: WebSocket, options: OptionMessage): Promise<void> {
@@ -22,7 +22,12 @@ async function showCanvas(socket: WebSocket, options: OptionMessage): Promise<vo
 }
 
 async function updateGameObject(object: ObjectMessage): Promise<void> {
-	game.updateObject(object);
+	game?.updateObject(object);
 } /** @todo change this in the scene manager directly after objects refacto */
 
-export { showCanvas, updateGameObject };
+async function stopGame(): Promise<void> {
+	game?.stop();
+	game = null;
+}
+
+export { showCanvas, updateGameObject, stopGame };

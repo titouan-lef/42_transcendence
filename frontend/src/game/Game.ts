@@ -3,6 +3,7 @@ import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS, START_TIMEOUT } from "./settings/values.js";
 import { DataMessage, ObjectMessage, OptionMessage, Status } from "./types_transfert.js";
+import { stopGame } from "./canvas_creation.js";
 
 export class Game {
 	private readonly socket: WebSocket;
@@ -30,8 +31,10 @@ export class Game {
 
 		socket.addEventListener("message", (event) => { /** @todo check if removeEventListener is necesseray and the end of the game */
 			const message : DataMessage = JSON.parse(event.data);
-			if (message.status === Status.STOP)
+			if (message.status === Status.STOP) {
 				this.stop();
+				stopGame();
+			}
 		});
 	}
 
