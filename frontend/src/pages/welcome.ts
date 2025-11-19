@@ -1,22 +1,28 @@
-import { addHandler } from "../routes/event.js";
-import { PageID, navigate } from "../routes/page.js";
+import { ELEM, loadPage } from "../routes/page";
+import { applyColor } from "../utils/applyColor";
+import { MODULAR, modularEvents } from "./modular";
 
 /** @todo clamp : better responsivity (not working well here) */
-const CLASS_CSS = `
-font-jaro font-bold text-tx-prim bg-primary
-text-[clamp(100px,50vmin,500px)] text-balance
+const WELCOME_STYLE = `
 flex items-center justify-center h-screen
+text-[clamp(100px,50vmin,500px)] text-balance
+font-jaro font-bold
+${applyColor('alt')}
 `;
 
-/** @todo mettre une variable pour les textes (import des langues) ${gameName} */
 const WELCOME = `
-<div class="${CLASS_CSS}">
+<div class="${WELCOME_STYLE}">
 	PONG
 </div>
 `;
 
-// function firstEvents(): void {
-// 	addHandler(PageID.FIRST, "click", () => navigate(PageID.MAIN_MENU));
-// }
+function goToModular(): void {
+	ELEM.removeEventListener('click', goToModular);
+	loadPage(MODULAR, modularEvents);
+}
 
-export { WELCOME };
+function welcomeEvents(): void {
+	ELEM.addEventListener('click', goToModular);
+}
+
+export { WELCOME, welcomeEvents };

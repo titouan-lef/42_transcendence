@@ -23,6 +23,4 @@ function setTheme(theme: Themes): void {
 	document.body.dataset.theme = theme;
 }
 
-initTheme();
-
-export { Themes, setTheme };
+export { Themes, setTheme, initTheme };

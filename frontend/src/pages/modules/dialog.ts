@@ -1,5 +1,5 @@
-import { getSafeElement } from "../utils/getSafeElement.js";
-import { applyColor } from "../utils/applyColor.js";
+import { getSafeElement } from "../../utils/getSafeElement.js";
+import { applyColor } from "../../utils/applyColor.js";
 
 const DIALOG_MAIN_STYLE = `
 	m-auto p-0 rounded-2xl
