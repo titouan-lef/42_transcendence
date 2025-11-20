@@ -203,13 +203,11 @@ export class Game {
 		const intervalMs = 1000 / 60; // 60 fps
 
 		this.gameInterval = setInterval(() => {
-			if (this.sceneManager.isSendingAllowed()) {
-				const player1 = this.sceneManager.getPlayer(1);
-				const player2 = this.sceneManager.getPlayer(2);
-				if (!player1 || !player2)
-					return;
-				this.sendPositions(player1, player2);
-			}
+			const player1 = this.sceneManager.getPlayer(1);
+			const player2 = this.sceneManager.getPlayer(2);
+			if (!player1 || !player2)
+				return;
+			this.sendPositions(player1, player2);
 		}, intervalMs);
 	}
 
@@ -247,8 +245,6 @@ export class Game {
 	}
 
 	receiveDataFrom(playerName: string, message: string): void {
-		if (!this.sceneManager.isReceivingAllowed())
-			return;
 		const controls: PlayerControls = JSON.parse(message);
 		const player1 = this.sceneManager.getPlayer(1);
 		const player2 = this.sceneManager.getPlayer(2);
