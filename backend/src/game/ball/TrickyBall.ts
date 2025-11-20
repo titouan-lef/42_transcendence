@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
 import { TRICKY_BALL_EFFECT_INTERVAL, TRICKY_BALL_FORWARD_ONLY } from "../settings/values.js";
 import { WebSocket } from "ws";
-
+import { vec3ToPos } from "../utils.js";
 
 export class TrickyBall extends BallTemplate {
 	private readonly effectIntervalId: ReturnType<typeof setInterval>;
@@ -34,7 +34,7 @@ export class TrickyBall extends BallTemplate {
 				}
 			}
 			this.physic.body.setLinearVelocity(newDirection.scale(speed));
-			// this.showParticles(this.mesh.position, this.mesh.getScene(), "impulse");
+			this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position));
 		}, TRICKY_BALL_EFFECT_INTERVAL);
 		return effectIntervalId;
 	}
