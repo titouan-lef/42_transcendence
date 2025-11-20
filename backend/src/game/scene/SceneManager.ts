@@ -25,6 +25,7 @@ export class SceneManager {
 	private allowReceiving = false;
 	private allowSending = false;
 	private countdownIntervalId: ReturnType<typeof setInterval> | null = null;
+	private endOfGame = false;
 
 	constructor(engine: babylon.Engine) {
 		this.engine = engine;
@@ -138,12 +139,12 @@ export class SceneManager {
 		this.engine.getDeltaTime = function(): number {
 			return originalGetDelta.call(this) * 0.01; // slow animations
 		};
+		/** @todo send DeltaTime to the front ? */
 		await new Promise<void>(resolve => {
 			setTimeout( () => {
 				resolve();
 			}, 2700);
 		});
-		/** @todo send DeltaTime to the front ? */
 	}
 
 	private async sendParticuleEvent(player1: Player, player2: Player, type: ParticlesType, position: Position) : Promise<void> {
@@ -173,6 +174,10 @@ export class SceneManager {
 		return this.allowReceiving;
 	}
 
+	doesGameEnded(): boolean {
+		return this.endOfGame;
+	}
+
 	startCountdown(time: number): ReturnType<typeof setInterval> {
 		const countdownIntervalId = setInterval(() => {
 			const player1 = this.getPlayer(1);
@@ -197,10 +202,13 @@ export class SceneManager {
 	}
 
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void { /** @todo remove score */
+		if (this.doesGameEnded())
+			return ;
 		this.createBall(scene, settings);
 		this.createMap(scene, settings);
 		this.countdownIntervalId = this.startCountdown(START_TIMEOUT);
 		this.engine.getDeltaTime = this.originalGetDelta;
+		/** @todo send DeltaTime to the front ? */
 	}
 
 	destroyEnvironnement(scene: babylon.Scene): void { /** @todo remove scene */
@@ -239,6 +247,7 @@ export class SceneManager {
 	}
 
 	destroyScene(scene: babylon.Scene): void {
+		this.endOfGame = true;
 		this.destroyPlayers();
 		if (this.countdownIntervalId)
 			clearInterval(this.countdownIntervalId);
