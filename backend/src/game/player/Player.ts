@@ -143,9 +143,9 @@ export class Player {
 	}
 
 	private handleAction(): void {
-		this.linearVelocityZ = (+this.keyPressed[1] - +this.keyPressed[0]) * PLAYER_MOVEMENT_VELOCITY;
+		this.linearVelocityZ = (+this.keyPressed[1] - +this.keyPressed[0]) * PLAYER_MOVEMENT_VELOCITY * (2 * (this.id - 1) - 1);
 		if (this.rotatingPlayer)
-			this.angularVelocityY = (+this.keyPressed[3] - +this.keyPressed[2]) * PLAYER_ROTATION_VELOCITY;
+			this.angularVelocityY = (+this.keyPressed[3] - +this.keyPressed[2]) * PLAYER_ROTATION_VELOCITY * (2 * (this.id - 1) - 1);
 		if (this.keyPressed[4] && this.rotatingPlayer)
 			this.resetPlayerRotation();
 	}
