@@ -22,10 +22,8 @@ export class SceneManager {
 	private readonly players: Player[] = [];
 	private engine: babylon.Engine;
 	private originalGetDelta: () => number;
-	private allowReceiving = false;
-	private allowSending = false;
 	private countdownIntervalId: ReturnType<typeof setInterval> | null = null;
-	private endOfGame = false;
+	private gameStopped = false;
 
 	constructor(engine: babylon.Engine) {
 		this.engine = engine;
@@ -182,16 +180,8 @@ export class SceneManager {
 		player2.send(time);
 	}
 
-	isSendingAllowed(): boolean {
-		return this.allowSending;
-	}
-
-	isReceivingAllowed(): boolean {
-		return this.allowReceiving;
-	}
-
 	doesGameEnded(): boolean {
-		return this.endOfGame;
+		return this.gameStopped;
 	}
 
 	startCountdown(time: number): ReturnType<typeof setInterval> {
@@ -200,11 +190,8 @@ export class SceneManager {
 			const player2 = this.getPlayer(2);
 			if (!player1 || !player2)
 				return;
-			this.allowSending = false;
 			this.sendCountDown(player1, player2, time);
 			if (time <= 0) {
-				this.allowSending = true;
-				this.allowReceiving = true;
 				this.ball?.launchBall();
 				this.map?.start();
 				if (this.countdownIntervalId) {
@@ -232,7 +219,7 @@ export class SceneManager {
 	}
 
 	destroyEnvironnement(scene: babylon.Scene): void { /** @todo remove scene */
-		this.allowReceiving = false;
+		// this.allowReceiving = false;
 		this.players.forEach((player) => {
 			player.clearControls();
 		});
@@ -267,7 +254,7 @@ export class SceneManager {
 	}
 
 	destroyScene(scene: babylon.Scene): void {
-		this.endOfGame = true;
+		this.gameStopped = true;
 		this.destroyPlayers();
 		if (this.countdownIntervalId)
 			clearInterval(this.countdownIntervalId);
