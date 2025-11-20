@@ -7,7 +7,7 @@ let game: Game;
 async function startGame(playerName1: string, playerName2: string, player1: WebSocket, player2: WebSocket): Promise<void> {
 
 	const settings = new GameSettings(
-		"desert", "default", true, true,
+		"random", "random", true, true,
 		player1, player2, playerName1, playerName2
 	);
 

@@ -2,10 +2,10 @@ import * as babylon from "@babylonjs/core";
 import { BallOption } from "../settings/GameSettings.js";
 import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_TRAIL_ON } from "../settings/values.js";
 import { BallTrail } from "./BallTrail.js";
-import { PlanePosition, Position } from "../types_transfert.js";
+import { Position } from "../types_transfert.js";
 import { ParticlesType } from "../types_transfert.js";
 
-export abstract class BallTemplate {
+export class Ball {
 
 	protected readonly color: babylon.Color3;
 	private readonly ballTrails: BallTrail[] = [];
@@ -102,12 +102,12 @@ export abstract class BallTemplate {
 		return explosionParticles;
 	}
 
-	/** hides ball on goal and stop intervals */
-	preDeath(): void { /**@todo not used*/
-		this.mesh.visibility = 0;
-		this.gameStopped = true;
-		this.destroyRest();
-	}
+	// /** hides ball on goal and stop intervals */
+	// preDeath(): void { /**@todo not used*/
+	// 	this.mesh.visibility = 0;
+	// 	this.gameStopped = true;
+	// 	this.destroyRest();
+	// }
 
 	setPosition(position: Position): void {
 		this.mesh.position.x = position.x;
@@ -122,7 +122,7 @@ export abstract class BallTemplate {
 	/** Spawn particules */
 	showParticles(collisionPoint: Position, scene: babylon.Scene, type: ParticlesType): void {
 		if (collisionPoint === null)
-			return ;
+			return;
 		let particle: babylon.ParticleSystem;
 		switch (type) {
 			case "collision":
@@ -149,7 +149,6 @@ export abstract class BallTemplate {
 	}
 
 	destroy(): void {
-		this.destroyRest();
 		if (this.trailIntervalId)
 			clearInterval(this.trailIntervalId);
 		while (this.ballTrails.length) {
@@ -166,8 +165,4 @@ export abstract class BallTemplate {
 		this.mesh?.material?.dispose();
 		this.mesh?.dispose();
 	}
-
-	abstract activateEffect(): void;
-
-	abstract destroyRest(): void;
 }

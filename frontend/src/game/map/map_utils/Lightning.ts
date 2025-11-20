@@ -3,7 +3,6 @@ import { MAP_SIZE, LIGHTNING_FRAMES_TO_DISAPPEAR, LIGHTNING_COLLISION_RADIUS, LI
 import { Position } from "../../types_transfert.js";
 
 export class Lightning {
-	//private readonly lightningIntervalId: ReturnType<typeof setInterval>;
 	private readonly lightning: babylon.Mesh;
 	private readonly particles: babylon.ParticleSystem;
 	private readonly size;
@@ -19,11 +18,9 @@ export class Lightning {
 		material.alpha = 1;
 		this.lightning.material = material;
 		this.lightning.renderingGroupId = 1;
-		//this.lightningIntervalId = this.animateLightningFade(material);
 		this.changeVisibility(1);
 		this.particles = this.createContactParticles(scene, end, texture);
 		this.particles.start();
-		console.log("test");
 	}
 
 	private spawnLightning(scene: babylon.Scene, start: babylon.Vector3, end: babylon.Vector3): babylon.Mesh {
@@ -89,9 +86,7 @@ export class Lightning {
 		return particles;
 	}
 
-
 	destroy(): void {
-		//clearInterval(this.lightningIntervalId);
 		this.particles?.stop();
 		if (this.particles && this.particles.particleTexture)
 			this.particles.particleTexture = null;

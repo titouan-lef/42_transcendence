@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { MAP_SIZE, WALL_WIDTH, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH, LIGHTNING_FRAMES_TO_DISAPPEAR, LIGHTNING_LIFETIME } from "../../settings/values.js";
+import { MAP_SIZE, WALL_WIDTH, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH, LIGHTNING_LIFETIME } from "../../settings/values.js";
 import { BallTemplate } from "../../ball/BallTemplate.js";
 import { Object, ObjectMessage, Status } from "../../../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
@@ -53,7 +53,7 @@ export class Lightning {
 			this.currentLifetime -= scene.getEngine().getDeltaTime() / LIGHTNING_LIFETIME;
 			if (this.currentLifetime <= 0) {
 				this.destroy();
-				return ;
+				return;
 			}
 			this.sendObjectInfos(); /** @todo send at 30 fps */
 		});
@@ -63,7 +63,7 @@ export class Lightning {
 	private applyExplosionForce(scene: babylon.Scene, center: babylon.Vector3): void {
 		scene.meshes.forEach(mesh => {
 			if (!mesh.metadata?.pushable || !mesh.physicsBody)
-				return ;
+				return;
 			const body = mesh.physicsBody;
 			const meshPosition = mesh.getAbsolutePosition();
 			const direction = meshPosition.subtract(center);

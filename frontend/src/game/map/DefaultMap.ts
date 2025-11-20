@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS3, COLORS4, START_TIMEOUT, D_GLOW_INTENSITY } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS3, COLORS4, D_GLOW_INTENSITY } from "../settings/values.js";
 import { PlanePosition } from "../types_transfert.js";
 
 export class DefaultMap extends MapTemplate {

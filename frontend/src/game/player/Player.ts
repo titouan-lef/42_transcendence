@@ -7,7 +7,6 @@ import { PlanePosition, PlayerControls, Rotation } from "../types_transfert.js";
 export class Player {
 	private readonly player: babylon.TransformNode;
 	private readonly id: 1 | 2;
-	// private readonly body: babylon.PhysicsBody;
 	private readonly controls: PlayerKeys;
 	private readonly keyPressed: boolean[] = [false, false, false, false, false];
 	private readonly applyingSpin;
@@ -19,8 +18,6 @@ export class Player {
 		this.controls = settings.playerKeys;
 		this.player = this.setPlayer(scene, position);
 		this.id = settings.playerId;
-		// this.body = this.setPlayerPhysic(scene);
-		// this.resetPlayerRotation();
 
 		if (PLAYER_TRAIL_ON)
 			this.trailIntervalId = this.setTrail(scene);
@@ -119,8 +116,6 @@ export class Player {
 			this.playerTrails[0]?.destroy();
 			this.playerTrails?.splice(0, 1);
 		}
-		// this.body?.shape?.dispose();
-		// this.body?.dispose();
 		this.player?.getChildMeshes().forEach(child => {
 			child.material?.dispose();
 			child.dispose();

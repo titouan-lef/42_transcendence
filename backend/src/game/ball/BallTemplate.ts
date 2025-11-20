@@ -35,9 +35,6 @@ export abstract class BallTemplate {
 		this.mesh.metadata = { type: "collider", pushable: true };
 		this.mesh.renderingGroupId = 1;
 		this.sockets = sockets;
-		// this.color = color;
-		// this.textures = textures;
-		// this.setMaterial(scene);
 		this.physic = this.setPhysic(scene);
 		
 		this.physic.body.setCollisionCallbackEnabled(true);
@@ -46,13 +43,11 @@ export abstract class BallTemplate {
 
 		this.yObservable = scene.onAfterPhysicsObservable;
 		this.yObserver = this.blockVelocityY();
-		
+
 		this.realDirection = this.physic.body.getLinearVelocity();
 		
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.sceneObserver = this.applyMovementChanges();
-		// if (BALL_TRAIL_ON)
-		// 	this.trailIntervalId = this.setTrail(scene);
 	}
 
 	/**block the ball from having a Y velocity */
@@ -74,12 +69,6 @@ export abstract class BallTemplate {
 		this.justCollided = true;
 		this.gameStopped = false;
 	}
-
-	// private setMaterial(scene: babylon.Scene): void {
-	// 	const material = new babylon.StandardMaterial('ballcolor', scene);
-	// 	material.emissiveColor = this.color;
-	// 	this.mesh.material = material;
-	// }
 
 	private setPhysic(scene: babylon.Scene): babylon.PhysicsAggregate {
 		const physic = new babylon.PhysicsAggregate(this.mesh, babylon.PhysicsShapeType.SPHERE, {
@@ -241,14 +230,6 @@ export abstract class BallTemplate {
 	getType(): BallOption {
 		return this.type;
 	}
-
-	// /**debug function*/
-	// moveBall(): void {
-	// 	this.physic.body.applyImpulse(
-	// 		new babylon.Vector3(25, 0, 0),
-	// 		this.mesh.position
-	// 	);
-	// }
 
 	destroy(): void {
 		this.destroyRest();

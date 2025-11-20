@@ -37,7 +37,7 @@ export class CountDown {
 
 	private changeText(score: string | number): void {
 		if (this.countDown.material === null)
-			return ;
+			return;
 		const ctx = this.countDownTexture.getContext();
 		ctx.font = `bold ${COUNTDOWN_SIZE}px Arial`;
 		const text = `${score}`;
