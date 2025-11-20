@@ -9,7 +9,7 @@ export abstract class MapTemplate {
 	protected readonly limits: babylon.Mesh[];
 	protected readonly limitsPhysic: babylon.PhysicsAggregate[] = [];
 	private readonly type: MapOption;
-	protected wind: PlanePosition = { x: 0, z:0 };
+	protected wind: PlanePosition = { x: 0, z: 0 };
 	protected gameStopped = true;
 
 	constructor(scene: babylon.Scene, type: MapOption) {
