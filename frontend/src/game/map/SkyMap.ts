@@ -4,7 +4,7 @@ import { Lightning } from "./map_utils/Lightning.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME, R_GLOW_INTENSITY } from "../settings/values.js";
 import { ObjectMessage } from "../types_transfert.js";
 
-export class RainyMap extends MapTemplate {
+export class SkyMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
 	// private readonly lightningIntervalId: ReturnType<typeof setInterval>;
 	private readonly lightnings: Lightning[] = [];
@@ -85,7 +85,7 @@ export class RainyMap extends MapTemplate {
 		if (this.gameStopped)
 			return;
 		if (lightning.id >= this.lightnings?.length) {
-			this.lightnings?.push(new Lightning(scene, texture.spark, lightning.position, lightning.size));
+			this.lightnings?.push(new Lightning(scene, texture.electricity, lightning.position, lightning.size));
 		} else {
 			if (lightning.currentLifetime === 0) {
 				this.lightnings?.at(lightning.id)?.destroy();

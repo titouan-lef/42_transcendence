@@ -24,7 +24,6 @@ export abstract class MapTemplate {
 		this.limits = this.createLimits(scene);
 		this.limits.forEach(limit => limit.renderingGroupId = 1);
 		this.limits.forEach(limit => this.setLimitPhysic(scene, limit));
-		// this.sunPosition = this.getSunPosition(scene);
 	}
 
 	start(): void {
@@ -71,51 +70,22 @@ export abstract class MapTemplate {
 		return limits;
 	}
 
-	// private getSunPosition(scene: babylon.Scene): babylon.Vector3 {
-	// 	const camera = scene.getCameraByName("camera");
-	// 	let sunPosition = babylon.Vector3.Zero();
-	// 	if (camera === null || !(camera instanceof babylon.ArcRotateCamera))
-	// 		return sunPosition;
-	// 	const direction = camera.target.subtract(camera.position);
-	// 	direction.y = 0;
-	// 	direction.normalize();
-	// 	const planePosition = camera.position.add(direction.scale(CAMERA_POS_X + (MAP_SIZE.x * 0.6)));
-	// 	sunPosition = new babylon.Vector3(planePosition.x, SCORE_POS_Y, planePosition.z);
-	// 	return sunPosition;
-	// }
-
 	getType(): MapOption {
 		return this.type;
 	}
 
 	destroy(): void {
-		// if (this.highlightTimeout)
-		// 	clearTimeout(this.highlightTimeout);
 		this.destroyRest();
 		this.groundPhysic?.dispose();
-		// if (this.ground.material && this.ground.material instanceof babylon.StandardMaterial) {
-		// 	this.ground.material.bumpTexture?.dispose();
-		// 	this.ground.material.diffuseTexture?.dispose();
-		// }
-		// this.ground?.material?.dispose();
 		this.ground?.dispose();
 		for (let i = 0; i < this.limits.length; i++) {
 			this.limitsPhysic[i]?.dispose();
 			this.limits[i]?.material?.dispose();
 			this.limits[i]?.dispose();
 		}
-		// this.sun?.material?.dispose();
-		// this.sun?.dispose();
-		// this.light?.dispose();
-		// this.glow?.dispose();
-		// this.wallHighlight?.dispose();
 	}
 
 	abstract createGround(scene: babylon.Scene): babylon.Mesh;
-
-	// abstract createLight(scene: babylon.Scene): babylon.DirectionalLight;
-
-	// abstract createSun(scene: babylon.Scene): babylon.Mesh;
 
 	abstract createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh;
 

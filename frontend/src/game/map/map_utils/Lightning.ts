@@ -23,6 +23,7 @@ export class Lightning {
 		this.changeVisibility(1);
 		this.particles = this.createContactParticles(scene, end, texture);
 		this.particles.start();
+		console.log("test");
 	}
 
 	private spawnLightning(scene: babylon.Scene, start: babylon.Vector3, end: babylon.Vector3): babylon.Mesh {
