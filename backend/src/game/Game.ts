@@ -164,6 +164,7 @@ export class Game {
 			status: Status.OPTIONS,
 			playerId: 1,
 			map: this.sceneManager.getMapType(),
+			wind: this.sceneManager.getWind(),
 			ball: "default",
 			rotatingPlayer: this.settings.rotatingPlayer,
 			spin: this.settings.spin

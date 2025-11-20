@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, CAMERA_POS_X, SCORE_POS_Y, START_TIMEOUT } from "../settings/values.js";
-import { ObjectMessage } from "../types_transfert.js";
+import { ObjectMessage, PlanePosition } from "../types_transfert.js";
 
 export abstract class MapTemplate {
 	protected glow: babylon.GlowLayer;
@@ -13,10 +13,12 @@ export abstract class MapTemplate {
 	protected readonly sunPosition: babylon.Vector3;
 	protected highlightTimeout: ReturnType<typeof setTimeout> | null = null;
 	protected wallHighlight: babylon.HighlightLayer | null = null;
+	protected readonly wind: PlanePosition;
 	protected gameStopped = false;
 
-	constructor(scene: babylon.Scene, type: MapOption) {
+	constructor(scene: babylon.Scene, type: MapOption, wind: PlanePosition) {
 		this.type = type;
+		this.wind = wind;
 		this.ground = this.createGround(scene);
 		this.ground.renderingGroupId = 1;
 		this.limits = this.createLimits(scene);

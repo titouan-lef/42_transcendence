@@ -2,14 +2,14 @@ import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Meteor } from "./map_utils/Meteor.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER, V_GLOW_INTENSITY, START_TIMEOUT } from "../settings/values.js";
-import { ObjectMessage } from "../types_transfert.js";
+import { ObjectMessage, PlanePosition } from "../types_transfert.js";
 
 export class VolcanoMap extends MapTemplate {
 	private readonly meteors: Meteor[] = [];
 	private readonly particles: babylon.ParticleSystem;
 
-	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
-		super(scene, "volcano");
+	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>, wind: PlanePosition) {
+		super(scene, "volcano", wind);
 		this.glow.intensity = V_GLOW_INTENSITY;
 		this.particles = this.createParticles(scene, texture.flare);
 		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);

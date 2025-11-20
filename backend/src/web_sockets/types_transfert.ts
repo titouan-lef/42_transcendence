@@ -84,6 +84,7 @@ interface OptionMessage {
 	status: Status.OPTIONS,
 	playerId: 1 | 2;
 	map: MapOption;
+	wind: PlanePosition; // Vector2
 	ball: BallOption;
 	rotatingPlayer: boolean;
 	spin: boolean;
