@@ -66,7 +66,7 @@ export class SceneManager {
 				color = COLORS3.red;
 				break;
 			case "tricky":
-				color = COLORS3.white;
+				color = COLORS3.orange;
 				break;
 			case "pulse":
 				color = COLORS3.blue;
