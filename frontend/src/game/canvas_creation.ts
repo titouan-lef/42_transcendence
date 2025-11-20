@@ -8,7 +8,7 @@ let game: Game | null = null;
 /**@todo will see how we pop the game */
 async function showCanvas(socket: WebSocket, options: OptionMessage): Promise<void> {
 	const settings = new GameSettings(
-		options.playerId, options.map, options.ball, options.rotatingPlayer, options.spin,
+		options.playerId, options.map, options.wind, options.ball, options.rotatingPlayer, options.spin,
 		["KeyA", "KeyD", "KeyW", "KeyS", "Space"],
 		["KeyJ", "KeyL", "KeyI", "KeyK", "KeyP"]
 	);

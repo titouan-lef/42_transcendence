@@ -1,14 +1,15 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS3, COLORS4, START_TIMEOUT, D_GLOW_INTENSITY } from "../settings/values.js";
+import { PlanePosition } from "../types_transfert.js";
 
 export class DefaultMap extends MapTemplate {
 	private readonly bars: babylon.Mesh[];
 	private readonly particles: babylon.ParticleSystem;
 	private readonly wallHighlightColor: babylon.Color3 = COLORS3.defaultHighlightWall;
 
-	constructor(scene: babylon.Scene, texture: babylon.Texture) {
-		super(scene, "default");
+	constructor(scene: babylon.Scene, texture: babylon.Texture, wind: PlanePosition) {
+		super(scene, "default", wind);
 		this.glow.intensity = D_GLOW_INTENSITY;
 		this.bars = this.createBars(scene);
 		this.particles = this.createParticles(scene, texture);

@@ -1,3 +1,5 @@
+import { PlanePosition } from "../types_transfert";
+
 export type MapOption = "default" | "random" | "volcano" | "sky" | "desert";
 export type BallOption = "default" | "random" | "invisible" | "tricky" | "pulse" | "snake";
 export type PlayerKeys = [KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"]];
@@ -9,6 +11,7 @@ export interface PlayerSettings {
 
 export class GameSettings {
 	map: MapOption;
+	wind: PlanePosition;
 	ball: BallOption;
 	rotatingPlayer: boolean;
 	spin: boolean;
@@ -17,9 +20,10 @@ export class GameSettings {
 	readonly player1: PlayerSettings;
 	readonly player2: PlayerSettings;
 
-	constructor(myId: 1 | 2, map:  MapOption, ball: BallOption, rotatingPlayer: boolean, spin: boolean,
+	constructor(myId: 1 | 2, map:  MapOption, wind: PlanePosition, ball: BallOption, rotatingPlayer: boolean, spin: boolean,
 		player1Keys: PlayerKeys, player2Keys: PlayerKeys) {
 		this.map = map;
+		this.wind = wind;
 		this.ball = ball;
 		this.rotatingPlayer = rotatingPlayer;
 		this.spin = spin;

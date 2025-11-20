@@ -1,6 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH } from "../settings/values.js";
+import { PlanePosition } from "../../web_sockets/types_transfert.js";
 
 export abstract class MapTemplate {
 	// protected glow: babylon.GlowLayer;
@@ -14,6 +15,7 @@ export abstract class MapTemplate {
 	// protected readonly sunPosition: babylon.Vector3;
 	// protected highlightTimeout: ReturnType<typeof setTimeout> | null = null;
 	// protected wallHighlight: babylon.HighlightLayer | null = null;
+	protected wind: PlanePosition = { x: 0, z:0 };
 	protected gameStopped = true;
 
 	constructor(scene: babylon.Scene, type: MapOption) {
@@ -72,6 +74,10 @@ export abstract class MapTemplate {
 
 	getType(): MapOption {
 		return this.type;
+	}
+
+	getWind(): PlanePosition {
+		return this.wind;
 	}
 
 	destroy(): void {

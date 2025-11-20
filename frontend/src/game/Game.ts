@@ -140,6 +140,7 @@ export class Game {
 	updateOptions(options: OptionMessage): void {
 		this.settings.ball = options.ball;
 		this.settings.map = options.map;
+		this.settings.wind = options.wind;
 		this.settings.rotatingPlayer = options.rotatingPlayer;
 		this.settings.spin = options.spin;
 		this.sceneManager.setEnvironnement(this.scene, this.settings);

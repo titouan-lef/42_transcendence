@@ -3,21 +3,20 @@ import { MapTemplate } from "./MapTemplate.js";
 import { Tornado } from "./map_utils/Tornado.js";
 import { MAP_SIZE, TORNADO_INTERVAL, TORNADO_LIFETIME, WIND_FORCE } from "../settings/values.js";
 import { WebSocket } from "ws";
+import { planePosToVec3 } from "../utils.js";
 
 export class DesertMap extends MapTemplate {
 	private readonly tornados: Tornado[] = [];
-	private readonly windForce;
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly sockets: WebSocket[] = []; // one or two socket depening on the IA...
 
 	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
 		super(scene, "desert");
-		this.windForce = new babylon.Vector3(
-			(Math.random() - 0.5) * WIND_FORCE,
-			0,
-			(Math.random() - 0.5) * WIND_FORCE
-		);
+		this.wind = {
+			x: (Math.random() - 0.5) * WIND_FORCE,
+			z: (Math.random() - 0.5) * WIND_FORCE
+		};
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.sceneObserver = this.observeScene(scene);
 		sockets.forEach(socket => {
@@ -25,7 +24,7 @@ export class DesertMap extends MapTemplate {
 		});
 	}
 
-	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
+	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> { /** @todo apply to all maps and manage objects in sceneManager*/
 		let tornadoTimer = 0;
 		const sceneObserver = this.sceneObservable.add(() => {
 			if (this.gameStopped)
@@ -34,14 +33,14 @@ export class DesertMap extends MapTemplate {
 				if (!mesh.physicsBody)
 					return;
 				mesh.physicsBody.applyForce(
-					this.windForce,
+					planePosToVec3(this.wind),
 					mesh.getAbsolutePosition()
 				);
 			});
 			tornadoTimer += scene.getEngine().getDeltaTime();
 			if (tornadoTimer >= TORNADO_INTERVAL) {
 				tornadoTimer -= TORNADO_INTERVAL;
-				const tornado = new Tornado(scene,this.tornados.length, this.windForce, this.sockets);
+				const tornado = new Tornado(scene,this.tornados.length, planePosToVec3(this.wind), this.sockets);
 				this.tornados.push(tornado);
 			}
 			/**@todo DO NOT empty the array */

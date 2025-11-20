@@ -1,5 +1,5 @@
 import { Vector3 } from "@babylonjs/core";
-import { Position } from "../web_sockets/types_transfert";
+import { PlanePosition, Position } from "../web_sockets/types_transfert";
 
 function vec3ToPos(vector: Vector3): Position {
 	return {
@@ -9,4 +9,8 @@ function vec3ToPos(vector: Vector3): Position {
 	};
 }
 
-export { vec3ToPos };
+function planePosToVec3(pp: PlanePosition): Vector3 {
+	return new Vector3(pp.x, 0, pp.z);
+}
+
+export { vec3ToPos, planePosToVec3 };

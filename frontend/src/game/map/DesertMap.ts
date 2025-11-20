@@ -2,17 +2,16 @@ import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Tornado } from "./map_utils/Tornado.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, W_PARTICLE_NUMBER, TORNADO_INTERVAL, TORNADO_LIFETIME, WIND_FORCE, W_GLOW_INTENSITY, COLORS4, START_TIMEOUT } from "../settings/values.js";
-import { ObjectMessage } from "../types_transfert.js";
+import { ObjectMessage, PlanePosition } from "../types_transfert.js";
+import { planePosToVec3 } from "../utils.js";
 
 export class DesertMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
 	private readonly tornados: Tornado[] = [];
-	private readonly windForce: babylon.Vector3;
 
-	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>, windForce: babylon.Vector3) {
-		super(scene, "desert");
+	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>, wind: PlanePosition) {
+		super(scene, "desert", wind);
 		this.glow.intensity = W_GLOW_INTENSITY;
-		this.windForce = windForce;
 		this.particles = this.createParticles(scene, texture.flare);
 		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
 		this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.desertHighlightWall));
@@ -72,8 +71,8 @@ export class DesertMap extends MapTemplate {
 		particles.maxEmitPower = 45;
 		particles.minSize = 0.25;
 		particles.maxSize = 0.5;
-		particles.direction1 = this.windForce;
-		particles.direction2 = this.windForce;
+		particles.direction1 = planePosToVec3(this.wind).scale(0.7);
+		particles.direction2 = planePosToVec3(this.wind).scale(0.7);
 		particles.minLifeTime = 1;
 		particles.maxLifeTime = 2;
 		particles.updateSpeed = 0.008;

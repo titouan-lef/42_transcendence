@@ -15,7 +15,7 @@ import { Player } from "../player/Player.js";
 import { BallOption, GameSettings, MapOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, POINTS_TO_WIN, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
-import { DataMessage, EventMessage, GoalMessage, Object, ObjectMessage, PositionsMessage, Status } from "../types_transfert.js";
+import { DataMessage, EventMessage, GoalMessage, Object, ObjectMessage, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
 
 export class SceneManager {
 	private ball: BallTemplate | null = null;
@@ -87,20 +87,19 @@ export class SceneManager {
 		}
 	}
 
-	private createMap(scene: babylon.Scene, map: MapOption): void {
+	private createMap(scene: babylon.Scene, map: MapOption, wind: PlanePosition): void {
 		switch (map) {
 			case "default":
-				this.map = new DefaultMap(scene, this.textures.stars);
+				this.map = new DefaultMap(scene, this.textures.stars, wind);
 				break;
 			case "volcano":
-				this.map = new VolcanoMap(scene, this.textures);
+				this.map = new VolcanoMap(scene, this.textures, wind);
 				break;
 			case "sky":
-				this.map = new SkyMap(scene, this.textures);
+				this.map = new SkyMap(scene, this.textures, wind);
 				break;
 			case "desert":
-				const windForce = new babylon.Vector3(0, 0, 0); /** @todo get windForce from back ? */
-				this.map = new DesertMap(scene, this.textures, windForce);
+				this.map = new DesertMap(scene, this.textures, wind);
 				break;
 			default: 
 				throw new Error("switch map fail");
@@ -186,7 +185,7 @@ export class SceneManager {
  
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
 		this.createBall(scene, settings.ball);
-		this.createMap(scene, settings.map);
+		this.createMap(scene, settings.map, settings.wind);
 		this.countDown = new CountDown(this.scene);
 	}
 

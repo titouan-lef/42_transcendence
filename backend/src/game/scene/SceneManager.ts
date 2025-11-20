@@ -14,7 +14,7 @@ import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
-import { EventMessage, ParticlesType, Position, RenderMessage, Status, TimingMessage } from "../../web_sockets/types_transfert.js";
+import { EventMessage, ParticlesType, PlanePosition, Position, RenderMessage, Status, TimingMessage } from "../../web_sockets/types_transfert.js";
 
 export class SceneManager {
 	private ball: BallTemplate | null = null;
@@ -41,6 +41,12 @@ export class SceneManager {
 		if (!type)
 			return "default";
 		return type;
+	}
+
+	getWind(): PlanePosition {
+		if (this.map)
+			return this.map.getWind();
+		return { x: 0, z: 0 };
 	}
 
 	getPlayer(number: number): Player | undefined {

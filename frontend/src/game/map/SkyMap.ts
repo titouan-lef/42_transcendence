@@ -2,14 +2,15 @@ import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Lightning } from "./map_utils/Lightning.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME, R_GLOW_INTENSITY } from "../settings/values.js";
-import { ObjectMessage } from "../types_transfert.js";
+import { ObjectMessage, PlanePosition } from "../types_transfert.js";
+import { planePosToVec3 } from "../utils.js";
 
 export class SkyMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
 	private readonly lightnings: Lightning[] = [];
 
-	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
-		super(scene, "sky");
+	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>, wind: PlanePosition) {
+		super(scene, "sky", wind);
 		this.glow.intensity = R_GLOW_INTENSITY;
 		this.particles = this.createParticles(scene, texture.rain);
 	}
@@ -57,7 +58,8 @@ export class SkyMap extends MapTemplate {
 		const particles = new babylon.ParticleSystem("rain", R_PARTICLE_NUMBER, scene);
 		particles.particleTexture = texture;
 		particles.emitter = new babylon.Vector3(0, 0, 0);
-		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
+		// particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
+		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_STRETCHED;
 		particles.minEmitBox = new babylon.Vector3(-MAP_SIZE.x * 1.4, -MAP_SIZE.y * 1, -MAP_SIZE.z * 1.4);
 		particles.maxEmitBox = new babylon.Vector3(MAP_SIZE.x * 1.4, MAP_SIZE.y * 2, MAP_SIZE.y * 1.4);
 		particles.color1    = COLORS4.skyRain1;
@@ -71,10 +73,10 @@ export class SkyMap extends MapTemplate {
 		particles.maxSize = 1;
 		particles.minLifeTime = 1.1;
 		particles.maxLifeTime = 1.3;
-		particles.direction1 = new babylon.Vector3(0, -5, 0);
-		particles.direction2 = new babylon.Vector3(0, -5, 0);
+		particles.direction1 = new babylon.Vector3(0, -5, 0).addInPlace(planePosToVec3(this.wind).scale(0.5));
+		particles.direction2 = new babylon.Vector3(0, -5, 0).addInPlace(planePosToVec3(this.wind).scale(0.5));
 		particles.updateSpeed = 0.008;
-		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
+		// particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
 		particles.start();
 		return particles;
 	}

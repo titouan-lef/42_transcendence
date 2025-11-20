@@ -1,8 +1,9 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Lightning } from "./map_utils/Lightning.js";
-import { MAP_SIZE, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME } from "../settings/values.js";
+import { MAP_SIZE, LIGHTNING_INTERVAL, WIND_FORCE } from "../settings/values.js";
 import { WebSocket } from "ws";
+import { planePosToVec3 } from "../utils.js";
 
 export class SkyMap extends MapTemplate {
 	private readonly lightnings: Lightning[] = [];
@@ -14,6 +15,10 @@ export class SkyMap extends MapTemplate {
 		super(scene, "sky");
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.sceneObserver = this.observeScene(scene);
+		this.wind = {
+			x: (Math.random() - 0.5) * WIND_FORCE,
+			z: (Math.random() - 0.5) * WIND_FORCE
+		};
 		sockets.forEach(socket => {
 			this.sockets.push(socket);
 		});
@@ -31,6 +36,14 @@ export class SkyMap extends MapTemplate {
 		const sceneObserver = this.sceneObservable.add(() => {
 			if (this.gameStopped)
 				return;
+			scene.meshes.forEach(mesh => {
+				if (!mesh.physicsBody)
+					return;
+				mesh.physicsBody.applyForce(
+					planePosToVec3(this.wind),
+					mesh.getAbsolutePosition()
+				);
+			});
 			lightningTimer += scene.getEngine().getDeltaTime();
 			if (lightningTimer >= LIGHTNING_INTERVAL) {
 				lightningTimer -= LIGHTNING_INTERVAL;
