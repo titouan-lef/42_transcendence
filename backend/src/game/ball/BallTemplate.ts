@@ -19,6 +19,7 @@ export abstract class BallTemplate {
 	private spinningRight = false;
 	protected force = BALL_ANGULAR_FORCE;
 	protected forceDirection = -1;
+	protected readonly sockets: WebSocket[];
 	protected readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	protected readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly yObservable: babylon.Observable<babylon.Scene>;
@@ -33,6 +34,7 @@ export abstract class BallTemplate {
 		this.mesh.position.y = BALL_DIAMETER / 2;
 		this.mesh.metadata = { type: "collider", pushable: true };
 		this.mesh.renderingGroupId = 1;
+		this.sockets = sockets;
 		// this.color = color;
 		// this.textures = textures;
 		// this.setMaterial(scene);
@@ -123,7 +125,7 @@ export abstract class BallTemplate {
 		}
 	}
 
-	private async sendParticuleEvent(sockets: WebSocket[], type: ParticlesType, position: Position) : Promise<void> {
+	protected async sendParticuleEvent(sockets: WebSocket[], type: ParticlesType, position: Position) : Promise<void> {
 		const time: EventMessage = {
 			status: Status.EVENT,
 			type : type,
