@@ -6,14 +6,12 @@ import { ObjectMessage } from "../types_transfert.js";
 
 export class SkyMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
-	// private readonly lightningIntervalId: ReturnType<typeof setInterval>;
 	private readonly lightnings: Lightning[] = [];
 
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
 		super(scene, "sky");
 		this.glow.intensity = R_GLOW_INTENSITY;
 		this.particles = this.createParticles(scene, texture.rain);
-		// this.lightningIntervalId = this.lightningInterval(scene, texture.electricity);
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
@@ -106,7 +104,6 @@ export class SkyMap extends MapTemplate {
 	}
 
 	destroyRest(): void {
-		// clearInterval(this.lightningIntervalId);
 		while (this.lightnings.length) {
 			this.lightnings[0].destroy();
 			this.lightnings.splice(0, 1);

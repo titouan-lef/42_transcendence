@@ -103,7 +103,7 @@ export abstract class BallTemplate {
 	}
 
 	/** hides ball on goal and stop intervals */
-	preDeath(): void {
+	preDeath(): void { /**@todo not used*/
 		this.mesh.visibility = 0;
 		this.gameStopped = true;
 		this.destroyRest();

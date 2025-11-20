@@ -24,6 +24,7 @@ export class SceneManager {
 	private originalGetDelta: () => number;
 	private allowReceiving = false;
 	private allowSending = false;
+	private countdownIntervalId: ReturnType<typeof setInterval> | null = null;
 
 	constructor(engine: babylon.Engine) {
 		this.engine = engine;
@@ -155,10 +156,10 @@ export class SceneManager {
 		player2.send(time);
 	}
 
-	private async sendCountDown(player1: Player, player2: Player, countdow: number) : Promise<void> {
+	private async sendCountDown(player1: Player, player2: Player, countdown: number) : Promise<void> {
 		const time: TimingMessage = {
 			status: Status.TIMING,
-			time : countdow
+			time : countdown
 		};
 		player1.send(time);
 		player2.send(time);
@@ -172,8 +173,8 @@ export class SceneManager {
 		return this.allowReceiving;
 	}
 
-	startCountdown(time: number): void {
-		const interval = setInterval(() => {
+	startCountdown(time: number): ReturnType<typeof setInterval> {
+		const countdownIntervalId = setInterval(() => {
 			const player1 = this.getPlayer(1);
 			const player2 = this.getPlayer(2);
 			if (!player1 || !player2)
@@ -185,16 +186,20 @@ export class SceneManager {
 				this.allowReceiving = true;
 				this.ball?.launchBall();
 				this.map?.start();
-				clearInterval(interval);
+				if (this.countdownIntervalId) {
+					clearInterval(this.countdownIntervalId);
+					this.countdownIntervalId = null;
+				}
 			}
 			time--;
 		}, 1000);
+		return countdownIntervalId;
 	}
 
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void { /** @todo remove score */
 		this.createBall(scene, settings);
 		this.createMap(scene, settings);
-		this.startCountdown(START_TIMEOUT);
+		this.countdownIntervalId = this.startCountdown(START_TIMEOUT);
 		this.engine.getDeltaTime = this.originalGetDelta;
 	}
 
@@ -235,6 +240,8 @@ export class SceneManager {
 
 	destroyScene(scene: babylon.Scene): void {
 		this.destroyPlayers();
+		if (this.countdownIntervalId)
+			clearInterval(this.countdownIntervalId);
 		this.destroyEnvironnement(scene);
 	}
 }
