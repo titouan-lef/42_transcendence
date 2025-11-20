@@ -181,6 +181,7 @@ export class SceneManager {
 		this.getPlayer(2)?.setPosition(message.enemy);
 		this.getPlayer(2)?.setRotatiton(message.enemyRotation);
 		this.ball?.setPosition(message.ball);
+		this.ball?.setVisibility(message.ballVisibility);
 	}
  
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {

@@ -124,6 +124,7 @@ export class Game {
 		const positions: PositionsMessage = {
 			status: Status.POSITIONS,
 			ball: ball.getPosition(),
+			ballVisibility: ball.getVisibility(),
 			player: player.getPosition(),
 			playerRotation: player.getRotation(),
 			enemy: enemy.getPosition(),
