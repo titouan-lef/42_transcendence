@@ -30,6 +30,7 @@ export abstract class BallTemplate {
 	constructor(scene: babylon.Scene, type: BallOption, sockets: WebSocket[]) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.type = type;
+		this.mesh.position.y = BALL_DIAMETER / 2;
 		this.mesh.metadata = { type: "collider", pushable: true };
 		this.mesh.renderingGroupId = 1;
 		// this.color = color;

@@ -109,8 +109,9 @@ export abstract class BallTemplate {
 		this.destroyRest();
 	}
 
-	setPosition(position: PlanePosition): void {
+	setPosition(position: Position): void {
 		this.mesh.position.x = position.x;
+		this.mesh.position.y = position.y;
 		this.mesh.position.z = position.z;
 	}
 
