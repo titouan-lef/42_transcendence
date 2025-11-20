@@ -84,6 +84,7 @@ interface OptionMessage {
 interface PositionsMessage {
 	status: Status.POSITIONS,
 	ball: Position,
+	ballVisibility: number,
 	player: PlanePosition,
 	playerRotation : Rotation,
 	enemy: PlanePosition,

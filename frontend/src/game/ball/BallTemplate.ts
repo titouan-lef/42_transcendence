@@ -115,6 +115,10 @@ export abstract class BallTemplate {
 		this.mesh.position.z = position.z;
 	}
 
+	setVisibility(visibility: number): void {
+		this.mesh.visibility = visibility;
+	}
+
 	/** Spawn particules */
 	showParticles(collisionPoint: Position, scene: babylon.Scene, type: ParticlesType): void {
 		if (collisionPoint === null)

@@ -232,6 +232,10 @@ export abstract class BallTemplate {
 		return { x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z };
 	}
 
+	getVisibility(): number {
+		return this.mesh.visibility;
+	}
+
 	getType(): BallOption {
 		return this.type;
 	}
