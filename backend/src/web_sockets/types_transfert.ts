@@ -110,14 +110,12 @@ interface ObjectMessage {
 	position: Position,
 	size: number,
 	currentLifetime: number
-	/** @todo more (size,... ) ??*/
 }
 
 interface EventMessage {
 	status: Status.EVENT,
 	type: ParticlesType,
 	position: Position
-	/** @todo more ??*/
 }
 
 type DataMessage = StartMessage | StopMessage | TimingMessage | RenderMessage | GoalMessage | OptionMessage | PositionsMessage | ObjectMessage | EventMessage ;

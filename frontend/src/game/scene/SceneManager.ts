@@ -1,11 +1,6 @@
 import * as babylon from "@babylonjs/core";
-import { BallTemplate } from "../ball/BallTemplate.js";
+import { Ball } from "../ball/Ball.js";
 import { Score } from "./Score.js";
-import { DefaultBall } from "../ball/DefaultBall.js";
-import { InvisibleBall } from "../ball/InvisibleBall.js";
-import { PulseBall } from "../ball/PulseBall.js";
-import { TrickyBall } from "../ball/TrickyBall.js";
-import { SnakeBall } from "../ball/SnakeBall.js";
 import { MapTemplate } from "../map/MapTemplate.js";
 import { DefaultMap } from "../map/DefaultMap.js";
 import { SkyMap } from "../map/SkyMap.js";
@@ -13,12 +8,12 @@ import { DesertMap } from "../map/DesertMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
 import { BallOption, GameSettings, MapOption } from "../settings/GameSettings.js";
-import { MAP_SIZE, PLAYER_DIMENSION, POINTS_TO_WIN, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
+import { COLORS3, MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
 import { DataMessage, EventMessage, GoalMessage, Object, ObjectMessage, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
 
 export class SceneManager {
-	private ball: BallTemplate | null = null;
+	private ball: Ball | null = null;
 	private map: MapTemplate | null = null;
 	private countDown: CountDown | null = null;
 	private readonly socket: WebSocket;
@@ -32,7 +27,7 @@ export class SceneManager {
 		this.scene = scene;
 		this.score = new Score(scene, camera);
 
-		socket.addEventListener("message", (event) => { /** @todo check if removeEventListener is necesseray and the end of the game */
+		socket.addEventListener("message", (event) => {
 			const message : DataMessage = JSON.parse(event.data);
 			switch (message.status) {
 				case (Status.TIMING):
@@ -53,7 +48,7 @@ export class SceneManager {
 		});
 	}
 
-	getBall(): BallTemplate | null {
+	getBall(): Ball | null {
 		return this.ball;
 	}
 
@@ -65,26 +60,24 @@ export class SceneManager {
 	}
 
 	private createBall(scene: babylon.Scene, ballType: BallOption): void {
-		const ball = ballType; // no random in the front
-		switch (ball) {
-			case "default":
-				this.ball = new DefaultBall(scene, this.textures);
-				break;
+		let color;
+		switch (ballType) {
 			case "invisible":
-				this.ball = new InvisibleBall(scene, this.textures);
+				color = COLORS3.red;
 				break;
 			case "tricky":
-				this.ball = new TrickyBall(scene, this.textures);
+				color = COLORS3.white;
 				break;
 			case "pulse":
-				this.ball = new PulseBall(scene, this.textures);
+				color = COLORS3.blue;
 				break;
 			case "snake":
-				this.ball = new SnakeBall(scene, this.textures);
+				color = COLORS3.green;
 				break;
-			default: 
-				throw new Error("switch ball fail");
+			default:
+				color = COLORS3.white;
 		}
+		this.ball = new Ball(scene, ballType, this.textures, color);
 	}
 
 	private createMap(scene: babylon.Scene, map: MapOption, wind: PlanePosition): void {
@@ -109,13 +102,13 @@ export class SceneManager {
 	updateObject(scene: babylon.Scene, object: ObjectMessage): void {
 		switch (object.type) {
 			case (Object.LIGHTNING):
-				this.map?.handleObject(scene, this.textures, object);//spark
+				this.map?.handleObject(scene, this.textures, object); // spark
 				break;
 			case (Object.METEOR):
-				this.map?.handleObject(scene, this.textures, object);//flare smoke
+				this.map?.handleObject(scene, this.textures, object); // flare smoke
 				break;
 			case (Object.TORNADO):
-				this.map?.handleObject(scene, this.textures, object);//flare
+				this.map?.handleObject(scene, this.textures, object); // flare
 				break;
 			default:
 				return;
@@ -132,7 +125,7 @@ export class SceneManager {
 		this.players.push(player2);
 	}
 
-	createTextures(scene: babylon.Scene): void { /** @todo check if one request per texture is best practice. Do we need al texture for all the maps ??*/
+	createTextures(scene: babylon.Scene): void { /** @todo check if one request per texture is best practice. Do we need all textures for all the maps ??*/
 		this.textures.spark = new babylon.Texture("textures/sparks.png", scene, true);
 		this.textures.flare = new babylon.Texture("textures/flare.png", scene, true);
 		this.textures.stars = new babylon.Texture("textures/particle.png", scene, true);
@@ -141,28 +134,9 @@ export class SceneManager {
 		this.textures.electricity = new babylon.Texture("textures/electricity.png", scene, true);
 	}
 
-	private handleParticules(message: EventMessage): void { /** @todo a class Particule hadeler for all particules (ball, objects) */
+	private handleParticules(message: EventMessage): void {
 		/** @todo bigger collisison particules if the impact if stronger ? */
 		this.ball?.showParticles(message.position, this.scene, message.type);
-	}
-
-	/** ball explodes, the time slow down */
-	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3, score: babylon.Vector2): Promise<void> { /**@todo not used*/
-		if (this.map)
-			this.map.preDeath(); /**@todo not used*/
-		this.ball?.preDeath(); /**@todo not used*/
-		this.ball?.showParticles(position, scene, "explosion");
-		this.score.changeScore([score.x, score.y]);
-		const originalGetDelta = engine.getDeltaTime; // keep original delta
-		engine.getDeltaTime = function(): number {
-			return originalGetDelta.call(this) * 0.01; // slow animations
-		};
-		await new Promise<void>(resolve => {
-			setTimeout( () => {
-				resolve();
-			}, 2700);
-		});
-		engine.getDeltaTime = originalGetDelta;// set back to original speed
 	}
 
 	private setCountDown(time: number): void {
@@ -195,11 +169,6 @@ export class SceneManager {
 		this.destroyMap();
 		if (score)
 			this.score.changeScore([score.x, score.y]);
-		// this.ball = null; // repetition
-		// this.map = null;
-		// while(this.players.length > 0) { //maybe needed but somwhere else
-		// 	this.players.pop();
-		// }
 	}
 
 	/** debug function */

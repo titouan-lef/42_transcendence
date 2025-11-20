@@ -28,7 +28,7 @@ export class DesertMap extends MapTemplate {
 		let tornadoTimer = 0;
 		const sceneObserver = this.sceneObservable.add(() => {
 			if (this.gameStopped)
-				return ;
+				return;
 			scene.meshes.forEach(mesh => {
 				if (!mesh.physicsBody)
 					return;

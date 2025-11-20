@@ -4,17 +4,11 @@ import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH } from "../settings/values.js";
 import { PlanePosition } from "../../web_sockets/types_transfert.js";
 
 export abstract class MapTemplate {
-	// protected glow: babylon.GlowLayer;
 	protected readonly ground: babylon.Mesh;
 	protected readonly groundPhysic: babylon.PhysicsAggregate;
 	protected readonly limits: babylon.Mesh[];
 	protected readonly limitsPhysic: babylon.PhysicsAggregate[] = [];
-	// protected readonly sun: babylon.Mesh;
-	// protected readonly light: babylon.DirectionalLight;
 	private readonly type: MapOption;
-	// protected readonly sunPosition: babylon.Vector3;
-	// protected highlightTimeout: ReturnType<typeof setTimeout> | null = null;
-	// protected wallHighlight: babylon.HighlightLayer | null = null;
 	protected wind: PlanePosition = { x: 0, z:0 };
 	protected gameStopped = true;
 

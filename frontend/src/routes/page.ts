@@ -44,7 +44,7 @@ function erasePage(id: PageID): void {
  */
 function navigate(nextID: PageID): void {
 	if (nextID === currentPage)
-		return ;
+		return;
 
 	erasePage(currentPage);
 	loadPage(nextID);

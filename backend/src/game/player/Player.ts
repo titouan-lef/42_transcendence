@@ -35,7 +35,6 @@ export class Player {
 		this.username = settings.username;
 		this.socket = settings.socket;
 		this.id = settings.playerId;
-
 	}
 
 	private setPlayer(scene: babylon.Scene, position: babylon.Vector2): babylon.TransformNode {

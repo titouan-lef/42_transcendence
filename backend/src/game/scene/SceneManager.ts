@@ -29,7 +29,7 @@ export class SceneManager {
 
 	constructor(engine: babylon.Engine) {
 		this.engine = engine;
-		this.originalGetDelta = engine.getDeltaTime; // keep original delta
+		this.originalGetDelta = engine.getDeltaTime; // keep original delta time
 	}
 
 	getBall(): BallTemplate | null {
@@ -94,7 +94,7 @@ export class SceneManager {
 		}
 		const sockets: WebSocket[] = [];
 		sockets.push(settings.player1.socket); /** @todo do not add if AI */
-		sockets.push(settings.player2.socket); /** @todo do not add if AI */
+		sockets.push(settings.player2.socket);
 		switch (map) {
 			case "default":
 				this.map = new DefaultMap(scene);
@@ -219,7 +219,7 @@ export class SceneManager {
 
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void { /** @todo remove score */
 		if (this.doesGameEnded())
-			return ;
+			return;
 		const player1 = this.getPlayer(1);
 		const player2 = this.getPlayer(2);
 		if (!player1 || !player2)

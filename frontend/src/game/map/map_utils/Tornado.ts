@@ -5,17 +5,12 @@ import { Position } from "../../types_transfert.js";
 export class Tornado {
 	private tornado: babylon.Mesh;
 	private readonly particles: babylon.ParticleSystem;
-	//private readonly timeoutId: ReturnType<typeof setTimeout>;
 	private readonly size;
-	// private readonly tornadoObservable: babylon.Observable<babylon.Scene>;
-	// private readonly tornadoObserver: babylon.Observer<babylon.Scene>;
 
 	/** 
-	 * @todo be the same as the one in the front
 	 * send position each frame too ? then assosiate an id to each meteor ?
 	 * maybe the windforce and the size should be linked ??
 	 */
-
 	constructor(scene: babylon.Scene, texture: babylon.Texture, position: Position, size: number) {
 		this.tornado = babylon.MeshBuilder.CreateBox("tornado", { width: 0.01, height: 0.01, depth: 0.01 }, scene);
 		this.tornado.visibility = 0;
@@ -26,11 +21,6 @@ export class Tornado {
 
 		this.particles = this.createTornadoParticles(scene, texture);
 
-		// this.tornadoObservable = scene.onBeforeRenderObservable;;
-		// // this.tornadoObserver = this.setTornadoObserver(scene, windforce);
-		// this.timeoutId = setTimeout( () => {
-		// 	this.destroy();
-		// }, TORNADO_LIFETIME);
 	}
 
 	stopParticles(): void {
@@ -85,8 +75,6 @@ export class Tornado {
 	}
 
 	destroy(): void {
-		//clearTimeout(this.timeoutId);
-		// this.tornadoObservable.remove(this.tornadoObserver);
 		this.particles?.stop();
 		if (this.particles && this.particles.particleTexture)
 			this.particles.particleTexture = null;

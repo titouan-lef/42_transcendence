@@ -65,7 +65,7 @@ async function openWebSocketConnection(): Promise<void> {
 				updateGameObject(message);
 				break;
 			default:
-				return ;
+				return;
 		}
 	};
 

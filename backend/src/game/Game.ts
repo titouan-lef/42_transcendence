@@ -24,7 +24,6 @@ export class Game {
 		this.camera = new babylon.ArcRotateCamera("Camera", 0, 0, 0, babylon.Vector3.Zero(), scene);
 		this.sceneManager = new SceneManager(engine);
 		this.scene = scene;
-		// window.addEventListener("resize", () => this.engine.resize());
 		this.score = new babylon.Vector2(0, 0);
 		this.setScene();
 	}
@@ -90,7 +89,7 @@ export class Game {
 			await this.sceneManager.goalAnimation(goalInfos.position);
 			this.sendScore();
 			if (this.sceneManager.doesGameEnded()) // if closing game while animation
-				return ;
+				return;
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
 				this.stop();
 			} else {
@@ -186,13 +185,13 @@ export class Game {
 			return;
 
 		let score: GoalMessage;
-		score = { 
+		score = {
 			status: Status.GOAL,
 			player: this.score.x,
 			enemy: this.score.y
 		};
 		player1.send(score);
-		score = { 
+		score = {
 			status: Status.GOAL,
 			player: this.score.y,
 			enemy: this.score.x
@@ -249,7 +248,7 @@ export class Game {
 
 	receiveDataFrom(playerName: string, message: string): void {
 		if (!this.sceneManager.isReceivingAllowed())
-			return ;
+			return;
 		const controls: PlayerControls = JSON.parse(message);
 		const player1 = this.sceneManager.getPlayer(1);
 		const player2 = this.sceneManager.getPlayer(2);

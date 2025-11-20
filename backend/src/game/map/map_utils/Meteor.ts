@@ -67,17 +67,17 @@ export class Meteor {
 				this.setBody(scene);
 				if (this.currentLifetime <= 0) {
 					this?.destroy();
-					return ;
+					return;
 				}
 			} else {
-				const ratio = scene.getAnimationRatio() / 60; //if game is slowed, meteor will also be
+				const ratio = scene.getAnimationRatio() / 60; // if game is slowed, meteor will also be
 				const velocity = this.direction.scale(METEOR_SPEED * ratio);
 				this.meteor.position.addInPlace(velocity);
 			}
 			this.sendObjectInfos(); /** @todo send at 30 fps */
 		});
 		return sceneObserver;
-	} 
+	}
 
 	private setBody(scene:babylon.Scene): void {
 		const body = new babylon.PhysicsBody(this.meteor, babylon.PhysicsMotionType.STATIC, false, scene);
@@ -93,7 +93,7 @@ export class Meteor {
 	private applyExplosionForce(scene: babylon.Scene, center: babylon.Vector3): void {
 		scene.meshes.forEach(mesh => {
 			if (!mesh.metadata?.pushable || !mesh.physicsBody)
-				return ;
+				return;
 			const body = mesh.physicsBody;
 			const meshPosition = mesh.getAbsolutePosition();
 			const direction = meshPosition.subtract(center);

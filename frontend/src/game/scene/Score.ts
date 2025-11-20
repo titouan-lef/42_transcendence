@@ -33,7 +33,7 @@ export class Score {
 
 	changeScore(score: number[]): void {
 		if (this.score.material === null)
-			return ;
+			return;
 		const ctx = this.scoreTexture.getContext();
 		ctx.font = `bold ${SCORE_SIZE}px Arial`;
 		const text = `${score[0]} : ${score[1]}`;

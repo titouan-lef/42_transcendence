@@ -58,7 +58,6 @@ export class SkyMap extends MapTemplate {
 		const particles = new babylon.ParticleSystem("rain", R_PARTICLE_NUMBER, scene);
 		particles.particleTexture = texture;
 		particles.emitter = new babylon.Vector3(0, 0, 0);
-		// particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_STRETCHED;
 		particles.minEmitBox = new babylon.Vector3(-MAP_SIZE.x * 1.4, -MAP_SIZE.y * 1, -MAP_SIZE.z * 1.4);
 		particles.maxEmitBox = new babylon.Vector3(MAP_SIZE.x * 1.4, MAP_SIZE.y * 2, MAP_SIZE.y * 1.4);
@@ -76,7 +75,6 @@ export class SkyMap extends MapTemplate {
 		particles.direction1 = new babylon.Vector3(0, -5, 0).addInPlace(planePosToVec3(this.wind).scale(0.5));
 		particles.direction2 = new babylon.Vector3(0, -5, 0).addInPlace(planePosToVec3(this.wind).scale(0.5));
 		particles.updateSpeed = 0.008;
-		// particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
 		particles.start();
 		return particles;
 	}

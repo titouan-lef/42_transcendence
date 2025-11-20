@@ -59,7 +59,7 @@ export class Tornado {
 			this.currentLifetime += scene.getEngine().getDeltaTime() / TORNADO_LIFETIME;
 			if (this.currentLifetime <= 0) {
 				this.destroy();
-				return ;
+				return;
 			}
 			this.sendObjectInfos(); /** @todo send at 30 fps */
 		});
