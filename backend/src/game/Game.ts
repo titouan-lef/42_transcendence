@@ -206,7 +206,7 @@ export class Game {
 		player2.send(score);
 	}
 
-	startSendingPostisions(): void {
+	startSendingPositions(): void {
 		const intervalMs = 1000 / 30; // 30 fps
 
 		this.gameInterval = setInterval(() => {
@@ -228,7 +228,7 @@ export class Game {
 		this.sendStart(player1, player2);
 		this.sendOptions(player1, player2);
 		this.sendPositions(player1, player2);
-		this.startSendingPostisions();
+		this.startSendingPositions();
 
 		player1.defineCloseAction(() => {
 			this.stop();
