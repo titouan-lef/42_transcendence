@@ -8,7 +8,7 @@ import { TrickyBall } from "../ball/TrickyBall.js";
 import { SnakeBall } from "../ball/SnakeBall.js";
 import { MapTemplate } from "../map/MapTemplate.js";
 import { DefaultMap } from "../map/DefaultMap.js";
-import { RainyMap as SkyMap } from "../map/SkyMap.js";
+import { SkyMap } from "../map/SkyMap.js";
 import { DesertMap } from "../map/DesertMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
