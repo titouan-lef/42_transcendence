@@ -14,7 +14,7 @@ import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
-import { EventMessage, ParticlesType, Position, Status, TimingMessage } from "../../web_sockets/types_transfert.js";
+import { EventMessage, ParticlesType, Position, RenderMessage, Status, TimingMessage } from "../../web_sockets/types_transfert.js";
 
 export class SceneManager {
 	private ball: BallTemplate | null = null;
@@ -133,18 +133,28 @@ export class SceneManager {
 		this.ball?.preDeath();
 		const player1 = this.getPlayer(1);
 		const player2 = this.getPlayer(2);
-		if (player1 && player2)
-			this.sendParticuleEvent(player1, player2, "explosion", position);
+		if (!player1 || !player2)
+			return;
+		this.sendParticuleEvent(player1, player2, "explosion", position);
 		const originalGetDelta = this.originalGetDelta; // keep original delta
 		this.engine.getDeltaTime = function(): number {
 			return originalGetDelta.call(this) * 0.01; // slow animations
 		};
-		/** @todo send DeltaTime to the front ? */
+		this.sendDeltaTime(player1, player2, this.engine.getDeltaTime());
 		await new Promise<void>(resolve => {
 			setTimeout( () => {
 				resolve();
 			}, 2700);
 		});
+	}
+
+	private sendDeltaTime(player1: Player, player2: Player, deltaTime: number): void {
+		const time: RenderMessage = {
+			status: Status.RENDER,
+			deltaTime : deltaTime
+		};
+		player1.send(time);
+		player2.send(time);
 	}
 
 	private async sendParticuleEvent(player1: Player, player2: Player, type: ParticlesType, position: Position) : Promise<void> {
@@ -204,11 +214,15 @@ export class SceneManager {
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void { /** @todo remove score */
 		if (this.doesGameEnded())
 			return ;
+		const player1 = this.getPlayer(1);
+		const player2 = this.getPlayer(2);
+		if (!player1 || !player2)
+			return;
 		this.createBall(scene, settings);
 		this.createMap(scene, settings);
 		this.countdownIntervalId = this.startCountdown(START_TIMEOUT);
 		this.engine.getDeltaTime = this.originalGetDelta;
-		/** @todo send DeltaTime to the front ? */
+		this.sendDeltaTime(player1, player2, this.engine.getDeltaTime());
 	}
 
 	destroyEnvironnement(scene: babylon.Scene): void { /** @todo remove scene */
