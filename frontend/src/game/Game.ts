@@ -31,9 +31,16 @@ export class Game {
 
 		socket.addEventListener("message", (event) => { /** @todo check if removeEventListener is necesseray and the end of the game */
 			const message : DataMessage = JSON.parse(event.data);
-			if (message.status === Status.STOP) {
-				this.stop();
-				stopGame();
+			switch (message.status) {
+				case (Status.STOP):
+					this.stop();
+					stopGame();
+					break;
+				case (Status.RENDER):
+					this.setDeltaTime(message.deltaTime);
+					break;
+				default:
+					return; /** do nothing / not an error*/
 			}
 		});
 	}
@@ -62,6 +69,10 @@ export class Game {
 		const scene = new babylon.Scene(engine);
 		return scene;
 	};
+
+	private setDeltaTime(deltaTime: number): void {
+		this.engine.getDeltaTime = (): number => deltaTime;;
+	}
 
 	show(): void {
 		if (!this.settings)

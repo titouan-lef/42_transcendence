@@ -1,4 +1,4 @@
-import { BallOption, MapOption } from "./settings/GameSettings.js";
+import { BallOption, MapOption } from "../game/settings/GameSettings.js";
 
 interface Position {
 	x: number;
@@ -22,6 +22,7 @@ enum Status {
 	START,			// game begins
 	STOP,			// game finished
 	TIMING,			// countdowns
+	RENDER,			// deltaT -> slow motions
 	GOAL,			// score
 	OPTIONS,		// precise game options
 	POSITIONS,		// positions of ball and players
@@ -41,9 +42,11 @@ enum Status {
  * 		EVENT if any	----------------	|
  * 											|
  * on goal:									|
+ * 		RENDER: slow motion					|
  * 		GOAL								|
  * 		EVENT (goal -> explosion, pause)	|
  *		OPTIONS if changed					|	(case of random map or ball ?? or is it just define at the begining of the game ?)
+		RENDER: back to normal				|
  * 		go back to countdown ---------------
  * 
  * end game -> STOP
@@ -64,6 +67,11 @@ interface StopMessage {
 interface TimingMessage {
 	status: Status.TIMING,
 	time : number
+}
+
+interface RenderMessage {
+	status: Status.RENDER,
+	deltaTime: number,
 }
 
 interface GoalMessage {
@@ -111,7 +119,7 @@ interface EventMessage {
 	/** @todo more ??*/
 }
 
-type DataMessage = StartMessage | StopMessage | TimingMessage | GoalMessage | OptionMessage | PositionsMessage | ObjectMessage | EventMessage ;
+type DataMessage = StartMessage | StopMessage | TimingMessage | RenderMessage | GoalMessage | OptionMessage | PositionsMessage | ObjectMessage | EventMessage ;
 
 interface PlayerControls {
 	mov_right: boolean;
@@ -122,4 +130,4 @@ interface PlayerControls {
 }
 
 export { Position, PlanePosition, Rotation, DataMessage, PlayerControls, ParticlesType, Status, Object };
-export { StartMessage, StopMessage, TimingMessage, GoalMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage };
+export { StartMessage, StopMessage, TimingMessage, RenderMessage, GoalMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage };
