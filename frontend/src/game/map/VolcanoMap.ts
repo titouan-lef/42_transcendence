@@ -6,18 +6,14 @@ import { ObjectMessage } from "../types_transfert.js";
 
 export class VolcanoMap extends MapTemplate {
 	private readonly meteors: Meteor[] = [];
-	// private readonly meteorIntervalId: ReturnType<typeof setInterval>;
 	private readonly particles: babylon.ParticleSystem;
 
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>) {
 		super(scene, "volcano");
 		this.glow.intensity = V_GLOW_INTENSITY;
 		this.particles = this.createParticles(scene, texture.flare);
-		// this.meteorIntervalId = this.meteorInterval(scene, texture);
 		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
-		this.highlightTimeout = setTimeout(() => {
-			this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.volcanoHighlightWall));
-		}, START_TIMEOUT);
+		this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.volcanoHighlightWall));
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
@@ -108,8 +104,6 @@ export class VolcanoMap extends MapTemplate {
 	}
 
 	destroyRest(): void {
-		// if (this.meteorIntervalId) /** @todo why is it proted here and not in the others maps ? */
-		//	 clearInterval(this.meteorIntervalId);
 		while (this.meteors.length) {
 			this.meteors[0].destroy();
 			this.meteors.splice(0, 1);

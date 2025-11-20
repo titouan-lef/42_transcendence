@@ -148,10 +148,10 @@ export class SceneManager {
 	}
 
 	/** ball explodes, the time slow down */
-	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3, score: babylon.Vector2): Promise<void> {
+	async goalAnimation(engine: babylon.Engine, scene: babylon.Scene, position: babylon.Vector3, score: babylon.Vector2): Promise<void> { /**@todo not used*/
 		if (this.map)
-			this.map.predeath();
-		this.ball?.preDeath();
+			this.map.preDeath(); /**@todo not used*/
+		this.ball?.preDeath(); /**@todo not used*/
 		this.ball?.showParticles(position, scene, "explosion");
 		this.score.changeScore([score.x, score.y]);
 		const originalGetDelta = engine.getDeltaTime; // keep original delta

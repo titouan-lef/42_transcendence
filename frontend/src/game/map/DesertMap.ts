@@ -6,42 +6,17 @@ import { ObjectMessage } from "../types_transfert.js";
 
 export class DesertMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
-	// private readonly tornadoIntervalId: ReturnType<typeof setInterval>;
 	private readonly tornados: Tornado[] = [];
 	private readonly windForce: babylon.Vector3;
-	private readonly windObservable: babylon.Observable<babylon.Scene>;
-	// private readonly windObserver: babylon.Observer<babylon.Scene>;
 
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>, windForce: babylon.Vector3) {
 		super(scene, "desert");
 		this.glow.intensity = W_GLOW_INTENSITY;
-		// this.windForce = new babylon.Vector3(
-		// 	(Math.random() - 0.5) * WIND_FORCE,
-		// 	0,
-		// 	(Math.random() - 0.5) * WIND_FORCE
-		// );
 		this.windForce = windForce;
-		this.windObservable = scene.onBeforeRenderObservable;
-		// this.windObserver = this.applyWind();
 		this.particles = this.createParticles(scene, texture.flare);
-		// this.tornadoIntervalId = this.tornadoInterval(scene, texture.flare);
 		this.wallHighlight = new babylon.HighlightLayer("wallhighlight", scene);
-		this.highlightTimeout = setTimeout(() => {
-			this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.desertHighlightWall));
-		}, START_TIMEOUT);
+		this.limits.forEach(limit => this.wallHighlight?.addMesh(limit, COLORS3.desertHighlightWall));
 	}
-
-	// private applyWind(): babylon.Observer<babylon.Scene> {
-	// 	const windObserver = this.windObservable.add(() => {
-	// 		if (this.gameStopped) {
-	// 			this.tornados.forEach(tornado => {
-	// 				tornado.stopParticles();
-	// 			});
-	// 			return ;
-	// 		}
-	// 	});
-	// 	return windObserver;
-	// }
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
 		const ground = babylon.MeshBuilder.CreateGround("desertground",
@@ -130,12 +105,10 @@ export class DesertMap extends MapTemplate {
 	}
 
 	destroyRest(): void {
-		// clearInterval(this.tornadoIntervalId);
 		while (this.tornados.length) {
 			this.tornados[0].destroy();
 			this.tornados.splice(0, 1);
 		}
-		// this.windObservable.remove(this.windObserver);
 		this.particles?.stop();
 		if (this.particles && this.particles.particleTexture)
 			this.particles.particleTexture = null;

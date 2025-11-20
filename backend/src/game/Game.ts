@@ -72,16 +72,8 @@ export class Game {
 	}
 
 	private setScene(): void {
-		// this.sceneManager.createTextures(this.scene);
 		this.sceneManager.createPlayers(this.scene, this.settings);
 		this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
-		// if (MOVE_BALL_ONCLICK) { //debug function
-		// 	this.scene.onPointerDown = (): void => {
-		// 		const ball = this.sceneManager.getBall();
-		// 		ball?.moveBall();
-		// 		ball?.setJustCollide();
-		// 	};
-		// }
 		this.scene.onAfterRenderObservable.add(() => {
 			if (this.inAnimation === false) {
 				this.checkEndOfPoint();
@@ -208,7 +200,7 @@ export class Game {
 	}
 
 	startSendingPositions(): void {
-		const intervalMs = 1000 / 30; // 30 fps
+		const intervalMs = 1000 / 60; // 60 fps
 
 		this.gameInterval = setInterval(() => {
 			if (this.sceneManager.isSendingAllowed()) {

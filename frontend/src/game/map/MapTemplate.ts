@@ -27,7 +27,7 @@ export abstract class MapTemplate {
 		this.glow = new babylon.GlowLayer("glow", scene);
 	}
 
-	predeath(): void {
+	preDeath(): void { /**@todo not used*/
 		this.gameStopped = true;
 	}
 

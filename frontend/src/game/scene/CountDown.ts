@@ -8,7 +8,7 @@ export class CountDown {
 	constructor(scene: babylon.Scene) {
 		this.countDownTexture = new babylon.DynamicTexture("scoreTexture", { width: COUNTDOWN_CANVAS_SIZE.x, height: COUNTDOWN_CANVAS_SIZE.y }, scene, false);
 		this.countDown = babylon.MeshBuilder.CreatePlane("scorePlane", { width: MAP_SIZE.z * 0.4, height: MAP_SIZE.z * 0.2 }, scene);
-		this.countDown.renderingGroupId = 2;
+		this.countDown.renderingGroupId = 1;
 		this.setMaterial(scene);
 		this.countDown.billboardMode = babylon.Mesh.BILLBOARDMODE_ALL;
 		this.countDown.position = new babylon.Vector3(0, COUNTDOWN_POS_Y, 0);
