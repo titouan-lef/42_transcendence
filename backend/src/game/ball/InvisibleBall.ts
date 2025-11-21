@@ -4,8 +4,8 @@ import { INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL, I
 import { WebSocket } from "ws";
 
 export class InvisibleBall extends BallTemplate {
-	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
-		super(scene, "invisible", sockets);
+	constructor(scene: babylon.Scene, sockets: WebSocket[], windAffected: boolean) {
+		super(scene, "invisible", sockets, windAffected);
 	}
 	
 	activateEffect(): void {

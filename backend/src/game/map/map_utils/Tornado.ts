@@ -19,6 +19,7 @@ export class Tornado {
 		const possiblePositionZ = ((Math.random() - 0.5) * 2) * ((MAP_SIZE.z - WALL_WIDTH) / 2);
 		const position = new babylon.Vector3(possiblePositionX, 0, possiblePositionZ);
 		this.tornado = babylon.MeshBuilder.CreateBox("tornado", { width: 0.01, height: 0.01, depth: 0.01 }, scene);
+		this.tornado.metadata = { windAffected: true };
 		this.tornado.visibility = 0;
 		this.tornado.position = position;
 		this.randomSize = Math.random() * 4 + 3;

@@ -17,8 +17,10 @@ export class GameSettings {
 	readonly player1: PlayerSettings;
 	readonly player2: PlayerSettings;
 
+	readonly windAffectsBall: boolean;
+
 	constructor(map: MapOption, ball: BallOption, rotatingPlayer: boolean, spin: boolean,
-		player1: WebSocket, player2: WebSocket, playerName1: string, playerName2: string) {
+		player1: WebSocket, player2: WebSocket, playerName1: string, playerName2: string, windAffectsBall: boolean) {
 		this.map = map;
 		this.ball = ball;
 		this.rotatingPlayer = rotatingPlayer;
@@ -33,5 +35,6 @@ export class GameSettings {
 			socket: player2,
 			username: playerName2
 		};
+		this.windAffectsBall = windAffectsBall;
 	}
 }

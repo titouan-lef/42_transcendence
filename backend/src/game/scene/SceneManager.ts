@@ -65,19 +65,19 @@ export class SceneManager {
 		sockets.push(settings.player2.socket);
 		switch (ball) {
 			case "default":
-				this.ball = new DefaultBall(scene, sockets);
+				this.ball = new DefaultBall(scene, sockets, settings.windAffectsBall);
 				break;
 			case "invisible":
-				this.ball = new InvisibleBall(scene, sockets);
+				this.ball = new InvisibleBall(scene, sockets, settings.windAffectsBall);
 				break;
 			case "tricky":
-				this.ball = new TrickyBall(scene, sockets);
+				this.ball = new TrickyBall(scene, sockets, settings.windAffectsBall);
 				break;
 			case "pulse":
-				this.ball = new PulseBall(scene, sockets);
+				this.ball = new PulseBall(scene, sockets, settings.windAffectsBall);
 				break;
 			case "snake":
-				this.ball = new SnakeBall(scene, sockets);
+				this.ball = new SnakeBall(scene, sockets, settings.windAffectsBall);
 				break;
 			default: 
 				throw new Error("switch ball fail");

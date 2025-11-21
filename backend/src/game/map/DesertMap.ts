@@ -30,8 +30,9 @@ export class DesertMap extends MapTemplate {
 			if (this.gameStopped)
 				return;
 			scene.meshes.forEach(mesh => {
-				if (!mesh.physicsBody)
+				if (!mesh.physicsBody || !mesh.metadata.windAffected)
 					return;
+
 				mesh.physicsBody.applyForce(
 					planePosToVec3(this.wind),
 					mesh.getAbsolutePosition()
