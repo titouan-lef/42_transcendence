@@ -61,8 +61,8 @@ export class SkyMap extends MapTemplate {
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_STRETCHED;
 		particles.minEmitBox = new babylon.Vector3(-MAP_SIZE.x * 1.4, -MAP_SIZE.y * 1, -MAP_SIZE.z * 1.4);
 		particles.maxEmitBox = new babylon.Vector3(MAP_SIZE.x * 1.4, MAP_SIZE.y * 2, MAP_SIZE.y * 1.4);
-		particles.color1    = COLORS4.skyRain1;
-		particles.color2    = COLORS4.skyRain2;
+		particles.color1 = COLORS4.skyRain1;
+		particles.color2 = COLORS4.skyRain2;
 		particles.colorDead = COLORS4.skyRainDead;
 		particles.emitRate = 1800;
 		particles.renderingGroupId = 1;

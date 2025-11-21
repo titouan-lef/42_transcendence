@@ -4,8 +4,9 @@ import { COLORS3 } from "../settings/values.js";
 
 export class PlayerTrail {
 	private readonly mesh: babylon.Mesh;
-	private readonly intervalId: ReturnType<typeof setInterval>;
 	private isFaded = false;
+	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
+	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
 
 	constructor(scene: babylon.Scene, player: babylon.TransformNode) {
 		this.mesh = babylon.MeshBuilder.CreateBox("playerTrail", { width: PLAYER_DIMENSION.x - 0.01, height: PLAYER_DIMENSION.y - 0.01, depth: PLAYER_DIMENSION.z - 0.01 }, scene);
@@ -15,7 +16,8 @@ export class PlayerTrail {
 		this.setMaterial(scene);
 		this.mesh.renderingGroupId = 1;
 		this.mesh.visibility = 0.20;
-		this.intervalId = this.fadeOut();
+		this.sceneObservable = scene.onBeforeRenderObservable;
+		this.sceneObserver = this.observeScene(scene);
 	}
 
 	private setMaterial(scene: babylon.Scene): void {
@@ -24,15 +26,16 @@ export class PlayerTrail {
 		this.mesh.material = material;
 	}
 
-	private fadeOut(): ReturnType<typeof setInterval> {
-		const intervalId = setInterval(() => {
+
+	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
+		const sceneObserver = this.sceneObservable.add(() => {
 			this.mesh.visibility -= 0.04;
 			if (this.mesh.visibility <= 0) {
 				this.destroy();
 				this.isFaded = true;
 			}
-		}, 15);
-		return intervalId;
+		});
+		return sceneObserver;
 	}
 
 	hasDisappeared(): boolean {
@@ -40,7 +43,7 @@ export class PlayerTrail {
 	}
 
 	destroy(): void {
-		clearInterval(this.intervalId);
+		this.sceneObservable.remove(this.sceneObserver);
 		this.mesh.material?.dispose();
 		this.mesh?.dispose();
 	}

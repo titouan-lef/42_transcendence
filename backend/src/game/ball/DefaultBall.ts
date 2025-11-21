@@ -7,8 +7,5 @@ export class DefaultBall extends BallTemplate {
 		super(scene, "default", sockets);
 	}
 
-	/**@description no effect */
 	activateEffect(): void {}
-
-	destroyRest(): void {}
 }

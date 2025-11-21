@@ -2,7 +2,7 @@ import { PlanePosition } from "../types_transfert";
 
 export type MapOption = "default" | "random" | "volcano" | "sky" | "desert";
 export type BallOption = "default" | "random" | "invisible" | "tricky" | "pulse" | "snake";
-export type PlayerKeys = [KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"]];
+export type PlayerKeys = [KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"]];
 
 export interface PlayerSettings {
 	readonly playerId: 1 | 2;

@@ -5,18 +5,14 @@ import { WebSocket } from "ws";
 import { vec3ToPos } from "../utils.js";
 
 export class TrickyBall extends BallTemplate {
-	private readonly effectIntervalId: ReturnType<typeof setInterval>;
-
 	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
 		super(scene, "tricky", sockets);
-		this.effectIntervalId = this.activateEffect();
 	}
-
-	/**changes direction every TRICKY_BALL_EFFECT_INTERVAL ms */
-	activateEffect(): ReturnType<typeof setInterval> {
-		const effectIntervalId = setInterval(() => {
-			if (this.gameStopped)
-				return;
+	
+	activateEffect(): void {
+		this.effectInterval++;
+		if (this.effectInterval >= TRICKY_BALL_EFFECT_INTERVAL) {
+			this.effectInterval -= TRICKY_BALL_EFFECT_INTERVAL;
 			const speed = this.physic.body.getLinearVelocity().length();
 			if (speed === 0)
 				return;
@@ -35,11 +31,6 @@ export class TrickyBall extends BallTemplate {
 			}
 			this.physic.body.setLinearVelocity(newDirection.scale(speed));
 			this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position));
-		}, TRICKY_BALL_EFFECT_INTERVAL);
-		return effectIntervalId;
-	}
-
-	destroyRest(): void {
-		clearInterval(this.effectIntervalId);
+		}
 	}
 }

@@ -9,11 +9,9 @@ export class SnakeBall extends BallTemplate {
 		this.force = SNAKE_BALL_ANGULAR_FORCE;
 	}
 
-	/**@description no effect */
 	activateEffect(): void {};
 
 	/** Redefine MovementChanges since spin doesn t apply to snake ball */
-	/** ball moves with a snake pattern */
 	applyMovementChanges(): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
 			if (this.justCollided) {
@@ -38,6 +36,4 @@ export class SnakeBall extends BallTemplate {
 		});
 		return sceneObserver;
 	}
-
-	destroyRest(): void {}
 }
