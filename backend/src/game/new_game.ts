@@ -7,8 +7,8 @@ let game: Game;
 async function startGame(playerName1: string, playerName2: string, player1: WebSocket, player2: WebSocket): Promise<void> {
 
 	const settings = new GameSettings(
-		"default", "pulse", true, true,
-		player1, player2, playerName1, playerName2
+		"desert", "pulse", true, true,
+		player1, player2, playerName1, playerName2, true
 	);
 
 	game = await Game.create(settings);

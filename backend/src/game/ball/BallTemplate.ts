@@ -29,11 +29,11 @@ export abstract class BallTemplate {
 	protected readonly mesh: babylon.Mesh;
 	protected gameStopped = true;
 
-	constructor(scene: babylon.Scene, type: BallOption, sockets: WebSocket[]) {
+	constructor(scene: babylon.Scene, type: BallOption, sockets: WebSocket[], windAffected: boolean) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.type = type;
 		this.mesh.position.y = BALL_DIAMETER / 2;
-		this.mesh.metadata = { type: "collider", pushable: true };
+		this.mesh.metadata = { type: "collider", pushable: true, windAffected: windAffected };
 		this.sockets = sockets;
 		this.physic = this.setPhysic(scene);
 		

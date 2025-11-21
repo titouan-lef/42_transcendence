@@ -4,8 +4,8 @@ import { SNAKE_BALL_ANGULAR_FORCE, SNAKE_BALL_ANGULAR_INTERVAL } from "../settin
 import { WebSocket } from "ws";
 
 export class SnakeBall extends BallTemplate {
-	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
-		super(scene, "snake", sockets);
+	constructor(scene: babylon.Scene, sockets: WebSocket[], windAffected: boolean) {
+		super(scene, "snake", sockets, windAffected);
 		this.force = SNAKE_BALL_ANGULAR_FORCE;
 	}
 

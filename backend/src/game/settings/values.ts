@@ -35,6 +35,7 @@ export const WIND_FORCE = 10; //BACK + FRONT
 export const TORNADO_ATTRACTION_STRENGTH = 100;
 export const TORNADO_COLLISION_RADIUS = 3; //BACK + FRONT
 
+
 /**PLAYER */
 export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x //BACK + FRONT
 export const PLAYER_MASS = 1;

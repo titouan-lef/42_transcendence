@@ -5,8 +5,8 @@ import { WebSocket } from "ws";
 import { vec3ToPos } from "../utils.js";
 
 export class PulseBall extends BallTemplate {
-	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
-		super(scene, "pulse", sockets);
+	constructor(scene: babylon.Scene, sockets: WebSocket[], windAffected: boolean) {
+		super(scene, "pulse", sockets, windAffected);
 	}
 
 	activateEffect(): void {
