@@ -44,13 +44,11 @@ export class Player {
 
 		const normal = babylon.MeshBuilder.CreateBox("normal", { width: PLAYER_DIMENSION.x / 2, height: PLAYER_DIMENSION.y, depth: PLAYER_DIMENSION.z }, scene);
 		normal.position.x = -PLAYER_DIMENSION.x / 4;
-		normal.renderingGroupId = 1;
 		normal.metadata = { face: "normal" };
 		normal.parent = player;
 
 		const spinEffect = babylon.MeshBuilder.CreateBox("spinEffect", { width: PLAYER_DIMENSION.x / 2, height: PLAYER_DIMENSION.y, depth: PLAYER_DIMENSION.z }, scene);
 		spinEffect.position.x = PLAYER_DIMENSION.x / 4;
-		spinEffect.renderingGroupId = 1;
 		if (this.applyingSpin) {
 			spinEffect.metadata = { face: "spinEffect" };
 		} else {

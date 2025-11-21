@@ -51,7 +51,6 @@ export class Player {
 		normal.material = normalMaterial;
 		normal.position.x = -PLAYER_DIMENSION.x / 4;
 		normal.renderingGroupId = 1;
-		normal.metadata = { face: "normal" };
 		normal.parent = player;
 
 		const spinEffect = babylon.MeshBuilder.CreateBox("spinEffect", { width: PLAYER_DIMENSION.x / 2, height: PLAYER_DIMENSION.y, depth: PLAYER_DIMENSION.z }, scene);
@@ -61,16 +60,13 @@ export class Player {
 		spinEffect.renderingGroupId = 1;
 		if (this.applyingSpin) {
 			spinEffectMaterial.emissiveColor = COLORS3.playerEmissiveSpinEffectFace;
-			spinEffect.metadata = { face: "spinEffect" };
 		} else {
 			spinEffectMaterial.emissiveColor = COLORS3.playerEmissiveNormalFace;
-			spinEffect.metadata = { face: "normal" };
 		}
 		spinEffect.parent = player;
 
 		player.position.x = position.x;
 		player.position.y = position.y;
-		player.metadata = { type: "collider" };
 		return player;
 	}
 

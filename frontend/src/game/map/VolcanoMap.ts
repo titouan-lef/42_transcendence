@@ -19,7 +19,6 @@ export class VolcanoMap extends MapTemplate {
 	createGround(scene: babylon.Scene): babylon.Mesh {
 		const ground = babylon.MeshBuilder.CreateGround("volcanoground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
-		ground.metadata = { type: "ground" };
 		const material = new babylon.StandardMaterial("ground",scene);
 		material.diffuseColor = COLORS3.volcanoDiffuseGround;
 		material.emissiveColor = COLORS3.volcanoEmissiveGround;

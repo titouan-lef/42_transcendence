@@ -35,25 +35,21 @@ export abstract class MapTemplate {
 		let newLimit: babylon.Mesh;
 		newLimit = this.createLimit(scene, new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH));
 		newLimit.position = new babylon.Vector3(0, WALL_HEIGHT/2, (WALL_WIDTH/2 - MAP_SIZE.z/2));
-		newLimit.metadata = { type: "collider", nature: "environnement" };
 		limits.push(newLimit);
 
 		newLimit = this.createLimit(scene,
 			new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH));
 		newLimit.position = new babylon.Vector3(0, WALL_HEIGHT/2, (MAP_SIZE.z/2 - WALL_WIDTH/2));
-		newLimit.metadata = { type: "collider", nature: "environnement" };
 		limits.push(newLimit);
 
 		newLimit = this.createLimit(scene,
 			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z - WALL_WIDTH * 2));
 		newLimit.position = new babylon.Vector3((-MAP_SIZE.x/2 + WALL_WIDTH/2), WALL_HEIGHT/2, 0);
-		newLimit.metadata = { type: "goal", player: 1 };
 		limits.push(newLimit);
 
 		newLimit = this.createLimit(scene,
 			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z - WALL_WIDTH * 2));
 		newLimit.position = new babylon.Vector3((MAP_SIZE.x/2 - WALL_WIDTH/2), WALL_HEIGHT/2, 0);
-		newLimit.metadata = { type: "goal", player: 2 };
 		limits.push(newLimit);
 
 		return limits;

@@ -34,7 +34,6 @@ export abstract class BallTemplate {
 		this.type = type;
 		this.mesh.position.y = BALL_DIAMETER / 2;
 		this.mesh.metadata = { type: "collider", pushable: true };
-		this.mesh.renderingGroupId = 1;
 		this.sockets = sockets;
 		this.physic = this.setPhysic(scene);
 		
@@ -83,7 +82,7 @@ export abstract class BallTemplate {
 	/** Spin doesn't apply to snake ball for obvious reasons */
 	protected applyMovementChanges(): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
-			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y (only visual)
+			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y (only visual but will be sent to front)
 			if (this.gameStopped)
 				return;
 			if (this.justCollided) {
