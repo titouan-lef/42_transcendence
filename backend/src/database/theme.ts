@@ -12,7 +12,7 @@ async function createThemeTable(): Promise<void> {
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT NOT NULL);`
+			name TEXT UNIQUE NOT NULL);`
 		), "create" + TABLE_NAME + "Table"
 	);
 }
@@ -20,7 +20,7 @@ async function createThemeTable(): Promise<void> {
 async function insertTheme(name: string): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (name) VALUES (?)`,
+			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES (?)`,
 			[name]
 		), "insert" + TABLE_NAME
 	);
@@ -41,7 +41,7 @@ async function getThemeById(id: number): Promise<Theme | undefined> {
 	);
 }
 
-export { Theme, createThemeTable };
+export { Theme, createThemeTable, insertTheme };
 /**
  * @todo see if we keep it
 async function updateTheme(id: number, newName: string): Promise<void> {
