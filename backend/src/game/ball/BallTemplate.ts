@@ -24,7 +24,8 @@ export abstract class BallTemplate {
 	protected readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly yObservable: babylon.Observable<babylon.Scene>;
 	private readonly yObserver: babylon.Observer<babylon.Scene>;
-
+	
+	protected effectInterval = 0;
 	protected readonly mesh: babylon.Mesh;
 	protected gameStopped = true;
 
@@ -83,6 +84,8 @@ export abstract class BallTemplate {
 	protected applyMovementChanges(): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
 			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y (only visual)
+			if (this.gameStopped)
+				return;
 			if (this.justCollided) {
 				this.realDirection = this.physic.body.getLinearVelocity(); // remember original velocity, to apply movement changes on it
 				this.justCollided = false; 
@@ -91,14 +94,15 @@ export abstract class BallTemplate {
 			}
 			if (this.force <= 0)
 				this.forceDirection *= -1;
-			this.applyEffect();
+			this.applySpin();
 			this.nerfSpeed();
+			this.activateEffect();
 		});
 		return sceneObserver;
 	}
 
 	/** applies two contradictory forces on either side of the ball */
-	private applyEffect(): void {
+	private applySpin(): void {
 		this.force -= (BALL_ANGULAR_FORCE / BALL_ANGULAR_INTERVAL) * this.forceDirection; // Angular interval is the number of step it will take to reach maximum value
 		this.force = Math.max(this.force, BALL_ANGULAR_FORCE); // to deny force to go higher than BALL_ANGULAR_FORCE
 		if (this.spinningRight) {
@@ -201,7 +205,6 @@ export abstract class BallTemplate {
 	preDeath(): void {
 		this.mesh.visibility = 0;
 		this.gameStopped = true;
-		this.destroyRest();
 	}
 
 	setJustCollide(): void {
@@ -232,7 +235,6 @@ export abstract class BallTemplate {
 	}
 
 	destroy(): void {
-		this.destroyRest();
 		this.collisionObservable.remove(this.collisionObserver);
 		this.sceneObservable.remove(this.sceneObserver);
 		this.yObservable.remove(this.yObserver);
@@ -242,6 +244,4 @@ export abstract class BallTemplate {
 	}
 
 	abstract activateEffect(): void;
-
-	abstract destroyRest(): void;
 }

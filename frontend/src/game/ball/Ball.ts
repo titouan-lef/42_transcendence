@@ -6,14 +6,15 @@ import { Position } from "../types_transfert.js";
 import { ParticlesType } from "../types_transfert.js";
 
 export class Ball {
-
 	protected readonly color: babylon.Color3;
 	private readonly ballTrails: BallTrail[] = [];
-	private trailIntervalId: ReturnType<typeof setInterval> | null = null;
 	protected readonly particles: babylon.ParticleSystem[] = [];
 	private readonly textures: Record<string, babylon.Texture>;
 	protected readonly mesh: babylon.Mesh;
 	protected gameStopped = true;
+	private sceneObservable: babylon.Observable<babylon.Scene> | null = null;
+	private sceneObserver: babylon.Observer<babylon.Scene> | null = null;
+	private trailTimer = 0;
 
 	constructor(scene: babylon.Scene, type: BallOption, textures: Record<string, babylon.Texture>, color: babylon.Color3) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
@@ -22,8 +23,10 @@ export class Ball {
 		this.color = color;
 		this.textures = textures;
 		this.setMaterial(scene);
-		if (BALL_TRAIL_ON)
-			this.trailIntervalId = this.setTrail(scene);
+		if (BALL_TRAIL_ON) {
+			this.sceneObservable = scene.onBeforeRenderObservable;
+			this.sceneObserver = this.observeScene(scene);
+		}
 	}
 
 	private setMaterial(scene: babylon.Scene): void {
@@ -33,14 +36,20 @@ export class Ball {
 	}
 
 	/** trail behind the ball */
-	private setTrail(scene: babylon.Scene): ReturnType<typeof setInterval> {
-		const trailIntervalId = setInterval(() => {
-			this.ballTrails.push(new BallTrail(scene, this.mesh.position, this.color, this.mesh.visibility));
-			while (this.ballTrails.length && this.ballTrails[0].hasDisappeared()) {
-				this.ballTrails.splice(0, 1);
+	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> | null {
+		if (!this.sceneObservable)
+			return null;
+		const sceneObserver = this.sceneObservable?.add(() => {
+			this.trailTimer++;
+			if (this.trailTimer >= BALL_TRAIL_INTERVAL) {
+				this.ballTrails.push(new BallTrail(scene, this.mesh.position, this.color, this.mesh.visibility));
+				while (this.ballTrails.length && this.ballTrails[0].hasDisappeared()) {
+					this.ballTrails.splice(0, 1);
+				}
+				this.trailTimer = 0;
 			}
-		}, BALL_TRAIL_INTERVAL);
-		return trailIntervalId;
+		});
+		return sceneObserver;
 	}
 
 	/** particles on collides */
@@ -102,13 +111,6 @@ export class Ball {
 		return explosionParticles;
 	}
 
-	// /** hides ball on goal and stop intervals */
-	// preDeath(): void { /**@todo not used*/
-	// 	this.mesh.visibility = 0;
-	// 	this.gameStopped = true;
-	// 	this.destroyRest();
-	// }
-
 	setPosition(position: Position): void {
 		this.mesh.position.x = position.x;
 		this.mesh.position.y = position.y;
@@ -149,8 +151,7 @@ export class Ball {
 	}
 
 	destroy(): void {
-		if (this.trailIntervalId)
-			clearInterval(this.trailIntervalId);
+		this.sceneObservable?.remove(this.sceneObserver);
 		while (this.ballTrails.length) {
 			this.ballTrails[0].destroy();
 			this.ballTrails.splice(0, 1);

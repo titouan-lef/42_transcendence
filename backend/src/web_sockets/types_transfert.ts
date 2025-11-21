@@ -125,7 +125,8 @@ interface PlayerControls {
 	mov_left: boolean;
 	rot_right: boolean;
 	rot_left: boolean;
-	apply_effect: boolean;
+	normalMode: boolean;
+	spinMode: boolean;
 }
 
 export { Position, PlanePosition, Rotation, DataMessage, PlayerControls, ParticlesType, Status, Object };

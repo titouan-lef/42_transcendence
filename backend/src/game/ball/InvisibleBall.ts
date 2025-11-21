@@ -1,40 +1,26 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
-import { INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL } from "../settings/values.js";
+import { INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL, INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL } from "../settings/values.js";
 import { WebSocket } from "ws";
 
 export class InvisibleBall extends BallTemplate {
-	private readonly effectIntervalId: ReturnType<typeof setInterval>;
-	private effectTimeOutId: ReturnType<typeof setTimeout> | null = null;
-		
 	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
 		super(scene, "invisible", sockets);
-		this.effectIntervalId = this.activateEffect();
 	}
 	
-	/**disappears gradually every INVISIBLE_BALL_FADING_INTERVAL ms for INVISIBLE_BALL_INVISIBILITY_INTERVAL ms */
-	activateEffect(): ReturnType<typeof setInterval> {
-		const effectIntervalId = setInterval(() => {
-			if (this.gameStopped)
-				return;
-			if (this.mesh.visibility > 0 && this.effectTimeOutId === null)
-				this.mesh.visibility -= 0.01;
-			else {
-				if (this.effectTimeOutId === null) {
-					this.effectTimeOutId = setTimeout(() => {
-						this.mesh.visibility = 1;
-						this.effectTimeOutId = null;
-					}, INVISIBLE_BALL_INVISIBILITY_INTERVAL);
-				}
-			}
-		}, INVISIBLE_BALL_FADING_INTERVAL);
-		return effectIntervalId;
-	}
+	activateEffect(): void {
+		const resetTimer = INVISIBLE_BALL_FADING_INTERVAL + INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL + INVISIBLE_BALL_INVISIBILITY_INTERVAL;
+		this.effectInterval++;
+		if (this.effectInterval >= INVISIBLE_BALL_FADING_INTERVAL) {
+			if (this.effectInterval >= resetTimer)// gain visibility after being invisible for a certain time
+				this.mesh.visibility += 1 / INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL;
+			else if (this.mesh.visibility > 0) // looses visibility
+				this.mesh.visibility -= 1 / INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL;
 
-	destroyRest(): void {
-		clearInterval(this.effectIntervalId);
-		if (this.effectTimeOutId !== null) {
-			clearTimeout(this.effectTimeOutId);
+			if (this.effectInterval >= resetTimer && this.mesh.visibility >= 1) { // reset timer
+				this.mesh.visibility = 1;
+				this.effectInterval -= resetTimer + INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL;
+			}
 		}
 	}
 }

@@ -179,10 +179,11 @@ export const BALL_TRAIL_INTERVAL = 15;
 export const BALL_TRAIL_ON = true;
 export const NERF_SPEED_FACTOR = MAX_SPEED / 4;
 export const INVISIBLE_BALL_FADING_INTERVAL = 50;
-export const INVISIBLE_BALL_INVISIBILITY_INTERVAL = 1200;
-export const TRICKY_BALL_EFFECT_INTERVAL = 2500;
+export const INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL = 100;
+export const INVISIBLE_BALL_INVISIBILITY_INTERVAL = 75;
+export const TRICKY_BALL_EFFECT_INTERVAL = 150;
 export const TRICKY_BALL_FORWARD_ONLY = true;
-export const PULSE_BALL_EFFECT_INTERVAL = 1000;
+export const PULSE_BALL_EFFECT_INTERVAL = 100;
 export const SNAKE_BALL_ANGULAR_FORCE = 4;
 /** Angular interval is the number of step it will take to reach max/min value */
 export const SNAKE_BALL_ANGULAR_INTERVAL = 20;

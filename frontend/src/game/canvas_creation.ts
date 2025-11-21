@@ -9,8 +9,8 @@ let game: Game | null = null;
 async function showCanvas(socket: WebSocket, options: OptionMessage): Promise<void> {
 	const settings = new GameSettings(
 		options.playerId, options.map, options.wind, options.ball, options.rotatingPlayer, options.spin,
-		["KeyA", "KeyD", "KeyW", "KeyS", "Space"],
-		["KeyJ", "KeyL", "KeyI", "KeyK", "KeyP"]
+		["KeyA", "KeyD", "KeyW", "KeyS", "Space", "KeyC"],
+		["KeyJ", "KeyL", "KeyI", "KeyK", "KeyP", "KeyO"]
 	);
 
 	if (game) {

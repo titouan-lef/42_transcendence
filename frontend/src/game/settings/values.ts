@@ -169,17 +169,18 @@ export const PLAYER_MASS = 1;
 export const PLAYER_RESTITUTION = 1;
 export const PLAYER_MOVEMENT_VELOCITY = 65;
 export const PLAYER_ROTATION_VELOCITY = 10;
-export const PLAYER_TRAIL_INTERVAL = 25;
+export const PLAYER_TRAIL_INTERVAL = 2;
 export const PLAYER_TRAIL_ON = true;
 
 /** BALL SETTINGS */
 export const BALL_DIAMETER = 2; //has to be smaller than the player
 export const MAX_SPEED = 60;
-export const BALL_TRAIL_INTERVAL = 15;
+export const BALL_TRAIL_INTERVAL = 2;
 export const BALL_TRAIL_ON = true;
 export const NERF_SPEED_FACTOR = MAX_SPEED / 4;
-export const INVISIBLE_BALL_FADING_INTERVAL = 50;
-export const INVISIBLE_BALL_INVISIBILITY_INTERVAL = 1200;
+export const INVISIBLE_BALL_FADING_INTERVAL = 300;
+export const INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL = 200;
+export const INVISIBLE_BALL_INVISIBILITY_INTERVAL = 150;
 export const TRICKY_BALL_EFFECT_INTERVAL = 2500;
 export const TRICKY_BALL_FORWARD_ONLY = true;
 export const PULSE_BALL_EFFECT_INTERVAL = 1000;

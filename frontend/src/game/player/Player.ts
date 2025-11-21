@@ -7,20 +7,39 @@ import { PlanePosition, PlayerControls, Rotation } from "../types_transfert.js";
 export class Player {
 	private readonly player: babylon.TransformNode;
 	private readonly id: 1 | 2;
+	private trailTimer = 0;
 	private readonly controls: PlayerKeys;
 	private readonly keyPressed: boolean[] = [false, false, false, false, false];
 	private readonly applyingSpin;
 	private readonly playerTrails: PlayerTrail[] = [];
-	private trailIntervalId: ReturnType<typeof setInterval> | null = null;
+	private sceneObservable: babylon.Observable<babylon.Scene> | null = null;
+	private sceneObserver: babylon.Observer<babylon.Scene> | null = null;
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings, settings: PlayerSettings) {
 		this.applyingSpin = gameSettings.spin;
 		this.controls = settings.playerKeys;
 		this.player = this.setPlayer(scene, position);
 		this.id = settings.playerId;
+		if (PLAYER_TRAIL_ON) {
+			this.sceneObservable = scene.onBeforeRenderObservable;
+			this.sceneObserver = this.observeScene(scene);
+		}
+	}
 
-		if (PLAYER_TRAIL_ON)
-			this.trailIntervalId = this.setTrail(scene);
+	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> | null {
+		if (!this.sceneObservable)
+			return null;
+		const sceneObserver = this.sceneObservable?.add(() => {
+			this.trailTimer++;
+			if (this.trailTimer >= PLAYER_TRAIL_INTERVAL) {
+				this.playerTrails.push(new PlayerTrail(scene, this.player));
+				while (this.playerTrails.length && this.playerTrails[0].hasDisappeared()) {
+					this.playerTrails.splice(0, 1);
+				}
+				this.trailTimer = 0;
+			}
+		});
+		return sceneObserver;
 	}
 
 	private setPlayer(scene: babylon.Scene, position: babylon.Vector2): babylon.TransformNode {
@@ -55,16 +74,6 @@ export class Player {
 		return player;
 	}
 
-	private setTrail(scene: babylon.Scene): ReturnType<typeof setInterval> {
-		const trailIntervalId = setInterval(() => {
-			this.playerTrails.push(new PlayerTrail(scene, this.player));
-			while (this.playerTrails.length && this.playerTrails[0].hasDisappeared()) {
-				this.playerTrails.splice(0, 1);
-			}
-		}, PLAYER_TRAIL_INTERVAL);
-		return trailIntervalId;
-	}
-
 	getId(): 1 | 2 {
 		return this.id;
 	}
@@ -86,7 +95,8 @@ export class Player {
 			mov_left: this.keyPressed[1],
 			rot_right: this.keyPressed[2],
 			rot_left: this.keyPressed[3],
-			apply_effect: this.keyPressed[4],
+			normalMode: this.keyPressed[4],
+			spinMode: this.keyPressed[5]
 		};
 		return controls;
 	}
@@ -110,8 +120,7 @@ export class Player {
 	}
 
 	destroy(): void {
-		if (this.trailIntervalId)
-			clearInterval(this.trailIntervalId);
+		this.sceneObservable?.remove(this.sceneObserver);
 		while (this.playerTrails.length) {
 			this.playerTrails[0]?.destroy();
 			this.playerTrails?.splice(0, 1);

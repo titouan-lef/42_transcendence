@@ -15,6 +15,7 @@ export class Player {
 	private readonly rotatingPlayer: boolean;
 	private readonly applyingSpin;
 	private readonly baseRotation: babylon.Quaternion;
+	private readonly reverseRotation: babylon.Quaternion;
 
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	private readonly positionObserver: babylon.Observer<babylon.Scene>;
@@ -27,7 +28,8 @@ export class Player {
 		this.player = this.setPlayer(scene, position);
 		this.body = this.setPlayerPhysic(scene);
 		this.baseRotation = this.setBaseRotation(settings.playerId);
-		this.resetPlayerRotation();
+		this.reverseRotation = this.setReverseRotation(settings.playerId);
+		this.normalMode();
 		
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.positionObserver = this.playerObserver();
@@ -86,10 +88,21 @@ export class Player {
 		return playersNumber === 2 ? babylon.Quaternion.FromEulerAngles(0, Math.PI, 0) : babylon.Quaternion.Identity();
 	}
 
-	private resetPlayerRotation(): void {
+	private setReverseRotation(playersNumber: number): babylon.Quaternion {
+		return playersNumber === 2 ? babylon.Quaternion.Identity() : babylon.Quaternion.FromEulerAngles(0, Math.PI, 0);
+	}
+
+	private normalMode(): void {
 		this.body.disablePreStep = true; // desactivate body physic for this frame so rotating doesn't cancel the reset
 		this.player.rotationQuaternion = this.baseRotation.clone();
 		this.body.setTargetTransform(this.player.position.clone(), this.baseRotation.clone());
+		this.body.disablePreStep = false;
+	}
+
+	private spinMode(): void {
+		this.body.disablePreStep = true; // desactivate body physic for this frame so rotating doesn't cancel the reset
+		this.player.rotationQuaternion = this.reverseRotation.clone();
+		this.body.setTargetTransform(this.player.position.clone(), this.reverseRotation.clone());
 		this.body.disablePreStep = false;
 	}
 
@@ -129,7 +142,8 @@ export class Player {
 		this.keyPressed[1] = controls.mov_right;
 		this.keyPressed[2] = controls.rot_left;
 		this.keyPressed[3] = controls.rot_right;
-		this.keyPressed[4] = controls.apply_effect;
+		this.keyPressed[4] = controls.normalMode;
+		this.keyPressed[5] = controls.spinMode;
 		this.handleAction();
 	}
 
@@ -147,7 +161,9 @@ export class Player {
 		if (this.rotatingPlayer)
 			this.angularVelocityY = (+this.keyPressed[3] - +this.keyPressed[2]) * PLAYER_ROTATION_VELOCITY * (2 * (this.id - 1) - 1);
 		if (this.keyPressed[4] && this.rotatingPlayer)
-			this.resetPlayerRotation();
+			this.normalMode();
+		if (this.keyPressed[5] && this.rotatingPlayer)
+			this.spinMode();
 	}
 
 	private playerObserver(): babylon.Observer<babylon.Scene> {

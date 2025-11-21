@@ -29,10 +29,6 @@ export abstract class MapTemplate {
 		this.glow = new babylon.GlowLayer("glow", scene);
 	}
 
-	// preDeath(): void { /**@todo not used*/
-	// 	this.gameStopped = true;
-	// }
-
 	/**creates limit with type: goal being the goal of each player and limit being a simple wall */
 	private createLimits(scene: babylon.Scene): babylon.Mesh[] {
 		const limits: babylon.Mesh[] = [];
