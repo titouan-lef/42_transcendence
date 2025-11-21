@@ -3,7 +3,7 @@ import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
-import { MOVE_BALL_ONCLICK, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
+import { POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import fs from "fs";
 import { Status, PlayerControls, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage } from "../web_sockets/types_transfert.js";
 import { Player } from "./player/Player.js";

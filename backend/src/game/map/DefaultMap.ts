@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { MAP_SIZE, WALL_WIDTH } from "../settings/values.js";
+import { MAP_SIZE } from "../settings/values.js";
 
 export class DefaultMap extends MapTemplate {
 	constructor(scene: babylon.Scene) {
