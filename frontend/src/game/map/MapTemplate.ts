@@ -11,7 +11,6 @@ export abstract class MapTemplate {
 	protected readonly light: babylon.DirectionalLight;
 	private readonly type: MapOption;
 	protected readonly sunPosition: babylon.Vector3;
-	protected highlightTimeout: ReturnType<typeof setTimeout> | null = null;
 	protected wallHighlight: babylon.HighlightLayer | null = null;
 	protected readonly wind: PlanePosition;
 
@@ -69,8 +68,6 @@ export abstract class MapTemplate {
 	}
 
 	destroy(): void {
-		if (this.highlightTimeout)
-			clearTimeout(this.highlightTimeout);
 		this.destroyRest();
 		if (this.ground.material && this.ground.material instanceof babylon.StandardMaterial) {
 			this.ground.material.bumpTexture?.dispose();

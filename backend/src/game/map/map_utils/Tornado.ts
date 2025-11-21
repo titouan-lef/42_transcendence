@@ -7,7 +7,6 @@ export class Tornado {
 	private tornado: babylon.Mesh;
 	private readonly id: number;
 	private readonly sockets: WebSocket[];
-	private readonly timeoutId: ReturnType<typeof setTimeout>;
 	private readonly randomSize;
 	private readonly tornadoObservable: babylon.Observable<babylon.Scene>;
 	private readonly tornadoObserver: babylon.Observer<babylon.Scene>;
@@ -26,9 +25,6 @@ export class Tornado {
 
 		this.tornadoObservable = scene.onBeforeRenderObservable;;
 		this.tornadoObserver = this.setTornadoObserver(scene, windforce);
-		this.timeoutId = setTimeout( () => {
-			this.destroy();
-		}, TORNADO_LIFETIME);
 	}
 
 	getCurrentLifetime(): number {
@@ -86,7 +82,6 @@ export class Tornado {
 	}
 
 	destroy(): void {
-		clearTimeout(this.timeoutId);
 		this.tornadoObservable.remove(this.tornadoObserver);
 		this.tornado?.dispose();
 		this.currentLifetime = 0;
