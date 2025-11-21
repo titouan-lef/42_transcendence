@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Meteor } from "./map_utils/Meteor.js";
-import { MAP_SIZE, METEOR_INTERVAL, METEOR_LIFETIME } from "../settings/values.js";
+import { MAP_SIZE, METEOR_INTERVAL } from "../settings/values.js";
 import { WebSocket } from "ws";
 
 export class VolcanoMap extends MapTemplate {

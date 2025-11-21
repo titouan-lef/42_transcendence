@@ -107,7 +107,6 @@ export const COLORS4 = {
 
 /**DEBUG FUNCTION */
 /**@todo should be false */
-export const MOVE_BALL_ONCLICK = false;
 export const MOVE_CAMERA_ONCLICK = false;
 export const SHOW_DISPOSE_LOGS = false;
 

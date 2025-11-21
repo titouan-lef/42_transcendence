@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Tornado } from "./map_utils/Tornado.js";
-import { MAP_SIZE, TORNADO_INTERVAL, TORNADO_LIFETIME, WIND_FORCE } from "../settings/values.js";
+import { MAP_SIZE, TORNADO_INTERVAL, WIND_FORCE } from "../settings/values.js";
 import { WebSocket } from "ws";
 import { planePosToVec3 } from "../utils.js";
 

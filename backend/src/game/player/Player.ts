@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { GameSettings, PlayerSettings } from "../settings/GameSettings.js";
-import { PLAYER_DIMENSION, COLORS3, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY, PLAYER_TRAIL_INTERVAL, PLAYER_TRAIL_ON } from "../settings/values.js";
+import { PLAYER_DIMENSION, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY } from "../settings/values.js";
 import { PlayerControls, Position, DataMessage, Rotation } from "../../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
 //import { PhysicsBody } from "babylonjs";
@@ -43,24 +43,17 @@ export class Player {
 		const player = new babylon.TransformNode("player", scene);
 
 		const normal = babylon.MeshBuilder.CreateBox("normal", { width: PLAYER_DIMENSION.x / 2, height: PLAYER_DIMENSION.y, depth: PLAYER_DIMENSION.z }, scene);
-		const normalMaterial = new babylon.StandardMaterial("normalMat", scene);;
-		normalMaterial.emissiveColor = COLORS3.playerEmissiveNormalFace;
-		normal.material = normalMaterial;
 		normal.position.x = -PLAYER_DIMENSION.x / 4;
 		normal.renderingGroupId = 1;
 		normal.metadata = { face: "normal" };
 		normal.parent = player;
 
 		const spinEffect = babylon.MeshBuilder.CreateBox("spinEffect", { width: PLAYER_DIMENSION.x / 2, height: PLAYER_DIMENSION.y, depth: PLAYER_DIMENSION.z }, scene);
-		const spinEffectMaterial = new babylon.StandardMaterial("spinEffectMat", scene);;
-		spinEffect.material = spinEffectMaterial;
 		spinEffect.position.x = PLAYER_DIMENSION.x / 4;
 		spinEffect.renderingGroupId = 1;
 		if (this.applyingSpin) {
-			spinEffectMaterial.emissiveColor = COLORS3.playerEmissiveSpinEffectFace;
 			spinEffect.metadata = { face: "spinEffect" };
 		} else {
-			spinEffectMaterial.emissiveColor = COLORS3.playerEmissiveNormalFace;
 			spinEffect.metadata = { face: "normal" };
 		}
 		spinEffect.parent = player;
