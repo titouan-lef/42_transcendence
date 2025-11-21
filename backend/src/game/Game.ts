@@ -13,7 +13,7 @@ export class Game {
 	private readonly scene: babylon.Scene;
 	private readonly sceneManager: SceneManager;
 	private readonly settings: GameSettings;
-	private readonly camera: babylon.ArcRotateCamera;
+	private readonly camera: babylon.ArcRotateCamera; //camera has to be there for W/E reason ??
 	private gameInterval?: ReturnType<typeof setInterval>; // ??NodeJS.Timer;
 	private score: babylon.Vector2;
 	private inAnimation = false;

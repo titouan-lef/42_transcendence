@@ -1,6 +1,6 @@
 import { Game } from "./Game.js";
 import { GameSettings } from "./settings/GameSettings.js";
-import { ObjectMessage, OptionMessage, PositionsMessage, TimingMessage } from "./types_transfert.js";
+import { ObjectMessage, OptionMessage } from "./types_transfert.js";
 
 /**@todo gameManager to handle several games and reconect a user tha has been disconected for a few seconds */
 let game: Game | null = null;

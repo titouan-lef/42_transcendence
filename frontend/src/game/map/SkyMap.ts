@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Lightning } from "./map_utils/Lightning.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, R_PARTICLE_NUMBER, LIGHTNING_INTERVAL, LIGHTNING_LIFETIME, R_GLOW_INTENSITY } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, R_PARTICLE_NUMBER, R_GLOW_INTENSITY } from "../settings/values.js";
 import { ObjectMessage, PlanePosition } from "../types_transfert.js";
 import { planePosToVec3 } from "../utils.js";
 
@@ -80,8 +80,6 @@ export class SkyMap extends MapTemplate {
 	}
 
 	handleObject(scene: babylon.Scene, texture: Record<string, babylon.Texture>, lightning: ObjectMessage): void {
-		if (this.gameStopped)
-			return;
 		if (lightning.id >= this.lightnings?.length) {
 			this.lightnings?.push(new Lightning(scene, texture.electricity, lightning.position, lightning.size));
 		} else {

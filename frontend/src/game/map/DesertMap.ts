@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Tornado } from "./map_utils/Tornado.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS3, W_PARTICLE_NUMBER, TORNADO_INTERVAL, TORNADO_LIFETIME, WIND_FORCE, W_GLOW_INTENSITY, COLORS4, START_TIMEOUT } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS3, W_PARTICLE_NUMBER, W_GLOW_INTENSITY, COLORS4 } from "../settings/values.js";
 import { ObjectMessage, PlanePosition } from "../types_transfert.js";
 import { planePosToVec3 } from "../utils.js";
 
@@ -82,8 +82,6 @@ export class DesertMap extends MapTemplate {
 	}
 
 	handleObject(scene: babylon.Scene, texture: Record<string, babylon.Texture>, tornado: ObjectMessage): void {
-		if (this.gameStopped)
-			return;
 		if (tornado.id >= this.tornados?.length) {
 			this.tornados?.push(new Tornado(scene, texture.flare, tornado.position, tornado.size));
 		} else {

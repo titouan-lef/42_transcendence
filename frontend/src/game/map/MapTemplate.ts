@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapOption } from "../settings/GameSettings.js";
-import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, CAMERA_POS_X, SCORE_POS_Y, START_TIMEOUT } from "../settings/values.js";
+import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, CAMERA_POS_X, SCORE_POS_Y } from "../settings/values.js";
 import { ObjectMessage, PlanePosition } from "../types_transfert.js";
 
 export abstract class MapTemplate {
@@ -14,7 +14,6 @@ export abstract class MapTemplate {
 	protected highlightTimeout: ReturnType<typeof setTimeout> | null = null;
 	protected wallHighlight: babylon.HighlightLayer | null = null;
 	protected readonly wind: PlanePosition;
-	protected gameStopped = false;
 
 	constructor(scene: babylon.Scene, type: MapOption, wind: PlanePosition) {
 		this.type = type;

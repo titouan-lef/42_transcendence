@@ -11,7 +11,6 @@ export class Ball {
 	protected readonly particles: babylon.ParticleSystem[] = [];
 	private readonly textures: Record<string, babylon.Texture>;
 	protected readonly mesh: babylon.Mesh;
-	protected gameStopped = true;
 	private sceneObservable: babylon.Observable<babylon.Scene> | null = null;
 	private sceneObserver: babylon.Observer<babylon.Scene> | null = null;
 	private trailTimer = 0;

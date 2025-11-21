@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { MAP_SIZE, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, COLORS3, COLORS4, METEOR_LIFETIME } from "../../settings/values.js";
+import { MAP_SIZE, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, COLORS3, COLORS4 } from "../../settings/values.js";
 import { Position } from "../../types_transfert.js";
 
 export class Meteor {
