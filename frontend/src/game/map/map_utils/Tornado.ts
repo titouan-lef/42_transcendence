@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { COLORS4, TORNADO_COLLISION_RADIUS, TORNADO_HEIGHT } from "../../settings/values.js";
 import { Position } from "../../types_transfert.js";
 
-export class Tornado {
+class Tornado {
 	private tornado: babylon.Mesh;
 	private readonly particles: babylon.ParticleSystem;
 	private readonly size;
@@ -78,3 +78,5 @@ export class Tornado {
 		this.tornado?.dispose();
 	}
 }
+
+export { Tornado };

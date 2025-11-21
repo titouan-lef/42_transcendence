@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { BALL_DIAMETER } from "../settings/values.js";
 
-export class BallTrail {
+class BallTrail {
 	private readonly mesh: babylon.Mesh;
 	private isFaded = false;
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
@@ -45,3 +45,5 @@ export class BallTrail {
 		this.mesh?.dispose();
 	}
 }
+
+export { BallTrail };

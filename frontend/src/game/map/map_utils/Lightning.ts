@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { MAP_SIZE, LIGHTNING_COLLISION_RADIUS, COLORS4, COLORS3 } from "../../settings/values.js";
 import { Position } from "../../types_transfert.js";
 
-export class Lightning {
+class Lightning {
 	private readonly lightning: babylon.Mesh;
 	private readonly particles: babylon.ParticleSystem;
 	private readonly size;
@@ -95,3 +95,5 @@ export class Lightning {
 		this.lightning?.dispose();
 	}
 }
+
+export { Lightning };

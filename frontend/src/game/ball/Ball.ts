@@ -5,7 +5,7 @@ import { BallTrail } from "./BallTrail.js";
 import { Position } from "../types_transfert.js";
 import { ParticlesType } from "../types_transfert.js";
 
-export class Ball {
+class Ball {
 	protected readonly color: babylon.Color3;
 	private readonly ballTrails: BallTrail[] = [];
 	protected readonly particles: babylon.ParticleSystem[] = [];
@@ -165,3 +165,5 @@ export class Ball {
 		this.mesh?.dispose();
 	}
 }
+
+export { Ball };

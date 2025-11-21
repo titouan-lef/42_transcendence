@@ -3,7 +3,7 @@ import { MapOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH } from "../settings/values.js";
 import { PlanePosition } from "../../web_sockets/types_transfert.js";
 
-export abstract class MapTemplate {
+abstract class MapTemplate {
 	protected readonly ground: babylon.Mesh;
 	protected readonly groundPhysic: babylon.PhysicsAggregate;
 	protected readonly limits: babylon.Mesh[];
@@ -90,3 +90,5 @@ export abstract class MapTemplate {
 
 	abstract destroyRest(): void;
 }
+
+export { MapTemplate };

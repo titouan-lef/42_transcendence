@@ -16,7 +16,7 @@ import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settin
 import { WebSocket } from "ws";
 import { EventMessage, ParticlesType, PlanePosition, Position, RenderMessage, Status, TimingMessage } from "../../web_sockets/types_transfert.js";
 
-export class SceneManager {
+class SceneManager {
 	private ball: BallTemplate | null = null;
 	private map: MapTemplate | null = null;
 	private readonly players: Player[] = [];
@@ -261,3 +261,5 @@ export class SceneManager {
 		this.destroyEnvironnement(scene);
 	}
 }
+
+export { SceneManager };

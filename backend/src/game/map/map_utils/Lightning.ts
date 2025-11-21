@@ -4,7 +4,7 @@ import { BallTemplate } from "../../ball/BallTemplate.js";
 import { Object, ObjectMessage, Status } from "../../../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
 
-export class Lightning {
+class Lightning {
 	private readonly id: number;
 	private readonly sockets: WebSocket[];
 	private readonly position: babylon.Vector3;
@@ -87,3 +87,5 @@ export class Lightning {
 		this.sendObjectInfos();
 	}
 }
+
+export { Lightning };

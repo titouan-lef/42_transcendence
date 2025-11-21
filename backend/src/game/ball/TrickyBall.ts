@@ -4,7 +4,7 @@ import { TRICKY_BALL_EFFECT_INTERVAL, TRICKY_BALL_FORWARD_ONLY } from "../settin
 import { WebSocket } from "ws";
 import { vec3ToPos } from "../utils.js";
 
-export class TrickyBall extends BallTemplate {
+class TrickyBall extends BallTemplate {
 	constructor(scene: babylon.Scene, sockets: WebSocket[], windAffected: boolean) {
 		super(scene, "tricky", sockets, windAffected);
 	}
@@ -34,3 +34,5 @@ export class TrickyBall extends BallTemplate {
 		}
 	}
 }
+
+export { TrickyBall };

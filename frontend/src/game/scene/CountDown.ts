@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { COLORS3, MAP_SIZE, COUNTDOWN_SIZE, COUNTDOWN_CANVAS_SIZE, COUNTDOWN_POS_Y } from "../settings/values.js";
 
-export class CountDown { 
+class CountDown { 
 	private readonly countDown: babylon.Mesh;
 	private readonly countDownTexture: babylon.DynamicTexture;
 
@@ -55,3 +55,5 @@ export class CountDown {
 		this.countDown?.dispose();
 	}
 }
+
+export { CountDown };

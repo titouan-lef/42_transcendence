@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { PLAYER_DIMENSION } from "../settings/values.js";
 import { COLORS3 } from "../settings/values.js";
 
-export class PlayerTrail {
+class PlayerTrail {
 	private readonly mesh: babylon.Mesh;
 	private isFaded = false;
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
@@ -48,3 +48,5 @@ export class PlayerTrail {
 		this.mesh?.dispose();
 	}
 }
+
+export { PlayerTrail };

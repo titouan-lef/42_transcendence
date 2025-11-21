@@ -5,7 +5,7 @@ import { MAP_SIZE, TORNADO_INTERVAL, WIND_FORCE } from "../settings/values.js";
 import { WebSocket } from "ws";
 import { planePosToVec3 } from "../utils.js";
 
-export class DesertMap extends MapTemplate {
+class DesertMap extends MapTemplate {
 	private readonly tornados: Tornado[] = [];
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
@@ -69,3 +69,5 @@ export class DesertMap extends MapTemplate {
 		this.sceneObservable.remove(this.sceneObserver);
 	}
 }
+
+export { DesertMap };

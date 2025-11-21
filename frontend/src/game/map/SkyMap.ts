@@ -5,7 +5,7 @@ import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, R_PARTICLE_NUMBER, R_GLOW_INT
 import { ObjectMessage, PlanePosition } from "../types_transfert.js";
 import { planePosToVec3 } from "../utils.js";
 
-export class SkyMap extends MapTemplate {
+class SkyMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
 	private readonly lightnings: Lightning[] = [];
 
@@ -111,3 +111,5 @@ export class SkyMap extends MapTemplate {
 		this.particles?.dispose();
 	}
 }
+
+export { SkyMap };

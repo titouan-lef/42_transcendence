@@ -4,7 +4,7 @@ import { Meteor } from "./map_utils/Meteor.js";
 import { MAP_SIZE, METEOR_INTERVAL } from "../settings/values.js";
 import { WebSocket } from "ws";
 
-export class VolcanoMap extends MapTemplate {
+class VolcanoMap extends MapTemplate {
 	private readonly meteors: Meteor[] = [];
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
@@ -55,3 +55,5 @@ export class VolcanoMap extends MapTemplate {
 		}
 	}
 }
+
+export { VolcanoMap };
