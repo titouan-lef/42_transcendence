@@ -17,7 +17,6 @@ export class Ball {
 
 	constructor(scene: babylon.Scene, type: BallOption, textures: Record<string, babylon.Texture>, color: babylon.Color3) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
-		this.mesh.metadata = { type: "collider", pushable: true };
 		this.mesh.renderingGroupId = 1;
 		this.color = color;
 		this.textures = textures;

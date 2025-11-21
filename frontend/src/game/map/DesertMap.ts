@@ -20,7 +20,6 @@ export class DesertMap extends MapTemplate {
 	createGround(scene: babylon.Scene): babylon.Mesh {
 		const ground = babylon.MeshBuilder.CreateGround("desertground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
-		ground.metadata = { type: "ground" };
 		const material = new babylon.StandardMaterial("groundMat", scene);
 		material.diffuseColor  = COLORS3.desertDiffuseGround;
 		material.emissiveColor  = COLORS3.desertEmissiveGround;

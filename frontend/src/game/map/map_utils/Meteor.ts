@@ -39,7 +39,6 @@ export class Meteor {
 	private spawnMeteor(scene: babylon.Scene, position: babylon.Vector3): babylon.Mesh {
 		const meteor = babylon.MeshBuilder.CreatePolyhedron("meteor", { type: 2, size: METEOR_DIAMETER * this.size }, scene);
 		meteor.position = position;
-		meteor.metadata = { type: "collider" };
 		const material = new babylon.StandardMaterial("MeteorMat", scene);
 		material.diffuseColor = COLORS3.volcanoDiffuseMeteor;
 		material.emissiveColor = COLORS3.volcanoEmissiveMeteor;

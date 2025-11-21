@@ -20,7 +20,6 @@ export class DefaultMap extends MapTemplate {
 	createGround(scene: babylon.Scene): babylon.Mesh {
 		const ground = babylon.MeshBuilder.CreateGround("defaultground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
-		ground.metadata = { type: "ground" };
 		const material = new babylon.StandardMaterial('groundcolor', scene);
 		material.diffuseColor =  COLORS3.defaultDiffuseGround;
 		ground.material = material;
