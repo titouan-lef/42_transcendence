@@ -12,7 +12,7 @@ async function createBallTable(): Promise<void> {
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT NOT NULL);`
+			name TEXT UNIQUE NOT NULL);`
 		), "create" + TABLE_NAME + "Table"
 	);
 }
@@ -20,7 +20,7 @@ async function createBallTable(): Promise<void> {
 async function insertBall(name: string): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (name) VALUES (?)`, [name]
+			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES (?)`, [name]
 		), "insert" + TABLE_NAME
 	);
 }
@@ -37,7 +37,7 @@ async function getBallById(id: number): Promise<Ball | undefined> {
 	);
 }
 
-export { Ball, createBallTable };
+export { Ball, createBallTable, insertBall };
 /**
  * @todo see if we keep it
 async function updateBall(id: number, newName: string): Promise<void> {

@@ -1,39 +1,89 @@
 import sqlite3 from "sqlite3";
+import { fs } from "fs";
 import { open, Database } from "sqlite";
-import { createThemeTable } from "./theme.js";
+import { createThemeTable, insertTheme } from "./theme.js";
 import { createUserTable } from "./user.js";
 import { createFriendshipTable } from "./friendship.js";
 import { createSeasonTable } from "./season.js";
-import { createMapTable } from "./map.js";
-import { createRuleTable } from "./rule.js";
-import { createBallTable } from "./ball.js";
+import { createMapTable, insertMap } from "./map.js";
+import { createRuleTable, insertRule } from "./rule.js";
+import { createBallTable, insertBall } from "./ball.js";
 import { createGameTable } from "./game.js";
 import { createEloTable } from "./elo.js";
 import { createGoalTable } from "./goal.js";
 import { createGameRuleTable } from "./game_rule.js";
 
+const DB_FILE = "database.db";
+
 async function getDB(): Promise<Database> {
 	return open({
-		filename: "./database.db",
+		filename: "./d" + DB_FILE,
 		driver: sqlite3.Database,
 	});
 }
 
-async function initDB(): Promise<void> {
-	// No foreign key.
-	await createSeasonTable();
-	await createRuleTable();
+async function initBallTable(): Promise<void> {
 	await createBallTable();
-	await createMapTable();
-	await createThemeTable();
+	await insertBall("default");
+	await insertBall("invisible");
+	await insertBall("pulse");
+	await insertBall("snake");
+	await insertBall("tricky");
+}
 
-	// Foreign key.
-	await createUserTable();
-	await createFriendshipTable();
-	await createGameTable();
-	await createGoalTable();
-	await createGameRuleTable();
-	await createEloTable();
+async function initMapTable(): Promise<void> {
+	await createMapTable();
+	await insertMap("default");
+	await insertMap("desert");
+	await insertMap("sky");
+	await insertMap("volcano");
+}
+
+async function initThemeTable(): Promise<void> {
+	await createThemeTable();
+	await insertTheme("pizza_lulu");
+	await insertTheme("over_titouan");
+	await insertTheme("sugar_rushtman");
+	await insertTheme("polybius");
+	await insertTheme("neon_hearts");
+	await insertTheme("claw_machine");
+	await insertTheme("lazer_tim");
+	await insertTheme("electronic_eclypse");
+	await insertTheme("please_insert_25c");
+	await insertTheme("ticket_muncher");
+	await insertTheme("electric_pl");
+	await insertTheme("monq");
+}
+
+async function initRuleTable(): Promise<void> {
+	await createRuleTable();
+	await insertRule("spin");
+	await insertRule("rotation");
+	await insertRule("wind");
+}
+
+async function initDB(): Promise<void> {
+	const fileExiste = fs.existsSync(DB_FILE);
+	if (!fileExiste){
+		// No foreign key.
+		await createSeasonTable();/** @todo see with blockchain */
+		await initRuleTable();//createRuleTable();
+		await initBallTable();//await createBallTable();
+		await initMapTable();//createMapTable();
+		await initThemeTable();//await createThemeTable();
+
+		// Foreign key.
+		await createUserTable();
+		await createFriendshipTable();
+		await createGameTable();
+		await createGoalTable();
+		await createGameRuleTable();
+		await createEloTable();
+	} else {
+		
+	}
+
+	
 }
 
 export { getDB, initDB };

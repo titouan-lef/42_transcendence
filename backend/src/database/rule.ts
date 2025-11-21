@@ -12,7 +12,7 @@ async function createRuleTable(): Promise<void> {
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			name TEXT NOT NULL);`
+			name TEXT UNIQUE NOT NULL);`
 		), "create" + TABLE_NAME + "Table"
 	);
 }
@@ -20,7 +20,7 @@ async function createRuleTable(): Promise<void> {
 async function insertRule(name: string): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (name) VALUES (?)`,
+			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES (?)`,
 			[name]
 		), "insert" + TABLE_NAME
 	);
@@ -41,7 +41,7 @@ async function getRuleById(id: number): Promise<Rule | undefined> {
 	);
 }
 
-export { Rule, createRuleTable };
+export { Rule, createRuleTable, insertRule };
 /**
  * @todo see if we keep it
 async function updateRule(id: number, newName: string): Promise<void> {
