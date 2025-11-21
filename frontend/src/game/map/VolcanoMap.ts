@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { Meteor } from "./map_utils/Meteor.js";
-import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, METEOR_INTERVAL, METEOR_LIFETIME, V_PARTICLE_NUMBER, V_GLOW_INTENSITY, START_TIMEOUT } from "../settings/values.js";
+import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, V_PARTICLE_NUMBER, V_GLOW_INTENSITY } from "../settings/values.js";
 import { ObjectMessage, PlanePosition } from "../types_transfert.js";
 
 export class VolcanoMap extends MapTemplate {
@@ -82,8 +82,6 @@ export class VolcanoMap extends MapTemplate {
 	}
 
 	handleObject(scene: babylon.Scene, texture: Record<string, babylon.Texture>, meteor: ObjectMessage): void {
-		if (this.gameStopped)
-			return;
 		if (meteor.id >= this.meteors?.length) {
 			this.meteors?.push(new Meteor(scene, texture, meteor.position, meteor.size));
 		} else {

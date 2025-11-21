@@ -108,17 +108,13 @@ export const COLORS4 = {
 /**DEBUG FUNCTION */
 /**@todo should be false */
 export const MOVE_CAMERA_ONCLICK = false;
-export const SHOW_DISPOSE_LOGS = false;
-
-/**GAMEPLAY GENERAL SETTINGS */
-export const POINTS_TO_WIN = 11;
-export const START_TIMEOUT = 4; // in seconds
+export const SHOW_DISPOSE_LOGS = false; //BACK + FRONT
 
 /**MAP GENERAL SETTINGS */
-export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100);
+export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100); //BACK + FRONT
 export const CAMERA_POS_X = MAP_SIZE.x * 1.4;
-export const WALL_WIDTH = 3;
-export const WALL_HEIGHT = 5;
+export const WALL_WIDTH = 3; //BACK + FRONT
+export const WALL_HEIGHT = 5; //BACK + FRONT
 export const SCORE_CANVAS_SIZE = new babylon.Vector2(512, 256);
 export const SCORE_SIZE = 120;
 export const SCORE_POS_Y = 20;
@@ -133,61 +129,30 @@ export const D_GLOW_INTENSITY = 0.6;
 
 /**SKY MAP */
 export const R_PARTICLE_NUMBER = 4000;
-export const LIGHTNING_INTERVAL = 600;
-export const LIGHTNING_LIFETIME = 1200;
-export const LIGHTNING_FRAMES_TO_DISAPPEAR = 30;
-export const LIGHTNING_COLLISION_RADIUS = 5;
-export const LIGHTNING_COLLISION_STRENGTH = 30;
+export const LIGHTNING_COLLISION_RADIUS = 5; //BACK + FRONT
 export const R_GLOW_INTENSITY = 0.3;
 
 /**VOLCANO MAP */
 export const V_PARTICLE_NUMBER = 4000;
-export const METEOR_INTERVAL = 3000;
-export const METEOR_DIAMETER = 2;
+export const METEOR_DIAMETER = 2; //BACK + FRONT
 export const METEOR_PARTICLE_INTERVAL = 5000;
-export const METEOR_LIFETIME = 5000;
-export const METEOR_COLLISION_RADIUS = METEOR_DIAMETER;
-export const METEOR_COLLISION_STRENGTH = 30;
-export const METEOR_SPEED = 100;
+export const METEOR_COLLISION_RADIUS = METEOR_DIAMETER; //BACK + FRONT
 export const V_GLOW_INTENSITY = 0.7;
 
 /**DESERT MAP */
 export const W_PARTICLE_NUMBER = 3000;
-export const TORNADO_INTERVAL = 3000;
-export const TORNADO_LIFETIME = 8000;
-export const WIND_FORCE = 10;
-export const TORNADO_ATTRACTION_STRENGTH = 100;
-export const TORNADO_COLLISION_RADIUS = 3;
+export const WIND_FORCE = 10; //BACK + FRONT
+export const TORNADO_COLLISION_RADIUS = 3; //BACK + FRONT
 export const TORNADO_HEIGHT = 40;
 export const W_GLOW_INTENSITY = 0.3;
 
 
 /**PLAYER */
-export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x
-export const PLAYER_MASS = 1;
-export const PLAYER_RESTITUTION = 1;
-export const PLAYER_MOVEMENT_VELOCITY = 65;
-export const PLAYER_ROTATION_VELOCITY = 10;
+export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x //BACK + FRONT
 export const PLAYER_TRAIL_INTERVAL = 2;
 export const PLAYER_TRAIL_ON = true;
 
 /** BALL SETTINGS */
-export const BALL_DIAMETER = 2; //has to be smaller than the player
-export const MAX_SPEED = 60;
+export const BALL_DIAMETER = 2; //has to be smaller than the player //BACK + FRONT
 export const BALL_TRAIL_INTERVAL = 2;
 export const BALL_TRAIL_ON = true;
-export const NERF_SPEED_FACTOR = MAX_SPEED / 4;
-export const INVISIBLE_BALL_FADING_INTERVAL = 300;
-export const INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL = 200;
-export const INVISIBLE_BALL_INVISIBILITY_INTERVAL = 150;
-export const TRICKY_BALL_EFFECT_INTERVAL = 2500;
-export const TRICKY_BALL_FORWARD_ONLY = true;
-export const PULSE_BALL_EFFECT_INTERVAL = 1000;
-export const SNAKE_BALL_ANGULAR_FORCE = 4;
-/** Angular interval is the number of step it will take to reach max/min value */
-export const SNAKE_BALL_ANGULAR_INTERVAL = 20;
-export const BALL_ANGULAR_FORCE = 0.5;
-/** Angular interval is the number of step it will take to reach max/min value */
-export const BALL_ANGULAR_INTERVAL = 45;
-
-/** @todo player sometimes blocked when pressing right left, should be solved with server side */

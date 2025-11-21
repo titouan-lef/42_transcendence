@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
-import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS, START_TIMEOUT } from "./settings/values.js";
+import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import { DataMessage, ObjectMessage, OptionMessage, Status } from "./types_transfert.js";
 import { stopGame } from "./canvas_creation.js";
 
@@ -13,9 +13,6 @@ export class Game {
 	private readonly camera: babylon.ArcRotateCamera;
 	private readonly canvas: HTMLCanvasElement;
 	private settings: GameSettings;
-	// private score: babylon.Vector2;
-	// private inAnimation = false;
-	// private gameStopped = false;
 
 	constructor (socket: WebSocket, canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.socket = socket;
@@ -26,7 +23,6 @@ export class Game {
 		this.sceneManager = new SceneManager(socket, scene, this.camera, settings);
 		this.scene = scene;
 		window.addEventListener("resize", () => this.engine.resize());
-		// this.score = new babylon.Vector2(0, 0);
 		this.setScene();
 
 		socket.addEventListener("message", (event) => { /** @todo check if removeEventListener is necesseray and the end of the game */
@@ -95,7 +91,6 @@ export class Game {
 		this.scene.dispose();
 		this.engine.dispose();
 		this.canvas.remove();
-		// this.gameStopped = true;
 		babylon.Tools.ClearLogCache(); // hides previous logs 
 	}
 

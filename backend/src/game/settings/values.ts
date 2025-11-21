@@ -2,7 +2,6 @@ import * as babylon from "@babylonjs/core";
 
 /**DEBUG FUNCTION */
 /**@todo should be false */
-export const MOVE_CAMERA_ONCLICK = false;
 export const SHOW_DISPOSE_LOGS = false;
 
 /**GAMEPLAY GENERAL SETTINGS */
@@ -10,42 +9,41 @@ export const POINTS_TO_WIN = 11;
 export const START_TIMEOUT = 4; // in seconds
 
 /**MAP GENERAL SETTINGS */
-export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100);
-export const WALL_WIDTH = 3;
-export const WALL_HEIGHT = 5;
+export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100); //BACK + FRONT
+export const WALL_WIDTH = 3; //BACK + FRONT
+export const WALL_HEIGHT = 5; //BACK + FRONT
 
 /**SKY MAP */
 export const LIGHTNING_INTERVAL = 600;
-export const LIGHTNING_LIFETIME = 1200;
+export const LIGHTNING_LIFETIME = 800;
 export const LIGHTNING_FRAMES_TO_DISAPPEAR = 30;
-export const LIGHTNING_COLLISION_RADIUS = 5;
+export const LIGHTNING_COLLISION_RADIUS = 5; //BACK + FRONT
 export const LIGHTNING_COLLISION_STRENGTH = 30;
 
 /**VOLCANO MAP */
 export const METEOR_INTERVAL = 3000;
-export const METEOR_DIAMETER = 2;
+export const METEOR_DIAMETER = 2; //BACK + FRONT
 export const METEOR_LIFETIME = 5000;
-export const METEOR_COLLISION_RADIUS = METEOR_DIAMETER;
+export const METEOR_COLLISION_RADIUS = METEOR_DIAMETER; //BACK + FRONT
 export const METEOR_COLLISION_STRENGTH = 30;
 export const METEOR_SPEED = 100;
 
 /**DESERT MAP */
 export const TORNADO_INTERVAL = 3000;
 export const TORNADO_LIFETIME = 8000;
-export const WIND_FORCE = 10;
+export const WIND_FORCE = 10; //BACK + FRONT
 export const TORNADO_ATTRACTION_STRENGTH = 100;
-export const TORNADO_COLLISION_RADIUS = 3;
-export const TORNADO_HEIGHT = 40;
+export const TORNADO_COLLISION_RADIUS = 3; //BACK + FRONT
 
 /**PLAYER */
-export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x
+export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x //BACK + FRONT
 export const PLAYER_MASS = 1;
 export const PLAYER_RESTITUTION = 1;
 export const PLAYER_MOVEMENT_VELOCITY = 65;
 export const PLAYER_ROTATION_VELOCITY = 10;
 
 /** BALL SETTINGS */
-export const BALL_DIAMETER = 2; //has to be smaller than the player
+export const BALL_DIAMETER = 2; //has to be smaller than the player //BACK + FRONT
 export const MAX_SPEED = 60;
 export const NERF_SPEED_FACTOR = MAX_SPEED / 4;
 export const BALL_ANGULAR_FORCE = 0.5;

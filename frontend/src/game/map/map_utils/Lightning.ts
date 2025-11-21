@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { MAP_SIZE, LIGHTNING_FRAMES_TO_DISAPPEAR, LIGHTNING_COLLISION_RADIUS, LIGHTNING_LIFETIME, COLORS4, COLORS3 } from "../../settings/values.js";
+import { MAP_SIZE, LIGHTNING_COLLISION_RADIUS, COLORS4, COLORS3 } from "../../settings/values.js";
 import { Position } from "../../types_transfert.js";
 
 export class Lightning {

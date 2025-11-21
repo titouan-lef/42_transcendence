@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { COLORS4, TORNADO_COLLISION_RADIUS, TORNADO_HEIGHT, TORNADO_LIFETIME } from "../../settings/values.js";
+import { COLORS4, TORNADO_COLLISION_RADIUS, TORNADO_HEIGHT } from "../../settings/values.js";
 import { Position } from "../../types_transfert.js";
 
 export class Tornado {
@@ -7,10 +7,6 @@ export class Tornado {
 	private readonly particles: babylon.ParticleSystem;
 	private readonly size;
 
-	/** 
-	 * send position each frame too ? then assosiate an id to each meteor ?
-	 * maybe the windforce and the size should be linked ??
-	 */
 	constructor(scene: babylon.Scene, texture: babylon.Texture, position: Position, size: number) {
 		this.tornado = babylon.MeshBuilder.CreateBox("tornado", { width: 0.01, height: 0.01, depth: 0.01 }, scene);
 		this.tornado.visibility = 0;
