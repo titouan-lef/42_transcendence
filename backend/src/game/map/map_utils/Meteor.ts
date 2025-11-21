@@ -3,7 +3,8 @@ import { MAP_SIZE, WALL_WIDTH, METEOR_SPEED, METEOR_DIAMETER, METEOR_COLLISION_R
 import { BallTemplate } from "../../ball/BallTemplate.js";
 import { Object, ObjectMessage, Status } from "../../../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
-export class Meteor {
+
+class Meteor {
 	private readonly id: number;
 	private readonly sockets: WebSocket[];
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
@@ -123,3 +124,5 @@ export class Meteor {
 		this.sendObjectInfos();
 	}
 }
+
+export { Meteor };

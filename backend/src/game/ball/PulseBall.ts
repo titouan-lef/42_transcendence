@@ -4,7 +4,7 @@ import { MAX_SPEED, PULSE_BALL_EFFECT_INTERVAL } from "../settings/values.js";
 import { WebSocket } from "ws";
 import { vec3ToPos } from "../utils.js";
 
-export class PulseBall extends BallTemplate {
+class PulseBall extends BallTemplate {
 	constructor(scene: babylon.Scene, sockets: WebSocket[], windAffected: boolean) {
 		super(scene, "pulse", sockets, windAffected);
 	}
@@ -30,3 +30,5 @@ export class PulseBall extends BallTemplate {
 		}
 	}
 }
+
+export { PulseBall };

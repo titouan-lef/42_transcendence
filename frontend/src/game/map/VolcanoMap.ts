@@ -4,7 +4,7 @@ import { Meteor } from "./map_utils/Meteor.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, V_PARTICLE_NUMBER, V_GLOW_INTENSITY } from "../settings/values.js";
 import { ObjectMessage, PlanePosition } from "../types_transfert.js";
 
-export class VolcanoMap extends MapTemplate {
+class VolcanoMap extends MapTemplate {
 	private readonly meteors: Meteor[] = [];
 	private readonly particles: babylon.ParticleSystem;
 
@@ -111,3 +111,5 @@ export class VolcanoMap extends MapTemplate {
 		this.particles?.dispose();
 	}
 }
+
+export { VolcanoMap };

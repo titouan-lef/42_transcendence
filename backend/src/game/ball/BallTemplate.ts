@@ -5,7 +5,7 @@ import { EventMessage, ParticlesType, Position, Status } from "../../web_sockets
 import { WebSocket } from "ws";
 import { vec3ToPos } from "../utils.js";
 
-export abstract class BallTemplate {
+abstract class BallTemplate {
 
 	private readonly type: BallOption;
 	protected readonly physic: babylon.PhysicsAggregate;
@@ -245,3 +245,5 @@ export abstract class BallTemplate {
 
 	abstract activateEffect(): void;
 }
+
+export { BallTemplate };

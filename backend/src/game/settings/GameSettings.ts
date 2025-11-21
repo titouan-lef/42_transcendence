@@ -1,14 +1,15 @@
 import { WebSocket } from "ws";
-export type MapOption = "default" | "random" | "volcano" | "sky" | "desert";
-export type BallOption = "default" | "random" | "invisible" | "tricky" | "pulse" | "snake";
 
-export interface PlayerSettings {
+type MapOption = "default" | "random" | "volcano" | "sky" | "desert";
+type BallOption = "default" | "random" | "invisible" | "tricky" | "pulse" | "snake";
+
+interface PlayerSettings {
 	readonly playerId: 1 | 2 ;
 	readonly socket: WebSocket;
 	readonly username: string;
 }
 
-export class GameSettings {
+class GameSettings {
 	readonly map: MapOption;
 	readonly ball: BallOption;
 	readonly rotatingPlayer: boolean;
@@ -38,3 +39,5 @@ export class GameSettings {
 		this.windAffectsBall = windAffectsBall;
 	}
 }
+
+export { MapOption, BallOption, PlayerSettings, GameSettings };

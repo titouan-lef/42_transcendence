@@ -12,7 +12,7 @@ import { COLORS3, MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/val
 import { CountDown } from "./CountDown.js";
 import { DataMessage, EventMessage, GoalMessage, Object, ObjectMessage, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
 
-export class SceneManager {
+class SceneManager {
 	private ball: Ball | null = null;
 	private map: MapTemplate | null = null;
 	private countDown: CountDown | null = null;
@@ -226,3 +226,5 @@ export class SceneManager {
 		this.destroyScore();
 	}
 }
+
+export { SceneManager };

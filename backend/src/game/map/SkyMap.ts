@@ -5,7 +5,7 @@ import { MAP_SIZE, LIGHTNING_INTERVAL, WIND_FORCE } from "../settings/values.js"
 import { WebSocket } from "ws";
 import { planePosToVec3 } from "../utils.js";
 
-export class SkyMap extends MapTemplate {
+class SkyMap extends MapTemplate {
 	private readonly lightnings: Lightning[] = [];
 	private readonly sockets: WebSocket[] = []; // one or two socket depening on the IA...
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
@@ -69,3 +69,5 @@ export class SkyMap extends MapTemplate {
 		}
 	}
 }
+
+export { SkyMap };

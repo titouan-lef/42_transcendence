@@ -8,7 +8,7 @@ import fs from "fs";
 import { Status, PlayerControls, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage } from "../web_sockets/types_transfert.js";
 import { Player } from "./player/Player.js";
 
-export class Game {
+class Game {
 	private readonly engine: babylon.Engine;
 	private readonly scene: babylon.Scene;
 	private readonly sceneManager: SceneManager;
@@ -260,3 +260,5 @@ export class Game {
 		player.setControls(controls);
 	}
 }
+
+export { Game };

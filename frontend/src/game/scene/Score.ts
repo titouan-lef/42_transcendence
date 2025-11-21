@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { SCORE_CANVAS_SIZE, COLORS3, CAMERA_POS_X, MAP_SIZE, SCORE_POS_Y, SCORE_SIZE } from "../settings/values.js";
 
-export class Score { 
+class Score { 
 	private readonly score: babylon.Mesh;
 	private readonly scoreTexture: babylon.DynamicTexture;
 
@@ -51,3 +51,5 @@ export class Score {
 		this.score?.dispose();
 	}
 }
+
+export { Score };

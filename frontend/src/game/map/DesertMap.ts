@@ -5,7 +5,7 @@ import { MAP_SIZE, SUN_DIAMETER, COLORS3, W_PARTICLE_NUMBER, W_GLOW_INTENSITY, C
 import { ObjectMessage, PlanePosition } from "../types_transfert.js";
 import { planePosToVec3 } from "../utils.js";
 
-export class DesertMap extends MapTemplate {
+class DesertMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
 	private readonly tornados: Tornado[] = [];
 
@@ -111,3 +111,5 @@ export class DesertMap extends MapTemplate {
 		this.particles?.dispose();
 	}
 }
+
+export { DesertMap };

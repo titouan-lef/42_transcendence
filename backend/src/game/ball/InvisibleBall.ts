@@ -3,7 +3,7 @@ import { BallTemplate } from "./BallTemplate.js";
 import { INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL, INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL } from "../settings/values.js";
 import { WebSocket } from "ws";
 
-export class InvisibleBall extends BallTemplate {
+class InvisibleBall extends BallTemplate {
 	constructor(scene: babylon.Scene, sockets: WebSocket[], windAffected: boolean) {
 		super(scene, "invisible", sockets, windAffected);
 	}
@@ -24,3 +24,5 @@ export class InvisibleBall extends BallTemplate {
 		}
 	}
 }
+
+export { InvisibleBall };

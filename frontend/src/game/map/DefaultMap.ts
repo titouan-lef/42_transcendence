@@ -3,7 +3,7 @@ import { MapTemplate } from "./MapTemplate.js";
 import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS3, COLORS4, D_GLOW_INTENSITY } from "../settings/values.js";
 import { PlanePosition } from "../types_transfert.js";
 
-export class DefaultMap extends MapTemplate {
+class DefaultMap extends MapTemplate {
 	private readonly bars: babylon.Mesh[];
 	private readonly particles: babylon.ParticleSystem;
 	private readonly wallHighlightColor: babylon.Color3 = COLORS3.defaultHighlightWall;
@@ -103,3 +103,5 @@ export class DefaultMap extends MapTemplate {
 		this.particles?.dispose();
 	}
 }
+
+export { DefaultMap };

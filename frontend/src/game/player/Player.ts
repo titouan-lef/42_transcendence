@@ -4,7 +4,7 @@ import { PLAYER_DIMENSION, COLORS3, PLAYER_TRAIL_INTERVAL, PLAYER_TRAIL_ON } fro
 import { PlayerTrail } from "./PlayerTrail.js";
 import { PlanePosition, PlayerControls, Rotation } from "../types_transfert.js";
 
-export class Player {
+class Player {
 	private readonly player: babylon.TransformNode;
 	private readonly id: 1 | 2;
 	private trailTimer = 0;
@@ -128,3 +128,5 @@ export class Player {
 		this.player?.dispose();
 	}
 }
+
+export { Player };

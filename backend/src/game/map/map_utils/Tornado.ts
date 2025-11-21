@@ -3,7 +3,7 @@ import { MAP_SIZE, TORNADO_ATTRACTION_STRENGTH, TORNADO_COLLISION_RADIUS, TORNAD
 import { Object, ObjectMessage, Status } from "../../../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
 
-export class Tornado {
+class Tornado {
 	private tornado: babylon.Mesh;
 	private readonly id: number;
 	private readonly sockets: WebSocket[];
@@ -88,3 +88,5 @@ export class Tornado {
 		this.currentLifetime = 0;
 	}
 }
+
+export { Tornado };

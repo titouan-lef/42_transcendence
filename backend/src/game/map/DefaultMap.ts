@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { MAP_SIZE } from "../settings/values.js";
 
-export class DefaultMap extends MapTemplate {
+class DefaultMap extends MapTemplate {
 	constructor(scene: babylon.Scene) {
 		super(scene, "default");
 	}
@@ -21,3 +21,5 @@ export class DefaultMap extends MapTemplate {
 
 	destroyRest(): void {}
 }
+
+export { DefaultMap };

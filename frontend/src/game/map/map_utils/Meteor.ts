@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { MAP_SIZE, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, COLORS3, COLORS4 } from "../../settings/values.js";
 import { Position } from "../../types_transfert.js";
 
-export class Meteor {
+class Meteor {
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly meteor: babylon.Mesh;
@@ -127,3 +127,5 @@ export class Meteor {
 		this.meteor?.dispose();
 	}
 }
+
+export { Meteor };

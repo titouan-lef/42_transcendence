@@ -5,7 +5,7 @@ import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./setting
 import { DataMessage, ObjectMessage, OptionMessage, Status } from "./types_transfert.js";
 import { stopGame } from "./canvas_creation.js";
 
-export class Game {
+class Game {
 	private readonly socket: WebSocket;
 	private readonly engine: babylon.Engine;
 	private readonly scene: babylon.Scene;
@@ -142,3 +142,5 @@ export class Game {
 	}
 
 }
+
+export { Game };
