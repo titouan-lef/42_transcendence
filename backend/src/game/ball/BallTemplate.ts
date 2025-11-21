@@ -66,6 +66,7 @@ export abstract class BallTemplate {
 	launchBall(): void {
 		const startingDirection = Math.random() < 0.5 ? 1 : -1;
 		this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
+		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position));
 		this.justCollided = true;
 		this.gameStopped = false;
 	}

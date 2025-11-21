@@ -63,7 +63,6 @@ export class Ball {
 		collisionParticles.maxSize = 0.3;
 		collisionParticles.minLifeTime = 0.5;
 		collisionParticles.maxLifeTime = 0.5;
-		collisionParticles.emitRate = 300;
 		collisionParticles.minEmitPower = 6;
 		collisionParticles.maxEmitPower = 12;
 		collisionParticles.emitRate = 0;
@@ -139,6 +138,7 @@ export class Ball {
 		}
 		this.particles.push(particle);
 		particle.start();
+		/**@todo if PAUSE, DO NOT DISPOSE*/
 		setTimeout( () => {
 			particle?.stop();
 			const index = this.particles?.indexOf(particle);
