@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { GameSettings, PlayerSettings } from "../settings/GameSettings.js";
+import { GameSettings } from "../settings/GameSettings.js";
 import { PLAYER_DIMENSION, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY } from "../settings/values.js";
 import { PlayerControls, Position, DataMessage, Rotation } from "../../web_sockets/types_transfert.js";
 
