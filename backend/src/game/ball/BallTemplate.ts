@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { BallOption } from "../settings/GameSettings.js";
 import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED } from "../settings/values.js";
-import { EventMessage, ParticlesType, Position, Status } from "../../web_sockets/types_transfert.js";
+import { EventMessage, ParticlesType, Position, Status } from "../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
 import { vec3ToPos } from "../utils.js";
 

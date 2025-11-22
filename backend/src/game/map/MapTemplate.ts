@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH } from "../settings/values.js";
-import { PlanePosition } from "../../web_sockets/types_transfert.js";
+import { PlanePosition } from "../web_sockets/types_transfert.js";
 
 abstract class MapTemplate {
 	protected readonly ground: babylon.Mesh;

@@ -5,7 +5,7 @@ import websocketPlugin from "@fastify/websocket";
 import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
 import { connectUser, disconnectUser, whoami, verifyAuth } from "./user_management/connect_user.js";
-import { findLocalGame, findRankedGame, localGameVsAI } from "./web_sockets/connection.js";
+import { findLocalGame, findRankedGame, localGameVsAI } from "./game/web_sockets/connection.js";
 
 const APP = fastify();
 
