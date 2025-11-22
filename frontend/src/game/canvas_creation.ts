@@ -6,17 +6,26 @@ import { ObjectMessage, OptionMessage } from "./types_transfert.js";
 let game: Game | null = null;
 
 /**@todo will see how we pop the game */
-async function showCanvas(socket: WebSocket, options: OptionMessage): Promise<void> {
-	const settings = new GameSettings(
-		options.playerId, options.map, options.wind, options.ball, options.rotatingPlayer, options.spin,
-		["KeyA", "KeyD", "KeyW", "KeyS", "Space", "KeyC"],
-		["KeyJ", "KeyL", "KeyI", "KeyK", "KeyP", "KeyO"]
-	);
+/**@todo get the player keys from the player settings in DB*/
+async function newGame(options: OptionMessage, player1: WebSocket, player2?: WebSocket): Promise<void> {
+	let settings;
+	if (player2) {
+		settings = new GameSettings(
+			options.playerId, options.map, options.wind, options.ball, options.rotatingPlayer, options.spin,
+			player1, ["KeyW", "KeyS", "KeyA", "KeyD", "Space", "KeyC"],
+			player2, ["KeyK", "KeyI", "KeyJ", "KeyL", "KeyP", "KeyO"]
+		);
+	} else {
+		settings = new GameSettings(
+			options.playerId, options.map, options.wind, options.ball, options.rotatingPlayer, options.spin,
+			player1, ["KeyA", "KeyD", "KeyW", "KeyS", "Space", "KeyC"]
+		);
+	}
 
 	if (game) {
 		game.updateOptions(options);
 	} else {
-		game = await Game.create(socket, settings);
+		game = await Game.create(settings);
 		game.show();
 	}
 }
@@ -30,4 +39,4 @@ async function stopGame(): Promise<void> {
 	game = null;
 }
 
-export { showCanvas, updateGameObject, stopGame };
+export { newGame, updateGameObject, stopGame };

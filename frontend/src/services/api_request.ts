@@ -1,4 +1,4 @@
-import { showCanvas, updateGameObject } from "../game/canvas_creation.js";
+import { newGame, updateGameObject } from "../game/canvas_creation.js";
 import { DataMessage, Status } from "../game/types_transfert.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 
@@ -45,21 +45,25 @@ async function sendGetRequestToBack(endpoint: string) : Promise<Response> {
 	return await fetch(`${API_URL}/${endpoint}`, createGetRequest());
 }
 
-async function openWebSocketConnection(): Promise<void> {
+async function openWebSocketConnection(endpoint?: string): Promise<WebSocket> {
+	if (endpoint)
+		return new WebSocket(`${WS_URL}/${endpoint}`);
+	return new WebSocket(`${WS_URL}`);
+}
 
-	const ws = new WebSocket(`${WS_URL}`);
+async function newRankedGame(): Promise<void> {
+
+	const ws = await openWebSocketConnection("ranked");
 
 	ws.onopen = (): void => {
 		console.log("Connected");
 	};
 
-	ws.onmessage = (event): void => { /** @todo handeler for game */
-		//console.log("Received:", event.data);
-
+	ws.onmessage = (event): void => {
 		const message : DataMessage = JSON.parse(event.data);
 		switch (message.status) {
 			case (Status.OPTIONS):
-				showCanvas(ws, message);
+				newGame(message, ws);
 				break;
 			case (Status.OBJECT): /** @todo remove after object refacto */
 				updateGameObject(message);
@@ -78,4 +82,53 @@ async function openWebSocketConnection(): Promise<void> {
 	};
 }
 
-export { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv, openWebSocketConnection };
+function randomInt(min: number, max: number): number {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+async function newLocalGame(): Promise<void> {
+
+	const player1 = await openWebSocketConnection("local");
+	const player2 = await openWebSocketConnection("local");
+
+	const id = randomInt(0, 5000);
+
+	player1.onopen = (): void => {
+		console.log("Player 1 connected"); /** @todo remove */
+		player1.send(JSON.stringify({ id: id }));
+	};
+	player2.onopen = (): void => {
+		console.log("Player 2 connected"); /** @todo remove */
+		player2.send(JSON.stringify({ id: id }));
+	};
+
+	player1.onmessage = (event): void => {
+		const message : DataMessage = JSON.parse(event.data);
+		switch (message.status) {
+			case (Status.OPTIONS):
+				newGame(message, player1, player2);
+				break;
+			case (Status.OBJECT): /** @todo remove after object refacto */
+				updateGameObject(message);
+				break;
+			default:
+				return;
+		}
+	};
+
+	player1.onerror = (err): void => {
+		console.error("Player 1 WebSocket error:", err);
+	};
+	player2.onerror = (err): void => {
+		console.error("Player 2 WebSocket error:", err);
+	};
+
+	player1.onclose = (event): void => {
+		console.log("Player 1 closed:", event.code, event.reason);
+	};
+	player2.onclose = (event): void => {
+		console.log("Player 2 closed:", event.code, event.reason);
+	};
+}
+
+export { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv, newRankedGame, newLocalGame };
