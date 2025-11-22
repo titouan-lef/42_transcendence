@@ -241,7 +241,12 @@ class Game {
 	}
 
 	receiveDataFrom(playerName: string, message: string): void {
-		const controls: PlayerControls = JSON.parse(message);
+		let controls: PlayerControls;
+		try {
+			controls = JSON.parse(message);
+		} catch {
+			return;
+		}
 		const player1 = this.sceneManager.getPlayer(1);
 		const player2 = this.sceneManager.getPlayer(2);
 		let player;
