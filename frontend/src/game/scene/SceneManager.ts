@@ -16,18 +16,16 @@ class SceneManager {
 	private ball: Ball | null = null;
 	private map: MapTemplate | null = null;
 	private countDown: CountDown | null = null;
-	private readonly socket: WebSocket;
 	private readonly scene: babylon.Scene;
 	private readonly players: Player[] = [];
 	private readonly textures: Record<string, babylon.Texture> = {};
 	private score: Score;
 
-	constructor(socket: WebSocket, scene: babylon.Scene, camera: babylon.ArcRotateCamera, settings: GameSettings) {
-		this.socket = socket;
+	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera, settings: GameSettings) {
 		this.scene = scene;
 		this.score = new Score(scene, camera);
 
-		socket.addEventListener("message", (event) => {
+		settings.player1.socket?.addEventListener("message", (event) => {
 			const message : DataMessage = JSON.parse(event.data);
 			switch (message.status) {
 				case (Status.TIMING):

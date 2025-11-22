@@ -5,7 +5,7 @@ import websocketPlugin from "@fastify/websocket";
 import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
 import { connectUser, disconnectUser, whoami, verifyAuth } from "./user_management/connect_user.js";
-import { initWebSocketConnection } from "./web_sockets/connection.js";
+import { findLocalGame, findRankedGame } from "./web_sockets/connection.js";
 
 const APP = fastify();
 
@@ -39,7 +39,8 @@ APP.get("/api/user/whoami", { preHandler: verifyAuth }, whoami);
  */
 // --- Web Socket route handlers ---
 APP.register(() => {
-	APP.get('/ws', { websocket: true }, initWebSocketConnection);
+	APP.get('/ws/ranked', { websocket: true }, findRankedGame);
+	APP.get('/ws/local', { websocket: true }, findLocalGame);
 });
 
 // --- Start server ---

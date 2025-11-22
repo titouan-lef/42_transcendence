@@ -6,7 +6,6 @@ import { DataMessage, ObjectMessage, OptionMessage, Status } from "./types_trans
 import { stopGame } from "./canvas_creation.js";
 
 class Game {
-	private readonly socket: WebSocket;
 	private readonly engine: babylon.Engine;
 	private readonly scene: babylon.Scene;
 	private readonly sceneManager: SceneManager;
@@ -14,18 +13,17 @@ class Game {
 	private readonly canvas: HTMLCanvasElement;
 	private settings: GameSettings;
 
-	constructor (socket: WebSocket, canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
-		this.socket = socket;
+	constructor (canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.engine = engine;
 		this.canvas = canvas;
 		this.settings = settings;
 		this.camera = this.createCamera();
-		this.sceneManager = new SceneManager(socket, scene, this.camera, settings);
+		this.sceneManager = new SceneManager(scene, this.camera, settings);
 		this.scene = scene;
 		window.addEventListener("resize", () => this.engine.resize());
 		this.setScene();
 
-		socket.addEventListener("message", (event) => { /** @todo check if removeEventListener is necesseray and the end of the game */
+		settings.player1.socket?.addEventListener("message", (event) => { /** @todo check if removeEventListener is necesseray and the end of the game */
 			const message : DataMessage = JSON.parse(event.data);
 			switch (message.status) {
 				case (Status.STOP):
@@ -42,11 +40,11 @@ class Game {
 	}
 
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
-	static async create(socket: WebSocket, settings: GameSettings): Promise<Game> {
+	static async create(settings: GameSettings): Promise<Game> {
 		const canvas = Game.createCanvas();
 		const engine = new babylon.Engine(canvas, true);
 		const scene = await Game.initScene(engine);
-		return new Game(socket, canvas, settings, scene, engine);
+		return new Game(canvas, settings, scene, engine);
 	}
 
 	/** creating the canvas here because each time a game is created, a new canvas should also be created */
@@ -104,20 +102,15 @@ class Game {
 			console.error(`Player ${this.settings.player1.playerId} not found`);
 			return;
 		}
-
-		window.addEventListener("keydown", (event: KeyboardEvent) => {
-			const controls = player.handleKeyDown(event);
-			this.socket.send(JSON.stringify(controls));
-		});
-		window.addEventListener("keyup", (event: KeyboardEvent) => {
-			const controls = player.handleKeyUp(event);
-			this.socket.send(JSON.stringify(controls));
-		});
 	}
 
 	private createCamera(): babylon.ArcRotateCamera {
-		const cameraAxeLat = 1;
-		const cameraAxeLong = this.settings.myId === 1 ? 0 : Math.PI;
+		let cameraAxeLat = 1;
+		let cameraAxeLong = this.settings.player1.playerId === 1 ? 0 : Math.PI;
+		if (this.settings.player2.socket) {
+			cameraAxeLat /= 1.5;
+			cameraAxeLong = Math.PI / 2;
+		}
 		const camera = new babylon.ArcRotateCamera("camera",
 			cameraAxeLong, cameraAxeLat,
 			CAMERA_POS_X, babylon.Vector3.Zero(), this.scene);
