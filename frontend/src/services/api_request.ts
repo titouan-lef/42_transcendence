@@ -51,10 +51,7 @@ async function openWebSocketConnection(endpoint?: string): Promise<WebSocket> {
 	return new WebSocket(`${WS_URL}`);
 }
 
-async function newRankedGame(): Promise<void> {
-
-	const ws = await openWebSocketConnection("ranked");
-
+async function newGameSolo(ws: WebSocket): Promise<void> {
 	ws.onopen = (): void => {
 		console.log("Connected");
 	};
@@ -80,6 +77,16 @@ async function newRankedGame(): Promise<void> {
 	ws.onclose = (event): void => {
 		console.log("Closed:", event.code, event.reason);
 	};
+}
+
+async function newRankedGame(): Promise<void> {
+	const ws = await openWebSocketConnection("ranked");
+	newGameSolo(ws);
+}
+
+async function newGameVsAI(): Promise<void> {
+	const ws = await openWebSocketConnection("AI");
+	newGameSolo(ws);
 }
 
 function randomInt(min: number, max: number): number {
@@ -131,4 +138,4 @@ async function newLocalGame(): Promise<void> {
 	};
 }
 
-export { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv, newRankedGame, newLocalGame };
+export { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv, newRankedGame, newLocalGame, newGameVsAI };

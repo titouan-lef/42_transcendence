@@ -2,13 +2,10 @@ import * as babylon from "@babylonjs/core";
 import { GameSettings, PlayerSettings } from "../settings/GameSettings.js";
 import { PLAYER_DIMENSION, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY } from "../settings/values.js";
 import { PlayerControls, Position, DataMessage, Rotation } from "../../web_sockets/types_transfert.js";
-import { WebSocket } from "ws";
 
-class Player {
+abstract class Player {
 	private readonly player: babylon.TransformNode;
 	private readonly id: 1 | 2;
-	private readonly username: string;
-	private readonly socket: WebSocket;
 	private readonly body: babylon.PhysicsBody;
 	private readonly keyPressed: boolean[] = [false, false, false, false, false];
 	private readonly rotatingPlayer: boolean;
@@ -21,21 +18,17 @@ class Player {
 	private linearVelocityZ = 0;
 	private angularVelocityY = 0;
 
-	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings, settings: PlayerSettings) {
+	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings, id: 1 | 2) {
 		this.applyingSpin = gameSettings.spin;
 		this.rotatingPlayer = gameSettings.rotatingPlayer;
 		this.player = this.setPlayer(scene, position);
 		this.body = this.setPlayerPhysic(scene);
-		this.baseRotation = this.setBaseRotation(settings.playerId);
-		this.reverseRotation = this.setReverseRotation(settings.playerId);
+		this.baseRotation = this.setBaseRotation(id);
+		this.reverseRotation = this.setReverseRotation(id);
 		this.normalMode();
-		
+		this.id = id;
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.positionObserver = this.playerObserver();
-
-		this.username = settings.username;
-		this.socket = settings.socket;
-		this.id = settings.playerId;
 	}
 
 	private setPlayer(scene: babylon.Scene, position: babylon.Vector2): babylon.TransformNode {
@@ -96,10 +89,6 @@ class Player {
 		this.body.disablePreStep = false;
 	}
 
-	getName(): string {
-		return this.username;
-	}
-
 	getId(): 1 | 2 {
 		return this.id;
 	}
@@ -113,18 +102,6 @@ class Player {
 		if (!q)
 			return { x: 0, y: 0, z: 0, w: 1 };
 		return { x: q.x, y: q.y, z: q.z, w: q.w };
-	}
-
-	async send(message: DataMessage): Promise<void> {
-		this.socket?.send(JSON.stringify(message));
-	}
-
-	async closeSocket(): Promise<void> {
-		this.socket?.close();
-	}
-
-	async defineCloseAction(fn: () => void): Promise<void> {
-		this.socket.on("close", fn);
 	}
 
 	setControls(controls: PlayerControls): void {
@@ -178,8 +155,11 @@ class Player {
 			child.dispose();
 		});
 		this.player?.dispose();
-		this.socket?.close();
 	}
+
+	abstract getName(): string;
+
+	abstract send(message: DataMessage): Promise<void>;
 }
 
 export { Player };

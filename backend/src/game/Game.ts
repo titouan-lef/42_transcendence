@@ -5,8 +5,9 @@ import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
 import { POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import fs from "fs";
-import { Status, PlayerControls, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage } from "../web_sockets/types_transfert.js";
+import { Status, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage } from "../web_sockets/types_transfert.js";
 import { Player } from "./player/Player.js";
+import { Human } from "./player/Human.js";
 
 class Game {
 	private readonly engine: babylon.Engine;
@@ -221,14 +222,20 @@ class Game {
 		this.sendPositions(player1, player2);
 		this.startSendingPositions();
 
-		player1.defineCloseAction(() => {
-			this.stop();
-			player2.closeSocket();
-		});
-		player2.defineCloseAction(() => {
-			this.stop();
-			player1.closeSocket();
-		});
+		if (player1 instanceof Human) {
+			player1.defineCloseAction(() => {
+				this.stop();
+				if (player2 instanceof Human) 
+					player2.closeSocket();
+			});
+		}
+		if (player2 instanceof Human) {
+			player2.defineCloseAction(() => {
+				this.stop();
+				if (player1 instanceof Human) 
+					player1.closeSocket();
+			});
+		}
 	}
 
 	stopSendingPositions(): void {
@@ -242,27 +249,6 @@ class Game {
 				return;
 			this.sendStop(player1, player2);
 		}
-	}
-
-	receiveDataFrom(playerName: string, message: string): void {
-		let controls: PlayerControls;
-		try {
-			controls = JSON.parse(message);
-		} catch {
-			return;
-		}
-		const player1 = this.sceneManager.getPlayer(1);
-		const player2 = this.sceneManager.getPlayer(2);
-		let player;
-		if (player1?.getName() === playerName) {
-			player = player1;
-		} else if (player2?.getName() === playerName) {
-			player = player2;
-		} else {
-			console.error(`Player ${playerName} not found`);
-			return;
-		}
-		player.setControls(controls);
 	}
 }
 

@@ -87,9 +87,17 @@ async function findLocalGame(socket: WebSocket, req: FastifyRequest): Promise<vo
 		const player2 = socket;
 		LOCAL_GAMES.delete(id);
 
-		startGame("Player 1", "Player 2", player1, player2);
+		startGame("Player 1", player1, "Player 2", player2);
 		console.log("New local game");
 	});
+}
+
+async function localGameVsAI(socket: WebSocket, req: FastifyRequest): Promise<void> {
+	console.log("New WebSocket connection for local game vs AI");
+
+	startHeartbeat(socket);
+
+	startGame("Player 1", socket);
 }
 
 async function findRankedGame(socket: WebSocket, req: FastifyRequest): Promise<void> {
@@ -129,7 +137,7 @@ function newGame(player1: string, player2: string): void {
 			WAITING_PLAYERS.push(player1);
 		return console.error("One of the players is no longer connected.");
 	}
-	startGame(player1, player2, socket1, socket2);
+	startGame(player1, socket1, player2, socket2);
 }
 
-export { findRankedGame, findLocalGame };
+export { findRankedGame, findLocalGame, localGameVsAI };
