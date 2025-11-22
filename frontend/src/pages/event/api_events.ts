@@ -1,11 +1,12 @@
 import { addHandler } from "../../routes/event.js";
 import { PageID, navigate } from "../../routes/page.js";
-import { joinGame } from "../../services/user_management/join_game.js";
+import { newLocalGame, newRankedGame } from "../../services/api_request.js";
 
 function apiEvents(): void {
 	addHandler("btn-theme", "click", () => navigate(PageID.THEME));
 	addHandler("btn-user", "click", () => navigate(PageID.USER));
-	addHandler("btn-play", "click", () => joinGame());
+	addHandler("btn-play-ranked", "click", () => newRankedGame());
+	addHandler("btn-play-local", "click", () => newLocalGame());
 }
 
 export { apiEvents };

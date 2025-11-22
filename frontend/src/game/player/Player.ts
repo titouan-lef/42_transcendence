@@ -7,8 +7,9 @@ import { PlanePosition, PlayerControls, Rotation } from "../types_transfert.js";
 class Player {
 	private readonly player: babylon.TransformNode;
 	private readonly id: 1 | 2;
+	private readonly socket: WebSocket | null = null;
+	private readonly controls: PlayerKeys | null = null;
 	private trailTimer = 0;
-	private readonly controls: PlayerKeys;
 	private readonly keyPressed: boolean[] = [false, false, false, false, false];
 	private readonly applyingSpin;
 	private readonly playerTrails: PlayerTrail[] = [];
@@ -17,12 +18,23 @@ class Player {
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings, settings: PlayerSettings) {
 		this.applyingSpin = gameSettings.spin;
-		this.controls = settings.playerKeys;
-		this.player = this.setPlayer(scene, position);
 		this.id = settings.playerId;
+		this.player = this.setPlayer(scene, position);
+
 		if (PLAYER_TRAIL_ON) {
 			this.sceneObservable = scene.onBeforeRenderObservable;
 			this.sceneObserver = this.observeScene(scene);
+		}
+
+		if (settings.socket && settings.playerKeys) {
+			this.controls = settings.playerKeys;
+			this.socket = settings.socket;
+			window.addEventListener("keydown", (event: KeyboardEvent) => {
+				this.handleKeyDown(event);
+			});
+			window.addEventListener("keyup", (event: KeyboardEvent) => {
+				this.handleKeyUp(event);
+			});
 		}
 	}
 
@@ -97,22 +109,34 @@ class Player {
 		return controls;
 	}
 
-	handleKeyDown(event: KeyboardEvent): PlayerControls {
+	handleKeyDown(event: KeyboardEvent): void {
+		if (!this.controls)
+			return;
+		let changed = false;
 		event.preventDefault(); // prevent the action from the navigator (ex: space)
 		for (let i = 0; i < this.controls.length; i++) {
-			if (event.code === this.controls[i] && !this.keyPressed[i])
+			if (event.code === this.controls[i] && !this.keyPressed[i]) {
 				this.keyPressed[i] = true;
+				changed = true;
+			}
 		}
-		return this.getPressedKeys();
+		if (changed)
+			this.socket?.send(JSON.stringify(this.getPressedKeys()));
 	}
 
-	handleKeyUp(event: KeyboardEvent): PlayerControls {
+	handleKeyUp(event: KeyboardEvent): void {
+		if (!this.controls)
+			return;
+		let changed = false;
 		event.preventDefault(); // prevent the action from the navigator (ex: space)
 		for (let i = 0; i < this.controls.length; i++) {
-			if (event.code === this.controls[i] && this.keyPressed[i])
+			if (event.code === this.controls[i] && this.keyPressed[i]) {
 				this.keyPressed[i] = false;
+				changed = true;
+			}
 		}
-		return this.getPressedKeys();
+		if (changed)
+			this.socket?.send(JSON.stringify(this.getPressedKeys()));
 	}
 
 	destroy(): void {

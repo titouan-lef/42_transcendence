@@ -14,6 +14,7 @@ declare module 'fastify' {
 
 const WAITING_PLAYERS: string[] = [];
 const ACTIVES_SOCKETS = new Map<string, WebSocket>();
+const LOCAL_GAMES = new Map<string, WebSocket>();
 
 /**
  * Ping the socket if he send no data for 30 seconds, to keep it alive
@@ -34,25 +35,69 @@ function startHeartbeat(socket: WebSocket): void {
 	socket.on("close", () => clearInterval(timer));
 }
 
-async function initWebSocketConnection(socket: WebSocket, req: FastifyRequest): Promise<void> {
-	console.log("New WebSocket connection");
-
+async function verifyAuthWS(socket: WebSocket, req: FastifyRequest): Promise<string | null> {
 	const token = req.cookies?.token;
-	if (!token)
-		return socket.close(1008, "User not logged in");
+	if (!token) {
+		socket.close(1008, "User not logged in");
+		return null;
+	}
 	// eslint-disable-next-line
 	const payload: JwtPayload = jwt.verify(token, SECRET) as JwtPayload;
-	if (!payload)
-		return socket.close(1008, "Invalid token");
+	if (!payload) {
+		socket.close(1008, "Invalid token");
+		return null;
+	}
 	const exists = await isValidUser(payload.id);
-	if (!exists)
-		return socket.close(1008, "User does not exist");
+	if (!exists) {
+		socket.close(1008, "User does not exist");
+		return null;
+	}
 	const user = payload.id;
+	if (ACTIVES_SOCKETS.has(user)) {
+		socket.close(1008, "Already playing");
+		return null;
+	}
+	if (WAITING_PLAYERS.includes(user)) {
+		socket.close(1008, "Already looking for a game");
+		return null;
+	}
+	return user;
+}
+
+async function findLocalGame(socket: WebSocket, req: FastifyRequest): Promise<void> {
+	console.log("New WebSocket connection for local game");
+
+	startHeartbeat(socket);
+
+	socket.once("message", (message) => {
+		console.log(message.toString());
+		let id;
+		try {
+			id = JSON.parse(message.toString()).id;
+		} catch {
+			return;
+		}
+		if (!id)
+			return;
+		const player1 = LOCAL_GAMES.get(id);
+		if (!player1) {
+			LOCAL_GAMES.set(id, socket);
+			return;
+		}
+		const player2 = socket;
+		LOCAL_GAMES.delete(id);
+
+		startGame("Player 1", "Player 2", player1, player2);
+		console.log("New local game");
+	});
+}
+
+async function findRankedGame(socket: WebSocket, req: FastifyRequest): Promise<void> {
+	console.log("New WebSocket connection");
+	const user = await verifyAuthWS(socket, req);
+	if (!user)
+		return;
 	console.log("Identified", user);
-	if (ACTIVES_SOCKETS.has(user))
-		return socket.close(1008, "Already playing");
-	if (WAITING_PLAYERS.includes(user))
-		return socket.close(1008, "Already looking for a game");
 	ACTIVES_SOCKETS.set(user, socket);
 	WAITING_PLAYERS.push(user);
 	console.log(user, "is waiting for a game");
@@ -87,4 +132,4 @@ function newGame(player1: string, player2: string): void {
 	startGame(player1, player2, socket1, socket2);
 }
 
-export { initWebSocketConnection };
+export { findRankedGame, findLocalGame };
