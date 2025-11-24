@@ -1,10 +1,10 @@
 type Color = 'base' | 'alt' | 'var' | 'warning' | 'input';
 
 const VARIANTS = {
-	'base': 'bg-secondary text-primary focus:outline-2',
-	'alt': 'bg-primary text-secondary focus:outline-2',
-	'var': 'bg-variant text-secondary focus:outline-2',
-	'warning': 'bg-primary text-warning focus:outline-2',
+	'base': 'bg-secondary text-primary',
+	'alt': 'bg-primary text-secondary',
+	'var': 'bg-variant text-secondary',
+	'warning': 'bg-primary text-warning',
 	'input' : 'bg-lighter text-variant focus:outline-2 focus:text-dark',
 };
 

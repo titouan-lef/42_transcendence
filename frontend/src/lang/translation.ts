@@ -69,6 +69,14 @@ const TRANSLATOR = {
 		en: "add friend",
 		fr: "ajouter un ami"
 	},
+	invite: {
+		en: "invite",
+		fr: "inviter"
+	},
+	delete: {
+		en: "delete",
+		fr: "supprimer"
+	},
 } as const satisfies Record<string, Expression>;
 
 export { CodeLang, TRANSLATOR };

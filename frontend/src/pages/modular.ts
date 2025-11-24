@@ -1,11 +1,9 @@
-import { loadPage } from "../routes/page";
+import { ELEM, loadPage } from "../routes/page";
 import { getSafeElement } from "../utils/getSafeElement";
-import { GAME_PAGE, gamePageEvents } from "./game_page";
-import { ASIDE_BOX } from "./modules/box_aside";
-import { MAIN_BOX } from "./modules/box_main";
-import { loadDialog } from "./modules/dialog";
-import { SIGN_IN } from "./modules/dialog_sign_in";
-import { SIGN_UP } from "./modules/dialog_sign_up";
+import { GAME_PAGE } from "./game_page";
+import { ASIDE_BOX, asideDisconnectedEvents } from "./modules/box_aside";
+import { MAIN_BOX, mainBoxEvents } from "./modules/box_main";
+import { exitDialog, openDialogSignIn, openDialogSignUp } from "./modules/dialog";
 
 const ROW_STYLE = `
 flex flex-row gap-[10px]
@@ -16,32 +14,18 @@ bg-dark
 
 const MODULAR = `
 <dialog id="modal"></dialog>
-<div id="modular-content" class="${ROW_STYLE}"></div>
+<div id="modular-content" class="${ROW_STYLE}">
+	${MAIN_BOX}
+	${ASIDE_BOX}
+</div>
 `;
 
-function openDialogSignIn(event: Event): void {
-	loadDialog(() => {}, SIGN_IN);
-}
-
-function openDialogSignUp(event: Event): void {
-	loadDialog(() => {}, SIGN_UP);
-}
-
-function goToGamePage(): void {
-	loadPage(GAME_PAGE, gamePageEvents);
-}
-
 function modularEvents(): void {
-	const content = getSafeElement('modular-content', HTMLElement);
+	const modal = getSafeElement('modal', HTMLDialogElement);
+	modal.addEventListener('click', (e) => exitDialog(modal, e));
 
-	content.innerHTML = MAIN_BOX + ASIDE_BOX;
-	const signIn = getSafeElement('btn-sign-in', HTMLElement);
-	const signUp = getSafeElement('btn-sign-up', HTMLElement);
-	const play = getSafeElement('main-play-btn', HTMLElement);
-
-	play.addEventListener('click', goToGamePage);
-	signIn.addEventListener('click', openDialogSignIn);
-	signUp.addEventListener('click', openDialogSignUp);
+	asideDisconnectedEvents();
+	mainBoxEvents();
 }
 
 export { MODULAR, modularEvents };
