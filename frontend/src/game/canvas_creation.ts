@@ -11,13 +11,13 @@ async function newGame(options: OptionMessage, player1: WebSocket, player2?: Web
 	if (player2) {
 		settings = new GameSettings(
 			options.playerId, options.map, options.wind, options.ball, options.rotatingPlayer, options.spin,
-			player1, ["KeyW", "KeyS", "KeyA", "KeyD", "Space", "KeyC"],
+			player1, ["ArrowRight", "ArrowLeft", "KeyA", "KeyD", "ArrowUp", "ArrowDown"],
 			player2, ["KeyK", "KeyI", "KeyJ", "KeyL", "KeyP", "KeyO"]
 		);
 	} else {
 		settings = new GameSettings(
 			options.playerId, options.map, options.wind, options.ball, options.rotatingPlayer, options.spin,
-			player1, ["KeyA", "KeyD", "KeyW", "KeyS", "Space", "KeyC"]
+			player1, ["KeyA", "KeyD", "ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"]
 		);
 	}
 

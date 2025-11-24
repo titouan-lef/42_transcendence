@@ -30,7 +30,7 @@ export const METEOR_SPEED = 100;
 
 /**DESERT MAP */
 export const TORNADO_INTERVAL = 3000;
-export const TORNADO_LIFETIME = 8000;
+export const TORNADO_LIFETIME = 5000;
 export const WIND_FORCE = 10; //BACK + FRONT
 export const TORNADO_ATTRACTION_STRENGTH = 100;
 export const TORNADO_COLLISION_RADIUS = 3; //BACK + FRONT
@@ -41,7 +41,7 @@ export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12);
 export const PLAYER_MASS = 1;
 export const PLAYER_RESTITUTION = 1;
 export const PLAYER_MOVEMENT_VELOCITY = 65;
-export const PLAYER_ROTATION_VELOCITY = 10;
+export const PLAYER_ROTATION_VELOCITY = 12;
 
 /** BALL SETTINGS */
 export const BALL_DIAMETER = 2; //has to be smaller than the player //BACK + FRONT

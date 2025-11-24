@@ -53,7 +53,7 @@ class Tornado {
 					body.applyForce(totalForce, meshPosition);
 				}
 			});
-			this.currentLifetime += scene.getEngine().getDeltaTime() / TORNADO_LIFETIME;
+			this.currentLifetime -= scene.getEngine().getDeltaTime() / TORNADO_LIFETIME;
 			if (this.currentLifetime <= 0) {
 				this.destroy();
 				return;
@@ -84,8 +84,9 @@ class Tornado {
 
 	destroy(): void {
 		this.tornadoObservable.remove(this.tornadoObserver);
-		this.tornado?.dispose();
 		this.currentLifetime = 0;
+		this.sendObjectInfos();
+		this.tornado?.dispose();
 	}
 }
 

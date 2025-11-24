@@ -15,7 +15,7 @@ class AI extends Player {
 
 		this.interval = setInterval(() => {
 			this.update();
-		}, 400); /** @todo change to 1000 to be every second */
+		}, 10); /** @todo change to 1000 to be every second */
 	}
 
 	update(): void { /** @todo real AI */

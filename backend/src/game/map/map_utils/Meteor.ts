@@ -118,10 +118,10 @@ class Meteor {
 
 	destroy(): void {
 		this.sceneObservable?.remove(this.sceneObserver);
-		this.body?.dispose();
-		this.meteor?.dispose();
 		this.currentLifetime = 0;
 		this.sendObjectInfos();
+		this.body?.dispose();
+		this.meteor?.dispose();
 	}
 }
 

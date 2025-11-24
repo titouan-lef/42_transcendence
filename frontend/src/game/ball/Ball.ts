@@ -141,6 +141,8 @@ class Ball {
 		/**@todo if PAUSE, DO NOT DISPOSE*/
 		setTimeout( () => {
 			particle?.stop();
+			if (particle.particleTexture)
+				particle.particleTexture = null;
 			const index = this.particles?.indexOf(particle);
 			particle?.dispose();
 			if (index !== -1)
@@ -156,7 +158,8 @@ class Ball {
 		}
 		this.particles.forEach(particle => {
 			particle.stop();
-			particle.particleTexture?.dispose();
+			if (particle.particleTexture)
+				particle.particleTexture = null;
 			particle.dispose();
 		});
 		while (this.particles.length)

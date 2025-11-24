@@ -19,10 +19,6 @@ class Tornado {
 
 	}
 
-	stopParticles(): void {
-		this.particles?.stop();
-	}
-
 	private createTornadoParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
 		const particles = new babylon.ParticleSystem("tornadoParticles", 4000, scene);
 		particles.particleTexture = texture;
@@ -66,7 +62,6 @@ class Tornado {
 
 	updatePosition(position: Position): void {
 		this.tornado.position.x = position.x;
-		// this.tornado.position.y = position.y;
 		this.tornado.position.z = position.z;
 	}
 
