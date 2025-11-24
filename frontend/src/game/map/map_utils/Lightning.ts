@@ -52,12 +52,10 @@ class Lightning {
 
 	/** fades slowly */
 	changeVisibility(currentLifetime: number): void {
-		if (currentLifetime <= 0)
+		if (currentLifetime <= 0 || !this.lightning.material || !(this.lightning.material instanceof babylon.StandardMaterial))
 			return;
-		else if (this.lightning.material && this.lightning.material instanceof babylon.StandardMaterial) {
-			this.lightning.material.emissiveColor = COLORS3.skyEmissiveLightning.scale(currentLifetime);
-			this.lightning.material.alpha = currentLifetime;
-		}
+		this.lightning.material.emissiveColor = COLORS3.skyEmissiveLightning.scale(currentLifetime);
+		this.lightning.material.alpha = currentLifetime;
 	}
 
 	private createContactParticles(scene: babylon.Scene, position: babylon.Vector3, texture: babylon.Texture): babylon.ParticleSystem {

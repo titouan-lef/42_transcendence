@@ -145,11 +145,9 @@ class SceneManager {
 			return originalGetDelta.call(this) * 0.01; // slow animations
 		};
 		this.sendDeltaTime(player1, player2, this.engine.getDeltaTime());
-		await new Promise<void>(resolve => {
-			setTimeout( () => {
-				resolve();
-			}, 2700);
-		});
+		await new Promise<void>(resolve => setTimeout(
+			() => resolve(), 2700
+		));
 	}
 
 	private sendDeltaTime(player1: Player, player2: Player, deltaTime: number): void {
@@ -219,10 +217,7 @@ class SceneManager {
 	}
 
 	destroyEnvironnement(scene: babylon.Scene): void { /** @todo remove scene */
-		// this.allowReceiving = false;
-		this.players.forEach((player) => {
-			player.clearControls();
-		});
+		this.players.forEach((player) => player.clearControls());
 		this.destroyBall();
 		this.destroyMap();
 	}
@@ -231,9 +226,9 @@ class SceneManager {
 	showDisposeLogs(scene: babylon.Scene): void {
 		console.log("meshes : " + scene.meshes);
 		console.log("materials : " + scene.materials);
-		scene.materials.forEach(mat => {
-			console.log("mat name : " + mat.name);
-		});
+		scene.materials.forEach(mat =>
+			console.log("mat name : " + mat.name)
+		);
 		console.log("textures : " + scene.textures);
 		console.log("lights : " + scene.lights);
 		console.log("particle system: " + scene.particleSystems);

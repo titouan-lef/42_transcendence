@@ -31,13 +31,13 @@ class Player {
 			return null;
 		const sceneObserver = this.sceneObservable?.add(() => {
 			this.trailTimer++;
-			if (this.trailTimer >= PLAYER_TRAIL_INTERVAL) {
-				this.playerTrails.push(new PlayerTrail(scene, this.player));
-				while (this.playerTrails.length && this.playerTrails[0].hasDisappeared()) {
-					this.playerTrails.splice(0, 1);
-				}
-				this.trailTimer = 0;
+			if (this.trailTimer < PLAYER_TRAIL_INTERVAL)
+				return ;
+			this.playerTrails.push(new PlayerTrail(scene, this.player));
+			while (this.playerTrails.length && this.playerTrails[0].hasDisappeared()) {
+				this.playerTrails.splice(0, 1);
 			}
+			this.trailTimer = 0;
 		});
 		return sceneObserver;
 	}

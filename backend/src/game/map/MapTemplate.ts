@@ -34,34 +34,30 @@ abstract class MapTemplate {
 		this.limitsPhysic.push(limitPhysic);
 	}
 
+	private createCollider(scene: babylon.Scene, position: PlanePosition): babylon.Mesh {
+		const size = new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH);
+		const border = this.createLimit(scene, size);
+		border.position = new babylon.Vector3(position.x, WALL_HEIGHT/2, position.z);
+		border.metadata = { type: "collider", nature: "environnement" };
+		return border;
+	}
+
+	private createGoal(scene: babylon.Scene, playerId: 1 | 2, position: PlanePosition): babylon.Mesh {
+		const size = new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z - WALL_WIDTH * 2);
+		const border = this.createLimit(scene, size);
+		border.position = new babylon.Vector3(position.x, WALL_HEIGHT/2, position.z);
+		border.metadata = { type: "goal", player: playerId };
+		return border;
+	}
+
 	/**creates limit with type: goal being the goal of each player and limit being a simple wall */
 	private createLimits(scene: babylon.Scene): babylon.Mesh[] {
 		const limits: babylon.Mesh[] = [];
 
-		let newLimit: babylon.Mesh;
-		newLimit = this.createLimit(scene, new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH));
-		newLimit.position = new babylon.Vector3(0, WALL_HEIGHT/2, (WALL_WIDTH/2 - MAP_SIZE.z/2));
-		newLimit.metadata = { type: "collider", nature: "environnement" };
-		limits.push(newLimit);
-
-		newLimit = this.createLimit(scene,
-			new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH));
-		newLimit.position = new babylon.Vector3(0, WALL_HEIGHT/2, (MAP_SIZE.z/2 - WALL_WIDTH/2));
-		newLimit.metadata = { type: "collider", nature: "environnement" };
-		limits.push(newLimit);
-
-		newLimit = this.createLimit(scene,
-			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z - WALL_WIDTH * 2));
-		newLimit.position = new babylon.Vector3((-MAP_SIZE.x/2 + WALL_WIDTH/2), WALL_HEIGHT/2, 0);
-		newLimit.metadata = { type: "goal", player: 1 };
-		limits.push(newLimit);
-
-		newLimit = this.createLimit(scene,
-			new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z - WALL_WIDTH * 2));
-		newLimit.position = new babylon.Vector3((MAP_SIZE.x/2 - WALL_WIDTH/2), WALL_HEIGHT/2, 0);
-		newLimit.metadata = { type: "goal", player: 2 };
-		limits.push(newLimit);
-
+		limits.push(this.createCollider(scene, { x: 0, z: WALL_WIDTH/2 - MAP_SIZE.z/2 }));
+		limits.push(this.createCollider(scene, { x: 0, z: MAP_SIZE.z/2 - WALL_WIDTH/2 }));
+		limits.push(this.createGoal(scene, 1, { x: WALL_WIDTH/2 - MAP_SIZE.x/2, z: 0 }));
+		limits.push(this.createGoal(scene, 2, { x: MAP_SIZE.x/2 - WALL_WIDTH/2, z: 0 }));
 		return limits;
 	}
 

@@ -43,10 +43,11 @@ class Tornado {
 		emitter.startPositionFunction = (worldMatrix, position): void => {
 			const positionY = Math.random();
 			const angle = Math.random() * Math.PI * 2;
+			const coeffVector = TORNADO_COLLISION_RADIUS * Math.min(positionY + 0.2, 1) * this.size;
 			const local = new babylon.Vector3(
-				Math.cos(angle) * TORNADO_COLLISION_RADIUS * Math.min(positionY + 0.2, 1) * this.size,
+				Math.cos(angle) * coeffVector,
 				TORNADO_HEIGHT * positionY,
-				Math.sin(angle) * TORNADO_COLLISION_RADIUS * Math.min(positionY + 0.2, 1) * this.size
+				Math.sin(angle) * coeffVector
 			);
 			babylon.Vector3.TransformCoordinatesToRef(local, worldMatrix, position);
 		};
@@ -66,7 +67,6 @@ class Tornado {
 
 	updatePosition(position: Position): void {
 		this.tornado.position.x = position.x;
-		// this.tornado.position.y = position.y;
 		this.tornado.position.z = position.z;
 	}
 

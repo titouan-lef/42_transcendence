@@ -39,13 +39,12 @@ class Ball {
 			return null;
 		const sceneObserver = this.sceneObservable?.add(() => {
 			this.trailTimer++;
-			if (this.trailTimer >= BALL_TRAIL_INTERVAL) {
-				this.ballTrails.push(new BallTrail(scene, this.mesh.position, this.color, this.mesh.visibility));
-				while (this.ballTrails.length && this.ballTrails[0].hasDisappeared()) {
-					this.ballTrails.splice(0, 1);
-				}
-				this.trailTimer = 0;
-			}
+			if (this.trailTimer < BALL_TRAIL_INTERVAL)
+				return;
+			this.ballTrails.push(new BallTrail(scene, this.mesh.position, this.color, this.mesh.visibility));
+			while (this.ballTrails.length && this.ballTrails[0].hasDisappeared())
+				this.ballTrails.splice(0, 1);
+			this.trailTimer = 0;
 		});
 		return sceneObserver;
 	}

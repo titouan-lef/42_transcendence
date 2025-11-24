@@ -26,12 +26,12 @@ class Meteor {
 
 	private observeScene(scene: babylon.Scene, texture: babylon.Texture): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
-			if (this.meteor.position.y <= 0) {
-				this.trail.stop();
-				this.contactParticles = this.createContactParticles(scene, texture, this.meteor.position);
-				this.contactParticles.start();
-				this.sceneObservable.remove(this.sceneObserver);
-			}
+			if (this.meteor.position.y > 0)
+				return;
+			this.trail.stop();
+			this.contactParticles = this.createContactParticles(scene, texture, this.meteor.position);
+			this.contactParticles.start();
+			this.sceneObservable.remove(this.sceneObserver);
 		});
 		return sceneObserver;
 	}

@@ -11,16 +11,16 @@ class InvisibleBall extends BallTemplate {
 	activateEffect(): void {
 		const resetTimer = INVISIBLE_BALL_FADING_INTERVAL + INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL + INVISIBLE_BALL_INVISIBILITY_INTERVAL;
 		this.effectInterval++;
-		if (this.effectInterval >= INVISIBLE_BALL_FADING_INTERVAL) {
-			if (this.effectInterval >= resetTimer)// gain visibility after being invisible for a certain time
-				this.mesh.visibility += 1 / INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL;
-			else if (this.mesh.visibility > 0) // looses visibility
-				this.mesh.visibility -= 1 / INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL;
+		if (this.effectInterval < INVISIBLE_BALL_FADING_INTERVAL)
+			return ;
+		if (this.effectInterval >= resetTimer)// gain visibility after being invisible for a certain time
+			this.mesh.visibility += 1 / INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL;
+		else if (this.mesh.visibility > 0) // looses visibility
+			this.mesh.visibility -= 1 / INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL;
 
-			if (this.effectInterval >= resetTimer && this.mesh.visibility >= 1) { // reset timer
-				this.mesh.visibility = 1;
-				this.effectInterval -= resetTimer + INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL;
-			}
+		if (this.effectInterval >= resetTimer && this.mesh.visibility >= 1) { // reset timer
+			this.mesh.visibility = 1;
+			this.effectInterval -= resetTimer + INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL;
 		}
 	}
 }

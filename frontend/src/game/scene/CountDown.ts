@@ -24,14 +24,14 @@ class CountDown {
 	}
 
 	udpateCountDown(time: number): CountDown | null {
+		if (time <= 0) {
+			this.destroy();
+			return null;
+		}
 		if (time > 1)
 			this.changeText(time - 1);
 		else if (time > 0)
 			this.changeText("GO!");
-		else {
-			this.destroy();
-			return null;
-		}
 		return this;
 	}
 

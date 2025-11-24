@@ -74,9 +74,8 @@ class Game {
 		this.sceneManager.createPlayers(this.scene, this.settings);
 		this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
 		this.scene.onAfterRenderObservable.add(() => {
-			if (this.inAnimation === false) {
+			if (this.inAnimation === false)
 				this.checkEndOfPoint();
-			}
 		});
 	}
 
@@ -125,29 +124,27 @@ class Game {
 	}
 
 	private async sendPositions(player1: Player, player2: Player) : Promise<void> {
-		let positions: PositionsMessage | null = null;
-		positions = this.getPositions(player1, player2);
-		if (positions)
-			player1.send(positions);
-		positions = this.getPositions(player2, player1);
-		if (positions)
-			player2.send(positions);
+		const positionP1 = this.getPositions(player1, player2);
+		if (positionP1)
+			player1.send(positionP1);
+		const positionP2 = this.getPositions(player2, player1);
+		if (positionP2)
+			player2.send(positionP2);
 	}
 
 	private async sendStart(player1: Player, player2: Player) : Promise<void> {
-		let start: StartMessage;
-		start = {
+		const startP1: StartMessage = {
 			status: Status.START,
 			playerName: player1.getName(),
 			enemyName: player2.getName()
 		};
-		player1.send(start);
-		start = {
+		player1.send(startP1);
+		const startP2: StartMessage = {
 			status: Status.START,
 			playerName: player2.getName(),
 			enemyName: player1.getName()
 		};
-		player2.send(start);
+		player2.send(startP2);
 	}
 
 	private async sendStop(player1: Player, player2: Player) : Promise<void> {
@@ -184,19 +181,18 @@ class Game {
 		if (!player1 || !player2)
 			return;
 
-		let score: GoalMessage;
-		score = {
+		const scoreP1: GoalMessage = {
 			status: Status.GOAL,
 			player: this.score.x,
 			enemy: this.score.y
 		};
-		player1.send(score);
-		score = {
+		player1.send(scoreP1);
+		const scoreP2: GoalMessage = {
 			status: Status.GOAL,
 			player: this.score.y,
 			enemy: this.score.x
 		};
-		player2.send(score);
+		player2.send(scoreP2);
 	}
 
 	startSendingPositions(): void {
@@ -232,16 +228,16 @@ class Game {
 	}
 
 	stopSendingPositions(): void {
-		if (this.gameInterval) {
-			clearInterval(this.gameInterval);
-			this.gameInterval = undefined;
+		if (!this.gameInterval)
+			return;
+		clearInterval(this.gameInterval);
+		this.gameInterval = undefined;
 
-			const player1 = this.sceneManager.getPlayer(1);
-			const player2 = this.sceneManager.getPlayer(2);
-			if (!player1 || !player2)
-				return;
-			this.sendStop(player1, player2);
-		}
+		const player1 = this.sceneManager.getPlayer(1);
+		const player2 = this.sceneManager.getPlayer(2);
+		if (!player1 || !player2)
+			return;
+		this.sendStop(player1, player2);
 	}
 
 	receiveDataFrom(playerName: string, message: string): void {
