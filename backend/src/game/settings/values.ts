@@ -6,6 +6,7 @@ export const SHOW_DISPOSE_LOGS = false;
 
 /**GAMEPLAY GENERAL SETTINGS */
 export const POINTS_TO_WIN = 11;
+export const UNSTUCK_TIMER = 400;
 export const START_TIMEOUT = 4; // in seconds
 
 /**MAP GENERAL SETTINGS */
@@ -47,7 +48,7 @@ export const PLAYER_ROTATION_VELOCITY = 12;
 export const BALL_DIAMETER = 2; //has to be smaller than the player //BACK + FRONT
 export const MAX_SPEED = 60;
 export const NERF_SPEED_FACTOR = MAX_SPEED / 4;
-export const BALL_ANGULAR_FORCE = 0.5;
+export const BALL_ANGULAR_FORCE = 0.6;
 export const BALL_ANGULAR_INTERVAL = 45; /** Angular interval is the number of step it will take to reach max/min value */
 
 export const INVISIBLE_BALL_FADING_INTERVAL = 50;

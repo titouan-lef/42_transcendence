@@ -17,7 +17,7 @@ class AI extends Player {
 		this.movementIntervalId = this.movement();
 		this.updateInterval = setInterval(() => {
 			this.update();
-		}, 1000);
+		}, 300);
 	}
 
 	private movement(): ReturnType<typeof setInterval> {
@@ -30,10 +30,14 @@ class AI extends Player {
 				normalMode: false,
 				spinMode: false
 			};
-			if (this.ballPosPredict.z < this.player.position.z - 1)
+			if (this.ballPosPredict.z < this.player.position.z - PLAYER_DIMENSION.z / 2)
 				controls.mov_left = true;
-			if (this.ballPosPredict.z > this.player.position.z + 1)
+			else if (this.ballPosPredict.z < this.player.position.z)
+				controls.rot_left = true;
+			if (this.ballPosPredict.z > this.player.position.z + PLAYER_DIMENSION.z / 2)
 				controls.mov_right = true;
+			else if (this.ballPosPredict.z > this.player.position.z + PLAYER_DIMENSION.z)
+				controls.rot_right = true;
 			this.setControls(controls);
 		}, 10);
 		return movementIntervalId;
@@ -89,8 +93,19 @@ class AI extends Player {
 	update(): void { /** @todo real AI */
 		const predictedZ = this.predictZAtPlayerX();
 		console.log("predictedZ =" + predictedZ);
-		if (predictedZ !== null)
+		if (predictedZ !== null) {
 			this.ballPosPredict.z = predictedZ;
+			const controls: PlayerControls = {
+				mov_right: false,
+				mov_left: false,
+				rot_right: false,
+				rot_left: false,
+				normalMode: false,
+				spinMode: false
+			};
+			controls.spinMode = true;
+			this.setControls(controls);
+		}
 		// if (predictedZ || predictedZ === 0)
 		// 	this.player.position = new babylon.Vector3(this.player.position.clone().x, PLAYER_DIMENSION.y / 2, predictedZ);
 	}
