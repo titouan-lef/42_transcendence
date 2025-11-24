@@ -226,6 +226,11 @@ abstract class BallTemplate {
 		return { x: this.mesh.position.x, y: this.mesh.position.y, z: this.mesh.position.z };
 	}
 
+	getDirection(): Position {
+		const linearVelocity = this.physic.body.getLinearVelocity();
+		return { x: linearVelocity.x, y: linearVelocity.y, z: linearVelocity.z };
+	}
+
 	getVisibility(): number {
 		return this.mesh.visibility;
 	}

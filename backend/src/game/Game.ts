@@ -76,11 +76,10 @@ class Game {
 
 	private setScene(): void {
 		this.sceneManager.createPlayers(this.scene, this.settings);
-		this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
+		this.sceneManager.setEnvironnement(this.scene, this.settings);
 		this.scene.onAfterRenderObservable.add(() => {
-			if (this.inAnimation === false) {
+			if (this.inAnimation === false)
 				this.checkEndOfPoint();
-			}
 		});
 	}
 
@@ -101,7 +100,7 @@ class Game {
 				this.sceneManager.destroyEnvironnement(this.scene);
 				if (SHOW_DISPOSE_LOGS)
 					this.sceneManager.showDisposeLogs(this.scene);
-				this.sceneManager.setEnvironnement(this.scene, this.settings, this.score);
+				this.sceneManager.setEnvironnement(this.scene, this.settings);
 				const player1 = this.sceneManager.getPlayer(1);
 				const player2 = this.sceneManager.getPlayer(2);
 				if (!player1 || !player2)
