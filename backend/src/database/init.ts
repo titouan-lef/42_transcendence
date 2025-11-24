@@ -1,5 +1,5 @@
 import sqlite3 from "sqlite3";
-import { fs } from "fs";
+import { existsSync } from "fs";
 import { open, Database } from "sqlite";
 import { createThemeTable, insertTheme } from "./theme.js";
 import { createUserTable } from "./user.js";
@@ -13,11 +13,12 @@ import { createEloTable } from "./elo.js";
 import { createGoalTable } from "./goal.js";
 import { createGameRuleTable } from "./game_rule.js";
 
-const DB_FILE = "database.db";
+const DB_FILE = "Database.db"
+const DB_PATH_FILE = "./" + DB_FILE;
 
 async function getDB(): Promise<Database> {
 	return open({
-		filename: "./d" + DB_FILE,
+		filename: DB_FILE,
 		driver: sqlite3.Database,
 	});
 }
@@ -62,16 +63,20 @@ async function initRuleTable(): Promise<void> {
 	await insertRule("wind");
 }
 
-async function initDB(): Promise<void> {
-	const fileExiste = fs.existsSync(DB_FILE);
-	if (!fileExiste){
-		// No foreign key.
-		await createSeasonTable();/** @todo see with blockchain */
-		await initRuleTable();//createRuleTable();
-		await initBallTable();//await createBallTable();
-		await initMapTable();//createMapTable();
-		await initThemeTable();//await createThemeTable();
+function databaseExist(): boolean {
+	if (!existsSync(DB_PATH_FILE))
+		return false;
+	return true;
+}
 
+async function initDB(): Promise<void> {
+	if (!databaseExist()){
+		// No foreign key.
+		await createSeasonTable();/** @todo see with blockchain*/
+		await initRuleTable();/** @todo createRuleTable();*/
+		await initBallTable();/** @todo createBallTable();*/
+		await initMapTable();/** @todo createMapTable();*/
+		await initThemeTable();/** @todo createThemeTable();*/
 		// Foreign key.
 		await createUserTable();
 		await createFriendshipTable();
@@ -82,8 +87,6 @@ async function initDB(): Promise<void> {
 	} else {
 		
 	}
-
-	
 }
 
 export { getDB, initDB };
