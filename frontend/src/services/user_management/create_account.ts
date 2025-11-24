@@ -1,13 +1,17 @@
 import { isOneStringEmtpy } from "../../utils/strings.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
 import { printReplyInDiv, sendPostRequestToBack } from "../api_request.js";
+import { ASIDE_CONNECTED, asideConnectedEvents, loadAside } from "../../pages/modules/box_aside.js";
+import { MODULAR, modularEvents } from "../../pages/modular.js";
+import { loadPage } from "../../routes/page.js";
+import { MAIN_BOX } from "../../pages/modules/box_main.js";
 
 async function newUser(): Promise<void> {
 
-	const userId: HTMLInputElement = getSafeElement("create_user_id", HTMLInputElement);
-	const userPseudo: HTMLInputElement = getSafeElement("create_user_pseudo", HTMLInputElement);
-	const userPassword: HTMLInputElement = getSafeElement("create_user_password", HTMLInputElement);
-	const confPassword: HTMLInputElement = getSafeElement("create_conf_password", HTMLInputElement);
+	const userId: HTMLInputElement = getSafeElement("userID", HTMLInputElement);
+	const userPseudo: HTMLInputElement = getSafeElement("publicID", HTMLInputElement);
+	const userPassword: HTMLInputElement = getSafeElement("password", HTMLInputElement);
+	const confPassword: HTMLInputElement = getSafeElement("confirmPassword", HTMLInputElement);
 	const container: HTMLElement = getSafeElement("print-content", HTMLElement);
 
 	if (isOneStringEmtpy(userId.value, userPseudo.value, userPassword.value, confPassword.value)) {
@@ -32,6 +36,15 @@ async function newUser(): Promise<void> {
 
 	const reply = await sendPostRequestToBack("api/user/new_user", JSON.stringify(data));
 	printReplyInDiv(reply, "print-content");
+
+	/** @todo connect user if request succeed */
+
+	const modal = getSafeElement('modal', HTMLDialogElement);
+
+	modal.close();
+
+	/** @wip changing style here */
+	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
 
 }
 

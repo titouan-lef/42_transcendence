@@ -1,6 +1,5 @@
 /** @todo use this to make styles changes over API calls */
 
-
 // function connectUser(userID: HTMLInputElement, password: HTMLInputElement, confirmPassword?: HTMLInputElement, publicID?: HTMLInputElement): void {
 
 // 	if (confirmPassword && publicID) {

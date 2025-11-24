@@ -1,5 +1,8 @@
 import { createButtonHtml } from "../../components/button";
+import { disconnectUser } from "../../services/user_management/login";
 import { applyColor } from "../../utils/applyColor";
+import { getSafeElement } from "../../utils/getSafeElement";
+import { openDialogAddFriend, openDialogSignIn, openDialogSignUp } from "./dialog";
 
 const ASIDE_BOX_STYLE = `
 grow
@@ -21,11 +24,16 @@ rounded-2xl
 bg-white
 `;
 
+const FRIENDLIST_BOX_STYLE = `
+grow
+flex flex-col items-center gap-[10px] justify-stretch
+`;
+
 const FRIENDLIST_STYLE = `
 grow
 flex flex-col gap-[10px] justify-start items-center
 rounded-2xl p-[10px]
-w-[150px]
+w-[150px] h-[50px]
 scrollbar-none
 overflow-y-scroll overflow-hidden
 bg-light
@@ -41,7 +49,7 @@ ${applyColor()}
 const ASIDE_CONNECTED = `
 	${createButtonHtml(["profile"], `btn-profile`, { "class": `${ASIDE_BTN_STYLE}` })}
 	<div id="friendlist" class="${FRIENDLIST_STYLE}"></div>
-	${createButtonHtml(["add_friend"], `add-friend`, { "class": `${ASIDE_BTN_STYLE}` })}
+	${createButtonHtml(["add_friend"], `btn-friend`, { "class": `${ASIDE_BTN_STYLE}` })}
 	${createButtonHtml(["log_out"], `btn-log-out`, { "class": `${ASIDE_BTN_STYLE} ${applyColor('var')}` })}
 `;
 
@@ -56,11 +64,55 @@ const ASIDE_BOX = `
 		<div class="${AVATAR_STYLE}">
 			<img src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
 		</div>
-		<div id="aside-status" class="${ASIDE_BOX_STYLE}">
+		<div id="aside-status" class="${FRIENDLIST_BOX_STYLE}">
 			${ASIDE_NOT_CONNECTED}
 		</div>
 	</div>
 </aside>
 `;
 
-export { ASIDE_BOX, ASIDE_CONNECTED, ASIDE_NOT_CONNECTED };
+function asideConnectedEvents(): void {
+	const allElements = getSafeElement('aside', HTMLElement).querySelectorAll('*[id]');
+
+	allElements.forEach(elem => {
+		switch (elem.id) {
+			case 'btn-profile':
+				elem.addEventListener('click', () => console.log('bouton appuyé :' + elem.id));
+				break;
+			case 'btn-friend':
+				elem.addEventListener('click', openDialogAddFriend);
+				break;
+			case 'btn-log-out':
+				elem.addEventListener('click', disconnectUser);
+				break;
+			default:
+				break;
+		}
+	});
+}
+
+function asideDisconnectedEvents(): void {
+	const allElements = getSafeElement('aside', HTMLElement).querySelectorAll('*[id]');
+
+	allElements.forEach(elem => {
+		switch (elem.id) {
+			case 'btn-sign-in':
+				elem.addEventListener('click', openDialogSignIn);
+				break;
+			case 'btn-sign-up':
+				elem.addEventListener('click', openDialogSignUp);
+				break;
+			default:
+				break;
+		}
+	});
+}
+
+function loadAside(asideContent: string, handler: () => void): void {
+	const aside = getSafeElement('aside-status', HTMLElement);
+
+	aside.innerHTML = asideContent;
+	handler();
+}
+
+export { ASIDE_BOX, ASIDE_CONNECTED, ASIDE_NOT_CONNECTED, loadAside, asideConnectedEvents, asideDisconnectedEvents };

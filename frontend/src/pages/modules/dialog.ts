@@ -1,5 +1,8 @@
 import { getSafeElement } from "../../utils/getSafeElement.js";
 import { applyColor } from "../../utils/applyColor.js";
+import { SIGN_IN, signInHandler } from "./dialog_sign_in.js";
+import { SIGN_UP, signUpHandler } from "./dialog_sign_up.js";
+import { ADD_FRIEND, addFriendHandler } from "./dialog_add_friend.js";
 
 const DIALOG_MAIN_STYLE = `
 	m-auto p-0 rounded-2xl
@@ -20,7 +23,7 @@ const DIALOG_INNER_STYLE = `
 	min-w-[100px] max-w-[250px]
 `;
 
-function loadDialog(handler: (modal: HTMLDialogElement) => void, dialog: string): void {
+function loadDialog(dialog: string, handler: (modal: HTMLDialogElement) => void): void {
 	const modal = getSafeElement("modal", HTMLDialogElement);
 
 	modal.className = DIALOG_MAIN_STYLE;
@@ -36,10 +39,22 @@ function loadDialog(handler: (modal: HTMLDialogElement) => void, dialog: string)
 	handler(modal);
 }
 
-function exitDialog(id: string, modal: HTMLDialogElement, event: Event): void {
+function exitDialog(modal: HTMLDialogElement, event: Event): void {
 	if (event.target === modal) {
 		modal.close();
 	}
 }
 
-export { exitDialog, loadDialog };
+function openDialogSignIn(): void {
+	loadDialog(SIGN_IN, signInHandler);
+}
+
+function openDialogSignUp(): void {
+	loadDialog(SIGN_UP, signUpHandler);
+}
+
+function openDialogAddFriend(): void {
+	loadDialog(ADD_FRIEND, addFriendHandler);
+}
+
+export { exitDialog, loadDialog, openDialogSignIn, openDialogSignUp, openDialogAddFriend };

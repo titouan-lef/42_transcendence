@@ -1,5 +1,8 @@
 import { createButtonHtml } from "../../components/button.js";
+import { loadPage } from "../../routes/page.js";
 import { applyColor } from "../../utils/applyColor.js";
+import { getSafeElement } from "../../utils/getSafeElement.js";
+import { GAME_PAGE, gamePageEvents } from "../game_page.js";
 
 const MAIN_BOX_STYLE = `
 grow
@@ -30,18 +33,27 @@ const MAIN_BOX = `
 <main id="main" class="${MAIN_BOX_STYLE}">
 	<div class="${MAIN_STYLE}">
 		<h1 class="${PONG_STYLE}">PONG</h1>
-		${createButtonHtml(["play"], "main-play-btn", { "class": `${PLAY_BTN_STYLE}` })}
+		${createButtonHtml(["play"], "btn-play", { "class": `${PLAY_BTN_STYLE}` })}
 	</div>
 </main>
 `;
 
-/** @wip changing event */
-function mainMenuEvents(): void {
-	// addHandler("main-play-btn", "click", () => navigate(PageID.API));
-	// addHandler("btn-profile", "click", () => loadDialog(signInHandler, SIGN_IN));
-	// addHandler("add-friend", "click", () => addFriend());
-	// addHandler("btn-sign-up", "click", () => loadDialog(signUpHandler, SIGN_UP));
-	// addHandler("btn-sign-in", "click", () => loadDialog(signInHandler, SIGN_IN));
-};
+function goToGamePage(): void {
+	console.log('lance le jeu si tu es co, sinon ca te propose une page de co');
+	loadPage(GAME_PAGE, gamePageEvents);
+}
 
-export { MAIN_BOX, mainMenuEvents };
+function mainBoxEvents(): void {
+	const allElements = getSafeElement('main', HTMLElement).querySelectorAll('*[id]');
+	allElements.forEach(elem => {
+		switch (elem.id) {
+			case 'btn-play':
+				elem.addEventListener('click', goToGamePage);
+				break;
+			default:
+				break;
+		}
+	});
+}
+
+export { MAIN_BOX, mainBoxEvents };
