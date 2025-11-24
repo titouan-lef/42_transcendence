@@ -4,7 +4,6 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { SECRET } from "../user_management/connect_user.js";
 import { isValidUser } from "../database/find_data.js";
 import { startGame } from "../game/new_game.js";
-// import { startGame } from "../game/new_game.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -35,7 +34,7 @@ function startHeartbeat(socket: WebSocket): void {
 }
 
 async function initWebSocketConnection(socket: WebSocket, req: FastifyRequest): Promise<void> {
-	console.log("New WebSocket connection");
+	console.log("New WebSocket connection"); /** @todo remove */
 
 	const token = req.cookies?.token;
 	if (!token)
@@ -55,7 +54,7 @@ async function initWebSocketConnection(socket: WebSocket, req: FastifyRequest): 
 		return socket.close(1008, "Already looking for a game");
 	ACTIVES_SOCKETS.set(user, socket);
 	WAITING_PLAYERS.push(user);
-	console.log(user, "is waiting for a game");
+	console.log(user, "is waiting for a game"); /** @todo remove */
 
 	startHeartbeat(socket);
 
@@ -73,7 +72,7 @@ async function initWebSocketConnection(socket: WebSocket, req: FastifyRequest): 
 }
 
 function newGame(player1: string, player2: string): void {
-	console.log(`New game with ${player1} et ${player2}`);
+	console.log(`New game with ${player1} et ${player2}`); /** @todo remove */
 	const socket1 = ACTIVES_SOCKETS.get(player1);
 	const socket2 = ACTIVES_SOCKETS.get(player2);
 

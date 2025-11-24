@@ -44,14 +44,14 @@ class Tornado {
 				direction.y = 0;
 				const distance = direction.length();
 				const tornadoRadius = TORNADO_COLLISION_RADIUS * this.randomSize;
-				if (distance < tornadoRadius && distance > 0) {
-					const tangent = new babylon.Vector3(-direction.z, 0, direction.x).normalize();
-					const distanceFromCenter = 1 - (distance / tornadoRadius);
-					const turningForce = tangent.scale(TORNADO_ATTRACTION_STRENGTH * distanceFromCenter);
-					const attractiveForce = direction.scale(-TORNADO_ATTRACTION_STRENGTH * distanceFromCenter);
-					const totalForce = turningForce.add(attractiveForce);
-					body.applyForce(totalForce, meshPosition);
-				}
+				if (distance >= tornadoRadius || distance <= 0)
+					return;
+				const tangent = new babylon.Vector3(-direction.z, 0, direction.x).normalize();
+				const distanceFromCenter = 1 - (distance / tornadoRadius);
+				const turningForce = tangent.scale(TORNADO_ATTRACTION_STRENGTH * distanceFromCenter);
+				const attractiveForce = direction.scale(-TORNADO_ATTRACTION_STRENGTH * distanceFromCenter);
+				const totalForce = turningForce.add(attractiveForce);
+				body.applyForce(totalForce, meshPosition);
 			});
 			this.currentLifetime += scene.getEngine().getDeltaTime() / TORNADO_LIFETIME;
 			if (this.currentLifetime <= 0) {
