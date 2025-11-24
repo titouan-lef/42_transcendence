@@ -197,6 +197,7 @@ class SceneManager {
 			this.sendCountDown(player1, player2, time);
 			if (time <= 0) {
 				this.ball?.launchBall();
+				this.ball?.setGameStopped(false);
 				this.map?.start();
 				if (this.countdownIntervalId) {
 					clearInterval(this.countdownIntervalId);

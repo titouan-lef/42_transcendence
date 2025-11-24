@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { BallOption } from "../settings/GameSettings.js";
-import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED } from "../settings/values.js";
+import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, UNSTUCK_TIMER } from "../settings/values.js";
 import { EventMessage, ParticlesType, Position, Status } from "../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
 import { vec3ToPos } from "../utils.js";
@@ -24,6 +24,7 @@ abstract class BallTemplate {
 	protected readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly yObservable: babylon.Observable<babylon.Scene>;
 	private readonly yObserver: babylon.Observer<babylon.Scene>;
+	private unstuckTimer = 0;
 	
 	protected effectInterval = 0;
 	protected readonly mesh: babylon.Mesh;
@@ -62,13 +63,16 @@ abstract class BallTemplate {
 		return yObserver;
 	}
 
+	setGameStopped(state: boolean): void {
+		this.gameStopped = state;
+	}
+
 	/**launch ball */
 	launchBall(): void {
 		const startingDirection = Math.random() < 0.5 ? 1 : -1;
 		this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
 		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position));
 		this.justCollided = true;
-		this.gameStopped = false;
 	}
 
 	private setPhysic(scene: babylon.Scene): babylon.PhysicsAggregate {
@@ -86,6 +90,7 @@ abstract class BallTemplate {
 			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y (only visual but will be sent to front)
 			if (this.gameStopped)
 				return;
+			this.unstuckTimer++;
 			if (this.justCollided) {
 				this.realDirection = this.physic.body.getLinearVelocity(); // remember original velocity, to apply movement changes on it
 				this.justCollided = false; 
@@ -97,6 +102,10 @@ abstract class BallTemplate {
 			this.applySpin();
 			this.nerfSpeed();
 			this.activateEffect();
+			if (this.unstuckTimer >= UNSTUCK_TIMER) {
+				this.launchBall();
+				this.unstuckTimer = 0;
+			}
 		});
 		return sceneObserver;
 	}
@@ -182,6 +191,7 @@ abstract class BallTemplate {
 			}
 		}
 		if (nearestMesh && nearestMesh.metadata) {
+			this.unstuckTimer = 0;
 			const face = nearestMesh.metadata.face;
 			return face;
 		}
