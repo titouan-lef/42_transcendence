@@ -4,7 +4,7 @@ import { PLAYER_DIMENSION, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION
 import { PlayerControls, Position, DataMessage, Rotation } from "../web_sockets/types_transfert.js";
 
 abstract class Player {
-	private readonly player: babylon.TransformNode;
+	protected readonly player: babylon.TransformNode;
 	private readonly id: 1 | 2;
 	private readonly body: babylon.PhysicsBody;
 	private readonly keyPressed: boolean[] = [false, false, false, false, false];

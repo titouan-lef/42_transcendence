@@ -1,9 +1,7 @@
 import { FastifyRequest } from "fastify";
 import { WebSocket } from "ws";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { SECRET } from "../user_management/connect_user.js";
-import { startGame } from "../game/new_game.js";
-import { doesUserExist } from "../database/user.js";
+import { doesUserExist } from "../../database/user.js";
 import { SECRET } from "../../user_management/connect_user.js";
 import { startGame } from "../game_manager.js";
 

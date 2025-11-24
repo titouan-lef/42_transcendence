@@ -208,7 +208,7 @@ class SceneManager {
 		return countdownIntervalId;
 	}
 
-	setEnvironnement(scene: babylon.Scene, settings: GameSettings, score: babylon.Vector2): void { /** @todo remove score */
+	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void { /** @todo remove score */
 		if (this.doesGameEnded())
 			return;
 		const player1 = this.getPlayer(1);
@@ -216,6 +216,9 @@ class SceneManager {
 		if (!player1 || !player2)
 			return;
 		this.createBall(scene, settings);
+		if (player2 instanceof AI && this.ball) {
+			player2.setBallToWatch(this.ball);
+		}
 		this.createMap(scene, settings);
 		this.countdownIntervalId = this.startCountdown(START_TIMEOUT);
 		this.engine.getDeltaTime = this.originalGetDelta;
