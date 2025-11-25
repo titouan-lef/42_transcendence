@@ -26,10 +26,39 @@ class SceneManager {
 	private originalGetDelta: () => number;
 	private countdownIntervalId: ReturnType<typeof setInterval> | null = null;
 	private gameStopped = false;
+	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
+	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
 
-	constructor(engine: babylon.Engine) {
+	constructor(engine: babylon.Engine, scene: babylon.Scene, settings: GameSettings) {
 		this.engine = engine;
 		this.originalGetDelta = engine.getDeltaTime; // keep original delta time
+		this.sceneObservable = scene.onBeforeRenderObservable;
+		this.sceneObserver = this.observeScene(settings);
+	}
+
+	private observeScene(settings: GameSettings): babylon.Observer<babylon.Scene> {
+		const sceneObserver = this.sceneObservable.add(() => {
+			if (this.checkOutOfFieldBall(this.ball?.getPosition())) {
+				this.gameStopped = true;
+				this.ball?.setGameStopped(true);
+				this.map?.stop();
+				this.ball?.reset();
+				this.countdownIntervalId = this.startCountdown(START_TIMEOUT, settings);
+			}
+		});
+		return sceneObserver;
+	}
+
+	private checkOutOfFieldBall(position: Position | undefined): boolean {
+		if (!position)
+			return false;
+		if (position.x > MAP_SIZE.x + WALL_WIDTH / 2
+		|| position.x < -(MAP_SIZE.x + WALL_WIDTH / 2)
+		|| position.y > MAP_SIZE.y + WALL_WIDTH / 2
+		|| position.y < -(MAP_SIZE.y + WALL_WIDTH / 2)) {
+			return true;
+		}
+		return false;
 	}
 
 	getBall(): BallTemplate | null {
@@ -206,6 +235,8 @@ class SceneManager {
 				this.ball?.launchBall(undefined, startingDirection);
 				this.ball?.setGameStopped(false);
 				this.map?.start();
+				if (player2 instanceof AI)
+					player2.update();
 				if (this.countdownIntervalId) {
 					clearInterval(this.countdownIntervalId);
 					this.countdownIntervalId = null;
@@ -273,6 +304,7 @@ class SceneManager {
 		this.destroyPlayers();
 		if (this.countdownIntervalId)
 			clearInterval(this.countdownIntervalId);
+		this.sceneObservable.remove(this.sceneObserver);
 		this.destroyEnvironnement(scene);
 	}
 }

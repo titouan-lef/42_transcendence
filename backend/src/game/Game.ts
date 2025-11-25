@@ -26,7 +26,7 @@ class Game {
 		this.engine = engine;
 		this.settings = settings;
 		this.camera = new babylon.ArcRotateCamera("Camera", 0, 0, 0, babylon.Vector3.Zero(), scene);
-		this.sceneManager = new SceneManager(engine);
+		this.sceneManager = new SceneManager(engine, scene, settings);
 		this.scene = scene;
 		this.score = new babylon.Vector2(0, 0);
 		this.setScene();

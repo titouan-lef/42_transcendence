@@ -71,6 +71,13 @@ abstract class BallTemplate {
 		this.gameStopped = state;
 	}
 
+	reset(): void {
+		this.physic.body.disablePreStep = true;
+		this.mesh.position = new babylon.Vector3(0, 0, 0);
+		this.physic.body.disablePreStep = false;
+		this.physic.body.setLinearVelocity(new babylon.Vector3(0, 0, 0));
+	}
+
 	/**launch ball */
 	launchBall(directionX?: 1 | -1, customStartingDirection?: babylon.Vector3): void {
 		const startingDirection = directionX ? directionX : (Math.random() < 0.5 ? 1 : -1);
