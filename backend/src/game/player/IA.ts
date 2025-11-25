@@ -2,18 +2,17 @@ import * as babylon from "@babylonjs/core";
 import { GameSettings } from "../settings/GameSettings.js";
 import { DataMessage, PlayerControls, Status } from "../web_sockets/types_transfert.js";
 import { Player } from "./Player.js";
-import { MAP_SIZE, WALL_WIDTH } from "../settings/values.js";
+import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { BallTemplate } from "../ball/BallTemplate.js";
 
 class AI extends Player {
 	private readonly updateInterval: ReturnType<typeof setInterval>;
 	private ballToWatch: BallTemplate | null = null;
 	private readonly movementIntervalId: ReturnType<typeof setInterval>;
-	private ballPosPredict: babylon.Vector3;
+	private ballPosPredict: babylon.Vector3 | null = null;
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings) {
 		super(scene, position, gameSettings, 2);
-		this.ballPosPredict = new babylon.Vector3(this.player.position.clone().x, this.player.position.clone().y, 0);
 		this.movementIntervalId = this.movement();
 		this.updateInterval = setInterval(() => {
 			this.update();
@@ -30,14 +29,23 @@ class AI extends Player {
 				normalMode: false,
 				spinMode: false
 			};
-			if (this.ballPosPredict.z < this.player.position.z - PLAYER_DIMENSION.z / 2)
-				controls.mov_left = true;
-			else if (this.ballPosPredict.z < this.player.position.z)
-				controls.rot_left = true;
-			if (this.ballPosPredict.z > this.player.position.z + PLAYER_DIMENSION.z / 2)
+			if (!this.ballPosPredict && this.player.position.z <= -0.1)
 				controls.mov_right = true;
-			else if (this.ballPosPredict.z > this.player.position.z + PLAYER_DIMENSION.z)
-				controls.rot_right = true;
+			else if (!this.ballPosPredict && this.player.position.z >= 0.1)
+				controls.mov_left = true;
+
+			if (this.ballPosPredict) {
+				if (this.ballPosPredict.z < this.player.position.z - PLAYER_DIMENSION.z / 2)
+					controls.mov_left = true;
+				else if (this.ballPosPredict.z < this.player.position.z)
+					controls.rot_left = true;
+	
+				if (this.ballPosPredict.z > this.player.position.z + PLAYER_DIMENSION.z / 2)
+					controls.mov_right = true;
+				else if (this.ballPosPredict.z > this.player.position.z + PLAYER_DIMENSION.z)
+					controls.rot_right = true;
+			}
+				
 			this.setControls(controls);
 		}, 3);
 		return movementIntervalId;
@@ -72,6 +80,8 @@ class AI extends Player {
 				return posZ + dirZ * tPlayer; //si elle touche la ligne du player, alors on return ce Z
 			}
 
+			//check player adverse aussi ?
+
 			if (tx < tz) { // sinon on inverse la direction en fonction du mur touché
 				posX = dirX > 0 ? wallBottom : wallTop;
 				posZ += dirZ * tx;
@@ -92,9 +102,9 @@ class AI extends Player {
 
 	update(): void { /** @todo real AI */
 		const predictedZ = this.predictZAtPlayerX();
+		!predictedZ ? this.ballPosPredict = null : this.ballPosPredict = new babylon.Vector3(this.player.position.x, 0, predictedZ);
 		console.log("predictedZ =" + predictedZ);
 		if (predictedZ !== null) {
-			this.ballPosPredict.z = predictedZ;
 			const controls: PlayerControls = {
 				mov_right: false,
 				mov_left: false,
