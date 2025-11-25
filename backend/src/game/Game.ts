@@ -13,8 +13,8 @@ class Game {
 	private readonly scene: babylon.Scene;
 	private readonly sceneManager: SceneManager;
 	private readonly settings: GameSettings;
-	private readonly camera: babylon.ArcRotateCamera; //camera has to be there for W/E reason ??
-	private gameInterval?: ReturnType<typeof setInterval>; // ??NodeJS.Timer;
+	private readonly camera: babylon.ArcRotateCamera; // the engine need a camera
+	private gameInterval?: ReturnType<typeof setInterval>; /** @todo type is supposed to be NodeJS.Timer but does not work */
 	private score: babylon.Vector2;
 	private inAnimation = false;
 
