@@ -127,9 +127,9 @@ abstract class Player {
 		this.linearVelocityZ = (+this.keyPressed[1] - +this.keyPressed[0]) * PLAYER_MOVEMENT_VELOCITY * (2 * (this.id - 1) - 1);
 		if (this.rotatingPlayer)
 			this.angularVelocityY = (+this.keyPressed[3] - +this.keyPressed[2]) * PLAYER_ROTATION_VELOCITY;
-		if (this.keyPressed[4] && this.rotatingPlayer)
+		if (this.keyPressed[4])
 			this.normalMode();
-		if (this.keyPressed[5] && this.rotatingPlayer)
+		if (this.keyPressed[5] && this.applyingSpin)
 			this.spinMode();
 	}
 
