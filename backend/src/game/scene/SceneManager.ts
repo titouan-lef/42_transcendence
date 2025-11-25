@@ -68,19 +68,19 @@ class SceneManager {
 			sockets.push(settings.player2.socket);
 		switch (ball) {
 			case "default":
-				this.ball = new DefaultBall(scene, sockets, settings.windAffectsBall);
+				this.ball = new DefaultBall(scene, sockets, settings);
 				break;
 			case "invisible":
-				this.ball = new InvisibleBall(scene, sockets, settings.windAffectsBall);
+				this.ball = new InvisibleBall(scene, sockets, settings);
 				break;
 			case "tricky":
-				this.ball = new TrickyBall(scene, sockets, settings.windAffectsBall);
+				this.ball = new TrickyBall(scene, sockets, settings);
 				break;
 			case "pulse":
-				this.ball = new PulseBall(scene, sockets, settings.windAffectsBall);
+				this.ball = new PulseBall(scene, sockets, settings);
 				break;
 			case "snake":
-				this.ball = new SnakeBall(scene, sockets, settings.windAffectsBall);
+				this.ball = new SnakeBall(scene, sockets, settings);
 				break;
 			default: 
 				throw new Error("switch ball fail");
@@ -188,7 +188,7 @@ class SceneManager {
 		return this.gameStopped;
 	}
 
-	startCountdown(time: number): ReturnType<typeof setInterval> {
+	startCountdown(time: number, settings: GameSettings): ReturnType<typeof setInterval> {
 		const countdownIntervalId = setInterval(() => {
 			const player1 = this.getPlayer(1);
 			const player2 = this.getPlayer(2);
@@ -196,7 +196,10 @@ class SceneManager {
 				return;
 			this.sendCountDown(player1, player2, time);
 			if (time <= 0) {
-				this.ball?.launchBall();
+				let startingDirection;
+				if (!settings.rotatingPlayer && !settings.spin)
+					startingDirection = new babylon.Vector3((Math.random() - 0.5) * 2, 0, (Math.random() - 0.5));
+				this.ball?.launchBall(undefined, startingDirection);
 				this.ball?.setGameStopped(false);
 				this.map?.start();
 				if (this.countdownIntervalId) {
@@ -221,7 +224,7 @@ class SceneManager {
 			player2.setBallToWatch(this.ball);
 		}
 		this.createMap(scene, settings);
-		this.countdownIntervalId = this.startCountdown(START_TIMEOUT);
+		this.countdownIntervalId = this.startCountdown(START_TIMEOUT, settings);
 		this.engine.getDeltaTime = this.originalGetDelta;
 		this.sendDeltaTime(player1, player2, this.engine.getDeltaTime());
 	}
