@@ -87,9 +87,8 @@ class SceneManager {
 	private createMap(scene: babylon.Scene, settings: GameSettings): void {
 		const mapList: MapOption[] = ["default", "volcano", "sky", "desert"];
 		let map = settings.map;
-		if (map === "random") {
+		if (map === "random")
 			map = mapList[Math.floor(Math.random() * 4)];
-		}
 		const sockets: WebSocket[] = [];
 		sockets.push(settings.player1.socket); /** @todo do not add if AI */
 		sockets.push(settings.player2.socket);
@@ -106,7 +105,7 @@ class SceneManager {
 			case "desert":
 				this.map = new DesertMap(scene, sockets);
 				break;
-			default: 
+			default:
 				throw new Error("switch map fail");
 		}
 	}
@@ -121,12 +120,11 @@ class SceneManager {
 		this.players.push(player2);
 	}
 
-	/** @todo Titouan gaming */
+	/** @todo check if better solution that the null everywere */
 	checkGoal(): { goal: "player1" | "player2" | null, position: Position | null } | null {
 		const goalInfos = this.ball?.getGoal();
-		if (goalInfos && goalInfos.goal !== null) {
+		if (goalInfos && goalInfos.goal !== null)
 			return goalInfos;
-		}
 		return null;
 	}
 
