@@ -17,7 +17,7 @@ class AI extends Player {
 		this.movementIntervalId = this.movement();
 		this.updateInterval = setInterval(() => {
 			this.update();
-		}, 300);
+		}, 1000);
 	}
 
 	private movement(): ReturnType<typeof setInterval> {
@@ -39,7 +39,7 @@ class AI extends Player {
 			else if (this.ballPosPredict.z > this.player.position.z + PLAYER_DIMENSION.z)
 				controls.rot_right = true;
 			this.setControls(controls);
-		}, 10);
+		}, 3);
 		return movementIntervalId;
 	}
 
