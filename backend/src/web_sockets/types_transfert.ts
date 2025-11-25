@@ -30,30 +30,6 @@ enum Status {
 	EVENT			// particules launcher
 }
 
-/**
- * ------------  DATA FLOW  ------------
- * 
- * new game -> START, OPTIONS, POSITIONS
- * 
- * TIMING (countdown)	<-------------------
- * during rounds:	<-------------------	|
- * 		POSITIONS 						|	|
- * 		OBJECT if any					|	|
- * 		EVENT if any	----------------	|
- * 											|
- * on goal:									|
- * 		RENDER: slow motion					|
- * 		GOAL								|
- * 		EVENT (goal -> explosion, pause)	|
- *		OPTIONS if changed					|	(case of random map or ball ?? or is it just define at the begining of the game ?)
-		RENDER: back to normal				|
- * 		go back to countdown ---------------
- * 
- * end game -> STOP
- * 
- * // client request DASHBOARD in HTTPS //
- */
-
 interface StartMessage {
 	status: Status.START,
 	playerName: string,
