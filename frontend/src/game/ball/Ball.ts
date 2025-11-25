@@ -51,7 +51,7 @@ class Ball {
 
 	/** particles on collides */
 	private createCollisionParticles(scene: babylon.Scene, position: Position): babylon.ParticleSystem {
-		const collisionParticles = new babylon.ParticleSystem("collision", 300, scene);
+		const collisionParticles = new babylon.ParticleSystem("collision", 100, scene);
 		collisionParticles.particleTexture = this.textures.spark.clone();
 		collisionParticles.emitter = new babylon.Vector3(position.x, position.y, position.z);
 		collisionParticles.createSphereEmitter(BALL_DIAMETER * 2);
@@ -60,12 +60,12 @@ class Ball {
 		collisionParticles.colorDead = new babylon.Color4(this.color.r, this.color.g, this.color.b, 1.0);
 		collisionParticles.minSize = 0.3;
 		collisionParticles.maxSize = 0.3;
-		collisionParticles.minLifeTime = 0.5;
-		collisionParticles.maxLifeTime = 0.5;
-		collisionParticles.minEmitPower = 6;
-		collisionParticles.maxEmitPower = 12;
+		collisionParticles.minLifeTime = 0.2;
+		collisionParticles.maxLifeTime = 0.2;
+		collisionParticles.minEmitPower = 4;
+		collisionParticles.maxEmitPower = 6;
 		collisionParticles.emitRate = 0;
-		collisionParticles.manualEmitCount = 200;
+		collisionParticles.manualEmitCount = 100;
 		return collisionParticles;
 	}
 

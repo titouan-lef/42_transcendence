@@ -7,6 +7,7 @@ let game: Game | null = null;
 
 /**@todo will see how we pop the game */
 /**@todo get the player keys from the player settings in DB*/
+/**PlayerKeys: MoveLeft, MoveRight, RotateClockWise, RotateCounterClockWise, NormalMode, SpinMode */
 async function newGame(options: OptionMessage, player1: WebSocket, player2?: WebSocket): Promise<void> {
 	let settings;
 	if (player2) {

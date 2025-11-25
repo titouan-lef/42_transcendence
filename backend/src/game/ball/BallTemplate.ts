@@ -25,6 +25,7 @@ abstract class BallTemplate {
 	private readonly yObservable: babylon.Observable<babylon.Scene>;
 	private readonly yObserver: babylon.Observer<babylon.Scene>;
 	private unstuckTimer = 0;
+	private particleCooldown = 0;
 	
 	protected effectInterval = 0;
 	protected readonly mesh: babylon.Mesh;
@@ -68,8 +69,8 @@ abstract class BallTemplate {
 	}
 
 	/**launch ball */
-	launchBall(): void {
-		const startingDirection = Math.random() < 0.5 ? 1 : -1;
+	launchBall(directionX?: 1 | -1 ): void {
+		const startingDirection = directionX ? directionX : (Math.random() < 0.5 ? 1 : -1);
 		this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
 		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position));
 		this.justCollided = true;
@@ -90,6 +91,8 @@ abstract class BallTemplate {
 			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y (only visual but will be sent to front)
 			if (this.gameStopped)
 				return;
+			if (this.particleCooldown > 0)
+				this.particleCooldown--;
 			this.unstuckTimer++;
 			if (this.justCollided) {
 				this.realDirection = this.physic.body.getLinearVelocity(); // remember original velocity, to apply movement changes on it
@@ -103,7 +106,7 @@ abstract class BallTemplate {
 			this.nerfSpeed();
 			this.activateEffect();
 			if (this.unstuckTimer >= UNSTUCK_TIMER) {
-				this.launchBall();
+				this.launchBall(this.mesh.position.x >= 0 ? -1 : 1);
 				this.unstuckTimer = 0;
 			}
 		});
@@ -149,8 +152,10 @@ abstract class BallTemplate {
 			}
 			if (metadata.type === "collider") {
 				this.justCollided = true;
-				if (collisionEvent.point)
+				if (collisionEvent.point && this.particleCooldown <= 0 && !this.gameStopped) {
 					this.sendParticuleEvent(sockets, "collision", vec3ToPos(collisionEvent.point));
+					this.particleCooldown++;
+				}
 				this.checkSpin(collisionEvent);
 			}
 		});
