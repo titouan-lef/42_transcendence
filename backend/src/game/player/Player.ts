@@ -21,7 +21,7 @@ abstract class Player {
 	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings, id: 1 | 2) {
 		this.applyingSpin = gameSettings.spin;
 		this.rotatingPlayer = gameSettings.rotatingPlayer;
-		this.player = this.setPlayer(scene, position);
+		this.player = this.setPlayer(scene, position, id);
 		this.body = this.setPlayerPhysic(scene);
 		this.baseRotation = this.setBaseRotation(id);
 		this.reverseRotation = this.setReverseRotation(id);
@@ -31,7 +31,7 @@ abstract class Player {
 		this.positionObserver = this.playerObserver();
 	}
 
-	private setPlayer(scene: babylon.Scene, position: babylon.Vector2): babylon.TransformNode {
+	private setPlayer(scene: babylon.Scene, position: babylon.Vector2, id: 1 | 2): babylon.TransformNode {
 		const player = new babylon.TransformNode("player", scene);
 
 		const normal = babylon.MeshBuilder.CreateBox("normal", { width: PLAYER_DIMENSION.x / 2, height: PLAYER_DIMENSION.y, depth: PLAYER_DIMENSION.z }, scene);
@@ -50,7 +50,7 @@ abstract class Player {
 
 		player.position.x = position.x;
 		player.position.y = position.y;
-		player.metadata = { type: "collider" };
+		player.metadata = { type: "collider", playerId: id };
 		return player;
 	}
 
@@ -126,7 +126,7 @@ abstract class Player {
 	private handleAction(): void {
 		this.linearVelocityZ = (Number(this.keyPressed[1]) - Number(this.keyPressed[0])) * PLAYER_MOVEMENT_VELOCITY * (2 * (this.id - 1) - 1);
 		if (this.rotatingPlayer)
-			this.angularVelocityY = (Number(this.keyPressed[3]) - Number(this.keyPressed[2])) * PLAYER_ROTATION_VELOCITY * (2 * (this.id - 1) - 1);
+			this.angularVelocityY = (Number(this.keyPressed[3]) - Number(this.keyPressed[2])) * PLAYER_ROTATION_VELOCITY; /** @todo chaeck if valid for both single and dual player */
 		if (this.keyPressed[4] && this.rotatingPlayer)
 			this.normalMode();
 		if (this.keyPressed[5] && this.rotatingPlayer)

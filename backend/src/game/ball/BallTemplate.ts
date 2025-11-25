@@ -167,9 +167,9 @@ abstract class BallTemplate {
 			if (collisionPointZ === undefined )
 				return;
 			if (collisionPointZ - collisionEvent.collidedAgainst.transformNode.position.z <= 0) // colliding right or left of the player
-				this.spinningLeft = true;
+				metadata.playerId === 1 ? this.spinningLeft = true : this.spinningRight = true;
 			else
-				this.spinningRight = true;
+				metadata.playerId === 1 ? this.spinningRight = true : this.spinningLeft = true;
 		} else {
 			this.spinningLeft = false;
 			this.spinningRight = false;
