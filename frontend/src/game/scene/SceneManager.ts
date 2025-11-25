@@ -29,6 +29,8 @@ class SceneManager {
 			const message : DataMessage = JSON.parse(event.data);
 			switch (message.status) {
 				case (Status.TIMING):
+					if (!this.countDown)
+						this.countDown = new CountDown(this.scene);
 					this.setCountDown(message.time);
 					break;
 				case (Status.GOAL):
@@ -158,7 +160,6 @@ class SceneManager {
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
 		this.createBall(scene, settings.ball);
 		this.createMap(scene, settings.map, settings.wind);
-		this.countDown = new CountDown(this.scene);
 	}
 
 	destroyEnvironnement(score: babylon.Vector2 | null): void {

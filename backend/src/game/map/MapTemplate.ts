@@ -25,6 +25,10 @@ abstract class MapTemplate {
 		this.gameStopped = false;
 	}
 
+	stop(): void {
+		this.gameStopped = true;
+	}
+
 	predeath(): void {
 		this.gameStopped = true;
 	}
