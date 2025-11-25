@@ -54,10 +54,10 @@ abstract class BallTemplate {
 	private blockVelocityY(): babylon.Observer<babylon.Scene> {
 		const yObserver = this.yObservable.add(() => {
 			const velocity = this.physic.body.getLinearVelocity();
-			if (velocity) {
-				velocity.y = 0;
-				this.physic.body.setLinearVelocity(velocity);
-			}
+			if (!velocity)
+				return;
+			velocity.y = 0;
+			this.physic.body.setLinearVelocity(velocity);
 		});
 		return yObserver;
 	}
@@ -211,7 +211,7 @@ abstract class BallTemplate {
 		this.justCollided = true;
 	}
 
-	/** @todo Titouan gaming */
+	/** @todo check if better solution that the null everywere */
 	getGoal(): { goal: "player1" | "player2" | null, position: Position | null } {
 		const goal = this.isInGoal;
 		let position;
