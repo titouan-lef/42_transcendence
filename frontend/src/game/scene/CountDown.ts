@@ -30,7 +30,7 @@ class CountDown {
 		}
 		if (time > 1)
 			this.changeText(time - 1);
-		else if (time > 0)
+		else
 			this.changeText("GO!");
 		return this;
 	}

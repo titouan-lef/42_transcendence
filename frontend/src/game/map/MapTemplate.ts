@@ -31,7 +31,6 @@ abstract class MapTemplate {
 		const size = new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH);
 		const border = this.createLimit(scene, size);
 		border.position = new babylon.Vector3(position.x, WALL_HEIGHT/2, position.z);
-		border.metadata = { type: "collider", nature: "environnement" };
 		return border;
 	}
 
@@ -39,7 +38,6 @@ abstract class MapTemplate {
 		const size = new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z - WALL_WIDTH * 2);
 		const border = this.createLimit(scene, size);
 		border.position = new babylon.Vector3(position.x, WALL_HEIGHT/2, position.z);
-		border.metadata = { type: "goal", player: playerId };
 		return border;
 	}
 

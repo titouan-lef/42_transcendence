@@ -70,7 +70,7 @@ class Lightning {
 			const distance = direction.length();
 			const explosionRadius = LIGHTNING_COLLISION_RADIUS * this.randomSize;
 
-			if (distance > explosionRadius || distance < 0)
+			if (distance >= explosionRadius || distance <= 0)
 				return;
 			direction.normalize();
 			const force = direction.scale(LIGHTNING_COLLISION_STRENGTH * (1 - distance / explosionRadius) * this.randomSize);
