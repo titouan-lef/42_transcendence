@@ -3,10 +3,11 @@ import { BallTemplate } from "./BallTemplate.js";
 import { TRICKY_BALL_EFFECT_INTERVAL, TRICKY_BALL_FORWARD_ONLY } from "../settings/values.js";
 import { WebSocket } from "ws";
 import { vec3ToPos } from "../utils.js";
+import { GameSettings } from "../settings/GameSettings.js";
 
 class TrickyBall extends BallTemplate {
-	constructor(scene: babylon.Scene, sockets: WebSocket[], windAffected: boolean) {
-		super(scene, "tricky", sockets, windAffected);
+	constructor(scene: babylon.Scene, sockets: WebSocket[], settings: GameSettings) {
+		super(scene, "tricky", sockets, settings);
 	}
 	
 	activateEffect(): void {

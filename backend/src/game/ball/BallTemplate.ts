@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { BallOption } from "../settings/GameSettings.js";
+import { BallOption, GameSettings } from "../settings/GameSettings.js";
 import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, UNSTUCK_TIMER } from "../settings/values.js";
 import { EventMessage, ParticlesType, Position, Status } from "../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
@@ -26,16 +26,19 @@ abstract class BallTemplate {
 	private readonly yObserver: babylon.Observer<babylon.Scene>;
 	private unstuckTimer = 0;
 	private particleCooldown = 0;
+	private readonly maxSpeed;
 	
 	protected effectInterval = 0;
 	protected readonly mesh: babylon.Mesh;
 	protected gameStopped = true;
 
-	constructor(scene: babylon.Scene, type: BallOption, sockets: WebSocket[], windAffected: boolean) {
+	constructor(scene: babylon.Scene, type: BallOption, sockets: WebSocket[], settings: GameSettings) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.type = type;
 		this.mesh.position.y = BALL_DIAMETER / 2;
-		this.mesh.metadata = { type: "collider", pushable: true, windAffected: windAffected };
+		this.mesh.metadata = { type: "collider", pushable: true, windAffected: settings.windAffectsBall };
+		(!settings.rotatingPlayer && !settings.spin) ? 
+			this.maxSpeed = MAX_SPEED * 1.3 : this.maxSpeed = MAX_SPEED;
 		this.sockets = sockets;
 		this.physic = this.setPhysic(scene);
 		
@@ -69,9 +72,11 @@ abstract class BallTemplate {
 	}
 
 	/**launch ball */
-	launchBall(directionX?: 1 | -1 ): void {
+	launchBall(directionX?: 1 | -1, customStartingDirection?: babylon.Vector3): void {
 		const startingDirection = directionX ? directionX : (Math.random() < 0.5 ? 1 : -1);
-		this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
+		customStartingDirection ?
+			this.physic.body.setLinearVelocity(customStartingDirection.normalize().scale(50)) :
+			this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
 		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position));
 		this.justCollided = true;
 	}
@@ -209,8 +214,8 @@ abstract class BallTemplate {
 		const speed = velocity.length();
 		let dampingFactor = 0;
 
-		if (speed > MAX_SPEED) {
-			const excessRatio = (speed - MAX_SPEED) / speed; // between 0 and 1
+		if (speed > this.maxSpeed) {
+			const excessRatio = (speed - this.maxSpeed) / speed; // between 0 and 1
 			dampingFactor = excessRatio * NERF_SPEED_FACTOR;
 		}
 		this.physic.body.setLinearDamping(dampingFactor);

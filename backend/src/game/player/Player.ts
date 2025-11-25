@@ -129,7 +129,7 @@ abstract class Player {
 			this.angularVelocityY = (Number(this.keyPressed[3]) - Number(this.keyPressed[2])) * PLAYER_ROTATION_VELOCITY; /** @todo chaeck if valid for both single and dual player */
 		if (this.keyPressed[4] && this.rotatingPlayer)
 			this.normalMode();
-		if (this.keyPressed[5] && this.rotatingPlayer)
+		if (this.keyPressed[5] && this.applyingSpin)
 			this.spinMode();
 	}
 
