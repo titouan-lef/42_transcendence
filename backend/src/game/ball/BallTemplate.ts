@@ -179,19 +179,16 @@ abstract class BallTemplate {
 		const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
 		if (!metadata)
 			return;
+		this.spinningLeft = false;
+		this.spinningRight = false;
 		if (this.checkSideHit(collisionEvent) === "spinEffect") {
 			const collisionPointZ = collisionEvent.point?.z;
-			this.spinningLeft = false;
-			this.spinningRight = false;
 			if (collisionPointZ === undefined )
 				return;
 			if (collisionPointZ - collisionEvent.collidedAgainst.transformNode.position.z <= 0) // colliding right or left of the player
 				metadata.playerId === 1 ? this.spinningLeft = true : this.spinningRight = true;
 			else
 				metadata.playerId === 1 ? this.spinningRight = true : this.spinningLeft = true;
-		} else {
-			this.spinningLeft = false;
-			this.spinningRight = false;
 		}
 	}
 
