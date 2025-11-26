@@ -29,10 +29,6 @@ abstract class MapTemplate {
 		this.gameStopped = true;
 	}
 
-	predeath(): void {
-		this.gameStopped = true;
-	}
-
 	private setLimitPhysic(scene: babylon.Scene, limit: babylon.Mesh): void {
 		const limitPhysic = new babylon.PhysicsAggregate(limit, babylon.PhysicsShapeType.BOX, { mass: 0, restitution: 1, friction: 0 }, scene);
 		this.limitsPhysic.push(limitPhysic);

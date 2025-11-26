@@ -140,7 +140,7 @@ class AI extends Player {
 			const tx = dirX > 0 ? (wallBottom - posX) / dirX : (wallTop - posX) / dirX; // time ball takes to hit the wall
 			const tz = dirZ > 0 ? (wallRight - posZ) / dirZ : (wallLeft - posZ) / dirZ;
 
-			const tPlayer = (playerPosX - posX) / dirX; // le temps qu elle mettrait a toucher la ligne du player
+			const tPlayer = (playerPosX - posX) / dirX;
 
 			if (tPlayer >= 0 && tPlayer <= Math.min(tx, tz)) {
 				return posZ + dirZ * tPlayer; //if ball will reach the player line

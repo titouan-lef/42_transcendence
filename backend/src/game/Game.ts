@@ -97,7 +97,7 @@ class Game {
 				stopGame(this.id);
 			} else {
 				this.inAnimation = false;
-				this.sceneManager.destroyEnvironnement(this.scene);
+				this.sceneManager.destroyEnvironnement();
 				if (SHOW_DISPOSE_LOGS)
 					this.sceneManager.showDisposeLogs(this.scene);
 				this.sceneManager.setEnvironnement(this.scene, this.settings);

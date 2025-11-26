@@ -144,7 +144,6 @@ class SceneManager {
 	}
 
 	private setGoalCheck(message: GoalMessage, settings: GameSettings): void {
-		/** @todo animation win / loose */
 		this.destroyEnvironnement(new babylon.Vector2(message.player, message.enemy));
 	}
 
