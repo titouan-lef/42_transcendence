@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { GameSettings } from "../settings/GameSettings.js";
-import { DataMessage, PlanePosition, PlayerControls, PositionsMessage, Status } from "../../web_sockets/types_transfert.js";
+import { DataMessage, PlanePosition, PlayerControls, PositionsMessage, Status } from "../web_sockets/types_transfert.js";
 import { Player } from "./Player.js";
 import { PLAYER_DIMENSION } from "../settings/values.js";
 

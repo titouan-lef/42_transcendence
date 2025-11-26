@@ -4,6 +4,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { SECRET } from "../user_management/connect_user.js";
 import { startGame } from "../game/new_game.js";
 import { doesUserExist } from "../database/user.js";
+import { SECRET } from "../../user_management/connect_user.js";
+import { startGame } from "../game_manager.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -68,7 +70,6 @@ async function findLocalGame(socket: WebSocket, req: FastifyRequest): Promise<vo
 	startHeartbeat(socket);
 
 	socket.once("message", (message) => {
-		console.log(message.toString());
 		let id;
 		try {
 			id = JSON.parse(message.toString()).id;
