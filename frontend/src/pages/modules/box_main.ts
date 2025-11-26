@@ -12,6 +12,7 @@ ${applyColor('alt')}
 `;
 
 const MAIN_STYLE = `
+fixed -z-10
 flex flex-col items-center gap-[10px]
 `;
 
@@ -39,7 +40,7 @@ const MAIN_BOX = `
 `;
 
 function goToGamePage(): void {
-	console.log('lance le jeu si tu es co, sinon ca te propose une page de co');
+	console.log('lance le jeu si tu es co, sinon ca te propose une page de co'); /** @todo change that */
 	loadPage(GAME_PAGE, gamePageEvents);
 }
 

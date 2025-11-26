@@ -3,6 +3,7 @@ import { disconnectUser } from "../../services/user_management/login";
 import { applyColor } from "../../utils/applyColor";
 import { getSafeElement } from "../../utils/getSafeElement";
 import { openDialogAddFriend, openDialogSignIn, openDialogSignUp } from "./dialog";
+import { loadDrawer, loadDrawertest } from "./drawer";
 
 const ASIDE_BOX_STYLE = `
 grow
@@ -11,6 +12,7 @@ first:mt-[25px] last:mb-[25px]
 `;
 
 const ASIDE_STYLE = `
+relative z-20
 grow-0
 flex
 rounded-2xl
@@ -77,7 +79,7 @@ function asideConnectedEvents(): void {
 	allElements.forEach(elem => {
 		switch (elem.id) {
 			case 'btn-profile':
-				elem.addEventListener('click', () => console.log('bouton appuyé :' + elem.id));
+				elem.addEventListener('click', () => loadDrawertest('coucou'));
 				break;
 			case 'btn-friend':
 				elem.addEventListener('click', openDialogAddFriend);

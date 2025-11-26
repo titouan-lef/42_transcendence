@@ -23,7 +23,7 @@ const DIALOG_INNER_STYLE = `
 	min-w-[100px] max-w-[250px]
 `;
 
-function loadDialog(dialog: string, handler: (modal: HTMLDialogElement) => void): void {
+function loadDialog(content: string, handler: (modal: HTMLDialogElement) => void): void {
 	const modal = getSafeElement("modal", HTMLDialogElement);
 
 	modal.className = DIALOG_MAIN_STYLE;
@@ -31,7 +31,7 @@ function loadDialog(dialog: string, handler: (modal: HTMLDialogElement) => void)
 	modal.innerHTML = `
 		<div class='${DIALOG_BOX_STYLE}'>
 			<div class='${DIALOG_INNER_STYLE}'>
-				${dialog}
+				${content}
 			</div>
 		</div>
 	`;

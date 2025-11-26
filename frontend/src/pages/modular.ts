@@ -1,9 +1,7 @@
-import { ELEM, loadPage } from "../routes/page";
 import { getSafeElement } from "../utils/getSafeElement";
-import { GAME_PAGE } from "./game_page";
 import { ASIDE_BOX, asideDisconnectedEvents } from "./modules/box_aside";
 import { MAIN_BOX, mainBoxEvents } from "./modules/box_main";
-import { exitDialog, openDialogSignIn, openDialogSignUp } from "./modules/dialog";
+import { exitDialog } from "./modules/dialog";
 
 const ROW_STYLE = `
 flex flex-row gap-[10px]
