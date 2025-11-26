@@ -43,7 +43,7 @@ async function disconnectUser(): Promise<void> {
 
 	await sendGetRequestToBack("api/user/logout");
 
-		/** @wip changing style here */
+	/** @wip changing style here */
 	loadAside(ASIDE_NOT_CONNECTED, asideDisconnectedEvents);
 }
 

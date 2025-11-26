@@ -39,6 +39,7 @@
 	--font-jaro:		"Jaro", sans-serif;
 	--font-jbm:			"JetBrains Mono", monospace;
 	--font-park:		"Parkinsans", sans-serif;
+
 	--color-primary:	#6e6e6e;
 	--color-light:		#c7c7c7;
 	--color-lighter:	#f0f0f0;
@@ -49,4 +50,27 @@
 	--color-tx-sec:		#477b99;
 	--color-warning:	#9c2b2b;
 	--color-shadow:		#6e6e6e;
+}
+
+/*
+	Gradients for background
+		use bg-grad-<direction>-<value in px> from-<color name>
+		to get a linear gradient to <direction> with size of <value in px> from color <color name>
+		(default value of color is --color-dark)
+	Only 'to top' and 'to left' are used, add 'to bottom' or 'to right' if needed.
+*/
+@utility bg-grad-t-* {
+	background-image: linear-gradient(
+		to top,
+		var(--tw-gradient-from, var(--color-dark)),
+		transparent calc(--value(integer) * 1px)
+	);
+}
+
+@utility bg-grad-l-* {
+	background-image: linear-gradient(
+		to left,
+		var(--tw-gradient-from, var(--color-dark)),
+		transparent calc(--value(integer) * 1px)
+	);
 }
