@@ -11,6 +11,7 @@ const API_PAGE = `
       <input id="btn-user" type="button" value="Users" class="btn btn-user"/>
       <input id="btn-play-ranked" type="button" value="Ranked" class="btn btn-play"/>
       <input id="btn-play-local" type="button" value="Local 2 Players" class="btn btn-play"/>
+      <input id="btn-play-AI" type="button" value="Local vs AI" class="btn btn-play"/>
       <div id="print-content" class="response-box"></div>
     </section>
   </main>
