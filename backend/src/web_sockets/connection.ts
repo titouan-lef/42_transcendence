@@ -2,8 +2,8 @@ import { FastifyRequest } from "fastify";
 import { WebSocket } from "ws";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { SECRET } from "../user_management/connect_user.js";
-import { isValidUser } from "../database/find_data.js";
 import { startGame } from "../game/new_game.js";
+import { doesUserExist } from "../database/user.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -43,8 +43,7 @@ async function initWebSocketConnection(socket: WebSocket, req: FastifyRequest): 
 	const payload: JwtPayload = jwt.verify(token, SECRET) as JwtPayload;
 	if (!payload)
 		return socket.close(1008, "Invalid token");
-	const exists = await isValidUser(payload.id);
-	if (!exists)
+	if (!await doesUserExist(payload.id))
 		return socket.close(1008, "User does not exist");
 	const user = payload.id;
 	console.log("Identified", user);
