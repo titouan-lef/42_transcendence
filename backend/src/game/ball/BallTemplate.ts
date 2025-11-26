@@ -37,8 +37,7 @@ abstract class BallTemplate {
 		this.type = type;
 		this.mesh.position.y = BALL_DIAMETER / 2;
 		this.mesh.metadata = { type: "collider", pushable: true, windAffected: settings.windAffectsBall };
-		(!settings.rotatingPlayer && !settings.spin) ? 
-			this.maxSpeed = MAX_SPEED * 1.3 : this.maxSpeed = MAX_SPEED;
+		this.maxSpeed = MAX_SPEED * ((!settings.rotatingPlayer && !settings.spin) ? 1.3 : 1);
 		this.sockets = sockets;
 		this.physic = this.setPhysic(scene);
 		
@@ -81,8 +80,9 @@ abstract class BallTemplate {
 	/**launch ball */
 	launchBall(directionX?: 1 | -1, customStartingDirection?: babylon.Vector3): void {
 		const startingDirection = directionX ? directionX : (Math.random() < 0.5 ? 1 : -1);
-		customStartingDirection ?
-			this.physic.body.setLinearVelocity(customStartingDirection.normalize().scale(50)) :
+		if (customStartingDirection)
+			this.physic.body.setLinearVelocity(customStartingDirection.normalize().scale(50));
+		else
 			this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
 		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position));
 		this.justCollided = true;
@@ -181,7 +181,7 @@ abstract class BallTemplate {
 			return;
 		if (this.checkSideHit(collisionEvent) === "spinEffect") {
 			const collisionPointZ = collisionEvent.point?.z;
-			if (collisionPointZ === undefined )
+			if (collisionPointZ === undefined)
 				return;
 			if (collisionPointZ - collisionEvent.collidedAgainst.transformNode.position.z <= 0) // colliding right or left of the player
 				metadata.playerId === 1 ? this.spinningLeft = true : this.spinningRight = true;
@@ -229,7 +229,7 @@ abstract class BallTemplate {
 	}
 
 	/** hides ball on goal and stop intervals */
-	preDeath(): void {
+	stop(): void {
 		this.mesh.visibility = 0;
 		this.gameStopped = true;
 	}

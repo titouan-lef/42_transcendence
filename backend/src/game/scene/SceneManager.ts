@@ -168,8 +168,8 @@ class SceneManager {
 	/** ball explodes, the time slow down */
 	async goalAnimation(position: Position): Promise<void> {
 		if (this.map)
-			this.map.predeath();
-		this.ball?.preDeath();
+			this.map.stop();
+		this.ball?.stop();
 		const player1 = this.getPlayer(1);
 		const player2 = this.getPlayer(2);
 		if (!player1 || !player2)
@@ -243,7 +243,7 @@ class SceneManager {
 		return countdownIntervalId;
 	}
 
-	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void { /** @todo remove score */
+	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
 		if (this.doesGameEnded())
 			return;
 		const player1 = this.getPlayer(1);
@@ -260,7 +260,7 @@ class SceneManager {
 		this.sendDeltaTime(player1, player2, this.engine.getDeltaTime());
 	}
 
-	destroyEnvironnement(scene: babylon.Scene): void { /** @todo remove scene */
+	destroyEnvironnement(): void {
 		this.players.forEach((player) => player.clearControls());
 		this.destroyBall();
 		this.destroyMap();
@@ -298,7 +298,7 @@ class SceneManager {
 		if (this.countdownIntervalId)
 			clearInterval(this.countdownIntervalId);
 		this.sceneObservable.remove(this.sceneObserver);
-		this.destroyEnvironnement(scene);
+		this.destroyEnvironnement();
 	}
 }
 
