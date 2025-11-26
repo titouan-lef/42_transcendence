@@ -71,7 +71,6 @@ class Game {
 		this.engine.stopRenderLoop();
 		this.scene.dispose();
 		this.engine.dispose();
-		babylon.Tools.ClearLogCache(); // hides previous logs 
 	}
 
 	private setScene(): void {
