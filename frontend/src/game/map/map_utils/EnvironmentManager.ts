@@ -6,7 +6,7 @@ import { ObjectMessage } from "../../types_transfert";
 
 type ObjectType = Lightning | Meteor | Tornado;
 
-class EnvironnementManager {
+export class EnvironmentManager {
 	private readonly objects: ObjectType[] = [];
 
 	handleObject(scene: babylon.Scene, textures: Record<string, babylon.Texture>, object: ObjectMessage): void {
