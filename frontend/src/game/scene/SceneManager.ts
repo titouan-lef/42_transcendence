@@ -11,6 +11,7 @@ import { BallOption, GameSettings, MapOption } from "../settings/GameSettings.js
 import { COLORS3, MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
 import { DataMessage, EventMessage, GoalMessage, Object, ObjectMessage, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
+import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
 
 class SceneManager {
 	private ball: Ball | null = null;
@@ -20,10 +21,12 @@ class SceneManager {
 	private readonly players: Player[] = [];
 	private readonly textures: Record<string, babylon.Texture> = {};
 	private score: Score;
+	private readonly environnementManager: EnvironmentManager;
 
 	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera, settings: GameSettings) {
 		this.scene = scene;
 		this.score = new Score(scene, camera);
+		this.environnementManager = new EnvironmentManager();
 
 		settings.player1.socket?.addEventListener("message", (event) => {
 			const message : DataMessage = JSON.parse(event.data);
@@ -113,6 +116,7 @@ class SceneManager {
 			default:
 				return;
 		}
+		//this.environnementManager.handleObject(scene, this.textures, object);
 	}
 
 	createPlayers(scene: babylon.Scene, settings: GameSettings): void {
