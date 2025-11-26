@@ -89,7 +89,6 @@ class Game {
 		this.scene.dispose();
 		this.engine.dispose();
 		this.canvas.remove();
-		babylon.Tools.ClearLogCache(); // hides previous logs 
 	}
 
 	private setScene(): void {
