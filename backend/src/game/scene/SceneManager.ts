@@ -15,6 +15,8 @@ import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js
 import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
 import { EventMessage, ParticlesType, PlanePosition, Position, RenderMessage, Status, TimingMessage } from "../../web_sockets/types_transfert.js";
+import { Human } from "../player/Human.js";
+import { AI } from "../player/IA.js";
 
 class SceneManager {
 	private ball: BallTemplate | null = null;
@@ -61,8 +63,9 @@ class SceneManager {
 			ball = ballList[Math.floor(Math.random() * 5)];
 		}
 		const sockets: WebSocket[] = [];
-		sockets.push(settings.player1.socket); /** @todo do not add if AI */
-		sockets.push(settings.player2.socket);
+		sockets.push(settings.player1.socket);
+		if (settings.player2) // non AI
+			sockets.push(settings.player2.socket);
 		switch (ball) {
 			case "default":
 				this.ball = new DefaultBall(scene, sockets, settings.windAffectsBall);
@@ -90,8 +93,9 @@ class SceneManager {
 		if (map === "random")
 			map = mapList[Math.floor(Math.random() * 4)];
 		const sockets: WebSocket[] = [];
-		sockets.push(settings.player1.socket); /** @todo do not add if AI */
-		sockets.push(settings.player2.socket);
+		sockets.push(settings.player1.socket);
+		if (settings.player2) // non AI
+			sockets.push(settings.player2.socket);
 		switch (map) {
 			case "default":
 				this.map = new DefaultMap(scene);
@@ -114,8 +118,12 @@ class SceneManager {
 		const player1PosX = MAP_SIZE.x / 2 - (PLAYER_DIMENSION.z + WALL_WIDTH);
 		const player2PosX = (PLAYER_DIMENSION.z + WALL_WIDTH) -(MAP_SIZE.x / 2);
 		const playersPoxY = PLAYER_DIMENSION.y / 2;
-		const player1 = new Player(scene, new babylon.Vector2(player1PosX, playersPoxY), settings, settings.player1);
-		const player2 = new Player(scene, new babylon.Vector2(player2PosX, playersPoxY), settings, settings.player2);
+		const player1 = new Human(scene, new babylon.Vector2(player1PosX, playersPoxY), settings, settings.player1);
+		let player2;
+		if (settings.player2)
+			player2 = new Human(scene, new babylon.Vector2(player2PosX, playersPoxY), settings, settings.player2);
+		else
+			player2 = new AI(scene, new babylon.Vector2(player2PosX, playersPoxY), settings);
 		this.players.push(player1);
 		this.players.push(player2);
 	}
