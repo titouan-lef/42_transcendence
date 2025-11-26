@@ -7,7 +7,7 @@ import { LIGHTNING_INTERVAL, METEOR_INTERVAL, TORNADO_INTERVAL } from "../../set
 import { planePosToVec3 } from "../../utils";
 import { WebSocket } from "ws";
 
-type Spawners = EnvironnementManager["lightningSpawner"] | EnvironnementManager["meteorSpawner"] | EnvironnementManager["tornadoSpawner"];
+type Spawners = EnvironmentManager["lightningSpawner"] | EnvironmentManager["meteorSpawner"] | EnvironmentManager["tornadoSpawner"];
 
 interface ObjectParameters {
 	object: Object,
@@ -17,7 +17,7 @@ interface ObjectParameters {
 
 type ObjectType = Lightning | Meteor | Tornado;
 
-class EnvironnementManager {
+export class EnvironmentManager {
 	private readonly objectsParameters: ObjectParameters[];
 	private objects: ObjectType[] = [];
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
