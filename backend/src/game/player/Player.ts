@@ -134,7 +134,7 @@ abstract class Player {
 	}
 
 	private playerObserver(): babylon.Observer<babylon.Scene> {
-		const distanceFromEdge = (MAP_SIZE.z / 2) - (WALL_WIDTH * 2) - (PLAYER_DIMENSION.z / 2);
+		const distanceFromEdge = (MAP_SIZE.z / 2) - WALL_WIDTH - (PLAYER_DIMENSION.z / 2);
 		const positionObserver = this.sceneObservable.add(() => {
 			if (this.player.position.z < -distanceFromEdge && this.linearVelocityZ === -PLAYER_MOVEMENT_VELOCITY)
 				this.linearVelocityZ += PLAYER_MOVEMENT_VELOCITY;
