@@ -1,9 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { Tornado } from "./map_utils/Tornado.js";
-import { MAP_SIZE, TORNADO_INTERVAL, WIND_FORCE } from "../settings/values.js";
-import { WebSocket } from "ws";
-import { planePosToVec3 } from "../utils.js";
+import { MAP_SIZE, WIND_FORCE } from "../settings/values.js";
 import { Object } from "../web_sockets/types_transfert.js";
 
 class DesertMap extends MapTemplate {
