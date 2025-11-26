@@ -1,4 +1,4 @@
-import { newGame, updateGameObject } from "../game/canvas_creation.js";
+import { newGame } from "../game/canvas_creation.js";
 import { GameOptions } from "../game/settings/GameSettings.js";
 import { DataMessage, Status } from "../game/types_transfert.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
@@ -140,9 +140,6 @@ async function newGameSolo(id: number): Promise<void> {
 			case (Status.OPTIONS):
 				newGame(message, ws);
 				break;
-			case (Status.OBJECT): /** @todo remove after object refacto */
-				updateGameObject(message);
-				break;
 			default:
 				return;
 		}
@@ -196,9 +193,6 @@ async function newLocalGame(): Promise<void> {
 		switch (message.status) {
 			case (Status.OPTIONS):
 				newGame(message, player1, player2);
-				break;
-			case (Status.OBJECT): /** @todo remove after object refacto */
-				updateGameObject(message);
 				break;
 			default:
 				return;
