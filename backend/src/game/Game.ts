@@ -5,11 +5,13 @@ import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
 import { POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import fs from "fs";
-import { Status, PlayerControls, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage } from "../web_sockets/types_transfert.js";
+import { Status, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage } from "./web_sockets/types_transfert.js";
 import { Player } from "./player/Player.js";
 import { Human } from "./player/Human.js";
+import { stopGame } from "./game_manager.js";
 
 class Game {
+	private readonly id: number;
 	private readonly engine: babylon.Engine;
 	private readonly scene: babylon.Scene;
 	private readonly sceneManager: SceneManager;
@@ -19,7 +21,8 @@ class Game {
 	private score: babylon.Vector2;
 	private inAnimation = false;
 
-	constructor (settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
+	constructor (id: number, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
+		this.id = id;
 		this.engine = engine;
 		this.settings = settings;
 		this.camera = new babylon.ArcRotateCamera("Camera", 0, 0, 0, babylon.Vector3.Zero(), scene);
@@ -30,10 +33,10 @@ class Game {
 	}
 
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
-	static async create(settings: GameSettings): Promise<Game> {
+	static async create(id: number, settings: GameSettings): Promise<Game> {
 		const engine =  new babylon.NullEngine();
 		const scene = await Game.initScene(engine);
-		return new Game(settings, scene, engine);
+		return new Game(id, settings, scene, engine);
 	}
 
 	private static async initScene(engine: babylon.Engine): Promise<babylon.Scene> {
@@ -91,7 +94,7 @@ class Game {
 			if (this.sceneManager.doesGameEnded()) // if closing game while animation
 				return;
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
-				this.stop();
+				stopGame(this.id);
 			} else {
 				this.inAnimation = false;
 				this.sceneManager.destroyEnvironnement(this.scene);
@@ -220,14 +223,14 @@ class Game {
 
 		if (player1 instanceof Human) {
 			player1.defineCloseAction(() => {
-				this.stop();
+				stopGame(this.id);
 				if (player2 instanceof Human) 
 					player2.closeSocket();
 			});
 		}
 		if (player2 instanceof Human) {
 			player2.defineCloseAction(() => {
-				this.stop();
+				stopGame(this.id);
 				if (player1 instanceof Human) 
 					player1.closeSocket();
 			});

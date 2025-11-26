@@ -14,7 +14,7 @@ import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
-import { EventMessage, ParticlesType, PlanePosition, Position, RenderMessage, Status, TimingMessage } from "../../web_sockets/types_transfert.js";
+import { EventMessage, ParticlesType, PlanePosition, Position, RenderMessage, Status, TimingMessage } from "../web_sockets/types_transfert.js";
 import { Human } from "../player/Human.js";
 import { AI } from "../player/IA.js";
 

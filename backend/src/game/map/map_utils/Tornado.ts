@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MAP_SIZE, TORNADO_ATTRACTION_STRENGTH, TORNADO_COLLISION_RADIUS, TORNADO_LIFETIME, WALL_WIDTH } from "../../settings/values.js";
-import { Object, ObjectMessage, Status } from "../../../web_sockets/types_transfert.js";
+import { Object, ObjectMessage, Status } from "../../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
 
 class Tornado {
