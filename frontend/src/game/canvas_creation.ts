@@ -1,6 +1,6 @@
 import { Game } from "./Game.js";
 import { GameSettings } from "./settings/GameSettings.js";
-import { ObjectMessage, OptionMessage } from "./types_transfert.js";
+import { OptionMessage } from "./types_transfert.js";
 
 /**@todo gameManager to handle several games and reconect a user tha has been disconected for a few seconds */
 let game: Game | null = null;
@@ -31,13 +31,9 @@ async function newGame(options: OptionMessage, player1: WebSocket, player2?: Web
 	}
 }
 
-async function updateGameObject(object: ObjectMessage): Promise<void> {
-	game?.updateObject(object);
-} /** @todo change this in the scene manager directly after objects refacto */
-
 async function stopGame(): Promise<void> {
 	game?.stop();
 	game = null;
 }
 
-export { newGame, updateGameObject, stopGame };
+export { newGame, stopGame };

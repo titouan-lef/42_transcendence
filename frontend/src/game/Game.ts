@@ -120,10 +120,6 @@ class Game {
 		return camera;
 	}
 
-	updateObject(object: ObjectMessage): void {
-		this.sceneManager.updateObject(this.scene, object);
-	}
-
 	updateOptions(options: OptionMessage): void {
 		this.settings.ball = options.ball;
 		this.settings.map = options.map;

@@ -45,6 +45,9 @@ class SceneManager {
 				case (Status.EVENT):
 					this.handleParticules(message);
 					break;
+				case (Status.OBJECT):
+					this.environnementManager.handleObject(scene, this.textures, message);
+					break;
 				default:
 					return; /** do nothing / not an error*/
 			}
@@ -102,23 +105,6 @@ class SceneManager {
 		}
 	}
 
-	updateObject(scene: babylon.Scene, object: ObjectMessage): void {
-		switch (object.type) {
-			case (Object.LIGHTNING):
-				this.map?.handleObject(scene, this.textures, object); // spark
-				break;
-			case (Object.METEOR):
-				this.map?.handleObject(scene, this.textures, object); // flare smoke
-				break;
-			case (Object.TORNADO):
-				this.map?.handleObject(scene, this.textures, object); // flare
-				break;
-			default:
-				return;
-		}
-		//this.environnementManager.handleObject(scene, this.textures, object);
-	}
-
 	createPlayers(scene: babylon.Scene, settings: GameSettings): void {
 		const player1PosX = MAP_SIZE.x / 2 - (PLAYER_DIMENSION.z + WALL_WIDTH);
 		const player2PosX = (PLAYER_DIMENSION.z + WALL_WIDTH) -(MAP_SIZE.x / 2);
@@ -163,6 +149,7 @@ class SceneManager {
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
 		this.createBall(scene, settings.ball);
 		this.createMap(scene, settings.map, settings.wind);
+		this.environnementManager.destroy();
 	}
 
 	destroyEnvironnement(score: babylon.Vector2 | null): void {

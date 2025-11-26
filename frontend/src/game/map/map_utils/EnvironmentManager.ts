@@ -10,11 +10,11 @@ class EnvironmentManager {
 	private readonly objects: ObjectType[] = [];
 
 	handleObject(scene: babylon.Scene, textures: Record<string, babylon.Texture>, object: ObjectMessage): void {
-		if (object instanceof Lightning)
+		if (object.type === 0)
 			this.handleLightning(scene, textures, object);
-		if (object instanceof Meteor)
+		if (object.type === 1)
 			this.handleMeteor(scene, textures, object);
-		if (object instanceof Tornado)
+		if (object.type === 2)
 			this.handleTornado(scene, textures, object);
 	}
 
