@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { GameOptions, GameSettings } from "../settings/GameSettings.js";
-import { DataMessage, PlayerControls, Status } from "../web_sockets/types_transfert.js";
+import { DataMessage, PlayerControls } from "../web_sockets/types_transfert.js";
 import { Player } from "./Player.js";
 import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { BallTemplate } from "../ball/BallTemplate.js";

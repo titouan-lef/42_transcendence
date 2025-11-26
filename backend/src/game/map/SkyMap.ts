@@ -1,9 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { Lightning } from "./map_utils/Lightning.js";
-import { MAP_SIZE, LIGHTNING_INTERVAL, WIND_FORCE } from "../settings/values.js";
-import { WebSocket } from "ws";
-import { planePosToVec3 } from "../utils.js";
+import { MAP_SIZE, WIND_FORCE } from "../settings/values.js";
 import { Object } from "../web_sockets/types_transfert.js";
 
 class SkyMap extends MapTemplate {
