@@ -128,26 +128,27 @@ class AI extends Player {
 
 		if (dirX === 0)
 			return null;
-		//should not take bottom and topwall in account and should go middle if it hits bottomwall
-		//return direction too ? so ia can choose to shoot or not
+		/**@todo should not take bottom and topwall in account and should go middle if it hits bottomwall*/
+		/**@todo return direction too ? so ia can choose to shoot or not*/
 		const wallTop = -(MAP_SIZE.x + WALL_WIDTH) / 2;
 		const wallBottom =  (MAP_SIZE.x + WALL_WIDTH) / 2;
 		const wallLeft = -(MAP_SIZE.z + WALL_WIDTH) / 2;
 		const wallRight =  (MAP_SIZE.z + WALL_WIDTH) / 2;
 
+		/**@todo */
 		for (let i = 0; i < 20; i++) {
-			const tx = dirX > 0 ? (wallBottom - posX) / dirX : (wallTop - posX) / dirX; // le temps qu elle mettrait a toucher ce mur
-			const tz = dirZ > 0 ? (wallRight - posZ) / dirZ : (wallLeft - posZ) / dirZ; // le temps qu elle mettrait a toucher ce mur
+			const tx = dirX > 0 ? (wallBottom - posX) / dirX : (wallTop - posX) / dirX; // time ball takes to hit the wall
+			const tz = dirZ > 0 ? (wallRight - posZ) / dirZ : (wallLeft - posZ) / dirZ;
 
 			const tPlayer = (playerPosX - posX) / dirX; // le temps qu elle mettrait a toucher la ligne du player
 
 			if (tPlayer >= 0 && tPlayer <= Math.min(tx, tz)) {
-				return posZ + dirZ * tPlayer; //si elle touche la ligne du player, alors on return ce Z
+				return posZ + dirZ * tPlayer; //if ball will reach the player line
 			}
 
-			//check player adverse aussi ?
+			/**@todo check enemy player too ? */
 
-			if (tx < tz) { // sinon on inverse la direction en fonction du mur touché
+			if (tx < tz) { // else we change direction of the ball
 				posX = dirX > 0 ? wallBottom : wallTop;
 				posZ += dirZ * tx;
 				dirX *= -1;
@@ -171,6 +172,7 @@ class AI extends Player {
 		console.log("predictedZ =" + predictedZ);
 	}
 
+	/**@todo to do ? */
 	async send(message: DataMessage): Promise<void> {
 		// if (message.status === Status.POSITIONS) {
 		// 	this.ballPosition = message.ball;
