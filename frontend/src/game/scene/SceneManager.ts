@@ -20,7 +20,6 @@ class SceneManager {
 	private readonly players: Player[] = [];
 	private readonly textures: Record<string, babylon.Texture> = {};
 	private score: Score;
-	//private readonly environnementManager: EnvironmentManager;
 
 	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera, settings: GameSettings) {
 		this.scene = scene;
