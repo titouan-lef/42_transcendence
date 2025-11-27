@@ -210,12 +210,12 @@ class Game {
 		}, intervalMs);
 	}
 
-	private defineCloseAction(player1: Player, player2: Player): void {
-		if (player1 instanceof Human) {
-			player1.defineCloseAction(() => {
+	private defineCloseAction(player: Player, enemy: Player): void {
+		if (player instanceof Human) {
+			player.defineCloseAction(() => {
 				stopGame(this.id);
-				if (player2 instanceof Human)
-					player2.closeSocket();
+				if (enemy instanceof Human)
+					enemy.closeSocket();
 			});
 		}
 	}
