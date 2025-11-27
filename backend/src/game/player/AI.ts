@@ -20,7 +20,7 @@ class AI extends Player {
 	private shootAnimationFrame = 0;
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings) {
-		super(scene, position, gameSettings, 2);
+		super(scene, position, gameSettings, 2, "AI");
 		this.controls = {
 			mov_right: false,
 			mov_left: false,
@@ -177,10 +177,6 @@ class AI extends Player {
 		// if (message.status === Status.POSITIONS) {
 		// 	this.ballPosition = message.ball;
 		// }
-	}
-
-	getName(): string {
-		return "AI";
 	}
 
 	destroy(): void {

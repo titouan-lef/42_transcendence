@@ -5,13 +5,11 @@ import { WebSocket } from "ws";
 import { Player } from "./Player.js";
 
 class Human extends Player {
-	private readonly username: string;
 	private readonly socket: WebSocket;
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings, settings: PlayerSettings) {
-		super(scene, position, gameSettings, settings.playerId);
+		super(scene, position, gameSettings, settings.playerId, settings.username);
 
-		this.username = settings.username;
 		this.socket = settings.socket;
 
 		this.socket.on("message", (message: Buffer) => {
@@ -23,10 +21,6 @@ class Human extends Player {
 			}
 			this.setControls(controls);
 		});
-	}
-
-	getName(): string {
-		return this.username;
 	}
 
 	async send(message: DataMessage): Promise<void> {
