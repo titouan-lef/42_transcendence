@@ -1,5 +1,5 @@
 import { newGame } from "../game/canvas_creation.js";
-import { GameOptions } from "../game/settings/GameSettings.js";
+import { BallOption, MapChoice } from "../game/settings/GameSettings.js";
 import { DataMessage, Status } from "../game/types_transfert.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 
@@ -70,6 +70,14 @@ async function getReplyMessage(reply: Response): Promise<string> {
 //			Game management				//
 //////////////////////////////////////////
 
+interface GameOptions { /** @toto include GameOptions in GameSettings ? */
+	map: MapChoice;
+	ball: BallOption;
+	rotatingPlayer: boolean;
+	spin: boolean;
+	windAffectsBall: boolean;
+}
+
 async function askForGame(): Promise<boolean> {
 	const reply = await sendGetRequestToBack("/api/game/ranked_game");
 	if (!isRequestSuccessfull(reply)) {
@@ -104,7 +112,7 @@ async function newRankedGame(): Promise<void> {
 async function newGameVsAI(): Promise<void> {
 	/** @todo get options from front interface */
 	const options : GameOptions = {
-		map: "default",
+		map: ["default"],
 		ball: "default",
 		rotatingPlayer: true,
 		spin: true,
@@ -157,7 +165,7 @@ async function newGameSolo(id: number): Promise<void> {
 async function newLocalGame(): Promise<void> {
 	/** @todo get options from front interface */
 	const options : GameOptions = {
-		map: "default",
+		map: ["default"],
 		ball: "default",
 		rotatingPlayer: true,
 		spin: true,

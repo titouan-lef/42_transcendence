@@ -75,7 +75,6 @@ class EnvironmentManager {
 	private lightningSpawner(object: ObjectParameters, scene: babylon.Scene): void {
 		object.timer += scene.getEngine().getDeltaTime();
 		if (object.timer >= LIGHTNING_INTERVAL) {
-			console.log("yes");
 			object.timer -= LIGHTNING_INTERVAL;
 			const lightning = new Lightning(scene, this.objects.length, this.sockets);
 			this.objects.push(lightning);
@@ -117,7 +116,6 @@ class EnvironmentManager {
 			this.objectsParameters.push(newObject);
 		});
 		this.wind = wind;
-		console.log(availableObjects);
 	}
 
 	destroy(): void {
