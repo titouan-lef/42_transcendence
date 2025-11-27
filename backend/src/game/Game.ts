@@ -63,7 +63,7 @@ class Game {
 
 	stop(): void {
 		this.stopSendingPositions();
-		this.sceneManager.destroyScene(this.scene);
+		this.sceneManager.destroyScene();
 		this.scene.onAfterRenderObservable.clear();
 		this.camera.dispose();
 		if (SHOW_DISPOSE_LOGS)

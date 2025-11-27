@@ -16,6 +16,7 @@ import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settin
 import { WebSocket } from "ws";
 import { EventMessage, ParticlesType, PlanePosition, Position, RenderMessage, Status, TimingMessage } from "../web_sockets/types_transfert.js";
 import { Human } from "../player/Human.js";
+import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
 import { AI } from "../player/AI.js";
 
 class SceneManager {
@@ -28,10 +29,16 @@ class SceneManager {
 	private gameStopped = false;
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
+	private readonly environmentManager: EnvironmentManager;
+	private sockets: WebSocket[] = [];
 
 	constructor(engine: babylon.Engine, scene: babylon.Scene, settings: GameSettings) {
 		this.engine = engine;
 		this.originalGetDelta = engine.getDeltaTime; // keep original delta time
+		this.sockets.push(settings.player1.socket);
+		if (settings.player2) // non AI
+			this.sockets.push(settings.player2.socket);
+		this.environmentManager = new EnvironmentManager(scene, this.sockets);
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.sceneObserver = this.observeScene(settings);
 	}
@@ -41,9 +48,11 @@ class SceneManager {
 			if (!this.checkOutOfFieldBall(this.ball?.getPosition()))
 				return;
 			this.gameStopped = true;
-			this.ball?.setGameStopped(true);
-			this.map?.stop();
+			this.ball?.stop();
 			this.ball?.reset();
+			this.map?.stop();
+			this.environmentManager.pauseSpawn();
+			this.environmentManager.clearObjects();
 			this.countdownIntervalId = this.startCountdown(START_TIMEOUT, settings);
 		});
 		return sceneObserver;
@@ -91,25 +100,21 @@ class SceneManager {
 		if (settings.options.ball === "random") {
 			ball = ballList[Math.floor(Math.random() * 5)];
 		}
-		const sockets: WebSocket[] = [];
-		sockets.push(settings.player1.socket);
-		if (settings.player2) // non AI
-			sockets.push(settings.player2.socket);
 		switch (ball) {
 			case "default":
-				this.ball = new DefaultBall(scene, sockets, settings);
+				this.ball = new DefaultBall(scene, this.sockets, settings);
 				break;
 			case "invisible":
-				this.ball = new InvisibleBall(scene, sockets, settings);
+				this.ball = new InvisibleBall(scene, this.sockets, settings);
 				break;
 			case "tricky":
-				this.ball = new TrickyBall(scene, sockets, settings);
+				this.ball = new TrickyBall(scene, this.sockets, settings);
 				break;
 			case "pulse":
-				this.ball = new PulseBall(scene, sockets, settings);
+				this.ball = new PulseBall(scene, this.sockets, settings);
 				break;
 			case "snake":
-				this.ball = new SnakeBall(scene, sockets, settings);
+				this.ball = new SnakeBall(scene, this.sockets, settings);
 				break;
 			default: 
 				throw new Error("switch ball fail");
@@ -121,22 +126,18 @@ class SceneManager {
 		let map = settings.options.map;
 		if (map === "random")
 			map = mapList[Math.floor(Math.random() * 4)];
-		const sockets: WebSocket[] = [];
-		sockets.push(settings.player1.socket);
-		if (settings.player2) // non AI
-			sockets.push(settings.player2.socket);
 		switch (map) {
 			case "default":
 				this.map = new DefaultMap(scene);
 				break;
 			case "volcano":
-				this.map = new VolcanoMap(scene, sockets);
+				this.map = new VolcanoMap(scene);
 				break;
 			case "sky":
-				this.map = new SkyMap(scene, sockets);
+				this.map = new SkyMap(scene);
 				break;
 			case "desert":
-				this.map = new DesertMap(scene, sockets);
+				this.map = new DesertMap(scene);
 				break;
 			default:
 				throw new Error("switch map fail");
@@ -229,8 +230,12 @@ class SceneManager {
 				if (!settings.options.rotatingPlayer && !settings.options.spin)
 					startingDirection = new babylon.Vector3((Math.random() - 0.5) * 2, 0, (Math.random() - 0.5));
 				this.ball?.launchBall(undefined, startingDirection);
-				this.ball?.setGameStopped(false);
-				this.map?.start();
+				this.ball?.start();
+				if (this.map) {
+					this.map?.start();
+					this.environmentManager.initObjectsParameters(this.map.getAvailableObjects(), this.map.getWind());
+					this.environmentManager.startSpawn();
+				}
 				if (player2 instanceof AI)
 					player2.update();
 				if (this.countdownIntervalId) {
@@ -262,6 +267,8 @@ class SceneManager {
 
 	destroyEnvironnement(): void {
 		this.players.forEach((player) => player.clearControls());
+		this.environmentManager.pauseSpawn();
+		this.environmentManager.clearObjects();
 		this.destroyBall();
 		this.destroyMap();
 	}
@@ -292,8 +299,9 @@ class SceneManager {
 		this.players.forEach(player => player.destroy());
 	}
 
-	destroyScene(scene: babylon.Scene): void {
+	destroyScene(): void {
 		this.gameStopped = true;
+		this.environmentManager.destroy();
 		this.destroyPlayers();
 		if (this.countdownIntervalId)
 			clearInterval(this.countdownIntervalId);

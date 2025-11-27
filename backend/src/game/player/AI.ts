@@ -169,7 +169,6 @@ class AI extends Player {
 	update(): void { /** @todo real AI */
 		const predictedZ = this.predictZAtPlayerX();
 		!predictedZ ? this.ballPosPredict = null : this.ballPosPredict = new babylon.Vector3(this.player.position.x, 0, predictedZ);
-		console.log("predictedZ =" + predictedZ);
 	}
 
 	/**@todo to do ? */

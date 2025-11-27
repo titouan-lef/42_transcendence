@@ -1,8 +1,8 @@
 import * as babylon from "@babylonjs/core";
-import { Lightning } from "./Lightning";
-import { Meteor } from "./Meteor";
-import { Tornado } from "./Tornado";
-import { ObjectMessage } from "../../types_transfert";
+import { Lightning } from "./Lightning.js";
+import { Meteor } from "./Meteor.js";
+import { Tornado } from "./Tornado.js";
+import { ObjectMessage } from "../../types_transfert.js";
 
 type ObjectType = Lightning | Meteor | Tornado;
 
