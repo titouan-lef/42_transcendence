@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { COLORS3, EMOTE_LIFETIME, MAP_SIZE, PLAYER_DIMENSION } from "../settings/values.js";
+import { COLORS3, EMOTE_GROWSPEED, EMOTE_LIFETIME, EMOTE_MAXGROW, MAP_SIZE, PLAYER_DIMENSION } from "../settings/values.js";
 
 export class Emote {
 	private readonly image: babylon.Mesh;
@@ -31,9 +31,9 @@ export class Emote {
 	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
 		let grow = 0;
 		const sceneObserver = this.sceneObservable.add(() => {
-			grow += 1;
+			grow += EMOTE_GROWSPEED;
 			this.timer += scene.getEngine().getDeltaTime() / EMOTE_LIFETIME;
-			if (grow <= 10) {
+			if (grow <= EMOTE_MAXGROW) {
 				this.image.scaling.set(0.1 * grow, 0.1 * grow, 0.1 * grow);
 				this.image.position.y += 0.5;
 			}

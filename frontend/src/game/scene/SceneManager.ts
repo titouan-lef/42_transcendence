@@ -155,6 +155,7 @@ class SceneManager {
 		this.ball?.setVisibility(message.ballVisibility);
 	}
 
+	/**@todo Clarify Id in the front VS playerId back */
 	private sendEmote(settings: GameSettings, scene: babylon.Scene, message: EmoteMessage): void {
 		this.players.forEach(player => {
 			if (settings.player1.playerId === 1) {
