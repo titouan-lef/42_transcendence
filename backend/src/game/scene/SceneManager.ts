@@ -38,13 +38,13 @@ class SceneManager {
 
 	private observeScene(settings: GameSettings): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
-			if (this.checkOutOfFieldBall(this.ball?.getPosition())) {
-				this.gameStopped = true;
-				this.ball?.setGameStopped(true);
-				this.map?.stop();
-				this.ball?.reset();
-				this.countdownIntervalId = this.startCountdown(START_TIMEOUT, settings);
-			}
+			if (!this.checkOutOfFieldBall(this.ball?.getPosition()))
+				return;
+			this.gameStopped = true;
+			this.ball?.setGameStopped(true);
+			this.map?.stop();
+			this.ball?.reset();
+			this.countdownIntervalId = this.startCountdown(START_TIMEOUT, settings);
 		});
 		return sceneObserver;
 	}

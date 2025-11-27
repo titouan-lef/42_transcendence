@@ -210,6 +210,16 @@ class Game {
 		}, intervalMs);
 	}
 
+	private defineCloseAction(player1: Player, player2: Player): void {
+		if (player1 instanceof Human) {
+			player1.defineCloseAction(() => {
+				stopGame(this.id);
+				if (player2 instanceof Human)
+					player2.closeSocket();
+			});
+		}
+	}
+
 	startGameCommunication(): void {
 		const player1 = this.sceneManager.getPlayer(1);
 		const player2 = this.sceneManager.getPlayer(2);
@@ -220,20 +230,8 @@ class Game {
 		this.sendPositions(player1, player2);
 		this.startSendingPositions();
 
-		if (player1 instanceof Human) {
-			player1.defineCloseAction(() => {
-				stopGame(this.id);
-				if (player2 instanceof Human) 
-					player2.closeSocket();
-			});
-		}
-		if (player2 instanceof Human) {
-			player2.defineCloseAction(() => {
-				stopGame(this.id);
-				if (player1 instanceof Human) 
-					player1.closeSocket();
-			});
-		}
+		this.defineCloseAction(player1, player2);
+		this.defineCloseAction(player2, player1);
 	}
 
 	stopSendingPositions(): void {
