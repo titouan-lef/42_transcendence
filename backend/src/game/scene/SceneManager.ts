@@ -11,7 +11,7 @@ import { SkyMap } from "../map/SkyMap.js";
 import { DesertMap } from "../map/DesertMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
-import { GameSettings, MapOption, BallOption, MapChoice, MAPLIST } from "../settings/GameSettings.js";
+import { GameSettings, MapOption, BallOption, MAP_LIST, BALL_LIST } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
 import { EventMessage, ParticlesType, PlanePosition, Position, RenderMessage, Status, TimingMessage } from "../web_sockets/types_transfert.js";
@@ -95,11 +95,13 @@ class SceneManager {
 	}
 
 	private createBall(scene: babylon.Scene, settings: GameSettings): void {
-		const ballList: BallOption[] = ["default", "invisible", "tricky", "pulse", "snake"];
-		let ball = settings.options.ball;
-		if (settings.options.ball === "random") {
-			ball = ballList[Math.floor(Math.random() * 5)];
-		}
+		let ball: BallOption;
+		if (settings.options.ball === "random")
+			ball = BALL_LIST[Math.floor(Math.random() * BALL_LIST.length)];
+		else if (settings.options.ball.length)
+			ball = settings.options.ball[Math.floor(Math.random() * settings.options.ball.length)];
+		else
+			throw new Error("ball empty");
 		switch (ball) {
 			case "default":
 				this.ball = new DefaultBall(scene, this.sockets, settings);
@@ -123,11 +125,11 @@ class SceneManager {
 
 	private createMap(scene: babylon.Scene, settings: GameSettings): void {
 		let map: MapOption;
-		if (settings.options.map === "random") {
-			map = MAPLIST[Math.floor(Math.random() * MAPLIST.length)];
-		} else if (settings.options.map.length) {
+		if (settings.options.map === "random")
+			map = MAP_LIST[Math.floor(Math.random() * MAP_LIST.length)];
+		else if (settings.options.map.length)
 			map = settings.options.map[Math.floor(Math.random() * settings.options.map.length)];
-		} else
+		else
 			throw new Error("Map empty");
 		switch (map) {
 			case "default":
