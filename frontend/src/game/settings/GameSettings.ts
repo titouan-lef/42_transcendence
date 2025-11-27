@@ -1,8 +1,6 @@
 import { PlanePosition } from "../types_transfert";
 
 type MapOption = "default" | "volcano" | "sky" | "desert";
-const MAPLIST: MapOption[] = ["default", "volcano", "sky", "desert"];
-type MapChoice = "random" | MapOption[];
 type BallOption = "default" | "random" | "invisible" | "tricky" | "pulse" | "snake";
 type PlayerKeys = [KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"]];
 
@@ -46,4 +44,4 @@ class GameSettings {
 	}
 }
 
-export { BallOption, PlayerKeys, PlayerSettings, GameSettings, MapChoice, MapOption };
+export { BallOption, PlayerKeys, PlayerSettings, GameSettings, MapOption };

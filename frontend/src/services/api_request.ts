@@ -1,5 +1,5 @@
 import { newGame } from "../game/canvas_creation.js";
-import { BallOption, MapChoice } from "../game/settings/GameSettings.js";
+import { BallOption, MapOption } from "../game/settings/GameSettings.js";
 import { DataMessage, Status } from "../game/types_transfert.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 
@@ -69,10 +69,15 @@ async function getReplyMessage(reply: Response): Promise<string> {
 //////////////////////////////////////////
 //			Game management				//
 //////////////////////////////////////////
+const BALL_LIST: BallOption[] = ["default", "invisible", "tricky", "pulse", "snake"];
+type BallChoice = "random" | BallOption[];
+const MAPLIST: MapOption[] = ["default", "volcano", "sky", "desert"];
+type MapChoice = "random" | MapOption[];
+
 
 interface GameOptions { /** @toto include GameOptions in GameSettings ? */
 	map: MapChoice;
-	ball: BallOption;
+	ball: BallChoice;
 	rotatingPlayer: boolean;
 	spin: boolean;
 	windAffectsBall: boolean;
@@ -113,7 +118,7 @@ async function newGameVsAI(): Promise<void> {
 	/** @todo get options from front interface */
 	const options : GameOptions = {
 		map: ["default"],
-		ball: "default",
+		ball: ["default"],
 		rotatingPlayer: true,
 		spin: true,
 		windAffectsBall: true
@@ -166,7 +171,7 @@ async function newLocalGame(): Promise<void> {
 	/** @todo get options from front interface */
 	const options : GameOptions = {
 		map: ["default"],
-		ball: "default",
+		ball: ["default"],
 		rotatingPlayer: true,
 		spin: true,
 		windAffectsBall: true

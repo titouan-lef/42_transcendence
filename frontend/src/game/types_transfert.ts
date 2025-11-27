@@ -1,4 +1,4 @@
-import { BallOption, MapChoice, MapOption } from "../game/settings/GameSettings.js";
+import { BallOption, MapOption } from "../game/settings/GameSettings.js";
 
 interface Position {
 	x: number;
