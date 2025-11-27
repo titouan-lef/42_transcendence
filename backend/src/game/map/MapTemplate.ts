@@ -2,6 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { MapOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH } from "../settings/values.js";
 import { PlanePosition } from "../web_sockets/types_transfert.js";
+import { Object } from "../web_sockets/types_transfert.js";
 
 abstract class MapTemplate {
 	protected readonly ground: babylon.Mesh;
@@ -11,6 +12,7 @@ abstract class MapTemplate {
 	private readonly type: MapOption;
 	protected wind: PlanePosition = { x: 0, z: 0 };
 	protected gameStopped = true;
+	protected availableObjects: Object[] = [];
 
 	constructor(scene: babylon.Scene, type: MapOption) {
 		this.type = type;
@@ -19,14 +21,6 @@ abstract class MapTemplate {
 
 		this.limits = this.createLimits(scene);
 		this.limits.forEach(limit => this.setLimitPhysic(scene, limit));
-	}
-
-	start(): void {
-		this.gameStopped = false;
-	}
-
-	stop(): void {
-		this.gameStopped = true;
 	}
 
 	private setLimitPhysic(scene: babylon.Scene, limit: babylon.Mesh): void {
@@ -59,6 +53,18 @@ abstract class MapTemplate {
 		limits.push(this.createGoal(scene, 1, { x: WALL_WIDTH/2 - MAP_SIZE.x/2, z: 0 }));
 		limits.push(this.createGoal(scene, 2, { x: MAP_SIZE.x/2 - WALL_WIDTH/2, z: 0 }));
 		return limits;
+	}
+
+	start(): void {
+		this.gameStopped = false;
+	}
+
+	stop(): void {
+		this.gameStopped = true;
+	}
+
+	getAvailableObjects(): Object[] {
+		return this.availableObjects;
 	}
 
 	getType(): MapOption {

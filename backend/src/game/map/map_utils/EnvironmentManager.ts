@@ -1,10 +1,11 @@
 import * as babylon from "@babylonjs/core";
-import { Lightning } from "./Lightning";
-import { Meteor } from "./Meteor";
-import { Tornado } from "./Tornado";
-import { Object, PlanePosition } from "../../web_sockets/types_transfert";
-import { LIGHTNING_INTERVAL, METEOR_INTERVAL, TORNADO_INTERVAL } from "../../settings/values";
-import { planePosToVec3 } from "../../utils";
+import { Lightning } from "./Lightning.js";
+import { Meteor } from "./Meteor.js";
+import { Tornado } from "./Tornado.js";
+import { PlanePosition } from "../../web_sockets/types_transfert.js";
+import { LIGHTNING_INTERVAL, METEOR_INTERVAL, TORNADO_INTERVAL } from "../../settings/values.js";
+import { planePosToVec3 } from "../../utils.js";
+import { Object } from "../../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
 
 type Spawners = EnvironmentManager["lightningSpawner"] | EnvironmentManager["meteorSpawner"] | EnvironmentManager["tornadoSpawner"];
@@ -15,56 +16,31 @@ interface ObjectParameters {
 	spawner: Spawners
 }
 
-type ObjectType = Lightning | Meteor | Tornado;
+export type ObjectType = Lightning | Meteor | Tornado;
 
 class EnvironmentManager {
-	private readonly objectsParameters: ObjectParameters[];
+	private objectsParameters: ObjectParameters[] = [];
 	private objects: ObjectType[] = [];
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly sockets: WebSocket[];
 	private gameStopped = true;
-	private readonly wind: PlanePosition;
+	private wind: PlanePosition = { x: 0, z: 0 };
 
-	constructor(availableObjects: Object[], scene: babylon.Scene, sockets: WebSocket[], wind: PlanePosition) {
-		this.objectsParameters = this.initObjectsParameters(availableObjects);
+	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
 		this.sockets = sockets;
-		this.wind = wind;
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.sceneObserver = this.observeScene(scene);
 	}
 
-	private initObjectsParameters(availableObjects: Object[]): ObjectParameters[] {
-		const objectsParameters: ObjectParameters[] = [];
-
-		availableObjects.forEach(object => {
-			const newObject: ObjectParameters = {
-				object: object,
-				timer: 0,
-				spawner: this.chooseSpawner(object)
-			};
-			objectsParameters.push(newObject);
-		});
-
-		return objectsParameters;
-	}
-
 	private chooseSpawner(object: Object): Spawners {
-		if (object === 0)
+		if (object === Object.LIGHTNING)
 			return this.lightningSpawner.bind(this);
-		else if (object === 1)
+		else if (object === Object.METEOR)
 			return this.meteorSpawner.bind(this);
-		else if (object === 2)
+		else if (object === Object.TORNADO)
 			return this.tornadoSpawner.bind(this);
 		throw new Error("Invalid object type");
-	}
-
-	startSpawn(): void {
-		this.gameStopped = false;
-	}
-
-	pauseSpawn(): void {
-		this.gameStopped = true;
 	}
 
 	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
@@ -81,45 +57,72 @@ class EnvironmentManager {
 				);
 			});
 			this.objectsParameters.forEach(object => {
-				object.spawner(object.timer, scene);
+				object.spawner(object, scene);
 			});
 		});
 		return sceneObserver;
 	}
 
-	private meteorSpawner(timer: number, scene: babylon.Scene): void {
-		timer += scene.getEngine().getDeltaTime();
-		if (timer >= METEOR_INTERVAL) {
-			timer -= METEOR_INTERVAL;
+	private meteorSpawner(object: ObjectParameters, scene: babylon.Scene): void {
+		object.timer += scene.getEngine().getDeltaTime();
+		if (object.timer >= METEOR_INTERVAL) {
+			object.timer -= METEOR_INTERVAL;
 			const meteor = new Meteor(scene, this.objects.length, this.sockets);
 			this.objects.push(meteor);
 		}
 	}
 
-	private lightningSpawner(timer: number, scene: babylon.Scene): void {
-		timer += scene.getEngine().getDeltaTime();
-		if (timer >= LIGHTNING_INTERVAL) {
-			timer -= LIGHTNING_INTERVAL;
+	private lightningSpawner(object: ObjectParameters, scene: babylon.Scene): void {
+		object.timer += scene.getEngine().getDeltaTime();
+		if (object.timer >= LIGHTNING_INTERVAL) {
+			console.log("yes");
+			object.timer -= LIGHTNING_INTERVAL;
 			const lightning = new Lightning(scene, this.objects.length, this.sockets);
 			this.objects.push(lightning);
 		}
 	}
 
-	private tornadoSpawner(timer: number, scene: babylon.Scene): void {
-		timer += scene.getEngine().getDeltaTime();
-		if (timer >= TORNADO_INTERVAL) {
-			timer -= TORNADO_INTERVAL;
+	private tornadoSpawner(object: ObjectParameters, scene: babylon.Scene): void {
+		object.timer += scene.getEngine().getDeltaTime();
+		if (object.timer >= TORNADO_INTERVAL) {
+			object.timer -= TORNADO_INTERVAL;
 			const tornado = new Tornado(scene, this.objects.length, planePosToVec3(this.wind), this.sockets);
 			this.objects.push(tornado);
 		}
 	}
 
-	destroy(): void {
-		this.sceneObservable.remove(this.sceneObserver);
+	clearObjects(): void {
 		while (this.objects.length) {
 			this.objects[0].destroy();
 			this.objects.splice(0, 1);
 		}
+	}
+
+	startSpawn(): void {
+		this.gameStopped = false;
+	}
+
+	pauseSpawn(): void {
+		this.gameStopped = true;
+	}
+
+	initObjectsParameters(availableObjects: Object[], wind: PlanePosition): void {
+		this.objectsParameters = [];
+		availableObjects.forEach(object => {
+			const newObject: ObjectParameters = {
+				object: object,
+				timer: 0,
+				spawner: this.chooseSpawner(object)
+			};
+			this.objectsParameters.push(newObject);
+		});
+		this.wind = wind;
+		console.log(availableObjects);
+	}
+
+	destroy(): void {
+		this.sceneObservable.remove(this.sceneObserver);
+		this.clearObjects();
 	}
 }
 

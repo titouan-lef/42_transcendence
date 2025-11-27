@@ -65,29 +65,6 @@ abstract class BallTemplate {
 		});
 		return yObserver;
 	}
-
-	setGameStopped(state: boolean): void {
-		this.gameStopped = state;
-	}
-
-	reset(): void {
-		this.physic.body.disablePreStep = true;
-		this.mesh.position = new babylon.Vector3(0, 0, 0);
-		this.physic.body.disablePreStep = false;
-		this.physic.body.setLinearVelocity(new babylon.Vector3(0, 0, 0));
-	}
-
-	/**launch ball */
-	launchBall(directionX?: 1 | -1, customStartingDirection?: babylon.Vector3): void {
-		const startingDirection = directionX ? directionX : (Math.random() < 0.5 ? 1 : -1);
-		if (customStartingDirection)
-			this.physic.body.setLinearVelocity(customStartingDirection.normalize().scale(50));
-		else
-			this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
-		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position));
-		this.justCollided = true;
-	}
-
 	private setPhysic(scene: babylon.Scene): babylon.PhysicsAggregate {
 		const physic = new babylon.PhysicsAggregate(this.mesh, babylon.PhysicsShapeType.SPHERE, {
 			mass: 1,
@@ -225,6 +202,28 @@ abstract class BallTemplate {
 			dampingFactor = excessRatio * NERF_SPEED_FACTOR;
 		}
 		this.physic.body.setLinearDamping(dampingFactor);
+	}
+
+	start(): void {
+		this.mesh.visibility = 1;
+		this.gameStopped = false;
+	}
+
+	reset(): void {
+		this.physic.body.disablePreStep = true;
+		this.mesh.position = new babylon.Vector3(0, 0, 0);
+		this.physic.body.disablePreStep = false;
+		this.physic.body.setLinearVelocity(new babylon.Vector3(0, 0, 0));
+	}
+
+	/**launch ball */
+	launchBall(directionX?: 1 | -1, customStartingDirection?: babylon.Vector3): void {
+		const startingDirection = directionX ? directionX : (Math.random() < 0.5 ? 1 : -1);
+		customStartingDirection ?
+			this.physic.body.setLinearVelocity(customStartingDirection.normalize().scale(50)) :
+			this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
+		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position));
+		this.justCollided = true;
 	}
 
 	/** hides ball on goal and stop intervals */

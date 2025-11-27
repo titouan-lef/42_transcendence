@@ -4,49 +4,16 @@ import { Tornado } from "./map_utils/Tornado.js";
 import { MAP_SIZE, TORNADO_INTERVAL, WIND_FORCE } from "../settings/values.js";
 import { WebSocket } from "ws";
 import { planePosToVec3 } from "../utils.js";
+import { Object } from "../web_sockets/types_transfert.js";
 
 class DesertMap extends MapTemplate {
-	private readonly tornados: Tornado[] = [];
-	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
-	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
-	private readonly sockets: WebSocket[] = []; // one or two socket depening on the IA...
-
-	constructor(scene: babylon.Scene, sockets: WebSocket[]) {
+	constructor(scene: babylon.Scene) {
 		super(scene, "desert");
+		this.availableObjects.push(Object.TORNADO);
 		this.wind = {
 			x: (Math.random() - 0.5) * WIND_FORCE,
 			z: (Math.random() - 0.5) * WIND_FORCE
 		};
-		this.sceneObservable = scene.onBeforeRenderObservable;
-		this.sceneObserver = this.observeScene(scene);
-		sockets.forEach(socket => {
-			this.sockets.push(socket);
-		});
-	}
-
-	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> { /** @todo apply to all maps and manage objects in sceneManager*/
-		let tornadoTimer = 0;
-		const sceneObserver = this.sceneObservable.add(() => {
-			if (this.gameStopped)
-				return;
-			scene.meshes.forEach(mesh => {
-				if (!mesh.physicsBody || !mesh.metadata.windAffected)
-					return;
-
-				mesh.physicsBody.applyForce(
-					planePosToVec3(this.wind),
-					mesh.getAbsolutePosition()
-				);
-			});
-			tornadoTimer += scene.getEngine().getDeltaTime();
-			if (tornadoTimer >= TORNADO_INTERVAL) {
-				tornadoTimer -= TORNADO_INTERVAL;
-				const tornado = new Tornado(scene,this.tornados.length, planePosToVec3(this.wind), this.sockets);
-				this.tornados.push(tornado);
-			}
-			/**@todo DO NOT empty the array */
-		});
-		return sceneObserver;
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {
@@ -61,13 +28,7 @@ class DesertMap extends MapTemplate {
 		return newMesh;
 	}
 
-	destroyRest(): void {
-		while (this.tornados.length) {
-			this.tornados[0].destroy();
-			this.tornados.splice(0, 1);
-		}
-		this.sceneObservable.remove(this.sceneObserver);
-	}
+	destroyRest(): void {}
 }
 
 export { DesertMap };
