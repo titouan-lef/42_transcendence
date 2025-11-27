@@ -198,7 +198,7 @@ abstract class BallTemplate {
 		let dampingFactor = 0;
 
 		if (speed > this.maxSpeed) {
-			const excessRatio = (speed - this.maxSpeed) / speed; // between 0 and 1
+			const excessRatio = (speed - this.maxSpeed) / speed; // On ] 0; 1 ]
 			dampingFactor = excessRatio * NERF_SPEED_FACTOR;
 		}
 		this.physic.body.setLinearDamping(dampingFactor);

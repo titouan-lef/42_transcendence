@@ -60,7 +60,7 @@ class Lightning {
 
 	private createContactParticles(scene: babylon.Scene, position: babylon.Vector3, texture: babylon.Texture): babylon.ParticleSystem {
 		const particles = new babylon.ParticleSystem("lightningSparks", Math.floor(50 * this.size), scene);
-		particles.particleTexture = texture;
+		particles.particleTexture = texture.clone();
 		particles.emitter = position;
 		const emitter = new babylon.ConeParticleEmitter();
 		emitter.radius = LIGHTNING_COLLISION_RADIUS * this.size;

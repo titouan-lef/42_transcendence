@@ -27,7 +27,8 @@ enum Status {
 	OPTIONS,		// precise game options
 	POSITIONS,		// positions of ball and players
 	OBJECT,			// tornados / meteors / thunders
-	EVENT			// particules launcher
+	EVENT,			// particules launcher
+	EMOTE			// emote launcher
 }
 
 interface StartMessage {
@@ -94,7 +95,15 @@ interface EventMessage {
 	position: Position
 }
 
-type DataMessage = StartMessage | StopMessage | TimingMessage | RenderMessage | GoalMessage | OptionMessage | PositionsMessage | ObjectMessage | EventMessage ;
+enum EmoteChoice { STRONG, SAD, LOL, ANGRY };
+
+interface EmoteMessage {
+	status: Status.EMOTE,
+	type: EmoteChoice,
+	playerid: 1 | 2;
+}
+
+type DataMessage = StartMessage | StopMessage | TimingMessage | RenderMessage | GoalMessage | OptionMessage | PositionsMessage | ObjectMessage | EventMessage | EmoteMessage;
 
 interface PlayerControls {
 	mov_right: boolean;
@@ -103,7 +112,11 @@ interface PlayerControls {
 	rot_left: boolean;
 	normalMode: boolean;
 	spinMode: boolean;
+	emoteStrong: boolean;
+	emoteSad: boolean;
+	emoteLol: boolean;
+	emoteAngry: boolean;
 }
 
-export { Position, PlanePosition, Rotation, DataMessage, PlayerControls, ParticlesType, Status, Object };
-export { StartMessage, StopMessage, TimingMessage, RenderMessage, GoalMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage };
+export { Position, PlanePosition, Rotation, DataMessage, PlayerControls, ParticlesType, Status, Object, EmoteChoice };
+export { StartMessage, StopMessage, TimingMessage, RenderMessage, GoalMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage, EmoteMessage };

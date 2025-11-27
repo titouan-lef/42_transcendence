@@ -34,13 +34,16 @@ class EnvironmentManager {
 	}
 
 	private chooseSpawner(object: Object): Spawners {
-		if (object === Object.LIGHTNING)
-			return this.lightningSpawner.bind(this);
-		else if (object === Object.METEOR)
-			return this.meteorSpawner.bind(this);
-		else if (object === Object.TORNADO)
-			return this.tornadoSpawner.bind(this);
-		throw new Error("Invalid object type");
+		switch (object) {
+			case (Object.LIGHTNING):
+				return this.lightningSpawner.bind(this);
+			case (Object.METEOR):
+				return this.meteorSpawner.bind(this);
+			case (Object.TORNADO):
+				return this.tornadoSpawner.bind(this);
+			default:
+				throw new Error("Invalid object type");
+		}
 	}
 
 	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {

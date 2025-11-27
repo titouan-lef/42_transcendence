@@ -23,13 +23,12 @@ class EnvironmentManager {
 			this.objects?.push(new Lightning(scene, textures.electricity, lightning.position, lightning.size));
 		} else {
 			const currentLightning = this.objects?.at(lightning.id);
-			if (currentLightning instanceof Lightning) {
-				if (lightning.currentLifetime === 0) {
-					currentLightning?.destroy();
-					return;
-				}
+			if (!(currentLightning instanceof Lightning))
+				return ;
+			if (lightning.currentLifetime === 0)
+				currentLightning?.destroy();
+			else
 				currentLightning?.changeVisibility(lightning.currentLifetime);
-			}
 		}
 	}
 
@@ -38,13 +37,12 @@ class EnvironmentManager {
 			this.objects?.push(new Meteor(scene, textures, meteor.position, meteor.size));
 		} else {
 			const currentMeteor = this.objects?.at(meteor.id);
-			if (currentMeteor instanceof Meteor) {
-				if (meteor.currentLifetime === 0) {
-					currentMeteor.destroy();
-					return;
-				}
+			if (!(currentMeteor instanceof Meteor))
+				return;
+			if (meteor.currentLifetime === 0)
+				currentMeteor.destroy();
+			else
 				currentMeteor.updatePosition(meteor.position);
-			}
 		}
 	}
 
@@ -53,20 +51,14 @@ class EnvironmentManager {
 			this.objects?.push(new Tornado(scene, textures.flare, tornado.position, tornado.size));
 		} else {
 			const currentTornado = this.objects?.at(tornado.id);
-			if (currentTornado instanceof Tornado) {
-				if (tornado.currentLifetime === 0) {
-					currentTornado.destroy();
-					return;
-				}
+			if (!(currentTornado instanceof Tornado))
+				return ;
+			if (tornado.currentLifetime === 0)
+				currentTornado.destroy();
+			else
 				currentTornado.updatePosition(tornado.position);
-			}
 		}
 	}
-
-	//mettre dans scenemanager
-	// updateObject(scene: babylon.Scene, object: ObjectMessage): void {
-	// 	this.environnementManager.handleObject(scene, textures, object);
-	// }
 
 	destroy(): void {
 		while (this.objects.length) {

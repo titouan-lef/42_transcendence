@@ -56,7 +56,7 @@ class VolcanoMap extends MapTemplate {
 	private createParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
 		scene.clearColor = COLORS4.volcanoDiffuseSky;
 		const particles = new babylon.ParticleSystem("ashes", V_PARTICLE_NUMBER, scene);
-		particles.particleTexture = texture;
+		particles.particleTexture = texture.clone();
 		particles.emitter = new babylon.Vector3(0, 0, 0);
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
 		particles.minEmitBox = new babylon.Vector3(-MAP_SIZE.x * 1.4, -MAP_SIZE.y * 1, -MAP_SIZE.z * 1.4);
@@ -78,18 +78,6 @@ class VolcanoMap extends MapTemplate {
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
 		particles.start();
 		return particles;
-	}
-
-	handleObject(scene: babylon.Scene, texture: Record<string, babylon.Texture>, meteor: ObjectMessage): void {
-		if (meteor.id >= this.meteors?.length) {
-			this.meteors?.push(new Meteor(scene, texture, meteor.position, meteor.size));
-		} else {
-			if (meteor.currentLifetime === 0) {
-				this.meteors?.at(meteor.id)?.destroy();
-				return;
-			}
-			this.meteors?.at(meteor.id)?.updatePosition(meteor.position);
-		}
 	}
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {

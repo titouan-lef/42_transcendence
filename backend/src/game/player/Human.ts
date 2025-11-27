@@ -1,8 +1,8 @@
 import * as babylon from "@babylonjs/core";
 import { GameOptions, GameSettings, PlayerSettings } from "../settings/GameSettings.js";
 import { PlayerControls, DataMessage } from "../web_sockets/types_transfert.js";
-import { WebSocket } from "ws";
 import { Player } from "./Player.js";
+import { WebSocket } from "ws";
 
 class Human extends Player {
 	private readonly socket: WebSocket;
@@ -11,6 +11,7 @@ class Human extends Player {
 		super(scene, position, options, settings.playerId, settings.username);
 
 		this.socket = settings.socket;
+
 
 		this.socket.on("message", (message: Buffer) => {
 			let controls: PlayerControls;

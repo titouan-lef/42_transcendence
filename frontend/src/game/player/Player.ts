@@ -2,7 +2,8 @@ import * as babylon from "@babylonjs/core";
 import { GameSettings, PlayerKeys, PlayerSettings } from "../settings/GameSettings.js";
 import { PLAYER_DIMENSION, COLORS3, PLAYER_TRAIL_INTERVAL, PLAYER_TRAIL_ON } from "../settings/values.js";
 import { PlayerTrail } from "./PlayerTrail.js";
-import { PlanePosition, PlayerControls, Rotation } from "../types_transfert.js";
+import { EmoteMessage, EmoteChoice, PlanePosition, PlayerControls, Rotation } from "../types_transfert.js";
+import { Emote } from "./Emote.js";
 
 class Player {
 	private readonly player: babylon.TransformNode;
@@ -10,11 +11,12 @@ class Player {
 	private readonly socket: WebSocket | null = null;
 	private readonly controls: PlayerKeys | null = null;
 	private trailTimer = 0;
-	private readonly keyPressed: boolean[] = [false, false, false, false, false];
+	private readonly keyPressed: Record<string, boolean> = {};
 	private readonly applyingSpin;
 	private readonly playerTrails: PlayerTrail[] = [];
 	private sceneObservable: babylon.Observable<babylon.Scene> | null = null;
 	private sceneObserver: babylon.Observer<babylon.Scene> | null = null;
+	private emote: Emote | null = null;
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings, settings: PlayerSettings) {
 		this.applyingSpin = gameSettings.spin;
@@ -25,6 +27,19 @@ class Player {
 			this.sceneObservable = scene.onBeforeRenderObservable;
 			this.sceneObserver = this.observeScene(scene);
 		}
+
+		this.keyPressed = {
+			mov_right: false,
+			mov_left: false,
+			rot_right: false,
+			rot_left: false,
+			normalMode: false,
+			spinMode: false,
+			emoteStrong: false,
+			emoteSad: false,
+			emoteLol: false,
+			emoteAngry: false
+		};
 
 		if (settings.socket && settings.playerKeys) {
 			this.controls = settings.playerKeys;
@@ -99,12 +114,16 @@ class Player {
 
 	getPressedKeys(): PlayerControls {
 		const controls: PlayerControls = {
-			mov_right: this.keyPressed[0],
-			mov_left: this.keyPressed[1],
-			rot_right: this.keyPressed[2],
-			rot_left: this.keyPressed[3],
-			normalMode: this.keyPressed[4],
-			spinMode: this.keyPressed[5]
+			mov_right: this.keyPressed.mov_right,
+			mov_left: this.keyPressed.mov_left,
+			rot_right: this.keyPressed.rot_right,
+			rot_left: this.keyPressed.rot_left,
+			normalMode: this.keyPressed.normalMode,
+			spinMode: this.keyPressed.spinMode,
+			emoteStrong: this.keyPressed.emoteStrong,
+			emoteSad: this.keyPressed.emoteSad,
+			emoteLol: this.keyPressed.emoteLol,
+			emoteAngry: this.keyPressed.emoteAngry
 		};
 		return controls;
 	}
@@ -113,10 +132,10 @@ class Player {
 		if (!this.controls)
 			return;
 		let changed = false;
-		event.preventDefault(); // prevent the action from the navigator (ex: space)
-		for (let i = 0; i < this.controls.length; i++) {
-			if (event.code === this.controls[i] && !this.keyPressed[i]) {
-				this.keyPressed[i] = true;
+		event.preventDefault();
+		for (const [keyName, keyCode] of Object.entries(this.controls)) {
+			if (event.code === keyCode && !this.keyPressed[keyName]) {
+				this.keyPressed[keyName] = true;
 				changed = true;
 			}
 		}
@@ -129,9 +148,9 @@ class Player {
 			return;
 		let changed = false;
 		event.preventDefault(); // prevent the action from the navigator (ex: space)
-		for (let i = 0; i < this.controls.length; i++) {
-			if (event.code === this.controls[i] && this.keyPressed[i]) {
-				this.keyPressed[i] = false;
+		for (const [keyName, keyCode] of Object.entries(this.controls)) {
+			if (event.code === keyCode && this.keyPressed[keyName]) {
+				this.keyPressed[keyName] = false;
 				changed = true;
 			}
 		}
@@ -139,7 +158,33 @@ class Player {
 			this.socket?.send(JSON.stringify(this.getPressedKeys()));
 	}
 
+	popEmote(scene: babylon.Scene, message: EmoteMessage, textures: Record<string, babylon.Texture>): void {
+		if (message.playerid === this.id) {
+			this.emote?.destroy();
+			let texture: babylon.Texture;
+			switch (message.type) {
+				case (EmoteChoice.STRONG):
+					texture = textures.emoteStrong;
+					break;
+				case (EmoteChoice.SAD):
+					texture = textures.emoteSad;
+					break;
+				case (EmoteChoice.LOL):
+					texture = textures.emoteLol;
+					break;
+				case (EmoteChoice.ANGRY):
+					texture = textures.emoteAngry;
+					break;
+				default:
+					throw new Error("Invalid emote");
+			}
+			this.emote = new Emote(scene, texture, this.player);
+		}
+	}
+
 	destroy(): void {
+		if (this.emote)
+			this.emote.destroy();
 		this.sceneObservable?.remove(this.sceneObserver);
 		while (this.playerTrails.length) {
 			this.playerTrails[0]?.destroy();
