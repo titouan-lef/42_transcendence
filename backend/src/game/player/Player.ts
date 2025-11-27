@@ -4,8 +4,9 @@ import { PLAYER_DIMENSION, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION
 import { PlayerControls, Position, DataMessage, Rotation } from "../web_sockets/types_transfert.js";
 
 abstract class Player {
-	protected readonly player: babylon.TransformNode;
 	private readonly id: 1 | 2;
+	private readonly username: string;
+	protected readonly player: babylon.TransformNode;
 	private readonly body: babylon.PhysicsBody;
 	private readonly keyPressed: boolean[] = [false, false, false, false, false];
 	private readonly rotatingPlayer: boolean;
@@ -18,7 +19,7 @@ abstract class Player {
 	private linearVelocityZ = 0;
 	private angularVelocityY = 0;
 
-	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings, id: 1 | 2) {
+	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings, id: 1 | 2, username :string) {
 		this.applyingSpin = gameSettings.spin;
 		this.rotatingPlayer = gameSettings.rotatingPlayer;
 		this.player = this.setPlayer(scene, position, id);
@@ -27,6 +28,7 @@ abstract class Player {
 		this.reverseRotation = this.setReverseRotation(id);
 		this.normalMode();
 		this.id = id;
+		this.username = username;
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.positionObserver = this.playerObserver();
 	}
@@ -93,6 +95,10 @@ abstract class Player {
 		return this.id;
 	}
 
+	getName(): string {
+		return this.username;
+	}
+
 	getPosition(): Position {
 		return { x: this.player.position.x, y: this.player.position.y, z: this.player.position.z };
 	}
@@ -156,8 +162,6 @@ abstract class Player {
 		});
 		this.player?.dispose();
 	}
-
-	abstract getName(): string;
 
 	abstract send(message: DataMessage): Promise<void>;
 }
