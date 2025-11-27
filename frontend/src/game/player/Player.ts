@@ -159,27 +159,25 @@ class Player {
 	}
 
 	popEmote(scene: babylon.Scene, message: EmoteMessage, textures: Record<string, babylon.Texture>): void {
-		if (message.playerid === this.id) {
-			this.emote?.destroy();
-			let texture: babylon.Texture;
-			switch (message.type) {
-				case (EmoteChoice.STRONG):
-					texture = textures.emoteStrong;
-					break;
-				case (EmoteChoice.SAD):
-					texture = textures.emoteSad;
-					break;
-				case (EmoteChoice.LOL):
-					texture = textures.emoteLol;
-					break;
-				case (EmoteChoice.ANGRY):
-					texture = textures.emoteAngry;
-					break;
-				default:
-					throw new Error("Invalid emote");
-			}
-			this.emote = new Emote(scene, texture, this.player);
+		this.emote?.destroy();
+		let texture: babylon.Texture;
+		switch (message.type) {
+			case (EmoteChoice.STRONG):
+				texture = textures.emoteStrong;
+				break;
+			case (EmoteChoice.SAD):
+				texture = textures.emoteSad;
+				break;
+			case (EmoteChoice.LOL):
+				texture = textures.emoteLol;
+				break;
+			case (EmoteChoice.ANGRY):
+				texture = textures.emoteAngry;
+				break;
+			default:
+				throw new Error("Invalid emote");
 		}
+		this.emote = new Emote(scene, texture, this.player);
 	}
 
 	destroy(): void {

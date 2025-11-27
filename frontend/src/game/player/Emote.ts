@@ -13,27 +13,30 @@ export class Emote {
 		this.image = this.createImage(scene, texture);
 		this.image.renderingGroupId = 1;
 		this.image.parent = player;
-		this.image.position.y = PLAYER_DIMENSION.y + 7;
+		this.image.position.y = PLAYER_DIMENSION.y + 2;
 	}
 
 	private createImage(scene: babylon.Scene, texture: babylon.Texture): babylon.Mesh {
 		const plane = babylon.MeshBuilder.CreatePlane("emote", { size: 10 }, scene);
-		const material = new babylon.StandardMaterial("mat", scene);
-		material.diffuseTexture = texture.clone();
-		material.diffuseTexture.hasAlpha = true;
-		material.disableLighting = true;
-		material.emissiveColor = COLORS3.emoteEmissiveColor;
-
-		// désactive post-process / tonemapping / exposure
-		material.imageProcessingConfiguration.isEnabled = false;
+		plane.scaling.set(0.1, 0.1, 0.1);
+		const material = new babylon.PBRMaterial("mat", scene);
+		material.albedoTexture = texture.clone();
+		material.albedoTexture.hasAlpha = true;
+		material.unlit = true;
 		plane.material = material;
 		plane.billboardMode = babylon.Mesh.BILLBOARDMODE_ALL;
 		return plane;
 	}
 
 	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
+		let grow = 0;
 		const sceneObserver = this.sceneObservable.add(() => {
+			grow += 1;
 			this.timer += scene.getEngine().getDeltaTime() / EMOTE_LIFETIME;
+			if (grow <= 10) {
+				this.image.scaling.set(0.1 * grow, 0.1 * grow, 0.1 * grow);
+				this.image.position.y += 0.5;
+			}
 			if (this.timer >= EMOTE_LIFETIME)
 				this.destroy();
 		});

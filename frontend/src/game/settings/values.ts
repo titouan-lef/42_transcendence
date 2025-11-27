@@ -66,7 +66,7 @@ export const COLORS3 = {
 	defaultDiffuseWall:				babylon.Color3.FromHexString("#ffffff"),
 
 	//EMOTE
-	emoteEmissiveColor:				babylon.Color3.FromHexString("#c9c9c9"),
+	emoteEmissiveColor:				babylon.Color3.FromHexString("#949393"),
 };
 
 function convertToColor4(hex: string, a: number): babylon.Color4 {

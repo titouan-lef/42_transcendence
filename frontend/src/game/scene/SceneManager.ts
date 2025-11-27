@@ -10,7 +10,7 @@ import { Player } from "../player/Player.js";
 import { BallOption, GameSettings, MapOption } from "../settings/GameSettings.js";
 import { COLORS3, MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
-import { DataMessage, EventMessage, GoalMessage, EmoteChoice, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
+import { DataMessage, EventMessage, GoalMessage, EmoteMessage, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
 import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
 
 class SceneManager {
@@ -50,10 +50,7 @@ class SceneManager {
 					this.environnementManager.handleObject(scene, this.textures, message);
 					break;
 				case (Status.EMOTE):
-					this.players.forEach(player => {
-						if (this.texturesCreated)
-							player.popEmote(scene, message, this.textures);
-					});
+					this.sendEmote(settings, scene, message);
 					break;
 				default:
 					return; /** do nothing / not an error*/
@@ -156,6 +153,18 @@ class SceneManager {
 		this.getPlayer(2)?.setRotatiton(message.enemyRotation);
 		this.ball?.setPosition(message.ball);
 		this.ball?.setVisibility(message.ballVisibility);
+	}
+
+	private sendEmote(settings: GameSettings, scene: babylon.Scene, message: EmoteMessage): void {
+		this.players.forEach(player => {
+			if (settings.player1.playerId === 1) {
+				if (this.texturesCreated && message.playerid === player.getId())
+					player.popEmote(scene, message, this.textures);
+			} else {
+				if (this.texturesCreated && message.playerid !== player.getId())
+					player.popEmote(scene, message, this.textures);
+			}
+		});
 	}
  
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
