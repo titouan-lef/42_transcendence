@@ -1,6 +1,7 @@
 import { newGame, updateGameObject } from "../game/canvas_creation.js";
 import { DataMessage, Status } from "../game/types_transfert.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
+import { randomInt } from "../utils/numbers.js";
 
 declare const API_URL: string; // just telling the compiler that API_URL and WS_URL will exists during execution
 declare const WS_URL: string;
@@ -79,18 +80,17 @@ async function newGameSolo(ws: WebSocket): Promise<void> {
 	};
 }
 
-async function newRankedGame(): Promise<void> {
-	const ws = await openWebSocketConnection("ranked");
+async function newGameType(type: string): Promise<void> {
+	const ws = await openWebSocketConnection(type);
 	newGameSolo(ws);
+}
+
+async function newRankedGame(): Promise<void> {
+	newGameType("ranked");
 }
 
 async function newGameVsAI(): Promise<void> {
-	const ws = await openWebSocketConnection("AI");
-	newGameSolo(ws);
-}
-
-function randomInt(min: number, max: number): number {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
+	newGameType("AI");
 }
 
 async function newLocalGame(): Promise<void> {
