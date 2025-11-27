@@ -11,7 +11,7 @@ import { SkyMap } from "../map/SkyMap.js";
 import { DesertMap } from "../map/DesertMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
-import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
+import { GameSettings, MapOption, BallOption, MapChoice, MAPLIST } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
 import { EventMessage, ParticlesType, PlanePosition, Position, RenderMessage, Status, TimingMessage } from "../web_sockets/types_transfert.js";
@@ -122,10 +122,13 @@ class SceneManager {
 	}
 
 	private createMap(scene: babylon.Scene, settings: GameSettings): void {
-		const mapList: MapOption[] = ["default", "volcano", "sky", "desert"];
-		let map = settings.options.map;
-		if (map === "random")
-			map = mapList[Math.floor(Math.random() * 4)];
+		let map: MapOption;
+		if (settings.options.map === "random") {
+			map = MAPLIST[Math.floor(Math.random() * MAPLIST.length)];
+		} else if (settings.options.map.length) {
+			map = settings.options.map[Math.floor(Math.random() * settings.options.map.length)];
+		} else
+			throw new Error("Map empty");
 		switch (map) {
 			case "default":
 				this.map = new DefaultMap(scene);

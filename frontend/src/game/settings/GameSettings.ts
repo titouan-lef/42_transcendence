@@ -1,6 +1,8 @@
 import { PlanePosition } from "../types_transfert";
 
-type MapOption = "default" | "random" | "volcano" | "sky" | "desert";
+type MapOption = "default" | "volcano" | "sky" | "desert";
+const MAPLIST: MapOption[] = ["default", "volcano", "sky", "desert"];
+type MapChoice = "random" | MapOption[];
 type BallOption = "default" | "random" | "invisible" | "tricky" | "pulse" | "snake";
 type PlayerKeys = [KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"]];
 
@@ -12,14 +14,6 @@ interface PlayerSettings {
 
 function swapPlayer(id: 1 | 2): 1 | 2 {
 	return id === 1 ? 2 : 1;
-}
-
-interface GameOptions { /** @toto include GameOptions in GameSettings ? */
-	map: MapOption;
-	ball: BallOption;
-	rotatingPlayer: boolean;
-	spin: boolean;
-	windAffectsBall: boolean;
 }
 
 class GameSettings {
@@ -52,4 +46,4 @@ class GameSettings {
 	}
 }
 
-export { MapOption, BallOption, PlayerKeys, PlayerSettings, GameOptions, GameSettings };
+export { BallOption, PlayerKeys, PlayerSettings, GameSettings, MapChoice, MapOption };
