@@ -64,6 +64,9 @@ export const COLORS3 = {
 	defaultEmissiveSun:				babylon.Color3.FromHexString("#FFE699"),
 	defaultDiffuseLight:			babylon.Color3.FromHexString("#FFE699"),
 	defaultDiffuseWall:				babylon.Color3.FromHexString("#ffffff"),
+
+	//EMOTE
+	emoteEmissiveColor:				babylon.Color3.FromHexString("#c9c9c9"),
 };
 
 function convertToColor4(hex: string, a: number): babylon.Color4 {
@@ -151,6 +154,7 @@ export const W_GLOW_INTENSITY = 0.3;
 export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x //BACK + FRONT
 export const PLAYER_TRAIL_INTERVAL = 2;
 export const PLAYER_TRAIL_ON = true;
+export const EMOTE_LIFETIME = 50;
 
 /** BALL SETTINGS */
 export const BALL_DIAMETER = 2; //has to be smaller than the player //BACK + FRONT

@@ -59,7 +59,7 @@ class Meteor {
 
 	private createContactParticles(scene: babylon.Scene, texture: babylon.Texture, end: babylon.Vector3): babylon.ParticleSystem {
 		const dustParticles = new babylon.ParticleSystem("MeteorDust", Math.floor(100 * this.size), scene);
-		dustParticles.particleTexture = texture;
+		dustParticles.particleTexture = texture.clone();
 		dustParticles.blendMode = babylon.ParticleSystem.BLENDMODE_STANDARD;
 		dustParticles.emitter = end.clone();
 		dustParticles.emitter.y += 1;
@@ -91,7 +91,7 @@ class Meteor {
 
 	private createTrail(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
 		const trail = new babylon.ParticleSystem("meteorTrail", Math.floor(400 * this.size), scene);
-		trail.particleTexture = texture;
+		trail.particleTexture = texture.clone();
 		trail.emitter = this.meteor;
 		trail.particleEmitterType = new babylon.SphereParticleEmitter(METEOR_COLLISION_RADIUS * this.size * 1.5);
 		trail.renderingGroupId = 1;

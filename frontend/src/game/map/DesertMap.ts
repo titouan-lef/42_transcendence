@@ -56,7 +56,7 @@ class DesertMap extends MapTemplate {
 	private createParticles(scene: babylon.Scene, texture: babylon.Texture): babylon.ParticleSystem {
 		scene.clearColor = COLORS4.desertSky;
 		const particles = new babylon.ParticleSystem("wind", W_PARTICLE_NUMBER, scene);
-		particles.particleTexture = texture;
+		particles.particleTexture = texture.clone();
 		particles.emitter = new babylon.Vector3(0, 0, 0);
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
 		particles.minEmitBox = new babylon.Vector3(-MAP_SIZE.x * 1.4, -MAP_SIZE.y * 1, -MAP_SIZE.z * 1.4);
@@ -78,18 +78,6 @@ class DesertMap extends MapTemplate {
 		particles.billboardMode = babylon.ParticleSystem.BILLBOARDMODE_Y;
 		particles.start();
 		return particles;
-	}
-
-	handleObject(scene: babylon.Scene, texture: Record<string, babylon.Texture>, tornado: ObjectMessage): void {
-		if (tornado.id >= this.tornados?.length) {
-			this.tornados?.push(new Tornado(scene, texture.flare, tornado.position, tornado.size));
-		} else {
-			if (tornado.currentLifetime === 0) {
-				this.tornados?.at(tornado.id)?.destroy();
-				return;
-			}
-			this.tornados?.at(tornado.id)?.updatePosition(tornado.position);
-		}
 	}
 
 	createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh {

@@ -2,7 +2,22 @@ import { PlanePosition } from "../types_transfert";
 
 type MapOption = "default" | "volcano" | "sky" | "desert";
 type BallOption = "default" | "random" | "invisible" | "tricky" | "pulse" | "snake";
-type PlayerKeys = [KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"]];
+type PlayerKey = KeyboardEvent["code"] | undefined;
+//type PlayerKeys = [KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"], KeyboardEvent["code"],
+//	KeyboardEvent["code"], KeyboardEvent["code"], undefined, undefined, undefined];
+
+interface PlayerKeys {
+	mov_right: PlayerKey;
+	mov_left: PlayerKey;
+	rot_right: PlayerKey;
+	rot_left: PlayerKey;
+	normalMode: PlayerKey;
+	spinMode: PlayerKey;
+	emoteStrong: PlayerKey;
+	emoteSad: PlayerKey;
+	emoteLol: PlayerKey;
+	emoteAngry: PlayerKey;
+}
 
 interface PlayerSettings {
 	readonly playerId: 1 | 2;

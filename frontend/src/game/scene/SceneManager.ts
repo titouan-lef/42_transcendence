@@ -10,7 +10,7 @@ import { Player } from "../player/Player.js";
 import { BallOption, GameSettings, MapOption } from "../settings/GameSettings.js";
 import { COLORS3, MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
-import { DataMessage, EventMessage, GoalMessage, Object, ObjectMessage, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
+import { DataMessage, EventMessage, GoalMessage, EmoteChoice, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
 import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
 
 class SceneManager {
@@ -22,6 +22,7 @@ class SceneManager {
 	private readonly textures: Record<string, babylon.Texture> = {};
 	private score: Score;
 	private readonly environnementManager: EnvironmentManager;
+	private texturesCreated = false;
 
 	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera, settings: GameSettings) {
 		this.scene = scene;
@@ -47,6 +48,12 @@ class SceneManager {
 					break;
 				case (Status.OBJECT):
 					this.environnementManager.handleObject(scene, this.textures, message);
+					break;
+				case (Status.EMOTE):
+					this.players.forEach(player => {
+						if (this.texturesCreated)
+							player.popEmote(scene, message, this.textures);
+					});
 					break;
 				default:
 					return; /** do nothing / not an error*/
@@ -115,13 +122,18 @@ class SceneManager {
 		this.players.push(player2);
 	}
 
-	createTextures(scene: babylon.Scene): void { /** @todo check if one request per texture is best practice. Do we need all textures for all the maps ??*/
+	createTextures(scene: babylon.Scene): void { /** @todo check if one request per texture is best practice. Do we need all textures for all the maps ?? => no but we create textures ONE time per game*/
 		this.textures.spark = new babylon.Texture("textures/sparks.png", scene, true);
 		this.textures.flare = new babylon.Texture("textures/flare.png", scene, true);
 		this.textures.stars = new babylon.Texture("textures/particle.png", scene, true);
 		this.textures.rain = new babylon.Texture("textures/rain.png", scene, true);
 		this.textures.smoke = new babylon.Texture("textures/smoke.png", scene, true);
 		this.textures.electricity = new babylon.Texture("textures/electricity.png", scene, true);
+		this.textures.emoteStrong = new babylon.Texture("textures/emotes/strong.png", scene, true);
+		this.textures.emoteSad = new babylon.Texture("textures/emotes/sad.png", scene, true);
+		this.textures.emoteLol = new babylon.Texture("textures/emotes/lol.png", scene, true);
+		this.textures.emoteAngry = new babylon.Texture("textures/emotes/angry.png", scene, true);
+		this.texturesCreated = true;
 	}
 
 	private handleParticules(message: EventMessage): void {

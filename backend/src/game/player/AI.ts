@@ -27,7 +27,11 @@ class AI extends Player {
 			rot_right: false,
 			rot_left: false,
 			normalMode: false,
-			spinMode: false
+			spinMode: false,
+			emoteStrong: false,
+			emoteSad: false,
+			emoteLol: false,
+			emoteAngry: false
 		};
 		this.movementIntervalId = this.movement();
 		this.updateInterval = setInterval(() => {
@@ -43,6 +47,7 @@ class AI extends Player {
 					this.isEndingShoot = false;
 					this.shootAnimationFrame = 0;
 					this.controls.normalMode = true;
+					this.controls.emoteAngry = true;
 				}
 				this.setControls(this.controls);
 				return ;
@@ -68,7 +73,11 @@ class AI extends Player {
 			rot_right: false,
 			rot_left: false,
 			normalMode: false,
-			spinMode: false
+			spinMode: false,
+			emoteStrong: false,
+			emoteSad: false,
+			emoteLol: false,
+			emoteAngry: false
 		};
 		this.isShootingRight = this.wantToShootRight;
 		this.isShootingLeft = this.wantToShootLeft;

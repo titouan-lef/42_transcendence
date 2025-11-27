@@ -14,7 +14,7 @@ import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption, MAP_LIST, BALL_LIST } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
-import { EventMessage, ParticlesType, PlanePosition, Position, RenderMessage, Status, TimingMessage } from "../web_sockets/types_transfert.js";
+import { EventMessage, ParticlesType, PlanePosition, Position, RenderMessage, Status, TimingMessage, EmoteMessage, EmoteChoice } from "../web_sockets/types_transfert.js";
 import { Human } from "../player/Human.js";
 import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
 import { AI } from "../player/AI.js";
@@ -45,17 +45,36 @@ class SceneManager {
 
 	private observeScene(settings: GameSettings): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
-			if (!this.checkOutOfFieldBall(this.ball?.getPosition()))
-				return;
-			this.gameStopped = true;
-			this.ball?.stop();
-			this.ball?.reset();
-			this.map?.stop();
-			this.environmentManager.pauseSpawn();
-			this.environmentManager.clearObjects();
-			this.countdownIntervalId = this.startCountdown(START_TIMEOUT, settings);
+			if (this.checkOutOfFieldBall(this.ball?.getPosition())) {
+				this.gameStopped = true;
+				this.ball?.stop();
+				this.ball?.reset();
+				this.map?.stop();
+				this.environmentManager.pauseSpawn();
+				this.environmentManager.clearObjects();
+				this.countdownIntervalId = this.startCountdown(START_TIMEOUT, settings);
+			}
+			this.checkPlayerEmote();
 		});
 		return sceneObserver;
+	}
+
+	private checkPlayerEmote(): void {
+		this.players.forEach(player => {
+			const emote: EmoteChoice | undefined = player.getEmote();
+			if (emote !== undefined) {
+				this.sockets.forEach(socket => {
+					const infos: EmoteMessage = {
+						status: Status.EMOTE,
+						type: emote,
+						playerid: player.getId()
+					};
+		
+					socket.send(JSON.stringify(infos));
+				});
+			}
+			player.resetEmote();
+		});
 	}
 
 	private checkOutOfFieldBall(position: Position | undefined): boolean {

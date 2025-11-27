@@ -1,14 +1,14 @@
 import * as babylon from "@babylonjs/core";
 import { GameOptions, GameSettings } from "../settings/GameSettings.js";
 import { PLAYER_DIMENSION, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY } from "../settings/values.js";
-import { PlayerControls, Position, DataMessage, Rotation } from "../web_sockets/types_transfert.js";
+import { PlayerControls, Position, DataMessage, Rotation, EmoteChoice } from "../web_sockets/types_transfert.js";
 
 abstract class Player {
 	private readonly id: 1 | 2;
 	private readonly username: string;
 	protected readonly player: babylon.TransformNode;
 	private readonly body: babylon.PhysicsBody;
-	private readonly keyPressed: boolean[] = [false, false, false, false, false];
+	private readonly keyPressed: boolean[] = [false, false, false, false, false, false, false, false, false, false];
 	private readonly rotatingPlayer: boolean;
 	private readonly applyingSpin;
 	private readonly baseRotation: babylon.Quaternion;
@@ -18,6 +18,7 @@ abstract class Player {
 	private readonly positionObserver: babylon.Observer<babylon.Scene>;
 	private linearVelocityZ = 0;
 	private angularVelocityY = 0;
+	private emote: EmoteChoice | undefined;
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, options: GameOptions, id: 1 | 2, username :string) {
 		this.applyingSpin = options.spin;
@@ -117,16 +118,25 @@ abstract class Player {
 		this.keyPressed[3] = controls.rot_right;
 		this.keyPressed[4] = controls.normalMode;
 		this.keyPressed[5] = controls.spinMode;
+		this.keyPressed[6] = controls.emoteStrong;
+		this.keyPressed[7] = controls.emoteSad;
+		this.keyPressed[8] = controls.emoteLol;
+		this.keyPressed[9] = controls.emoteAngry;
 		this.handleAction();
 	}
 
 	clearControls(): void {
-		this.keyPressed[0] = false;
-		this.keyPressed[1] = false;
-		this.keyPressed[2] = false;
-		this.keyPressed[3] = false;
-		this.keyPressed[4] = false;
-		this.handleAction();
+		this.keyPressed.forEach(key => {
+			key = false;
+		});
+	}
+
+	getEmote(): EmoteChoice | undefined {
+		return this.emote;
+	}
+
+	resetEmote(): void {
+		this.emote = undefined;
 	}
 
 	private handleAction(): void {
@@ -135,8 +145,21 @@ abstract class Player {
 			this.angularVelocityY = (Number(this.keyPressed[3]) - Number(this.keyPressed[2])) * PLAYER_ROTATION_VELOCITY; /** @todo chaeck if valid for both single and dual player */
 		if (this.keyPressed[4] && this.rotatingPlayer)
 			this.normalMode();
-		if (this.keyPressed[5] && this.applyingSpin)
+		if (this.keyPressed[5])
 			this.spinMode();
+		if (this.keyPressed[6] || this.keyPressed[7] || this.keyPressed[8] || this.keyPressed[9])
+			this.changeEmote();
+	}
+
+	private changeEmote(): void {
+		if (this.keyPressed[6])
+			this.emote = EmoteChoice.STRONG;
+		if (this.keyPressed[7])
+			this.emote = EmoteChoice.SAD;
+		if (this.keyPressed[8])
+			this.emote = EmoteChoice.LOL;
+		if (this.keyPressed[9])
+			this.emote = EmoteChoice.ANGRY;
 	}
 
 	private playerObserver(): babylon.Observer<babylon.Scene> {
