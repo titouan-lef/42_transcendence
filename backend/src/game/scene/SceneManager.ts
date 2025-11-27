@@ -16,7 +16,7 @@ import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settin
 import { WebSocket } from "ws";
 import { EventMessage, ParticlesType, PlanePosition, Position, RenderMessage, Status, TimingMessage } from "../web_sockets/types_transfert.js";
 import { Human } from "../player/Human.js";
-import { AI } from "../player/IA.js";
+import { AI } from "../player/AI.js";
 
 class SceneManager {
 	private ball: BallTemplate | null = null;
