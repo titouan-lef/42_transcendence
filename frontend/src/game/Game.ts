@@ -42,7 +42,7 @@ class Game {
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
 	static async create(settings: GameSettings): Promise<Game> {
 		const canvas = Game.createCanvas();
-		const engine = new babylon.Engine(canvas, true);
+		const engine = new babylon.Engine(canvas, true, { preserveDrawingBuffer: true, premultipliedAlpha: true });
 		const scene = await Game.initScene(engine);
 		return new Game(canvas, settings, scene, engine);
 	}

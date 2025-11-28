@@ -20,6 +20,7 @@ class Game {
 	private gameInterval?: ReturnType<typeof setInterval>; /** @todo type is supposed to be NodeJS.Timer but does not work */
 	private score: babylon.Vector2;
 	private inAnimation = false;
+	private readonly gameSpeed = 1000/60;
 
 	constructor (id: number, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.id = id;
@@ -50,9 +51,9 @@ class Game {
 	};
 
 	start(): void {
-		this.engine.runRenderLoop(() => {
-			this.scene.render();
-		});
+		// this.engine.runRenderLoop(() => {
+		// 	this.scene.render();
+		// });
 		this.startGameCommunication();
 	}
 
@@ -68,7 +69,7 @@ class Game {
 		this.camera.dispose();
 		if (SHOW_DISPOSE_LOGS)
 			this.sceneManager.showDisposeLogs(this.scene);
-		this.engine.stopRenderLoop();
+		//this.engine.stopRenderLoop();
 		this.scene.dispose();
 		this.engine.dispose();
 	}
@@ -198,16 +199,19 @@ class Game {
 		player2.send(scoreP2);
 	}
 
-	startSendingPositions(): void {
-		const intervalMs = 1000 / 60; // 60 fps
-
+	startRender(): void {
 		this.gameInterval = setInterval(() => {
+			const physics = this.scene.getPhysicsEngine();
+			if (physics)
+				physics._step(this.gameSpeed / 1000);
+			this.scene.render();
+
 			const player1 = this.sceneManager.getPlayer(1);
 			const player2 = this.sceneManager.getPlayer(2);
 			if (!player1 || !player2)
 				return;
 			this.sendPositions(player1, player2);
-		}, intervalMs);
+		}, this.gameSpeed);
 	}
 
 	private defineCloseAction(player: Player, enemy: Player): void {
@@ -221,6 +225,7 @@ class Game {
 	}
 
 	startGameCommunication(): void {
+		this.startRender();
 		const player1 = this.sceneManager.getPlayer(1);
 		const player2 = this.sceneManager.getPlayer(2);
 		if (!player1 || !player2)
@@ -228,7 +233,6 @@ class Game {
 		this.sendStart(player1, player2);
 		this.sendOptions(player1, player2);
 		this.sendPositions(player1, player2);
-		this.startSendingPositions();
 
 		this.defineCloseAction(player1, player2);
 		this.defineCloseAction(player2, player1);

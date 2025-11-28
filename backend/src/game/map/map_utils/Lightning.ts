@@ -50,7 +50,7 @@ class Lightning {
 
 	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
-			this.currentLifetime -= scene.getEngine().getDeltaTime() / LIGHTNING_LIFETIME;
+			this.currentLifetime -= 1 / LIGHTNING_LIFETIME;//scene.getEngine().getDeltaTime() / LIGHTNING_LIFETIME;
 			if (this.currentLifetime <= 0) {
 				this.destroy();
 				return;
