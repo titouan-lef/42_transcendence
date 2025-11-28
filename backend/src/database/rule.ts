@@ -8,7 +8,7 @@ interface Rule {
 const TABLE_NAME = "Rule";
 
 async function createRuleTable(): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,7 +18,7 @@ async function createRuleTable(): Promise<void> {
 }
 
 async function insertRule(name: string): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.run(
 			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES (?)`,
 			[name]
@@ -27,11 +27,11 @@ async function insertRule(name: string): Promise<void> {
 }
 
 async function getAllRule(): Promise<Rule[] | undefined> {
-	return fetchAll(TABLE_NAME);
+	return await fetchAll(TABLE_NAME);
 }
 
 async function getRuleById(id: number): Promise<Rule | undefined> {
-	return applyQuery(
+	return await applyQuery(
 		async (db) => await db.get(
 			`SELECT *
 			FROM ${TABLE_NAME}

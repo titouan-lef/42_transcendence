@@ -9,7 +9,7 @@ interface Elo {
 const TABLE_NAME = "Elo";
 
 async function createEloTable(): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			username TEXT,
@@ -23,7 +23,7 @@ async function createEloTable(): Promise<void> {
 }
 
 async function insertElo(elo: Elo): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (username, gameId, variation) VALUES (? ,? ,?)`,
 			[elo.username, elo.gameId, elo.variation]
@@ -32,11 +32,11 @@ async function insertElo(elo: Elo): Promise<void> {
 }
 
 async function getAllElos(): Promise<Elo[] | undefined> {
-	return fetchAll(TABLE_NAME);
+	return await fetchAll(TABLE_NAME);
 }
 
 async function getElo(username: string, gameId: number): Promise<Elo | undefined> {
-	return applyQuery(
+	return await applyQuery(
 		async (db) => await db.get(
 			`SELECT *
 			FROM ${TABLE_NAME}

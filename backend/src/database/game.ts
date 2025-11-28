@@ -11,7 +11,7 @@ interface Game {
 const TABLE_NAME = "Game";
 
 async function createGameTable(): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,7 +24,7 @@ async function createGameTable(): Promise<void> {
 }
 
 async function insertGame(mapId: number, ballId: number, seasonId: number | null): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (mapId, ballId, seasonId) VALUES (?, ?, ?)`,
 			[mapId, ballId, seasonId]
@@ -33,11 +33,11 @@ async function insertGame(mapId: number, ballId: number, seasonId: number | null
 }
 
 async function getAllGames(): Promise<Game[] | undefined> {
-	return fetchAll(TABLE_NAME);
+	return await fetchAll(TABLE_NAME);
 }
 
 async function getGameById(id: number): Promise<Game | undefined> {
-	return applyQuery(
+	return await applyQuery(
 		async (db) => await db.get(
 			`SELECT *
 			FROM ${TABLE_NAME}
@@ -48,7 +48,7 @@ async function getGameById(id: number): Promise<Game | undefined> {
 }
 
 async function getGamesBySeason(seasonId: number):Promise<Game[] | undefined> {
-	return applyQuery(
+	return await applyQuery(
 		async (db) => await db.all(
 			`SELECT *
 			FROM ${TABLE_NAME}

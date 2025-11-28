@@ -13,7 +13,7 @@ async function applyQuery<T>(queryFunc: (db: Database) => Promise<T>, errorMsg: 
 }
 
 async function fetchAll<T>(tableName: string): Promise<T | undefined> {
-	return applyQuery(
+	return await applyQuery(
 		async (db) => await db.all(
 			`SELECT *
 			FROM ${tableName}`

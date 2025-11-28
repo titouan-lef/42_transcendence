@@ -1,0 +1,1 @@
+/** @todo friends management */

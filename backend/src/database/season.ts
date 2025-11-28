@@ -8,7 +8,7 @@ interface Season {
 const TABLE_NAME = "Season";
 
 async function createSeasonTable(): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,7 +18,7 @@ async function createSeasonTable(): Promise<void> {
 }
 
 async function insertSeason(): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} DEFAULT VALUES;`
 		), "insert" + TABLE_NAME
@@ -26,11 +26,11 @@ async function insertSeason(): Promise<void> {
 }
 
 async function getAllSeason(): Promise<Season[] | undefined> {
-	return fetchAll(TABLE_NAME);
+	return await fetchAll(TABLE_NAME);
 }
 
 async function getSeasonById(id: number): Promise<Season | undefined> {
-	return applyQuery(
+	return await applyQuery(
 		async (db) => await db.get(
 			`SELECT *
 			FROM ${TABLE_NAME}

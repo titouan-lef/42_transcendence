@@ -13,7 +13,7 @@ import { createEloTable } from "./elo.js";
 import { createGoalTable } from "./goal.js";
 import { createGameRuleTable } from "./game_rule.js";
 
-const DB_FILE = "Database.db"
+const DB_FILE = "Database.db";
 const DB_PATH_FILE = "./" + DB_FILE;
 
 async function getDB(): Promise<Database> {
@@ -70,7 +70,7 @@ function databaseExist(): boolean {
 }
 
 async function initDB(): Promise<void> {
-	if (!databaseExist()){
+	if (!databaseExist()) {
 		// No foreign key.
 		await createSeasonTable();/** @todo see with blockchain*/
 		await initRuleTable();/** @todo createRuleTable();*/
