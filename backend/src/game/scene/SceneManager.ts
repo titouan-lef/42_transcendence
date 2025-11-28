@@ -82,9 +82,8 @@ class SceneManager {
 			return false;
 		if (position.x > MAP_SIZE.x + WALL_WIDTH / 2
 		|| position.x < -(MAP_SIZE.x + WALL_WIDTH / 2)
-		|| position.y > MAP_SIZE.y + WALL_WIDTH / 2
-		|| position.y < -(MAP_SIZE.y + WALL_WIDTH / 2)) {
-			console.log("out of map");
+		|| position.z > MAP_SIZE.z + WALL_WIDTH / 2
+		|| position.z < -(MAP_SIZE.z + WALL_WIDTH / 2)) {
 			return true;
 		}
 		return false;
