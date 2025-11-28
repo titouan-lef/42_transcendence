@@ -50,12 +50,12 @@ class Lightning {
 
 	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
-			this.currentLifetime -= 1 / LIGHTNING_LIFETIME;//scene.getEngine().getDeltaTime() / LIGHTNING_LIFETIME;
+			this.currentLifetime -= scene.metadata.gameSpeed / LIGHTNING_LIFETIME;
 			if (this.currentLifetime <= 0) {
 				this.destroy();
 				return;
 			}
-			this.sendObjectInfos(); /** @todo send at 30 fps */
+			this.sendObjectInfos();
 		});
 		return sceneObserver;
 	} 

@@ -24,7 +24,6 @@ class SceneManager {
 	private map: MapTemplate | null = null;
 	private readonly players: Player[] = [];
 	private engine: babylon.Engine;
-	private originalGetDelta: () => number;
 	private countdownIntervalId: ReturnType<typeof setInterval> | null = null;
 	private gameStopped = false;
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
@@ -34,7 +33,6 @@ class SceneManager {
 
 	constructor(engine: babylon.Engine, scene: babylon.Scene, settings: GameSettings) {
 		this.engine = engine;
-		this.originalGetDelta = engine.getDeltaTime; // keep original delta time
 		this.sockets.push(settings.player1.socket);
 		if (settings.player2) // non AI
 			this.sockets.push(settings.player2.socket);
@@ -200,11 +198,7 @@ class SceneManager {
 		if (!player1 || !player2)
 			return;
 		this.sendParticuleEvent(player1, player2, "explosion", position);
-		const originalGetDelta = this.originalGetDelta; // keep original delta
-		this.engine.getDeltaTime = function(): number {
-			return originalGetDelta.call(this) * 0.01; // slow animations
-		};
-		this.sendDeltaTime(player1, player2, this.engine.getDeltaTime());
+		this.sendDeltaTime(player1, player2, 0.1);
 		await new Promise<void>(resolve => setTimeout(
 			() => resolve(), 2700
 		));
@@ -213,7 +207,7 @@ class SceneManager {
 	private sendDeltaTime(player1: Player, player2: Player, deltaTime: number): void {
 		const time: RenderMessage = {
 			status: Status.RENDER,
-			deltaTime : deltaTime
+			deltaMultiplicator : deltaTime
 		};
 		player1.send(time);
 		player2.send(time);
@@ -285,8 +279,7 @@ class SceneManager {
 		}
 		this.createMap(scene, settings);
 		this.countdownIntervalId = this.startCountdown(START_TIMEOUT, settings);
-		this.engine.getDeltaTime = this.originalGetDelta;
-		this.sendDeltaTime(player1, player2, this.engine.getDeltaTime());
+		this.sendDeltaTime(player1, player2, 1);
 	}
 
 	destroyEnvironnement(): void {

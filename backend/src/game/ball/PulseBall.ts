@@ -11,7 +11,6 @@ class PulseBall extends BallTemplate {
 	}
 
 	activateEffect(): void {
-		this.effectInterval++;
 		if (this.effectInterval < PULSE_BALL_EFFECT_INTERVAL)
 			return;
 		this.effectInterval -= PULSE_BALL_EFFECT_INTERVAL;

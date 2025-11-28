@@ -3,7 +3,7 @@ import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
-import { POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
+import { GAME_STEPS_INTERVAL, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import fs from "fs";
 import { Status, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage } from "./web_sockets/types_transfert.js";
 import { Player } from "./player/Player.js";
@@ -17,10 +17,10 @@ class Game {
 	private readonly sceneManager: SceneManager;
 	private readonly settings: GameSettings;
 	private readonly camera: babylon.ArcRotateCamera; // the engine need a camera
-	private gameInterval?: ReturnType<typeof setInterval>; /** @todo type is supposed to be NodeJS.Timer but does not work */
-	private score: babylon.Vector2;
+	private gameStepsIntervalId?: ReturnType<typeof setInterval>; /** @todo type is supposed to be NodeJS.Timer but does not work */
+	private gameStepsInterval = GAME_STEPS_INTERVAL;
 	private inAnimation = false;
-	private readonly gameSpeed = 1000/60;
+	private score: babylon.Vector2;
 
 	constructor (id: number, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.id = id;
@@ -29,6 +29,7 @@ class Game {
 		this.camera = new babylon.ArcRotateCamera("Camera", 0, 0, 0, babylon.Vector3.Zero(), scene);
 		this.sceneManager = new SceneManager(engine, scene, settings);
 		this.scene = scene;
+		this.scene.metadata = { gameSpeed: 1 };
 		this.score = new babylon.Vector2(0, 0);
 		this.setScene();
 	}
@@ -58,8 +59,10 @@ class Game {
 	}
 
 	/**@todo usefull ? */
-	hide(): void {
-		this.engine.stopRenderLoop();
+	pause(): void {
+		if (this.gameStepsIntervalId)
+			clearInterval(this.gameStepsIntervalId);
+		//this.engine.stopRenderLoop();
 	}
 
 	stop(): void {
@@ -89,7 +92,9 @@ class Game {
 		if (goalInfos !== null && goalInfos.position !== null) {
 			this.inAnimation = true;
 			goalInfos.goal === "player1" ? this.score.x += 1 : this.score.y += 1;
+			this.changeGameSpeed(0.1);
 			await this.sceneManager.goalAnimation(goalInfos.position);
+			this.changeGameSpeed(1);
 			this.sendScore();
 			if (this.sceneManager.doesGameEnded()) // if closing game while animation
 				return;
@@ -199,19 +204,27 @@ class Game {
 		player2.send(scoreP2);
 	}
 
+	private changeGameSpeed(newSpeed: number): void {
+		this.scene.metadata.gameSpeed = newSpeed;
+	}
+
 	startRender(): void {
-		this.gameInterval = setInterval(() => {
+		this.gameStepsIntervalId = setInterval(() => {
+			//this.timer += this.gameSpeed;
 			const physics = this.scene.getPhysicsEngine();
 			if (physics)
-				physics._step(this.gameSpeed / 1000);
+				physics._step(this.gameStepsInterval / 1000 * this.scene.metadata.gameSpeed);
+			//if (this.timer >= 1) {
+			//this.timer = 0;
 			this.scene.render();
+			//}
 
 			const player1 = this.sceneManager.getPlayer(1);
 			const player2 = this.sceneManager.getPlayer(2);
 			if (!player1 || !player2)
 				return;
 			this.sendPositions(player1, player2);
-		}, this.gameSpeed);
+		}, this.gameStepsInterval);
 	}
 
 	private defineCloseAction(player: Player, enemy: Player): void {
@@ -239,10 +252,10 @@ class Game {
 	}
 
 	stopSendingPositions(): void {
-		if (!this.gameInterval)
+		if (!this.gameStepsIntervalId)
 			return;
-		clearInterval(this.gameInterval);
-		this.gameInterval = undefined;
+		clearInterval(this.gameStepsIntervalId);
+		this.gameStepsIntervalId = undefined;
 
 		const player1 = this.sceneManager.getPlayer(1);
 		const player2 = this.sceneManager.getPlayer(2);

@@ -9,7 +9,7 @@ export class Emote {
 
 	constructor(scene: babylon.Scene, texture: babylon.Texture, player: babylon.TransformNode) {
 		this.sceneObservable = scene.onBeforeRenderObservable;
-		this.sceneObserver = this.observeScene(scene);
+		this.sceneObserver = this.observeScene();
 		this.image = this.createImage(scene, texture);
 		this.image.renderingGroupId = 1;
 		this.image.parent = player;
@@ -28,11 +28,11 @@ export class Emote {
 		return plane;
 	}
 
-	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
+	private observeScene(): babylon.Observer<babylon.Scene> {
 		let grow = 0;
 		const sceneObserver = this.sceneObservable.add(() => {
 			grow += EMOTE_GROWSPEED;
-			this.timer += 1 / EMOTE_LIFETIME;//scene.getEngine().getDeltaTime() / EMOTE_LIFETIME;
+			this.timer += 1 / EMOTE_LIFETIME;
 			if (grow <= EMOTE_MAXGROW) {
 				this.image.scaling.set(0.1 * grow, 0.1 * grow, 0.1 * grow);
 				this.image.position.y += 0.5;

@@ -67,7 +67,7 @@ class EnvironmentManager {
 	}
 
 	private meteorSpawner(object: ObjectParameters, scene: babylon.Scene): void {
-		object.timer += 1;//scene.getEngine().getDeltaTime();
+		object.timer += scene.metadata.gameSpeed;
 		if (object.timer >= METEOR_INTERVAL) {
 			object.timer -= METEOR_INTERVAL;
 			const meteor = new Meteor(scene, this.objects.length, this.sockets);
@@ -76,7 +76,7 @@ class EnvironmentManager {
 	}
 
 	private lightningSpawner(object: ObjectParameters, scene: babylon.Scene): void {
-		object.timer += 1;//scene.getEngine().getDeltaTime();
+		object.timer += scene.metadata.gameSpeed;
 		if (object.timer >= LIGHTNING_INTERVAL) {
 			object.timer -= LIGHTNING_INTERVAL;
 			const lightning = new Lightning(scene, this.objects.length, this.sockets);
@@ -85,7 +85,7 @@ class EnvironmentManager {
 	}
 
 	private tornadoSpawner(object: ObjectParameters, scene: babylon.Scene): void {
-		object.timer += 1;//scene.getEngine().getDeltaTime();
+		object.timer += scene.metadata.gameSpeed;
 		if (object.timer >= TORNADO_INTERVAL) {
 			object.timer -= TORNADO_INTERVAL;
 			const tornado = new Tornado(scene, this.objects.length, planePosToVec3(this.wind), this.sockets);

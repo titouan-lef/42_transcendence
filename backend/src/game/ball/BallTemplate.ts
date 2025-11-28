@@ -51,7 +51,7 @@ abstract class BallTemplate {
 		this.realDirection = this.physic.body.getLinearVelocity();
 		
 		this.sceneObservable = scene.onBeforeRenderObservable;
-		this.sceneObserver = this.applyMovementChanges();
+		this.sceneObserver = this.applyMovementChanges(scene);
 	}
 
 	/**block the ball from having a Y velocity */
@@ -75,14 +75,14 @@ abstract class BallTemplate {
 	}
 
 	/** Spin doesn't apply to snake ball for obvious reasons */
-	protected applyMovementChanges(): babylon.Observer<babylon.Scene> {
+	protected applyMovementChanges(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
 			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y (only visual but will be sent to front)
 			if (this.gameStopped)
 				return;
 			if (this.particleCooldown > 0)
 				this.particleCooldown--;
-			this.unstuckTimer++;
+			this.unstuckTimer += scene.metadata.gameSpeed;
 			if (this.justCollided) {
 				this.realDirection = this.physic.body.getLinearVelocity(); // remember original velocity, to apply movement changes on it
 				this.justCollided = false; 
@@ -93,6 +93,7 @@ abstract class BallTemplate {
 				this.forceDirection *= -1;
 			this.applySpin();
 			this.nerfSpeed();
+			this.effectInterval += scene.metadata.gameSpeed;
 			this.activateEffect();
 			if (this.unstuckTimer >= UNSTUCK_TIMER) {
 				this.launchBall(this.mesh.position.x >= 0 ? -1 : 1);
