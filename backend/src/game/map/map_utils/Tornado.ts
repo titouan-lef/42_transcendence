@@ -34,7 +34,7 @@ class Tornado {
 
 	private setTornadoObserver(scene: babylon.Scene, windforce: babylon.Vector3): babylon.Observer<babylon.Scene> {
 		const tornadoObserver = this.tornadoObservable.add(() => {
-			this.tornado.position = this.tornado.absolutePosition.addInPlace(windforce.scale(0.05));
+			this.tornado.position = this.tornado.absolutePosition.addInPlace(windforce.scale(0.05 * scene.metadata.gameSpeed));
 			scene.meshes.forEach(mesh => {
 				if (!mesh.metadata?.pushable || !mesh.physicsBody)
 					return;
@@ -53,7 +53,7 @@ class Tornado {
 				const totalForce = turningForce.add(attractiveForce);
 				body.applyForce(totalForce, meshPosition);
 			});
-			this.currentLifetime -= 1 / TORNADO_LIFETIME;//scene.getEngine().getDeltaTime() / TORNADO_LIFETIME;
+			this.currentLifetime -= scene.metadata.gameSpeed / TORNADO_LIFETIME;
 			if (this.currentLifetime <= 0) {
 				this.destroy();
 				return;

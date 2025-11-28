@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
-import { DataMessage, ObjectMessage, OptionMessage, Status } from "./types_transfert.js";
+import { DataMessage, OptionMessage, Status } from "./types_transfert.js";
 import { stopGame } from "./canvas_creation.js";
 
 class Game {
@@ -12,6 +12,8 @@ class Game {
 	private readonly camera: babylon.ArcRotateCamera;
 	private readonly canvas: HTMLCanvasElement;
 	private settings: GameSettings;
+	private originalGetDelta: (() => number) | null = null;
+	private firstFrame = true;
 
 	constructor (canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.engine = engine;
@@ -31,7 +33,7 @@ class Game {
 					stopGame();
 					break;
 				case (Status.RENDER):
-					this.setDeltaTime(message.deltaTime);
+					this.setDeltaTime(message.deltaMultiplicator);
 					break;
 				default:
 					return; /** do nothing / not an error*/
@@ -64,14 +66,26 @@ class Game {
 		return scene;
 	};
 
-	private setDeltaTime(deltaTime: number): void {
-		this.engine.getDeltaTime = (): number => deltaTime;;
+	private setDeltaTime(multiplicator: number): void {
+		if (this.firstFrame)
+			return ;
+		this.engine.getDeltaTime = (): number => {
+			if (this.originalGetDelta === null)
+				return 0;
+			return this.originalGetDelta() * multiplicator;
+		};
 	}
 
 	show(): void {
 		if (!this.settings)
 			return;
-		this.engine.runRenderLoop(() => this.scene.render());
+		this.engine.runRenderLoop(() => {
+			this.scene.render();
+			if (this.firstFrame) {
+				this.originalGetDelta = this.engine.getDeltaTime.bind(this.engine);
+				this.firstFrame = false;
+			}
+		});
 	}
 
 	/**@todo usefull ? */

@@ -48,7 +48,7 @@ interface TimingMessage {
 
 interface RenderMessage {
 	status: Status.RENDER,
-	deltaTime: number,
+	deltaMultiplicator: number,
 }
 
 interface GoalMessage {

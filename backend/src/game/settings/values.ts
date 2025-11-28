@@ -5,8 +5,9 @@ export const SHOW_DISPOSE_LOGS = false;
 
 /**GAMEPLAY GENERAL SETTINGS */
 export const POINTS_TO_WIN = 11;
-export const UNSTUCK_TIMER = 400;
 export const START_TIMEOUT = 4; // in seconds
+const FPS = 60;
+export const GAME_STEPS_INTERVAL = 1000 / FPS;
 
 /**MAP GENERAL SETTINGS */
 export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100); //BACK + FRONT
@@ -49,6 +50,7 @@ export const MAX_SPEED = 60;
 export const NERF_SPEED_FACTOR = MAX_SPEED / 4;
 export const BALL_ANGULAR_FORCE = 0.6;
 export const BALL_ANGULAR_INTERVAL = 45; /** Angular interval is the number of step it will take to reach max/min value */
+export const UNSTUCK_TIMER = 420;
 
 export const INVISIBLE_BALL_FADING_INTERVAL = 50;
 export const INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL = 100;

@@ -11,7 +11,6 @@ class TrickyBall extends BallTemplate {
 	}
 	
 	activateEffect(): void {
-		this.effectInterval++;
 		if (this.effectInterval < TRICKY_BALL_EFFECT_INTERVAL)
 			return;
 		this.effectInterval -= TRICKY_BALL_EFFECT_INTERVAL;
