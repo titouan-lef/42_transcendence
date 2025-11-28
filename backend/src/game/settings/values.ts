@@ -14,23 +14,23 @@ export const WALL_WIDTH = 3; //BACK + FRONT
 export const WALL_HEIGHT = 5; //BACK + FRONT
 
 /**SKY MAP */
-export const LIGHTNING_INTERVAL = 600;
-export const LIGHTNING_LIFETIME = 800;
+export const LIGHTNING_INTERVAL = 60;
+export const LIGHTNING_LIFETIME = 80;
 export const LIGHTNING_FRAMES_TO_DISAPPEAR = 30;
 export const LIGHTNING_COLLISION_RADIUS = 5; //BACK + FRONT
 export const LIGHTNING_COLLISION_STRENGTH = 30;
 
 /**VOLCANO MAP */
-export const METEOR_INTERVAL = 3000;
+export const METEOR_INTERVAL = 180;
 export const METEOR_DIAMETER = 2; //BACK + FRONT
-export const METEOR_LIFETIME = 5000;
+export const METEOR_LIFETIME = 420;
 export const METEOR_COLLISION_RADIUS = METEOR_DIAMETER; //BACK + FRONT
 export const METEOR_COLLISION_STRENGTH = 30;
-export const METEOR_SPEED = 100;
+export const METEOR_SPEED = 1;
 
 /**DESERT MAP */
-export const TORNADO_INTERVAL = 3000;
-export const TORNADO_LIFETIME = 8000;
+export const TORNADO_INTERVAL = 180;
+export const TORNADO_LIFETIME = 300;
 export const WIND_FORCE = 10; //BACK + FRONT
 export const TORNADO_ATTRACTION_STRENGTH = 100;
 export const TORNADO_COLLISION_RADIUS = 3; //BACK + FRONT

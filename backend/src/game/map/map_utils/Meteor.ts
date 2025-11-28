@@ -64,15 +64,15 @@ class Meteor {
 			if (this.meteor.position.y < 0) {
 				if (this.currentLifetime === 1)
 					this.applyExplosionForce(scene, end);
-				this.currentLifetime -= scene.getEngine().getDeltaTime() / METEOR_LIFETIME;
+				this.currentLifetime -= 1 / METEOR_LIFETIME;//scene.getEngine().getDeltaTime() / METEOR_LIFETIME;
 				this.setBody(scene);
 				if (this.currentLifetime <= 0) {
 					this?.destroy();
 					return;
 				}
 			} else {
-				const ratio = scene.getAnimationRatio() / 60; // if game is slowed, meteor will also be
-				const velocity = this.direction.scale(METEOR_SPEED * ratio);
+				//const ratio = scene.getAnimationRatio() / 60; // if game is slowed, meteor will also be
+				const velocity = this.direction.scale(METEOR_SPEED);//(METEOR_SPEED * ratio)
 				this.meteor.position.addInPlace(velocity);
 			}
 			this.sendObjectInfos(); /** @todo send at 30 fps */

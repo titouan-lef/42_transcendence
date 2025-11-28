@@ -53,12 +53,12 @@ class Tornado {
 				const totalForce = turningForce.add(attractiveForce);
 				body.applyForce(totalForce, meshPosition);
 			});
-			this.currentLifetime += scene.getEngine().getDeltaTime() / TORNADO_LIFETIME;
+			this.currentLifetime -= 1 / TORNADO_LIFETIME;//scene.getEngine().getDeltaTime() / TORNADO_LIFETIME;
 			if (this.currentLifetime <= 0) {
 				this.destroy();
 				return;
 			}
-			this.sendObjectInfos(); /** @todo send at 30 fps */
+			this.sendObjectInfos();
 		});
 		return tornadoObserver;
 	}
@@ -86,6 +86,7 @@ class Tornado {
 		this.tornadoObservable.remove(this.tornadoObserver);
 		this.tornado?.dispose();
 		this.currentLifetime = 0;
+		this.sendObjectInfos();
 	}
 }
 
