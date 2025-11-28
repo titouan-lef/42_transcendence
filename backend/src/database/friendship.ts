@@ -8,7 +8,7 @@ interface Friendship {
 const TABLE_NAME = "Friendship";
 
 async function createFriendshipTable(): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			username TEXT NOT NULL,
@@ -41,7 +41,7 @@ async function addFriendship(user: string, friend: string): Promise<void> {
 }
 
 async function getAllFriendship(): Promise<Friendship[] | undefined> {
-	return fetchAll(TABLE_NAME);
+	return await fetchAll(TABLE_NAME);
 }
 
 async function getFriendships(username: string): Promise<string[] | undefined> {
@@ -59,8 +59,9 @@ async function getFriendships(username: string): Promise<string[] | undefined> {
 	return rows.map(row => row.friendName);
 }
 
+
 async function removeFriendship(username: string, friendName: string): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.run(
 			`DELETE FROM ${TABLE_NAME}
 			WHERE username = ?

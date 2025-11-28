@@ -40,8 +40,11 @@ APP.register(fastifyStatic, {
 
 // --- Users --- 
 APP.post("/api/user/new_user", addNewUser);
+
 APP.post("/api/user/login", connectUser);
+
 APP.get("/api/user/logout", { preHandler: verifyAuth }, disconnectUser);
+
 APP.get("/api/user/whoami", { preHandler: verifyAuth }, whoami);
 APP.post("/api/user/picture", getPicture);
 APP.post("/api/user/change_picture", { preHandler: verifyAuth }, changePicture);

@@ -10,7 +10,7 @@ interface Goal {
 const TABLE_NAME = "Goal";
 
 async function createGoalTable(): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,7 +22,7 @@ async function createGoalTable(): Promise<void> {
 }
 
 async function insertGoal(gameId: number, username: string): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (gameId, by) VALUES (?, ?)`,
 			[gameId, username]
@@ -31,11 +31,11 @@ async function insertGoal(gameId: number, username: string): Promise<void> {
 }
 
 async function getAllGoals(): Promise<Goal[] | undefined> {
-	return fetchAll(TABLE_NAME);
+	return await fetchAll(TABLE_NAME);
 }
 
 async function getGoalById(id: number): Promise<Goal | undefined> {
-	return applyQuery(
+	return await applyQuery(
 		async (db) => await db.get(
 			`SELECT *
 			FROM ${TABLE_NAME}

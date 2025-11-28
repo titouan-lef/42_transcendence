@@ -9,7 +9,7 @@ interface GameRule {
 const TABLE_NAME = "Game_rule";
 
 async function createGameRuleTable(): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			gameId INTEGER,
@@ -23,7 +23,7 @@ async function createGameRuleTable(): Promise<void> {
 }
 
 async function inserrtGameRule(gameRule: GameRule): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (gameId, ruleId, isActive) VALUES (? ,? , ?)`,
 			[gameRule.gameId, gameRule.ruleId, gameRule.isEnable]
@@ -32,11 +32,11 @@ async function inserrtGameRule(gameRule: GameRule): Promise<void> {
 }
 
 async function getAllGameRules(): Promise<GameRule[] | undefined> {
-	return fetchAll(TABLE_NAME);
+	return await fetchAll(TABLE_NAME);
 }
 
 async function getGameRuleById(gameId: number, ruleId: number): Promise<GameRule | undefined> {
-	return applyQuery(
+	return await applyQuery(
 		async (db) => await db.get(
 			`SELECT *
 			FROM ${TABLE_NAME}

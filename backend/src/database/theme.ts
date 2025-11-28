@@ -8,7 +8,7 @@ interface Theme {
 const TABLE_NAME = "Theme";
 
 async function createThemeTable(): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,7 +18,7 @@ async function createThemeTable(): Promise<void> {
 }
 
 async function insertTheme(name: string): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.run(
 			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES (?)`,
 			[name]
@@ -27,11 +27,11 @@ async function insertTheme(name: string): Promise<void> {
 }
 
 async function getAllTheme(): Promise<Theme[] | undefined> {
-	return fetchAll(TABLE_NAME);
+	return await fetchAll(TABLE_NAME);
 }
 
 async function getThemeById(id: number): Promise<Theme | undefined> {
-	return applyQuery(
+	return await applyQuery(
 		async (db) => await db.get(
 			`SELECT *
 			FROM ${TABLE_NAME}
