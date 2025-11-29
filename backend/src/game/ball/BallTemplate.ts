@@ -1,17 +1,19 @@
 import * as babylon from "@babylonjs/core";
 import { BallOption, GameSettings } from "../settings/GameSettings.js";
-import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, UNSTUCK_TIMER } from "../settings/values.js";
+import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, UNSTUCK_TIMER, COLORS3, PLAYER_STUN_DURATION } from "../settings/values.js";
 import { EventMessage, ParticlesType, Position, Status } from "../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
 import { vec3ToPos } from "../utils.js";
+import { Player } from "../player/Player.js";
 
 abstract class BallTemplate {
 
 	private readonly type: BallOption;
+	protected particleColor: babylon.Color3 = COLORS3.white;
 	protected readonly physic: babylon.PhysicsAggregate;
 	private readonly collisionObservable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
 	private readonly collisionObserver: babylon.Observer<babylon.IPhysicsCollisionEvent>;
-	private isInGoal: "player1" | "player2" | null = null;
+	protected isInGoal: "player1" | "player2" | null = null;
 	private goalPosition: babylon.Vector3 | null = null;
 	protected justCollided = false;
 	protected realDirection: babylon.Vector3;
@@ -124,6 +126,7 @@ abstract class BallTemplate {
 		const time: EventMessage = {
 			status: Status.EVENT,
 			type : type,
+			color: this.particleColor,
 			position: position
 		};
 		sockets.forEach((socket) => {
@@ -147,9 +150,23 @@ abstract class BallTemplate {
 					this.particleCooldown++;
 				}
 				this.checkSpin(collisionEvent);
+				this.checkStun(collisionEvent);
 			}
 		});
 		return collisionObserver;
+	}
+
+	private checkStun(collisionEvent: babylon.IPhysicsCollisionEvent): void {
+		const ballStunType = this.mesh.metadata?.stun;
+		if (!ballStunType)
+			return;
+
+		const player = collisionEvent.collidedAgainst.transformNode;
+
+		const side = this.checkSideHit(collisionEvent);
+		if ((ballStunType === "spin" && side === "normal")
+			|| (ballStunType === "normal" && side === "spinEffect"))
+			player.metadata.stunDuration = PLAYER_STUN_DURATION;
 	}
 
 	/** check if the player has the spinEffect and change the spinning boolean of the ball if so */
@@ -266,6 +283,8 @@ abstract class BallTemplate {
 	}
 
 	destroy(): void {
+		this.mesh.visibility = 0;
+		this.sendParticuleEvent(this.sockets, "explosion", vec3ToPos(this.mesh.position));
 		this.collisionObservable.remove(this.collisionObserver);
 		this.sceneObservable.remove(this.sceneObserver);
 		this.yObservable.remove(this.yObserver);

@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { GameOptions, GameSettings, PlayerSettings } from "../settings/GameSettings.js";
+import { GameOptions, GameSettings } from "../settings/GameSettings.js";
 import { PLAYER_DIMENSION, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY, PLAYER_DASH_MULT, PLAYER_DASH_CD, PLAYER_DASH_DURATION } from "../settings/values.js";
 import { PlayerControls, Position, DataMessage, Rotation, EmoteChoice } from "../web_sockets/types_transfert.js";
 
@@ -73,7 +73,7 @@ abstract class Player {
 
 		player.position.x = position.x;
 		player.position.y = position.y;
-		player.metadata = { type: "collider", playerId: id };
+		player.metadata = { type: "collider", playerId: id, stunDuration: 0 };
 		return player;
 	}
 
@@ -129,6 +129,10 @@ abstract class Player {
 		if (!q)
 			return { x: 0, y: 0, z: 0, w: 1 };
 		return { x: q.x, y: q.y, z: q.z, w: q.w };
+	}
+
+	getState(): boolean {
+		return this.player.metadata.stunDuration > 0;
 	}
 
 	setControls(controls: PlayerControls): void {
@@ -190,6 +194,12 @@ abstract class Player {
 	private playerObserver(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
 		const distanceFromEdge = (MAP_SIZE.z / 2) - WALL_WIDTH - (PLAYER_DIMENSION.z / 2);
 		const positionObserver = this.sceneObservable.add(() => {
+			if (this.player.metadata.stunDuration > 0) {
+				this.player.metadata.stunDuration -= scene.metadata.gameSpeed;
+				this.body.setLinearVelocity(new babylon.Vector3(0, 0, 0));
+				this.body.setAngularVelocity(new babylon.Vector3(0, 0, 0));
+				return ;
+			}
 			this.linearVelocityZ = (Number(this.keyPressed.mov_right) - Number(this.keyPressed.mov_left)) * PLAYER_MOVEMENT_VELOCITY * (2 * (this.id - 1) - 1);
 			if (this.rotatingPlayer)
 				this.angularVelocityY = (Number(this.keyPressed.rot_right) - Number(this.keyPressed.rot_left)) * PLAYER_ROTATION_VELOCITY;
@@ -211,8 +221,6 @@ abstract class Player {
 
 		return positionObserver;
 	}
-
-
 
 	destroy(): void {
 		this.sceneObservable.remove(this.positionObserver);

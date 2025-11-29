@@ -1,6 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { MAP_SIZE } from "../settings/values.js";
+import { Object } from "../web_sockets/types_transfert.js";
 
 class DefaultMap extends MapTemplate {
 	constructor(scene: babylon.Scene) {
@@ -10,6 +11,7 @@ class DefaultMap extends MapTemplate {
 	createGround(scene: babylon.Scene): babylon.Mesh {
 		const ground = babylon.MeshBuilder.CreateGround("defaultground",
 			{ width: MAP_SIZE.x, height: MAP_SIZE.z }, scene);
+		this.availableObjects.push(Object.CANON_BALL);
 		ground.metadata = { type: "ground" };
 		return ground;
 	}

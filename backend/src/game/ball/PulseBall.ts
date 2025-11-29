@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
-import { MAX_SPEED, PULSE_BALL_EFFECT_INTERVAL } from "../settings/values.js";
+import { COLORS3, MAX_SPEED, PULSE_BALL_EFFECT_INTERVAL } from "../settings/values.js";
 import { WebSocket } from "ws";
 import { vec3ToPos } from "../utils.js";
 import { GameSettings } from "../settings/GameSettings.js";
@@ -8,6 +8,7 @@ import { GameSettings } from "../settings/GameSettings.js";
 class PulseBall extends BallTemplate {
 	constructor(scene: babylon.Scene, sockets: WebSocket[], settings: GameSettings) {
 		super(scene, "pulse", sockets, settings);
+		this.particleColor = COLORS3.blue;
 	}
 
 	activateEffect(): void {

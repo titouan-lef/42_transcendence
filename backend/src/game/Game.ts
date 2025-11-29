@@ -52,9 +52,6 @@ class Game {
 	};
 
 	start(): void {
-		// this.engine.runRenderLoop(() => {
-		// 	this.scene.render();
-		// });
 		this.startGameCommunication();
 	}
 
@@ -62,7 +59,6 @@ class Game {
 	pause(): void {
 		if (this.gameStepsIntervalId)
 			clearInterval(this.gameStepsIntervalId);
-		//this.engine.stopRenderLoop();
 	}
 
 	stop(): void {
@@ -117,17 +113,26 @@ class Game {
 
 	private getPositions(player: Player, enemy: Player): PositionsMessage | null {
 		const ball = this.sceneManager.getBall();
-		if (!ball)
-			return null;
+		let ballPosition;
+		let ballVisibility;
+		if (!ball) {
+			ballPosition = { x: 0, y:0, z: 0 };
+			ballVisibility = 0;
+		} else{
+			ballPosition = ball.getPosition();
+			ballVisibility = ball.getVisibility();
+		}
 
 		const positions: PositionsMessage = {
 			status: Status.POSITIONS,
-			ball: ball.getPosition(),
-			ballVisibility: ball.getVisibility(),
+			ball: ballPosition,
+			ballVisibility: ballVisibility,
 			player: player.getPosition(),
 			playerRotation: player.getRotation(),
+			playerStunned: player.getState(),
 			enemy: enemy.getPosition(),
-			enemyRotation: enemy.getRotation()
+			enemyRotation: enemy.getRotation(),
+			enemyStunned: enemy.getState(),
 		};
 		return positions;
 	}
@@ -210,14 +215,10 @@ class Game {
 
 	startRender(): void {
 		this.gameStepsIntervalId = setInterval(() => {
-			//this.timer += this.gameSpeed;
 			const physics = this.scene.getPhysicsEngine();
 			if (physics)
 				physics._step(this.gameStepsInterval / 1000 * this.scene.metadata.gameSpeed);
-			//if (this.timer >= 1) {
-			//this.timer = 0;
 			this.scene.render();
-			//}
 
 			const player1 = this.sceneManager.getPlayer(1);
 			const player2 = this.sceneManager.getPlayer(2);

@@ -12,6 +12,7 @@ import { COLORS3, MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/val
 import { CountDown } from "./CountDown.js";
 import { DataMessage, EventMessage, GoalMessage, EmoteMessage, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
 import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
+import { ParticuleManager as ParticleManager } from "./ParticuleManager.js";
 
 class SceneManager {
 	private ball: Ball | null = null;
@@ -22,12 +23,15 @@ class SceneManager {
 	private readonly textures: Record<string, babylon.Texture> = {};
 	private score: Score;
 	private readonly environnementManager: EnvironmentManager;
+	private readonly particleManager: ParticleManager;
 	private texturesCreated = false;
 
 	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera, settings: GameSettings) {
 		this.scene = scene;
 		this.score = new Score(scene, camera);
 		this.environnementManager = new EnvironmentManager();
+		this.createTextures(scene);
+		this.particleManager = new ParticleManager(this.textures);
 
 		settings.player1.socket?.addEventListener("message", (event) => {
 			const message : DataMessage = JSON.parse(event.data);
@@ -119,7 +123,7 @@ class SceneManager {
 		this.players.push(player2);
 	}
 
-	createTextures(scene: babylon.Scene): void { /** @todo check if one request per texture is best practice. Do we need all textures for all the maps ?? => no but we create textures ONE time per game*/
+	private createTextures(scene: babylon.Scene): void { /** @todo check if one request per texture is best practice. Do we need all textures for all the maps ?? => no but we create textures ONE time per game*/
 		this.textures.spark = new babylon.Texture("textures/sparks.png", scene, true);
 		this.textures.flare = new babylon.Texture("textures/flare.png", scene, true);
 		this.textures.stars = new babylon.Texture("textures/particle.png", scene, true);
@@ -135,7 +139,7 @@ class SceneManager {
 
 	private handleParticules(message: EventMessage): void {
 		/** @todo bigger collisison particules if the impact if stronger ? */
-		this.ball?.showParticles(message.position, this.scene, message.type);
+		this.particleManager.showParticles(message.position, this.scene, message);
 	}
 
 	private setCountDown(time: number): void {
@@ -169,9 +173,10 @@ class SceneManager {
 	}
  
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
+		this.particleManager.clear();
 		this.createBall(scene, settings.ball);
 		this.createMap(scene, settings.map, settings.wind);
-		this.environnementManager.destroy();
+		this.environnementManager.clear();
 	}
 
 	destroyEnvironnement(score: babylon.Vector2 | null): void {

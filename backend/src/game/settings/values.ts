@@ -1,5 +1,15 @@
 import * as babylon from "@babylonjs/core";
 
+export const COLORS3 = {
+	// REGULAR COLORS
+	white:							babylon.Color3.FromHexString("#FFFFFF"),
+	red:							babylon.Color3.FromHexString("#FF0000"),
+	green:							babylon.Color3.FromHexString("#00FF00"),
+	blue:							babylon.Color3.FromHexString("#0000FF"),
+	yellow:							babylon.Color3.FromHexString("#FFFF00"),
+	orange:							babylon.Color3.FromHexString("#FF8000")
+};
+
 /**DEBUG FUNCTION */
 export const SHOW_DISPOSE_LOGS = false;
 
@@ -13,15 +23,16 @@ export const GAME_STEPS_INTERVAL = 1000 / FPS;
 export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100); //BACK + FRONT
 export const WALL_WIDTH = 3; //BACK + FRONT
 export const WALL_HEIGHT = 5; //BACK + FRONT
+export const WIND_FORCE = 10; //BACK + FRONT
 
-/**SKY MAP */
+
+/**OBJECTS */
 export const LIGHTNING_INTERVAL = 60;
 export const LIGHTNING_LIFETIME = 80;
 export const LIGHTNING_FRAMES_TO_DISAPPEAR = 30;
 export const LIGHTNING_COLLISION_RADIUS = 5; //BACK + FRONT
 export const LIGHTNING_COLLISION_STRENGTH = 30;
 
-/**VOLCANO MAP */
 export const METEOR_INTERVAL = 180;
 export const METEOR_DIAMETER = 2; //BACK + FRONT
 export const METEOR_LIFETIME = 420;
@@ -29,12 +40,12 @@ export const METEOR_COLLISION_RADIUS = METEOR_DIAMETER; //BACK + FRONT
 export const METEOR_COLLISION_STRENGTH = 30;
 export const METEOR_SPEED = 1;
 
-/**DESERT MAP */
 export const TORNADO_INTERVAL = 180;
 export const TORNADO_LIFETIME = 300;
-export const WIND_FORCE = 10; //BACK + FRONT
 export const TORNADO_ATTRACTION_STRENGTH = 100;
 export const TORNADO_COLLISION_RADIUS = 3; //BACK + FRONT
+
+export const CANON_BALL_INTERVAL = 180;
 
 /**PLAYER */
 export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x //BACK + FRONT
@@ -45,6 +56,7 @@ export const PLAYER_ROTATION_VELOCITY = 15;
 export const PLAYER_DASH_CD = 20;
 export const PLAYER_DASH_MULT = 100;
 export const PLAYER_DASH_DURATION = 5;
+export const PLAYER_STUN_DURATION = 90;
 
 /** BALL SETTINGS */
 export const BALL_DIAMETER = 2; //has to be smaller than the player //BACK + FRONT
