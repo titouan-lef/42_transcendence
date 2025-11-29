@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { GameOptions, GameSettings } from "../settings/GameSettings.js";
+import { GameOptions, GameSettings, PlayerSettings } from "../settings/GameSettings.js";
 import { PLAYER_DIMENSION, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY, PLAYER_DASH_MULT, PLAYER_DASH_CD, PLAYER_DASH_DURATION } from "../settings/values.js";
 import { PlayerControls, Position, DataMessage, Rotation, EmoteChoice } from "../web_sockets/types_transfert.js";
 
@@ -8,7 +8,7 @@ abstract class Player {
 	private readonly username: string;
 	protected readonly player: babylon.TransformNode;
 	private readonly body: babylon.PhysicsBody;
-	private readonly keyPressed: boolean[] = [false, false, false, false, false, false, false, false, false, false, false];
+	private readonly keyPressed: Record<string, boolean> = {};
 	private readonly rotatingPlayer: boolean;
 	private readonly applyingSpin;
 	private readonly dashingPlayer;
@@ -28,6 +28,21 @@ abstract class Player {
 		this.applyingSpin = options.spin;
 		this.rotatingPlayer = options.rotatingPlayer;
 		this.dashingPlayer = options.dashingPlayer;
+
+		this.keyPressed = {
+			mov_right: false,
+			mov_left: false,
+			rot_right: false,
+			rot_left: false,
+			normalMode: false,
+			spinMode: false,
+			emoteStrong: false,
+			emoteSad: false,
+			emoteLol: false,
+			emoteAngry: false,
+			dash: false
+		};
+
 		this.player = this.setPlayer(scene, position, id);
 		this.body = this.setPlayerPhysic(scene);
 		this.baseRotation = this.setBaseRotation(id);
@@ -117,24 +132,25 @@ abstract class Player {
 	}
 
 	setControls(controls: PlayerControls): void {
-		this.keyPressed[0] = controls.mov_left;
-		this.keyPressed[1] = controls.mov_right;
-		this.keyPressed[2] = controls.rot_left;
-		this.keyPressed[3] = controls.rot_right;
-		this.keyPressed[4] = controls.normalMode;
-		this.keyPressed[5] = controls.spinMode;
-		this.keyPressed[6] = controls.emoteStrong;
-		this.keyPressed[7] = controls.emoteSad;
-		this.keyPressed[8] = controls.emoteLol;
-		this.keyPressed[9] = controls.emoteAngry;
-		this.keyPressed[10] = controls.dash;
+		this.keyPressed.mov_left = controls.mov_left;
+		this.keyPressed.mov_right = controls.mov_right;
+		this.keyPressed.rot_left = controls.rot_left;
+		this.keyPressed.rot_right = controls.rot_right;
+		this.keyPressed.normalMode = controls.normalMode;
+		this.keyPressed.spinMode = controls.spinMode;
+		this.keyPressed.emoteStrong = controls.emoteStrong;
+		this.keyPressed.emoteSad = controls.emoteSad;
+		this.keyPressed.emoteLol = controls.emoteLol;
+		this.keyPressed.emoteAngry = controls.emoteAngry;
+		this.keyPressed.dash = controls.dash;
 		this.handleAction();
 	}
 
+
 	clearControls(): void {
-		this.keyPressed.forEach(key => {
-			key = false;
-		});
+		for (const key in this.keyPressed) {
+			this.keyPressed[key] = false;
+		}
 	}
 
 	getEmote(): EmoteChoice | undefined {
@@ -146,24 +162,24 @@ abstract class Player {
 	}
 
 	private changeEmote(): void {
-		if (this.keyPressed[6])
+		if (this.keyPressed.emoteStrong)
 			this.emote = EmoteChoice.STRONG;
-		if (this.keyPressed[7])
+		if (this.keyPressed.emoteSad)
 			this.emote = EmoteChoice.SAD;
-		if (this.keyPressed[8])
+		if (this.keyPressed.emoteLol)
 			this.emote = EmoteChoice.LOL;
-		if (this.keyPressed[9])
+		if (this.keyPressed.emoteAngry)
 			this.emote = EmoteChoice.ANGRY;
 	}
 
 	private handleAction(): void {
-		if (this.keyPressed[4] && this.rotatingPlayer)
+		if (this.keyPressed.normalMode && this.rotatingPlayer)
 			this.normalMode();
-		if (this.keyPressed[5])
+		if (this.keyPressed.spinMode)
 			this.spinMode();
-		if (this.keyPressed[6] || this.keyPressed[7] || this.keyPressed[8] || this.keyPressed[9])
+		if (this.keyPressed.emoteStrong || this.keyPressed.emoteSad || this.keyPressed.emoteLol || this.keyPressed.emoteAngry)
 			this.changeEmote();
-		if (this.keyPressed[10] && this.dashingPlayer && this.dashCooldown <= 0) {
+		if (this.keyPressed.dash && this.dashingPlayer && this.dashCooldown <= 0) {
 			this.isDashing = true;
 			this.dashDuration = PLAYER_DASH_DURATION;
 			this.dashCooldown += PLAYER_DASH_CD;
@@ -174,9 +190,9 @@ abstract class Player {
 	private playerObserver(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
 		const distanceFromEdge = (MAP_SIZE.z / 2) - WALL_WIDTH - (PLAYER_DIMENSION.z / 2);
 		const positionObserver = this.sceneObservable.add(() => {
-			this.linearVelocityZ = (Number(this.keyPressed[1]) - Number(this.keyPressed[0])) * PLAYER_MOVEMENT_VELOCITY * (2 * (this.id - 1) - 1);
+			this.linearVelocityZ = (Number(this.keyPressed.mov_right) - Number(this.keyPressed.mov_left)) * PLAYER_MOVEMENT_VELOCITY * (2 * (this.id - 1) - 1);
 			if (this.rotatingPlayer)
-				this.angularVelocityY = (Number(this.keyPressed[3]) - Number(this.keyPressed[2])) * PLAYER_ROTATION_VELOCITY;
+				this.angularVelocityY = (Number(this.keyPressed.rot_right) - Number(this.keyPressed.rot_left)) * PLAYER_ROTATION_VELOCITY;
 			if (this.dashCooldown > 0)
 				this.dashCooldown -= scene.metadata.gameSpeed;
 			if (this.isDashing) {

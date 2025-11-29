@@ -45,12 +45,8 @@ class Player {
 		if (settings.socket && settings.playerKeys) {
 			this.controls = settings.playerKeys;
 			this.socket = settings.socket;
-			window.addEventListener("keydown", (event: KeyboardEvent) => {
-				this.handleKeyDown(event);
-			});
-			window.addEventListener("keyup", (event: KeyboardEvent) => {
-				this.handleKeyUp(event);
-			});
+			window.addEventListener("keydown", this.handleKeyDown);
+			window.addEventListener("keyup", this.handleKeyUp);
 		}
 	}
 
@@ -130,7 +126,7 @@ class Player {
 		return controls;
 	}
 
-	handleKeyDown(event: KeyboardEvent): void {
+	private handleKeyDown = (event: KeyboardEvent): void => {
 		if (!this.controls)
 			return;
 		let changed = false;
@@ -143,9 +139,9 @@ class Player {
 		}
 		if (changed)
 			this.socket?.send(JSON.stringify(this.getPressedKeys()));
-	}
+	};
 
-	handleKeyUp(event: KeyboardEvent): void {
+	private handleKeyUp = (event: KeyboardEvent): void => {
 		if (!this.controls)
 			return;
 		let changed = false;
@@ -158,7 +154,7 @@ class Player {
 		}
 		if (changed)
 			this.socket?.send(JSON.stringify(this.getPressedKeys()));
-	}
+	};
 
 	popEmote(scene: babylon.Scene, message: EmoteMessage, textures: Record<string, babylon.Texture>): void {
 		this.emote?.destroy();
@@ -183,6 +179,8 @@ class Player {
 	}
 
 	destroy(): void {
+		window.removeEventListener("keydown", this.handleKeyDown);
+		window.removeEventListener("keyup", this.handleKeyUp);
 		if (this.emote)
 			this.emote.destroy();
 		this.sceneObservable?.remove(this.sceneObserver);
