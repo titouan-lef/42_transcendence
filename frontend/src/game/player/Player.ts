@@ -4,6 +4,7 @@ import { PLAYER_DIMENSION, COLORS3, PLAYER_TRAIL_INTERVAL, PLAYER_TRAIL_ON } fro
 import { PlayerTrail } from "./PlayerTrail.js";
 import { EmoteMessage, EmoteChoice, PlanePosition, PlayerControls, Rotation } from "../types_transfert.js";
 import { Emote } from "./Emote.js";
+import { StunAnimation } from "./StunAnimation.js";
 
 class Player {
 	private readonly player: babylon.TransformNode;
@@ -17,6 +18,7 @@ class Player {
 	private sceneObservable: babylon.Observable<babylon.Scene> | null = null;
 	private sceneObserver: babylon.Observer<babylon.Scene> | null = null;
 	private emote: Emote | null = null;
+	private stunAnimation: StunAnimation | null = null;
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings, settings: PlayerSettings) {
 		this.applyingSpin = gameSettings.spin;
@@ -109,6 +111,15 @@ class Player {
 		this.player.rotationQuaternion.set(rotation.x, rotation.y, rotation.z, rotation.w);
 	}
 
+	setStunAnim(playerStunned: boolean, texture: babylon.Texture): void {
+		if (!playerStunned) {
+			this.stunAnimation?.destroy();
+			return ;
+		}
+		if (!this.stunAnimation)
+			this.stunAnimation = new StunAnimation(this.player.getScene(), texture, this.player);
+	}
+
 	getPressedKeys(): PlayerControls {
 		const controls: PlayerControls = {
 			mov_right: this.keyPressed.mov_right,
@@ -181,8 +192,8 @@ class Player {
 	destroy(): void {
 		window.removeEventListener("keydown", this.handleKeyDown);
 		window.removeEventListener("keyup", this.handleKeyUp);
-		if (this.emote)
-			this.emote.destroy();
+		this.stunAnimation?.destroy();
+		this.emote?.destroy();
 		this.sceneObservable?.remove(this.sceneObserver);
 		while (this.playerTrails.length) {
 			this.playerTrails[0]?.destroy();
