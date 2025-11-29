@@ -4,7 +4,7 @@ import * as babylon from "@babylonjs/core";
 export const SHOW_DISPOSE_LOGS = false;
 
 /**GAMEPLAY GENERAL SETTINGS */
-export const POINTS_TO_WIN = 11;
+export const POINTS_TO_WIN = 2;
 export const START_TIMEOUT = 4; // in seconds
 const FPS = 60;
 export const GAME_STEPS_INTERVAL = 1000 / FPS;
@@ -36,15 +36,15 @@ export const WIND_FORCE = 10; //BACK + FRONT
 export const TORNADO_ATTRACTION_STRENGTH = 100;
 export const TORNADO_COLLISION_RADIUS = 3; //BACK + FRONT
 
-
 /**PLAYER */
 export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x //BACK + FRONT
 export const PLAYER_MASS = 1;
 export const PLAYER_RESTITUTION = 1;
 export const PLAYER_MOVEMENT_VELOCITY = 65;
-export const PLAYER_ROTATION_VELOCITY = 10;
-export const PLAYER_DASH_CD = 60;
-export const PLAYER_DASH_MULT = 2;
+export const PLAYER_ROTATION_VELOCITY = 15;
+export const PLAYER_DASH_CD = 20;
+export const PLAYER_DASH_MULT = 100;
+export const PLAYER_DASH_DURATION = 5;
 
 /** BALL SETTINGS */
 export const BALL_DIAMETER = 2; //has to be smaller than the player //BACK + FRONT

@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { GameOptions, GameSettings } from "../settings/GameSettings.js";
-import { PLAYER_DIMENSION, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY, PLAYER_DASH_MULT, PLAYER_DASH_CD } from "../settings/values.js";
+import { PLAYER_DIMENSION, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY, PLAYER_DASH_MULT, PLAYER_DASH_CD, PLAYER_DASH_DURATION } from "../settings/values.js";
 import { PlayerControls, Position, DataMessage, Rotation, EmoteChoice } from "../web_sockets/types_transfert.js";
 
 abstract class Player {
@@ -13,6 +13,7 @@ abstract class Player {
 	private readonly applyingSpin;
 	private readonly dashingPlayer;
 	private isDashing = false;
+	private dashDuration = 0;
 	private dashCooldown = 0;
 	private readonly baseRotation: babylon.Quaternion;
 	private readonly reverseRotation: babylon.Quaternion;
@@ -144,20 +145,6 @@ abstract class Player {
 		this.emote = undefined;
 	}
 
-	private handleAction(): void {
-		this.linearVelocityZ = (Number(this.keyPressed[1]) - Number(this.keyPressed[0])) * PLAYER_MOVEMENT_VELOCITY * (2 * (this.id - 1) - 1);
-		if (this.rotatingPlayer)
-			this.angularVelocityY = (Number(this.keyPressed[3]) - Number(this.keyPressed[2])) * PLAYER_ROTATION_VELOCITY; /** @todo chaeck if valid for both single and dual player */
-		if (this.keyPressed[4] && this.rotatingPlayer)
-			this.normalMode();
-		if (this.keyPressed[5])
-			this.spinMode();
-		if (this.keyPressed[6] || this.keyPressed[7] || this.keyPressed[8] || this.keyPressed[9])
-			this.changeEmote();
-		if (this.keyPressed[10] && this.dashingPlayer && this.dashCooldown <= 0)
-			this.isDashing = true;
-	}
-
 	private changeEmote(): void {
 		if (this.keyPressed[6])
 			this.emote = EmoteChoice.STRONG;
@@ -169,25 +156,47 @@ abstract class Player {
 			this.emote = EmoteChoice.ANGRY;
 	}
 
+	private handleAction(): void {
+		if (this.keyPressed[4] && this.rotatingPlayer)
+			this.normalMode();
+		if (this.keyPressed[5])
+			this.spinMode();
+		if (this.keyPressed[6] || this.keyPressed[7] || this.keyPressed[8] || this.keyPressed[9])
+			this.changeEmote();
+		if (this.keyPressed[10] && this.dashingPlayer && this.dashCooldown <= 0) {
+			this.isDashing = true;
+			this.dashDuration = PLAYER_DASH_DURATION;
+			this.dashCooldown += PLAYER_DASH_CD;
+		}
+	}
+
+
 	private playerObserver(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
 		const distanceFromEdge = (MAP_SIZE.z / 2) - WALL_WIDTH - (PLAYER_DIMENSION.z / 2);
 		const positionObserver = this.sceneObservable.add(() => {
+			this.linearVelocityZ = (Number(this.keyPressed[1]) - Number(this.keyPressed[0])) * PLAYER_MOVEMENT_VELOCITY * (2 * (this.id - 1) - 1);
+			if (this.rotatingPlayer)
+				this.angularVelocityY = (Number(this.keyPressed[3]) - Number(this.keyPressed[2])) * PLAYER_ROTATION_VELOCITY;
 			if (this.dashCooldown > 0)
 				this.dashCooldown -= scene.metadata.gameSpeed;
-			if (this.player.position.z < -distanceFromEdge && this.linearVelocityZ === -PLAYER_MOVEMENT_VELOCITY)
-				this.linearVelocityZ += PLAYER_MOVEMENT_VELOCITY;
-			if (this.player.position.z > distanceFromEdge && this.linearVelocityZ === PLAYER_MOVEMENT_VELOCITY)
-				this.linearVelocityZ -= PLAYER_MOVEMENT_VELOCITY;
 			if (this.isDashing) {
+				this.dashDuration -= scene.metadata.gameSpeed;
+				if (this.dashDuration <= 0)
+					this.isDashing = false;
 				this.linearVelocityZ *= PLAYER_DASH_MULT;
-				this.isDashing = false;
-				this.dashCooldown += PLAYER_DASH_CD;
 			}
+			if (this.player.position.z <= -distanceFromEdge && this.linearVelocityZ < 0)
+				this.linearVelocityZ = 0;
+			if (this.player.position.z >= distanceFromEdge && this.linearVelocityZ > 0)
+				this.linearVelocityZ = 0;
 			this.body.setLinearVelocity(new babylon.Vector3(0, 0, this.linearVelocityZ));
 			this.body.setAngularVelocity(new babylon.Vector3(0, this.angularVelocityY, 0));
 		});
+
 		return positionObserver;
 	}
+
+
 
 	destroy(): void {
 		this.sceneObservable.remove(this.positionObserver);
