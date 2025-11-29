@@ -94,10 +94,10 @@ class Game {
 			goalInfos.goal === "player1" ? this.score.x += 1 : this.score.y += 1;
 			this.changeGameSpeed(0.1);
 			await this.sceneManager.goalAnimation(goalInfos.position);
-			this.changeGameSpeed(1);
-			this.sendScore();
 			if (this.sceneManager.doesGameEnded()) // if closing game while animation
 				return;
+			this.changeGameSpeed(1);
+			this.sendScore();
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
 				stopGame(this.id);
 			} else {

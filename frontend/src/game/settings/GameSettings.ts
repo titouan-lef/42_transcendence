@@ -17,6 +17,7 @@ interface PlayerKeys {
 	emoteSad: PlayerKey;
 	emoteLol: PlayerKey;
 	emoteAngry: PlayerKey;
+	dash: PlayerKey;
 }
 
 interface PlayerSettings {
@@ -35,17 +36,19 @@ class GameSettings {
 	ball: BallOption;
 	rotatingPlayer: boolean;
 	spin: boolean;
+	dashingPlayer: boolean;
 
 	readonly player1: PlayerSettings;
 	readonly player2: PlayerSettings;
 
-	constructor(playerId: 1 | 2, map: MapOption, wind: PlanePosition, ball: BallOption, rotatingPlayer: boolean, spin: boolean,
+	constructor(playerId: 1 | 2, map: MapOption, wind: PlanePosition, ball: BallOption, rotatingPlayer: boolean, spin: boolean, dashingPlayer: boolean,
 		player1: WebSocket, player1Keys: PlayerKeys, player2?: WebSocket, player2Keys?: PlayerKeys) {
 		this.map = map;
 		this.wind = wind;
 		this.ball = ball;
 		this.rotatingPlayer = rotatingPlayer;
 		this.spin = spin;
+		this.dashingPlayer = dashingPlayer;
 		this.player1 = {
 			playerId: playerId,
 			socket: player1,

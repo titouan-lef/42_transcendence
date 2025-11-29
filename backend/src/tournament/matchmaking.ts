@@ -30,7 +30,8 @@ function getRandomOptions(): GameOptions {
 		ball: "random",
 		rotatingPlayer: randomBoolean(),
 		spin: randomBoolean(),
-		windAffectsBall: randomBoolean()
+		windAffectsBall: randomBoolean(),
+		dashingPlayer: randomBoolean()
 	};
 	return options;
 }

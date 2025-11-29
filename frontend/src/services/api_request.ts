@@ -81,6 +81,7 @@ interface GameOptions { /** @toto include GameOptions in GameSettings ? */
 	rotatingPlayer: boolean;
 	spin: boolean;
 	windAffectsBall: boolean;
+	dashingPlayer: boolean;
 }
 
 async function askForGame(): Promise<boolean> {
@@ -121,7 +122,8 @@ async function newGameVsAI(): Promise<void> {
 		ball: ["default"],
 		rotatingPlayer: true,
 		spin: true,
-		windAffectsBall: true
+		windAffectsBall: true,
+		dashingPlayer: true
 	};
 
 	const reply = await sendPostRequestToBack("/api/game/ai_game", JSON.stringify(options));
@@ -174,7 +176,8 @@ async function newLocalGame(): Promise<void> {
 		ball: ["default"],
 		rotatingPlayer: true,
 		spin: true,
-		windAffectsBall: true
+		windAffectsBall: true,
+		dashingPlayer: true
 	};
 
 	const reply = await sendPostRequestToBack("/api/game/local_game", JSON.stringify(options));

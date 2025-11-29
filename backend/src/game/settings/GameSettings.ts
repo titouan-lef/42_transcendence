@@ -19,6 +19,7 @@ interface GameOptions { /** @toto include GameOptions in GameSettings ? */
 	rotatingPlayer: boolean;
 	spin: boolean;
 	windAffectsBall: boolean;
+	dashingPlayer: boolean;
 }
 
 class GameSettings {

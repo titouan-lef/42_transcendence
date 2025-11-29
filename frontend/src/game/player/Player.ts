@@ -38,7 +38,8 @@ class Player {
 			emoteStrong: false,
 			emoteSad: false,
 			emoteLol: false,
-			emoteAngry: false
+			emoteAngry: false,
+			dash: false
 		};
 
 		if (settings.socket && settings.playerKeys) {
@@ -123,7 +124,8 @@ class Player {
 			emoteStrong: this.keyPressed.emoteStrong,
 			emoteSad: this.keyPressed.emoteSad,
 			emoteLol: this.keyPressed.emoteLol,
-			emoteAngry: this.keyPressed.emoteAngry
+			emoteAngry: this.keyPressed.emoteAngry,
+			dash: this.keyPressed.dash
 		};
 		return controls;
 	}
