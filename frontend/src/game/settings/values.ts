@@ -154,6 +154,8 @@ export const PLAYER_TRAIL_ON = true;
 export const EMOTE_LIFETIME = 50;
 export const EMOTE_GROWSPEED = 1;
 export const EMOTE_MAXGROW = 10;
+export const STUN_STAR_GROWSPEED = 0.2;
+export const STUN_STAR_MAXGROW = 2;
 
 /** BALL SETTINGS */
 export const BALL_DIAMETER = 2; //has to be smaller than the player //BACK + FRONT
