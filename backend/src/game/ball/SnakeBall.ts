@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
-import { SNAKE_BALL_ANGULAR_FORCE, SNAKE_BALL_ANGULAR_INTERVAL } from "../settings/values.js";
+import { COLORS3, SNAKE_BALL_ANGULAR_FORCE, SNAKE_BALL_ANGULAR_INTERVAL } from "../settings/values.js";
 import { WebSocket } from "ws";
 import { GameSettings } from "../settings/GameSettings.js";
 
@@ -8,6 +8,7 @@ class SnakeBall extends BallTemplate {
 	constructor(scene: babylon.Scene, sockets: WebSocket[], settings: GameSettings) {
 		super(scene, "snake", sockets, settings);
 		this.force = SNAKE_BALL_ANGULAR_FORCE;
+		this.particleColor = COLORS3.green;
 	}
 
 	activateEffect(): void {};

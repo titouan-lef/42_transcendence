@@ -1,12 +1,13 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
-import { INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL, INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL } from "../settings/values.js";
+import { COLORS3, INVISIBLE_BALL_FADING_INTERVAL, INVISIBLE_BALL_INVISIBILITY_INTERVAL, INVISIBLE_BALL_LOOSING_VISIBILITY_INTERVAL } from "../settings/values.js";
 import { WebSocket } from "ws";
 import { GameSettings } from "../settings/GameSettings.js";
 
 class InvisibleBall extends BallTemplate {
 	constructor(scene: babylon.Scene, sockets: WebSocket[], settings: GameSettings) {
 		super(scene, "invisible", sockets, settings);
+		this.particleColor = COLORS3.red;
 	}
 	
 	activateEffect(): void {

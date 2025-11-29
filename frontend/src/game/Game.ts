@@ -106,7 +106,6 @@ class Game {
 	}
 
 	private setScene(): void {
-		this.sceneManager.createTextures(this.scene);
 		this.sceneManager.createPlayers(this.scene, this.settings);
 		this.sceneManager.setEnvironnement(this.scene, this.settings);
 		

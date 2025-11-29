@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { BallTemplate } from "./BallTemplate.js";
-import { TRICKY_BALL_EFFECT_INTERVAL, TRICKY_BALL_FORWARD_ONLY } from "../settings/values.js";
+import { COLORS3, TRICKY_BALL_EFFECT_INTERVAL, TRICKY_BALL_FORWARD_ONLY } from "../settings/values.js";
 import { WebSocket } from "ws";
 import { vec3ToPos } from "../utils.js";
 import { GameSettings } from "../settings/GameSettings.js";
@@ -8,6 +8,7 @@ import { GameSettings } from "../settings/GameSettings.js";
 class TrickyBall extends BallTemplate {
 	constructor(scene: babylon.Scene, sockets: WebSocket[], settings: GameSettings) {
 		super(scene, "tricky", sockets, settings);
+		this.particleColor = COLORS3.orange;
 	}
 	
 	activateEffect(): void {

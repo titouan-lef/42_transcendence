@@ -2,20 +2,24 @@ import * as babylon from "@babylonjs/core";
 import { Lightning } from "./Lightning.js";
 import { Meteor } from "./Meteor.js";
 import { Tornado } from "./Tornado.js";
-import { ObjectMessage } from "../../types_transfert.js";
+import { ObjectMessage, Object } from "../../types_transfert.js";
+import { Ball } from "../../ball/Ball.js";
+import { COLORS3 } from "../../settings/values.js";
 
-type ObjectType = Lightning | Meteor | Tornado;
+type ObjectType = Lightning | Meteor | Tornado | Ball;
 
 class EnvironmentManager {
 	private readonly objects: ObjectType[] = [];
 
 	handleObject(scene: babylon.Scene, textures: Record<string, babylon.Texture>, object: ObjectMessage): void {
-		if (object.type === 0)
+		if (object.type === Object.LIGHTNING)
 			this.handleLightning(scene, textures, object);
-		if (object.type === 1)
+		if (object.type === Object.METEOR)
 			this.handleMeteor(scene, textures, object);
-		if (object.type === 2)
+		if (object.type === Object.TORNADO)
 			this.handleTornado(scene, textures, object);
+		if (object.type === Object.CANON_BALL)
+			this.handleCanonBall(scene, textures, object);
 	}
 
 	private handleLightning(scene: babylon.Scene, textures: Record<string, babylon.Texture>, lightning: ObjectMessage): void {
@@ -60,7 +64,24 @@ class EnvironmentManager {
 		}
 	}
 
-	destroy(): void {
+	private handleCanonBall(scene: babylon.Scene, textures: Record<string, babylon.Texture>, canonBall: ObjectMessage): void {
+		if (canonBall.id >= this.objects?.length) {
+			const color = canonBall.size ? COLORS3.red : COLORS3.white;
+			const newBall = new Ball(scene, "default", textures, color);
+			newBall.setPosition(canonBall.position);
+			this.objects?.push(newBall);
+		} else {
+			const currentCanonBall = this.objects?.at(canonBall.id);
+			if (!(currentCanonBall instanceof Ball))
+				return ;
+			if (canonBall.currentLifetime === 0)
+				currentCanonBall.destroy();
+			else
+				currentCanonBall.setPosition(canonBall.position);
+		}
+	}
+
+	clear(): void {
 		while (this.objects.length) {
 			this.objects[0].destroy();
 			this.objects.splice(0, 1);

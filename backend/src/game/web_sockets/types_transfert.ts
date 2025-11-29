@@ -1,3 +1,4 @@
+import * as babylon from "@babylonjs/core";
 import { BallOption, MapOption } from "../settings/GameSettings.js";
 
 interface Position {
@@ -73,11 +74,13 @@ interface PositionsMessage {
 	ballVisibility: number,
 	player: PlanePosition,
 	playerRotation : Rotation,
+	playerStunned: boolean,
 	enemy: PlanePosition,
-	enemyRotation: Rotation
+	enemyRotation: Rotation,
+	enemyStunned: boolean
 }
 
-enum Object { LIGHTNING, METEOR, TORNADO };
+enum Object { LIGHTNING, METEOR, TORNADO, CANON_BALL };
 type ParticlesType = "explosion" | "collision" | "impulse";
 
 interface ObjectMessage {
@@ -92,6 +95,7 @@ interface ObjectMessage {
 interface EventMessage {
 	status: Status.EVENT,
 	type: ParticlesType,
+	color: babylon.Color3,
 	position: Position
 }
 

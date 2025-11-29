@@ -36,7 +36,7 @@ class SceneManager {
 		this.sockets.push(settings.player1.socket);
 		if (settings.player2) // non AI
 			this.sockets.push(settings.player2.socket);
-		this.environmentManager = new EnvironmentManager(scene, this.sockets);
+		this.environmentManager = new EnvironmentManager(scene, this.sockets, settings);
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.sceneObserver = this.observeScene(settings);
 	}
@@ -192,12 +192,11 @@ class SceneManager {
 	async goalAnimation(position: Position): Promise<void> {
 		if (this.map)
 			this.map.stop();
-		this.ball?.stop();
+		this.destroyBall();
 		const player1 = this.getPlayer(1);
 		const player2 = this.getPlayer(2);
 		if (!player1 || !player2)
 			return;
-		this.sendParticuleEvent(player1, player2, "explosion", position);
 		this.sendDeltaTime(player1, player2, 0.1);
 		await new Promise<void>(resolve => setTimeout(
 			() => resolve(), 2700
@@ -208,16 +207,6 @@ class SceneManager {
 		const time: RenderMessage = {
 			status: Status.RENDER,
 			deltaMultiplicator : deltaTime
-		};
-		player1.send(time);
-		player2.send(time);
-	}
-
-	private async sendParticuleEvent(player1: Player, player2: Player, type: ParticlesType, position: Position) : Promise<void> {
-		const time: EventMessage = {
-			status: Status.EVENT,
-			type : type,
-			position: position
 		};
 		player1.send(time);
 		player2.send(time);
