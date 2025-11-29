@@ -70,6 +70,7 @@ class EnvironmentManager {
 		object.timer += scene.metadata.gameSpeed;
 		if (object.timer >= METEOR_INTERVAL) {
 			object.timer -= METEOR_INTERVAL;
+			object.timer += Math.min(Math.random(), 0.8) * METEOR_INTERVAL; // add randomness, can now spawn between METEOR_INTERVAL and METEOR_INTERVAL * 0.2;
 			const meteor = new Meteor(scene, this.objects.length, this.sockets);
 			this.objects.push(meteor);
 		}
@@ -79,6 +80,7 @@ class EnvironmentManager {
 		object.timer += scene.metadata.gameSpeed;
 		if (object.timer >= LIGHTNING_INTERVAL) {
 			object.timer -= LIGHTNING_INTERVAL;
+			object.timer += Math.min(Math.random(), 0.8) * LIGHTNING_INTERVAL; // add randomness, can now spawn between LIGHTNING_INTERVAL and LIGHTNING_INTERVAL * 0.2;
 			const lightning = new Lightning(scene, this.objects.length, this.sockets);
 			this.objects.push(lightning);
 		}
@@ -88,6 +90,7 @@ class EnvironmentManager {
 		object.timer += scene.metadata.gameSpeed;
 		if (object.timer >= TORNADO_INTERVAL) {
 			object.timer -= TORNADO_INTERVAL;
+			object.timer += Math.min(Math.random(), 0.8) * TORNADO_INTERVAL; // add randomness, can now spawn between TORNADO_INTERVAL and TORNADO_INTERVAL * 0.2;
 			const tornado = new Tornado(scene, this.objects.length, planePosToVec3(this.wind), this.sockets);
 			this.objects.push(tornado);
 		}
