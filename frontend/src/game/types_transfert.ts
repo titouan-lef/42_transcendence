@@ -65,6 +65,7 @@ interface OptionMessage {
 	ball: BallOption;
 	rotatingPlayer: boolean;
 	spin: boolean;
+	dashingPlayer: boolean;
 }
 
 interface PositionsMessage {
@@ -116,6 +117,7 @@ interface PlayerControls {
 	emoteSad: boolean;
 	emoteLol: boolean;
 	emoteAngry: boolean;
+	dash: boolean;
 }
 
 export { Position, PlanePosition, Rotation, DataMessage, PlayerControls, ParticlesType, Status, Object, EmoteChoice };

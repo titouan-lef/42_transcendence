@@ -31,7 +31,8 @@ class AI extends Player {
 			emoteStrong: false,
 			emoteSad: false,
 			emoteLol: false,
-			emoteAngry: false
+			emoteAngry: false,
+			dash: false
 		};
 		this.movementIntervalId = this.movement();
 		this.updateInterval = setInterval(() => {
@@ -77,7 +78,8 @@ class AI extends Player {
 			emoteStrong: false,
 			emoteSad: false,
 			emoteLol: false,
-			emoteAngry: false
+			emoteAngry: false,
+			dash: false
 		};
 		this.isShootingRight = this.wantToShootRight;
 		this.isShootingLeft = this.wantToShootLeft;

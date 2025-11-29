@@ -43,6 +43,8 @@ export const PLAYER_MASS = 1;
 export const PLAYER_RESTITUTION = 1;
 export const PLAYER_MOVEMENT_VELOCITY = 65;
 export const PLAYER_ROTATION_VELOCITY = 10;
+export const PLAYER_DASH_CD = 60;
+export const PLAYER_DASH_MULT = 2;
 
 /** BALL SETTINGS */
 export const BALL_DIAMETER = 2; //has to be smaller than the player //BACK + FRONT

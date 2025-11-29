@@ -11,7 +11,7 @@ async function newGame(options: OptionMessage, player1: WebSocket, player2?: Web
 	let settings;
 	if (player2) {
 		settings = new GameSettings(
-			options.playerId, options.map, options.wind, options.ball, options.rotatingPlayer, options.spin,
+			options.playerId, options.map, options.wind, options.ball, options.rotatingPlayer, options.spin, options.dashingPlayer,
 			player1,
 			{
 				mov_right: "KeyA",
@@ -24,6 +24,7 @@ async function newGame(options: OptionMessage, player1: WebSocket, player2?: Web
 				emoteSad: undefined,
 				emoteLol: undefined,
 				emoteAngry: undefined,
+				dash: "Space"
 			},
 			player2,
 			{
@@ -37,11 +38,12 @@ async function newGame(options: OptionMessage, player1: WebSocket, player2?: Web
 				emoteSad: undefined,
 				emoteLol: undefined,
 				emoteAngry: undefined,
+				dash: undefined
 			}
 		);
 	} else {
 		settings = new GameSettings(
-			options.playerId, options.map, options.wind, options.ball, options.rotatingPlayer, options.spin,
+			options.playerId, options.map, options.wind, options.ball, options.rotatingPlayer, options.spin, options.dashingPlayer,
 			player1, 
 			{
 				mov_right: "KeyA",
@@ -54,6 +56,7 @@ async function newGame(options: OptionMessage, player1: WebSocket, player2?: Web
 				emoteSad: "Numpad6",
 				emoteLol: "Numpad4",
 				emoteAngry: "Numpad2",
+				dash: "Space"
 			}
 		);
 	}
