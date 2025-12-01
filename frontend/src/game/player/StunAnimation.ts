@@ -31,10 +31,10 @@ export class StunAnimation {
 	private observeScene(): babylon.Observer<babylon.Scene> {
 		let grow = 0;
 		let angle = 0;
-		const radius = 1.5; // distance autour de la tête
+		const radius = 2.2;
 		const sceneObserver = this.sceneObservable.add(() => {
 			grow += STUN_STAR_GROWSPEED;
-			angle += 0.1; // rotatio speed
+			angle += 0.1; // rotation speed
 			
 			for (let i = 0; i < this.images.length; i++) {
 				if (grow <= STUN_STAR_MAXGROW)

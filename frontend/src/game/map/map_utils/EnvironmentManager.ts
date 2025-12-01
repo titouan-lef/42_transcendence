@@ -68,6 +68,7 @@ class EnvironmentManager {
 		if (canonBall.id >= this.objects?.length) {
 			const color = canonBall.size ? COLORS3.red : COLORS3.white;
 			const newBall = new Ball(scene, "default", textures, color);
+			//newBall.replaceMaterial(scene, COLORS3.black);
 			newBall.setPosition(canonBall.position);
 			this.objects?.push(newBall);
 		} else {
