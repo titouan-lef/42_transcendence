@@ -77,7 +77,7 @@ class SceneManager {
 		let color;
 		switch (ballType) {
 			case "invisible":
-				color = COLORS3.red;
+				color = COLORS3.magenta;
 				break;
 			case "tricky":
 				color = COLORS3.orange;
@@ -88,8 +88,12 @@ class SceneManager {
 			case "snake":
 				color = COLORS3.green;
 				break;
-			default:
+			case "default":
 				color = COLORS3.white;
+				break;
+			default:
+				color = COLORS3.black;
+				break;
 		}
 		this.ball = new Ball(scene, ballType, this.textures, color);
 	}

@@ -97,7 +97,8 @@ interface EventMessage {
 	status: Status.EVENT,
 	type: ParticlesType,
 	color: babylon.Color3,
-	position: Position
+	position: Position,
+	size: number
 }
 
 enum EmoteChoice { STRONG, SAD, LOL, ANGRY };

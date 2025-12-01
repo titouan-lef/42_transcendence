@@ -23,7 +23,7 @@ class PulseBall extends BallTemplate {
 		else
 			randomImpulse = -Math.random() / 2; // 0 -- -0.5
 		this.physic.body.applyImpulse(velocity.scale(randomImpulse), this.mesh.position);
-		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position));
+		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position), 1);
 	}
 }
 

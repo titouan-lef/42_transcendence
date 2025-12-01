@@ -32,7 +32,7 @@ class TrickyBall extends BallTemplate {
 			}
 		}
 		this.physic.body.setLinearVelocity(newDirection.scale(speed));
-		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position));
+		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position), 1);
 	}
 }
 

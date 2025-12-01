@@ -9,7 +9,7 @@ import { Player } from "../player/Player.js";
 abstract class BallTemplate {
 
 	private readonly type: BallOption;
-	protected particleColor: babylon.Color3 = COLORS3.white;
+	protected particleColor: babylon.Color3 = COLORS3.black;
 	protected readonly physic: babylon.PhysicsAggregate;
 	private readonly collisionObservable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
 	private readonly collisionObserver: babylon.Observer<babylon.IPhysicsCollisionEvent>;
@@ -33,6 +33,8 @@ abstract class BallTemplate {
 	protected effectInterval = 0;
 	protected readonly mesh: babylon.Mesh;
 	protected gameStopped = true;
+
+	protected test = 1;
 
 	constructor(scene: babylon.Scene, type: BallOption, sockets: WebSocket[], settings: GameSettings) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
@@ -122,12 +124,13 @@ abstract class BallTemplate {
 		}
 	}
 
-	protected async sendParticuleEvent(sockets: WebSocket[], type: ParticlesType, position: Position) : Promise<void> {
+	protected async sendParticuleEvent(sockets: WebSocket[], type: ParticlesType, position: Position, size: number) : Promise<void> {
 		const time: EventMessage = {
 			status: Status.EVENT,
 			type : type,
 			color: this.particleColor,
-			position: position
+			position: position,
+			size: size
 		};
 		sockets.forEach((socket) => {
 			socket.send(JSON.stringify(time));
@@ -146,7 +149,7 @@ abstract class BallTemplate {
 			if (metadata.type === "collider") {
 				this.justCollided = true;
 				if (collisionEvent.point && this.particleCooldown <= 0 && !this.gameStopped) {
-					this.sendParticuleEvent(sockets, "collision", vec3ToPos(collisionEvent.point));
+					this.sendParticuleEvent(sockets, "collision", vec3ToPos(collisionEvent.point), 1);
 					this.particleCooldown++;
 				}
 				this.checkSpin(collisionEvent);
@@ -165,8 +168,11 @@ abstract class BallTemplate {
 
 		const side = this.checkSideHit(collisionEvent);
 		if ((ballStunType === "spin" && side === "normal")
-			|| (ballStunType === "normal" && side === "spinEffect"))
+			|| (ballStunType === "normal" && side === "spinEffect")) {
 			player.metadata.stunDuration = PLAYER_STUN_DURATION;
+			if (this.type === "canon")
+				this.destroy();
+		}
 	}
 
 	/** check if the player has the spinEffect and change the spinning boolean of the ball if so */
@@ -240,7 +246,7 @@ abstract class BallTemplate {
 		customStartingDirection ?
 			this.physic.body.setLinearVelocity(customStartingDirection.normalize().scale(50)) :
 			this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
-		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position));
+		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position), 1);
 		this.justCollided = true;
 	}
 
@@ -283,8 +289,11 @@ abstract class BallTemplate {
 	}
 
 	destroy(): void {
+		this.test = 0;
+
 		this.mesh.visibility = 0;
-		this.sendParticuleEvent(this.sockets, "explosion", vec3ToPos(this.mesh.position));
+		const size = this.type === "canon" ? 0.4 : 1;
+		this.sendParticuleEvent(this.sockets, "explosion", vec3ToPos(this.mesh.position), size);
 		this.collisionObservable.remove(this.collisionObserver);
 		this.sceneObservable.remove(this.sceneObserver);
 		this.yObservable.remove(this.yObserver);
