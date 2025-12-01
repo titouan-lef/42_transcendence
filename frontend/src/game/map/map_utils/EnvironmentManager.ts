@@ -2,14 +2,18 @@ import * as babylon from "@babylonjs/core";
 import { Lightning } from "./Lightning.js";
 import { Meteor } from "./Meteor.js";
 import { Tornado } from "./Tornado.js";
-import { ObjectMessage, Object } from "../../types_transfert.js";
+import { ObjectMessage, Object, ObjectSpawnerMessage, ObjectSpawner } from "../../types_transfert.js";
 import { Ball } from "../../ball/Ball.js";
 import { COLORS3 } from "../../settings/values.js";
+import { Canon } from "./Canon.js";
 
 type ObjectType = Lightning | Meteor | Tornado | Ball;
 
+type ObjectSpawnersType = Canon;
+
 class EnvironmentManager {
 	private readonly objects: ObjectType[] = [];
+	private readonly objectSpawners: ObjectSpawnersType[] = [];
 
 	handleObject(scene: babylon.Scene, textures: Record<string, babylon.Texture>, object: ObjectMessage): void {
 		if (object.type === Object.LIGHTNING)
@@ -20,6 +24,11 @@ class EnvironmentManager {
 			this.handleTornado(scene, textures, object);
 		if (object.type === Object.CANON_BALL)
 			this.handleCanonBall(scene, textures, object);
+	}
+
+	handleObjectSpawner(scene: babylon.Scene, object: ObjectSpawnerMessage): void {
+		if (object.type === ObjectSpawner.CANON)
+			this.handleCanon(scene, object);
 	}
 
 	private handleLightning(scene: babylon.Scene, textures: Record<string, babylon.Texture>, lightning: ObjectMessage): void {
@@ -79,6 +88,20 @@ class EnvironmentManager {
 				currentCanonBall.destroy();
 			else
 				currentCanonBall.setPosition(canonBall.position);
+		}
+	}
+
+	private handleCanon(scene: babylon.Scene, canon: ObjectSpawnerMessage): void {
+		if (canon.id >= this.objectSpawners?.length) {
+			this.objectSpawners?.push(new Canon(scene, canon.id));
+		} else {
+			const currentCanon = this.objectSpawners?.at(canon.id);
+			if (!(currentCanon instanceof Canon))
+				return ;
+			if (canon.currentLifetime === 0)
+				currentCanon.destroy();
+			else
+				currentCanon.updatePosition(canon.position);
 		}
 	}
 

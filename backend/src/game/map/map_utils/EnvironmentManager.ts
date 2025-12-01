@@ -9,20 +9,25 @@ import { Object } from "../../web_sockets/types_transfert.js";
 import { GameSettings } from "../../settings/GameSettings.js";
 import { WebSocket } from "ws";
 import { CanonBall } from "./CanonBall.js";
+import { Canon } from "./Canon.js";
 
 type Spawners = EnvironmentManager["lightningSpawner"] | EnvironmentManager["meteorSpawner"] | EnvironmentManager["tornadoSpawner"] | EnvironmentManager["canonBallSpawner"];
 
 interface ObjectParameters {
 	object: Object,
 	timer: number,
-	spawner: Spawners
+	spawnFunction: Spawners,
+	spawner?: ObjectSpawnerType
 }
 
 export type ObjectType = Lightning | Meteor | Tornado | CanonBall;
 
+export type ObjectSpawnerType = Canon;
+
 class EnvironmentManager {
 	private objectsParameters: ObjectParameters[] = [];
 	private objects: ObjectType[] = [];
+	private objectSpawners: ObjectSpawnerType[] = [];
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	private readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly sockets: WebSocket[];
@@ -37,7 +42,7 @@ class EnvironmentManager {
 		this.sceneObserver = this.observeScene(scene);
 	}
 
-	private chooseSpawner(object: Object): Spawners {
+	private chooseSpawnerFunction(object: Object): Spawners {
 		switch (object) {
 			case (Object.LIGHTNING):
 				return this.lightningSpawner.bind(this);
@@ -49,6 +54,17 @@ class EnvironmentManager {
 				return this.canonBallSpawner.bind(this);
 			default:
 				throw new Error("Invalid object type");
+		}
+	}
+
+	private chooseSpawner(scene: babylon.Scene, object: Object): ObjectSpawnerType | undefined {
+		switch (object) {
+			case (Object.CANON_BALL):
+				const newCanon = new Canon(scene, this.objectSpawners.length, this.sockets);
+				this.objectSpawners.push(newCanon);
+				return newCanon;
+			default:
+				return undefined;
 		}
 	}
 
@@ -66,7 +82,7 @@ class EnvironmentManager {
 				);
 			});
 			this.objectsParameters.forEach(object => {
-				object.spawner(object, scene);
+				object.spawnFunction(object, scene);
 			});
 		});
 		return sceneObserver;
@@ -103,19 +119,26 @@ class EnvironmentManager {
 	}
 
 	private canonBallSpawner(object: ObjectParameters, scene: babylon.Scene): void {
+		if (!object.spawner)
+			return ;
 		object.timer += scene.metadata.gameSpeed;
 		if (object.timer >= CANON_BALL_INTERVAL) {
 			object.timer -= CANON_BALL_INTERVAL;
 			object.timer += Math.min(Math.random(), 0.8) * CANON_BALL_INTERVAL; // add randomness, can now spawn between CANON_BALL_INTERVAL and CANON_BALL_INTERVAL * 0.2;
 			const canonBall = new CanonBall(scene, this.objects.length, this.sockets, this.settings);
-			const randomSide = Math.random() < 0.5 ? 1 : -1;
-			const posX = Math.min(Math.max(-MAP_SIZE.x / 2 * 0.2, Math.random() * MAP_SIZE.x / 2), MAP_SIZE.x / 2 * 0.8);
-			let posZ = MAP_SIZE.z / 2 - WALL_WIDTH - BALL_DIAMETER;
-			posZ *= randomSide;
-			canonBall.setPosition(new babylon.Vector3(posX, BALL_DIAMETER / 2, posZ));
-			const startingDirectionX = (Math.random() - 0.5) * 2;
-			const startingDirectionZ = Math.random() * -randomSide;
-			canonBall.launchBall(undefined, new babylon.Vector3(startingDirectionX, 0, startingDirectionZ).normalize());
+			//const randomSide = Math.random() < 0.5 ? 1 : -1;
+			// const posX = Math.min(Math.max(-MAP_SIZE.x / 2 * 0.2, Math.random() * MAP_SIZE.x / 2), MAP_SIZE.x / 2 * 0.8);
+			// let posZ = MAP_SIZE.z / 2 - WALL_WIDTH - BALL_DIAMETER;
+			// posZ *= randomSide;
+			//canonBall.setPosition(new babylon.Vector3(posX, BALL_DIAMETER / 2, posZ));
+			//const startingDirectionX = (Math.random() - 0.5) * 2;
+			//const startingDirectionZ = Math.random() * -randomSide;
+			//canonBall.launchBall(undefined, new babylon.Vector3(startingDirectionX, 0, startingDirectionZ).normalize());
+
+			const spawnPos = object.spawner.getCanonTip();
+			spawnPos.z -= BALL_DIAMETER;//to remove
+			canonBall.setPosition(spawnPos.clone());
+			canonBall.launchBall(undefined, new babylon.Vector3(0, 0, -1).normalize());
 			this.objects.push(canonBall);
 		}
 	}
@@ -124,6 +147,10 @@ class EnvironmentManager {
 		while (this.objects.length) {
 			this.objects[0].destroy();
 			this.objects.splice(0, 1);
+		}
+		while (this.objectSpawners.length) {
+			this.objectSpawners[0].destroy();
+			this.objectSpawners.splice(0, 1);
 		}
 	}
 
@@ -135,13 +162,14 @@ class EnvironmentManager {
 		this.gameStopped = true;
 	}
 
-	initObjectsParameters(availableObjects: Object[], wind: PlanePosition): void {
+	initObjectsParameters(scene: babylon.Scene, availableObjects: Object[], wind: PlanePosition): void {
 		this.objectsParameters = [];
 		availableObjects.forEach(object => {
 			const newObject: ObjectParameters = {
 				object: object,
 				timer: 0,
-				spawner: this.chooseSpawner(object)
+				spawnFunction: this.chooseSpawnerFunction(object),
+				spawner: this.chooseSpawner(scene, object)
 			};
 			this.objectsParameters.push(newObject);
 		});

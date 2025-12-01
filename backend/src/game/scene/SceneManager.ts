@@ -38,10 +38,10 @@ class SceneManager {
 			this.sockets.push(settings.player2.socket);
 		this.environmentManager = new EnvironmentManager(scene, this.sockets, settings);
 		this.sceneObservable = scene.onBeforeRenderObservable;
-		this.sceneObserver = this.observeScene(settings);
+		this.sceneObserver = this.observeScene(scene, settings);
 	}
 
-	private observeScene(settings: GameSettings): babylon.Observer<babylon.Scene> {
+	private observeScene(scene: babylon.Scene, settings: GameSettings): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
 			if (this.checkOutOfFieldBall(this.ball?.getPosition())) {
 				this.gameStopped = true;
@@ -50,7 +50,7 @@ class SceneManager {
 				this.map?.stop();
 				this.environmentManager.pauseSpawn();
 				this.environmentManager.clearObjects();
-				this.countdownIntervalId = this.startCountdown(START_TIMEOUT, settings);
+				this.countdownIntervalId = this.startCountdown(scene, START_TIMEOUT, settings);
 			}
 			this.checkPlayerEmote();
 		});
@@ -225,7 +225,7 @@ class SceneManager {
 		return this.gameStopped;
 	}
 
-	startCountdown(time: number, settings: GameSettings): ReturnType<typeof setInterval> {
+	startCountdown(scene: babylon.Scene, time: number, settings: GameSettings): ReturnType<typeof setInterval> {
 		const countdownIntervalId = setInterval(() => {
 			const player1 = this.getPlayer(1);
 			const player2 = this.getPlayer(2);
@@ -240,7 +240,7 @@ class SceneManager {
 				this.ball?.start();
 				if (this.map) {
 					this.map?.start();
-					this.environmentManager.initObjectsParameters(this.map.getAvailableObjects(), this.map.getWind());
+					this.environmentManager.initObjectsParameters(scene, this.map.getAvailableObjects(), this.map.getWind());
 					this.environmentManager.startSpawn();
 				}
 				if (player2 instanceof AI)
@@ -267,7 +267,7 @@ class SceneManager {
 			player2.setBallToWatch(this.ball);
 		}
 		this.createMap(scene, settings);
-		this.countdownIntervalId = this.startCountdown(START_TIMEOUT, settings);
+		this.countdownIntervalId = this.startCountdown(scene, START_TIMEOUT, settings);
 		this.sendDeltaTime(player1, player2, 1);
 	}
 
