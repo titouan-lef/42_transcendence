@@ -7,14 +7,17 @@ export const COLORS3 = {
 	green:							babylon.Color3.FromHexString("#00FF00"),
 	blue:							babylon.Color3.FromHexString("#0000FF"),
 	yellow:							babylon.Color3.FromHexString("#FFFF00"),
-	orange:							babylon.Color3.FromHexString("#FF8000")
+	orange:							babylon.Color3.FromHexString("#FF8000"),
+	magenta:						babylon.Color3.FromHexString("#FF00FF"),
+	black:							babylon.Color3.FromHexString("#000000"),
+	grey:							babylon.Color3.FromHexString("#808080")
 };
 
 /**DEBUG FUNCTION */
 export const SHOW_DISPOSE_LOGS = false;
 
 /**GAMEPLAY GENERAL SETTINGS */
-export const POINTS_TO_WIN = 2;
+export const POINTS_TO_WIN = 11;
 export const START_TIMEOUT = 4; // in seconds
 const FPS = 60;
 export const GAME_STEPS_INTERVAL = 1000 / FPS;
@@ -52,11 +55,11 @@ export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12);
 export const PLAYER_MASS = 1;
 export const PLAYER_RESTITUTION = 1;
 export const PLAYER_MOVEMENT_VELOCITY = 65;
-export const PLAYER_ROTATION_VELOCITY = 15;
+export const PLAYER_ROTATION_VELOCITY = 12;
 export const PLAYER_DASH_CD = 20;
 export const PLAYER_DASH_MULT = 100;
 export const PLAYER_DASH_DURATION = 5;
-export const PLAYER_STUN_DURATION = 90;
+export const PLAYER_STUN_DURATION = 150;
 
 /** BALL SETTINGS */
 export const BALL_DIAMETER = 2; //has to be smaller than the player //BACK + FRONT

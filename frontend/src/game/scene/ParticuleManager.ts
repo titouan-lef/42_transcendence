@@ -31,19 +31,19 @@ export class ParticuleManager {
 	}
 
 	/** particles on goal */
-	createExplosionParticles(scene: babylon.Scene, position: Position): babylon.ParticleSystem {
+	createExplosionParticles(scene: babylon.Scene, position: Position, size: number): babylon.ParticleSystem {
 		const explosionParticles = new babylon.ParticleSystem("explosion", 200, scene);
 		explosionParticles.particleTexture = this.textures.flare.clone();
 		explosionParticles.emitter = new babylon.Vector3(position.x, position.y, position.z);
-		explosionParticles.createSphereEmitter(BALL_DIAMETER * 10);
+		explosionParticles.createSphereEmitter(BALL_DIAMETER * 10 * size);
 		explosionParticles.renderingGroupId = 1;
 		explosionParticles.color1 = new babylon.Color4(1, 0.5, 0, 1);
 		explosionParticles.color2 = new babylon.Color4(1, 0.2, 0, 1);
 		explosionParticles.colorDead = new babylon.Color4(0, 0, 0, 0);
-		explosionParticles.minSize = 5;
-		explosionParticles.maxSize = 10;
-		explosionParticles.minEmitPower = 5;
-		explosionParticles.maxEmitPower = 15;
+		explosionParticles.minSize = 5 * size;
+		explosionParticles.maxSize = 10 * size;
+		explosionParticles.minEmitPower = 5 * size;
+		explosionParticles.maxEmitPower = 15 * size;
 		explosionParticles.updateSpeed = 0.02;
 		explosionParticles.emitRate = 0;
 		explosionParticles.manualEmitCount = 200;
@@ -78,7 +78,7 @@ export class ParticuleManager {
 				particle = this.createCollisionParticles(scene, position, message.color);
 				break;
 			case "explosion":
-				particle = this.createExplosionParticles(scene, position);
+				particle = this.createExplosionParticles(scene, position, message.size);
 				break;
 			case "impulse":
 				particle = this.createImpulseParticles(scene, position, message.color);

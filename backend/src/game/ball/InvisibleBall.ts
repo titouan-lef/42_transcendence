@@ -7,7 +7,7 @@ import { GameSettings } from "../settings/GameSettings.js";
 class InvisibleBall extends BallTemplate {
 	constructor(scene: babylon.Scene, sockets: WebSocket[], settings: GameSettings) {
 		super(scene, "invisible", sockets, settings);
-		this.particleColor = COLORS3.red;
+		this.particleColor = COLORS3.magenta;
 	}
 	
 	activateEffect(): void {

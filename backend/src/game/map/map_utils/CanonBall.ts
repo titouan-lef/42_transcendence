@@ -13,11 +13,11 @@ class CanonBall extends BallTemplate {
 	private currentLifetime = 1;
 
 	constructor(scene: babylon.Scene, id: number, sockets: WebSocket[], settings: GameSettings) {
-		super(scene, "default", sockets, settings);
+		super(scene, "canon", sockets, settings);
 		this.id = id;
 		this.mesh.metadata.stun = Math.random() < 0.5 ? "spin" : "normal";
 		this.stunTarget = this.mesh.metadata.stun === "spin" ? 1 : 0;
-		this.particleColor = this.mesh.metadata.stun === "spin" ? COLORS3.red : COLORS3.white;
+		this.particleColor = this.mesh.metadata.stun === "spin" ? COLORS3.red : COLORS3.grey;
 		this.canonSceneObservable = scene.onBeforeRenderObservable;
 		this.canonSceneObserver = this.canonObserveScene();
 	}
@@ -26,8 +26,11 @@ class CanonBall extends BallTemplate {
 
 	private canonObserveScene(): babylon.Observer<babylon.Scene> {
 		const canonSceneObserver = this.canonSceneObservable.add(() => {
-			if (this.checkOutOfFieldBall(this.mesh.position) || this.isInGoal)
+			console.log(this.test);
+			if (this.checkOutOfFieldBall(this.mesh.position) || this.isInGoal) {
 				this.destroy();
+				return;
+			}
 			this.sendObjectInfos();
 		});
 		return canonSceneObserver;
@@ -71,6 +74,7 @@ class CanonBall extends BallTemplate {
 	destroy(): void {
 		this.canonSceneObservable.remove(this.canonSceneObserver);
 		this.currentLifetime = 0;
+		this.sendObjectInfos();
 		super.destroy();
 	}
 }

@@ -114,6 +114,7 @@ class Player {
 	setStunAnim(playerStunned: boolean, texture: babylon.Texture): void {
 		if (!playerStunned) {
 			this.stunAnimation?.destroy();
+			this.stunAnimation = null;
 			return ;
 		}
 		if (!this.stunAnimation)

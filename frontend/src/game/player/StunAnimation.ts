@@ -7,7 +7,6 @@ export class StunAnimation {
 	private sceneObserver: babylon.Observer<babylon.Scene>;
 
 	constructor(scene: babylon.Scene, texture: babylon.Texture, player: babylon.TransformNode) {
-		console.log("yes");
 		this.sceneObservable = scene.onBeforeRenderObservable;
 		this.sceneObserver = this.observeScene();
 		this.images.push(this.createImage(scene, texture, player));

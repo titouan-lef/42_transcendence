@@ -32,7 +32,7 @@ export class Emote {
 		let grow = 0;
 		const sceneObserver = this.sceneObservable.add(() => {
 			grow += EMOTE_GROWSPEED;
-			this.timer += 1 / EMOTE_LIFETIME;
+			this.timer += 1;
 			if (grow <= EMOTE_MAXGROW) {
 				this.image.scaling.set(0.1 * grow, 0.1 * grow, 0.1 * grow);
 				this.image.position.y += 0.5;

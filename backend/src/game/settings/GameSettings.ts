@@ -4,7 +4,7 @@ const MAP_LIST: MapOption[] = ["default", "volcano", "sky", "desert"];
 type MapOption = "default" | "volcano" | "sky" | "desert";
 type MapChoice = "random" | MapOption[];
 const BALL_LIST: BallOption[] = ["default", "invisible", "tricky", "pulse", "snake"];
-type BallOption = "default" | "invisible" | "tricky" | "pulse" | "snake";
+type BallOption = "default" | "invisible" | "tricky" | "pulse" | "snake" | "canon";
 type BallChoice = "random" | BallOption[];
 
 interface PlayerSettings {
