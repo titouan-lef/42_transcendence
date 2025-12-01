@@ -34,8 +34,6 @@ abstract class BallTemplate {
 	protected readonly mesh: babylon.Mesh;
 	protected gameStopped = true;
 
-	protected test = 1;
-
 	constructor(scene: babylon.Scene, type: BallOption, sockets: WebSocket[], settings: GameSettings) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.type = type;
@@ -289,8 +287,6 @@ abstract class BallTemplate {
 	}
 
 	destroy(): void {
-		this.test = 0;
-
 		this.mesh.visibility = 0;
 		const size = this.type === "canon" ? 0.4 : 1;
 		this.sendParticuleEvent(this.sockets, "explosion", vec3ToPos(this.mesh.position), size);

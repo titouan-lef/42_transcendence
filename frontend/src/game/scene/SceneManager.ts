@@ -138,6 +138,7 @@ class SceneManager {
 		this.textures.emoteSad = new babylon.Texture("textures/emotes/sad.png", scene, true);
 		this.textures.emoteLol = new babylon.Texture("textures/emotes/lol.png", scene, true);
 		this.textures.emoteAngry = new babylon.Texture("textures/emotes/angry.png", scene, true);
+		this.textures.stun = new babylon.Texture("textures/stun.png", scene, true);
 		this.texturesCreated = true;
 	}
 
@@ -157,10 +158,10 @@ class SceneManager {
 	private setPositionUpdater(message : PositionsMessage): void {
 		this.getPlayer(1)?.setPosition(message.player);
 		this.getPlayer(1)?.setRotatiton(message.playerRotation);
-		this.getPlayer(1)?.setStunAnim(message.playerStunned, this.textures.emoteAngry);
+		this.getPlayer(1)?.setStunAnim(message.playerStunned, this.textures.stun);
 		this.getPlayer(2)?.setPosition(message.enemy);
 		this.getPlayer(2)?.setRotatiton(message.enemyRotation);
-		this.getPlayer(2)?.setStunAnim(message.enemyStunned, this.textures.emoteAngry);
+		this.getPlayer(2)?.setStunAnim(message.enemyStunned, this.textures.stun);
 		this.ball?.setPosition(message.ball);
 		this.ball?.setVisibility(message.ballVisibility);
 	}
@@ -190,7 +191,7 @@ class SceneManager {
 		this.destroyBall();
 		this.destroyMap();
 		if (score)
-			this.score.changeScore([score.x, score.y]);
+			this.score.changeText([score.x, score.y], "score");
 	}
 
 	/** debug function */

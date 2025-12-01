@@ -73,7 +73,7 @@ abstract class Player {
 
 		player.position.x = position.x;
 		player.position.y = position.y;
-		player.metadata = { type: "collider", playerId: id, stunDuration: 0 };
+		player.metadata = { type: "collider", playerId: id, stunDuration: 90 };
 		return player;
 	}
 
@@ -99,6 +99,8 @@ abstract class Player {
 	}
 
 	private normalMode(): void {
+		if (this.player.metadata.stunDuration > 0)
+			return ;
 		this.body.disablePreStep = true; // desactivate body physic for this frame so rotating doesn't cancel the reset
 		this.player.rotationQuaternion = this.baseRotation.clone();
 		this.body.setTargetTransform(this.player.position.clone(), this.baseRotation.clone());
@@ -106,6 +108,8 @@ abstract class Player {
 	}
 
 	private spinMode(): void {
+		if (this.player.metadata.stunDuration > 0)
+			return ;
 		this.body.disablePreStep = true; // desactivate body physic for this frame so rotating doesn't cancel the reset
 		this.player.rotationQuaternion = this.reverseRotation.clone();
 		this.body.setTargetTransform(this.player.position.clone(), this.reverseRotation.clone());
@@ -202,7 +206,7 @@ abstract class Player {
 			}
 			this.linearVelocityZ = (Number(this.keyPressed.mov_right) - Number(this.keyPressed.mov_left)) * PLAYER_MOVEMENT_VELOCITY * (2 * (this.id - 1) - 1);
 			if (this.rotatingPlayer)
-				this.angularVelocityY = (Number(this.keyPressed.rot_right) - Number(this.keyPressed.rot_left)) * PLAYER_ROTATION_VELOCITY;
+				this.angularVelocityY = (Number(this.keyPressed.rot_right) - Number(this.keyPressed.rot_left)) * PLAYER_ROTATION_VELOCITY * (2 * (this.id - 1) - 1);
 			if (this.dashCooldown > 0)
 				this.dashCooldown -= scene.metadata.gameSpeed;
 			if (this.isDashing) {
