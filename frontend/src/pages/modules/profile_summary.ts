@@ -1,0 +1,78 @@
+import { createButtonHtml } from "../../components/button";
+import { createParagraphHtml } from "../../components/paragraph";
+import { getSafeElement } from "../../utils/getSafeElement";
+import { setActiveBtn } from "./profile";
+
+const SEE_MORE_BTN = `
+rounded-r-2xl
+w-full h-[30px] bg-grad-t-15 text-[20px] text-variant
+`;
+
+const SECTION_STYLE = `
+p-6
+flex flex-col justify-start items-center
+`;
+
+const SECTION_TITLE_STYLE = `
+text-[26px] font-bold
+`;
+
+const SUMMARY_DASHBOARD_STYLE = `
+flex-1
+bg-dark shadow-md shadow-dark
+rounded-2xl mt-4 p-4
+flex flex-col justify-start items-start
+`;
+
+/** @todo fetch elo, calculate max of wins for balls and maps */
+const SUMMARY = `
+<div class="flex flex-col gap-1 h-full">
+	<div id='sum-dashboard' class="${SECTION_STYLE}">
+		<div class='${SECTION_TITLE_STYLE}'>
+			dashboard
+		</div>
+		<div class="flex h-[150px] w-full gap-4">
+			<div class="${SUMMARY_DASHBOARD_STYLE}">
+				${createParagraphHtml(['elo'], 'p-elo', { 'class': 'text-[20px] text-secondary' })}
+				<div class="w-full h-full items-center text-[48px] text-center">
+					500
+				</div>
+			</div>
+			<div class="${SUMMARY_DASHBOARD_STYLE}">
+				${createParagraphHtml(['prefered_map'], 'p-map', { 'class': 'text-[20px] text-secondary' })}
+				<div class="w-full h-full items-center text-[48px] text-center">
+					volcano
+				</div>
+			</div>
+			<div class="${SUMMARY_DASHBOARD_STYLE}">
+				${createParagraphHtml(['prefered_ball'], 'p-ball', { 'class': 'text-[20px] text-secondary' })}
+				<div class="w-full h-full items-center text-[48px] text-center">
+					snake
+				</div>
+			</div>
+		</div>
+	</div>
+	${createButtonHtml(['see_more'], 'btn-sum-dashboard', { 'class':`${SEE_MORE_BTN}` })}
+	<div id='sum-history' class="${SECTION_STYLE}">
+		<div class="${SECTION_TITLE_STYLE}">
+			last games
+		</div>
+		<div>
+			<div>01</div>
+			<div>02</div>
+		</div>
+	</div>
+	${createButtonHtml(['see_more'], 'btn-sum-history', { 'class':`${SEE_MORE_BTN}` })}
+</div>
+`;
+
+function loadSummary(): void {
+	const content = getSafeElement('profile-content', HTMLElement);
+
+	content.innerHTML = SUMMARY;
+	setActiveBtn('btn-summary');
+
+	/** @todo events */
+}
+
+export { SUMMARY, loadSummary };

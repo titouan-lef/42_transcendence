@@ -12,7 +12,6 @@ ${applyColor('alt')}
 `;
 
 const MAIN_STYLE = `
-fixed -z-10
 flex flex-col items-center gap-[10px]
 `;
 
@@ -26,9 +25,11 @@ font-park font-bold
 rounded-[10px]
 text-[20px]
 w-[150px] h-[40px]
-animate-pulse
 ${applyColor()}
 `;
+
+/** @todo animation is not working with z-index, see later */
+// animate-pulse
 
 const MAIN_BOX = `
 <main id="main" class="${MAIN_BOX_STYLE}">
