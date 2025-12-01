@@ -52,7 +52,7 @@ const PI_SQ = Math.PI * Math.PI;
  * @param t Time elapsed since the last game (in day).
  */
 function updateEloAfterGame(elo: Elo, eloOpp: Elo, outcome: number, t: number): void {
-	elo.rd = applyTimeOnRd(elo.rd, t);
+	elo.rd = applyTimeOnRd(elo.rd, t); /** @todo apply a date before placement game */
 	const rdDistance = Math.sqrt(elo.rd * elo.rd + eloOpp.rd * eloOpp.rd);
 	const resultData = getResultData(elo.r, eloOpp.r, rdDistance, outcome);
 	updateElo(elo, resultData.accuracy, resultData.deviation);
