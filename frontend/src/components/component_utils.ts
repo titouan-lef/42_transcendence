@@ -46,4 +46,13 @@ function applyAttribute(element: HTMLElement, id: string, attributeList: Record<
 		element.setAttribute(key, value);
 }
 
-export { createHtmlData, createTranslatableElement };
+function capitalizeElementValue(el: HTMLElement): HTMLElement {
+	el.innerHTML = el.innerHTML[0].toUpperCase() + el.innerHTML.substring(1).toLowerCase();
+	return el;
+}
+
+function capitalizeElementValueHTML(el: HTMLElement): string {
+	return capitalizeElementValue(el).outerHTML;
+}
+
+export { createHtmlData, createTranslatableElement, capitalizeElementValueHTML };

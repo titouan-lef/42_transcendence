@@ -77,6 +77,38 @@ const TRANSLATOR = {
 		en: "delete",
 		fr: "supprimer"
 	},
+	settings: {
+		en: "settings",
+		fr: "paramètres"
+	},
+	history: {
+		en: "history",
+		fr: "historique"
+	},
+	summary: {
+		en: "summary",
+		fr: "résumé"
+	},
+	dashboard: {
+		en: "dashboard",
+		fr: "tableau de bord"
+	},
+	see_more: {
+		en: "see more",
+		fr: "voir plus"
+	},
+	elo: {
+		en: "elo",
+		fr: "elo"
+	},
+	prefered_map: {
+		en: "prefered map",
+		fr: "map favorite"
+	},
+	prefered_ball: {
+		en: "prefered ball",
+		fr: "balle favorite"
+	},
 } as const satisfies Record<string, Expression>;
 
 export { CodeLang, TRANSLATOR };

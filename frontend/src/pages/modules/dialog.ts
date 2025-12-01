@@ -25,6 +25,7 @@ const DIALOG_INNER_STYLE = `
 
 function loadDialog(content: string, handler: (modal: HTMLDialogElement) => void): void {
 	const modal = getSafeElement("modal", HTMLDialogElement);
+	modal.close();
 
 	modal.className = DIALOG_MAIN_STYLE;
 	modal.showModal();

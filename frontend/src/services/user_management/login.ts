@@ -45,6 +45,9 @@ async function disconnectUser(): Promise<void> {
 
 	/** @wip changing style here */
 	loadAside(ASIDE_NOT_CONNECTED, asideDisconnectedEvents);
+	const modal = getSafeElement('modal', HTMLDialogElement);
+
+	modal.close();
 }
 
 async function whoami(): Promise<void> {
