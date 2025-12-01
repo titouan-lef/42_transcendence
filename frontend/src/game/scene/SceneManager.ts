@@ -53,6 +53,9 @@ class SceneManager {
 				case (Status.OBJECT):
 					this.environnementManager.handleObject(scene, this.textures, message);
 					break;
+				case (Status.OBJECTSPAWNER):
+					this.environnementManager.handleObjectSpawner(scene, message);
+					break;
 				case (Status.EMOTE):
 					this.sendEmote(settings, scene, message);
 					break;

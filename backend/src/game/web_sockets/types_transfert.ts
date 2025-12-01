@@ -29,7 +29,8 @@ enum Status {
 	POSITIONS,		// positions of ball and players
 	OBJECT,			// tornados / meteors / thunders
 	EVENT,			// particules launcher
-	EMOTE			// emote launche
+	EMOTE,			// emote launche
+	OBJECTSPAWNER	// canon
 }
 
 interface StartMessage {
@@ -92,6 +93,17 @@ interface ObjectMessage {
 	currentLifetime: number
 }
 
+enum ObjectSpawner { CANON };
+
+interface ObjectSpawnerMessage {
+	status: Status.OBJECTSPAWNER,
+	type: ObjectSpawner,
+	id: number,
+	position: Position,
+	rotation: Rotation,
+	currentLifetime: number
+}
+
 interface EventMessage {
 	status: Status.EVENT,
 	type: ParticlesType,
@@ -108,7 +120,7 @@ interface EmoteMessage {
 	playerid: 1 | 2;
 }
 
-type DataMessage = StartMessage | StopMessage | TimingMessage | RenderMessage | GoalMessage | OptionMessage | PositionsMessage | ObjectMessage | EventMessage | EmoteMessage;
+type DataMessage = StartMessage | StopMessage | TimingMessage | RenderMessage | GoalMessage | OptionMessage | PositionsMessage | ObjectMessage | EventMessage | EmoteMessage | ObjectSpawnerMessage;
 
 interface PlayerControls {
 	mov_right: boolean;
@@ -124,5 +136,5 @@ interface PlayerControls {
 	dash: boolean;
 }
 
-export { Position, PlanePosition, Rotation, DataMessage, PlayerControls, ParticlesType, Status, Object, EmoteChoice };
-export { StartMessage, StopMessage, TimingMessage, RenderMessage, GoalMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage, EmoteMessage };
+export { Position, PlanePosition, Rotation, DataMessage, PlayerControls, ParticlesType, Status, Object, EmoteChoice, ObjectSpawner };
+export { StartMessage, StopMessage, TimingMessage, RenderMessage, GoalMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage, EmoteMessage, ObjectSpawnerMessage };

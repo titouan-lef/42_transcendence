@@ -73,7 +73,7 @@ abstract class Player {
 
 		player.position.x = position.x;
 		player.position.y = position.y;
-		player.metadata = { type: "collider", playerId: id, stunDuration: 90 };
+		player.metadata = { type: "collider", playerId: id, stunDuration: 0 };
 		return player;
 	}
 

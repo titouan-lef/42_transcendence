@@ -6,7 +6,7 @@ import { COLORS3, MAP_SIZE, WALL_WIDTH } from "../../settings/values.js";
 import { ObjectMessage, Status, Object } from "../../web_sockets/types_transfert.js";
 
 class CanonBall extends BallTemplate {
-	private readonly canonSceneObserver: babylon.Observer<babylon.Scene>;
+	private readonly canonBallSceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly id: number;
 	private stunTarget;
 	private currentLifetime = 1;
@@ -17,21 +17,21 @@ class CanonBall extends BallTemplate {
 		this.mesh.metadata.stun = Math.random() < 0.5 ? "spin" : "normal";
 		this.stunTarget = this.mesh.metadata.stun === "spin" ? 1 : 0;
 		this.particleColor = this.mesh.metadata.stun === "spin" ? COLORS3.red : COLORS3.grey;
-		this.canonSceneObserver = this.canonObserveScene();
+		this.canonBallSceneObserver = this.canonObserveScene();
 		this.gameStopped = false;
 	}
 
 	activateEffect(): void {}
 
 	private canonObserveScene(): babylon.Observer<babylon.Scene> {
-		const canonSceneObserver = this.sceneObservable.add(() => {
+		const canonBallSceneObserver = this.sceneObservable.add(() => {
 			if (this.checkOutOfFieldBall(this.mesh.position) || this.isInGoal) {
 				this.destroy();
 				return;
 			}
 			this.sendObjectInfos();
 		});
-		return canonSceneObserver;
+		return canonBallSceneObserver;
 	}
 
 	private checkOutOfFieldBall(position: babylon.Vector3): boolean {
@@ -70,7 +70,7 @@ class CanonBall extends BallTemplate {
 	}
 
 	destroy(): void {
-		this.sceneObservable.remove(this.canonSceneObserver);
+		this.sceneObservable.remove(this.canonBallSceneObserver);
 		this.currentLifetime = 0;
 		this.sendObjectInfos();
 		super.destroy();
