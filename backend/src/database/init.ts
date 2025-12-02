@@ -72,11 +72,11 @@ function databaseExist(): boolean {
 async function initDB(): Promise<void> {
 	if (!databaseExist()) {
 		// No foreign key.
-		await createSeasonTable();/** @todo see with blockchain*/
-		await initRuleTable();/** @todo createRuleTable();*/
-		await initBallTable();/** @todo createBallTable();*/
-		await initMapTable();/** @todo createMapTable();*/
-		await initThemeTable();/** @todo createThemeTable();*/
+		await createSeasonTable();
+		await initRuleTable(); 
+		await initBallTable(); 
+		await initMapTable();
+		await initThemeTable();
 		// Foreign key.
 		await createUserTable();
 		await createFriendshipTable();
@@ -84,8 +84,6 @@ async function initDB(): Promise<void> {
 		await createGoalTable();
 		await createGameRuleTable();
 		await createEloTable();
-	} else {
-		
 	}
 }
 
