@@ -41,21 +41,15 @@ const MAIN_BOX = `
 `;
 
 function goToGamePage(): void {
-	console.log('lance le jeu si tu es co, sinon ca te propose une page de co'); /** @todo change that */
 	loadPage(GAME_PAGE, gamePageEvents);
+	/** @todo do a gamepage (can be loading canvas, other page...) */
+	console.log('lance le jeu si tu es co, sinon ca te propose une page de co');
 }
 
 function mainBoxEvents(): void {
-	const allElements = getSafeElement('main', HTMLElement).querySelectorAll('*[id]');
-	allElements.forEach(elem => {
-		switch (elem.id) {
-			case 'btn-play':
-				elem.addEventListener('click', goToGamePage);
-				break;
-			default:
-				break;
-		}
-	});
+	const play = getSafeElement('btn-play', HTMLElement);
+
+	play.addEventListener('click', goToGamePage);
 }
 
 export { MAIN_BOX, mainBoxEvents };

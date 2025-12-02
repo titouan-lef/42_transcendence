@@ -45,8 +45,8 @@ const TRANSLATOR = {
 		en: "sign up",
 		fr: "s'inscrire"
 	},
-	nick_name: {
-		en: "nick name",
+	nickname: {
+		en: "nickname",
 		fr: "pseudo"
 	},
 	confirm: {
