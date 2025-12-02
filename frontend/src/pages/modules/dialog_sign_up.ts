@@ -8,7 +8,7 @@ import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_SEPARATOR_STYLE, DIALOG_FO
 const SIGN_UP = `
 	<form name="Register" class="${DIALOG_FORM_STYLE}">
 		${createInputHtml(["user_name"], "text", "userID", { "autofocus": "true", "class": `${DIALOG_INPUT_STYLE}` })}
-		${createInputHtml(["nick_name"], "text", "publicID", { "class": `${DIALOG_INPUT_STYLE}` })}
+		${createInputHtml(["nickname"], "text", "publicID", { "class": `${DIALOG_INPUT_STYLE}` })}
 		${createInputHtml(["password"], "password", "password", { "class": `${DIALOG_INPUT_STYLE}` })}
 		${createInputHtml(["confirm_password"], "password", "confirmPassword", { "class": `${DIALOG_INPUT_STYLE}` })}
 	</form>

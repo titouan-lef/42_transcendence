@@ -30,6 +30,6 @@
     "@stylistic/eslint-plugin": "5.4.0",
     "eslint-plugin-import": "2.32.0",
     "@tailwindcss/cli": "4.1.14",
-    "tailwind-scrollbar": "^4.0.2"
+    "tailwind-scrollbar": "4.0.2"
   }
 }

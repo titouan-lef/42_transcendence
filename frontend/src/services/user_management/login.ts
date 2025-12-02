@@ -5,10 +5,6 @@ import { ASIDE_CONNECTED, ASIDE_NOT_CONNECTED, asideConnectedEvents, asideDiscon
 import { generateFriendList } from "../../pages/modules/box_aside_friendlist.js";
 
 async function connectUser(): Promise<void> {
-	console.log('user is connected'); /** @todo update connect user */
-
-	const modal = getSafeElement('modal', HTMLDialogElement);
-
 	const userId: HTMLInputElement = getSafeElement("userID", HTMLInputElement);
 	const userPassword: HTMLInputElement = getSafeElement("password", HTMLInputElement);
 	const container: HTMLElement = getSafeElement("print-content", HTMLElement);
@@ -27,10 +23,9 @@ async function connectUser(): Promise<void> {
 	printReplyInDiv(reply, "print-content");
 
 	/** @todo change modal only in case of success */
-
+	const modal = getSafeElement('modal', HTMLDialogElement);
+ 
 	modal.close();
-
-	/** @wip changing style here */
 
 	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
 
@@ -39,9 +34,7 @@ async function connectUser(): Promise<void> {
 	generateFriendList();
 }
 
-async function disconnectUser(): Promise<void> {
-
-	await sendGetRequestToBack("api/user/logout");
+function disconnectUser(): void {
 
 	/** @wip changing style here */
 	loadAside(ASIDE_NOT_CONNECTED, asideDisconnectedEvents);
