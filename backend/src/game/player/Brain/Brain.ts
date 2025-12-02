@@ -41,7 +41,7 @@ abstract class Brain {
 
 	refreshView(): void {
 		this.atkDirection = AttackAi.WAIT;
-		if (this.ballToWatch === null) {
+		if (this.ballToWatch === null || this.ballToWatch.getGoal()) {
 			this.ballPosPredict = 0;
 			return;
 		}
@@ -53,7 +53,7 @@ abstract class Brain {
 		};
 		const zPos = this.intersectionTop(mouvement);
 		this.ballPosPredict = Math.round(zPos * 10) / 10;
-		console.log("Me: " + this.ballPosPredict);
+		console.log("Me: " + this.ballPosPredict); /** @todo remove */
 	}
 
 	setBallToWatch(ball: BallTemplate): void {
@@ -72,9 +72,9 @@ abstract class Brain {
 			return;
 		}
 		if (this.ballPosPredict < aiPosZ)
-			this.destination = DestinationAi.LEFT;
-		else
 			this.destination = DestinationAi.RIGHT;
+		else
+			this.destination = DestinationAi.LEFT;
 	}
 
 	private applyAction(): ActionAi {
