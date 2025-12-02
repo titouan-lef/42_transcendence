@@ -3,7 +3,7 @@ import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
-import { GAME_STEPS_INTERVAL, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
+import { GAME_STEP_INTERVAL, PHYSIC_STEP_INTERVAL, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import fs from "fs";
 import { Status, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage } from "./web_sockets/types_transfert.js";
 import { Player } from "./player/Player.js";
@@ -18,7 +18,8 @@ class Game {
 	private readonly settings: GameSettings;
 	private readonly camera: babylon.ArcRotateCamera; // the engine need a camera
 	private gameStepsIntervalId?: ReturnType<typeof setInterval>; /** @todo type is supposed to be NodeJS.Timer but does not work */
-	private gameStepsInterval = GAME_STEPS_INTERVAL;
+	private gameStepsInterval = GAME_STEP_INTERVAL;
+	private physicStepsInterval = PHYSIC_STEP_INTERVAL;
 	private inAnimation = false;
 	private score: babylon.Vector2;
 
@@ -217,7 +218,7 @@ class Game {
 		this.gameStepsIntervalId = setInterval(() => {
 			const physics = this.scene.getPhysicsEngine();
 			if (physics)
-				physics._step(this.gameStepsInterval / 1000 * this.scene.metadata.gameSpeed);
+				physics._step(this.physicStepsInterval / 1000 * this.scene.metadata.gameSpeed);
 			this.scene.render();
 
 			const player1 = this.sceneManager.getPlayer(1);
