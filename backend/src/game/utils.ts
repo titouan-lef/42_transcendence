@@ -13,4 +13,8 @@ function planePosToVec3(pp: PlanePosition): Vector3 {
 	return new Vector3(pp.x, 0, pp.z);
 }
 
-export { vec3ToPos, planePosToVec3 };
+function randomBoolean() : boolean {
+	return !!Math.random();
+}
+
+export { vec3ToPos, planePosToVec3, randomBoolean };

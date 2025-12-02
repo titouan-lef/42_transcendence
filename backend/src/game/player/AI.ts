@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { GameSettings } from "../settings/GameSettings.js";
+import { GameOptions, GameSettings } from "../settings/GameSettings.js";
 import { DataMessage, PlayerControls, Status } from "../web_sockets/types_transfert.js";
 import { Player } from "./Player.js";
 import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
@@ -19,8 +19,8 @@ class AI extends Player {
 	private isEndingShoot = false;
 	private shootAnimationFrame = 0;
 
-	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings) {
-		super(scene, position, gameSettings, 2, "AI");
+	constructor(scene: babylon.Scene, position: babylon.Vector2, options: GameOptions) {
+		super(scene, position, options, 2, "AI");
 		this.controls = {
 			mov_right: false,
 			mov_left: false,

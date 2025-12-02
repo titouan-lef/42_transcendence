@@ -9,23 +9,21 @@ interface PlayerSettings {
 	readonly username: string;
 }
 
-class GameSettings {
-	readonly map: MapOption;
-	readonly ball: BallOption;
-	readonly rotatingPlayer: boolean;
-	readonly spin: boolean;
-	readonly windAffectsBall: boolean;
+interface GameOptions { /** @toto include GameOptions in GameSettings ? */
+	map: MapOption;
+	ball: BallOption;
+	rotatingPlayer: boolean;
+	spin: boolean;
+	windAffectsBall: boolean;
+}
 
+class GameSettings {
+	readonly options: GameOptions;
 	readonly player1: PlayerSettings;
 	readonly player2?: PlayerSettings;
 
-	constructor(map: MapOption, ball: BallOption, rotatingPlayer: boolean, spin: boolean, windAffectsBall: boolean,
-		player1: WebSocket, playerName1: string, player2?: WebSocket, playerName2?: string) {
-		this.map = map;
-		this.ball = ball;
-		this.rotatingPlayer = rotatingPlayer;
-		this.spin = spin;
-		this.windAffectsBall = windAffectsBall;
+	constructor(options: GameOptions, player1: WebSocket, playerName1: string, player2?: WebSocket, playerName2?: string) {
+		this.options = options;
 		this.player1 = {
 			playerId: 1,
 			socket: player1,
@@ -41,4 +39,4 @@ class GameSettings {
 	}
 }
 
-export { MapOption, BallOption, PlayerSettings, GameSettings };
+export { MapOption, BallOption, PlayerSettings, GameOptions, GameSettings };

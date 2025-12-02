@@ -1,4 +1,5 @@
 import { newGame, updateGameObject } from "../game/canvas_creation.js";
+import { GameOptions } from "../game/settings/GameSettings.js";
 import { DataMessage, Status } from "../game/types_transfert.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 import { randomInt } from "../utils/numbers.js";
@@ -74,9 +75,10 @@ async function openWebSocketConnection(endpoint?: string): Promise<WebSocket> {
 	return new WebSocket(`${WS_URL}`);
 }
 
-async function newGameSolo(ws: WebSocket): Promise<void> {
+async function newGameSolo(id: number, ws: WebSocket): Promise<void> {
 	ws.onopen = (): void => {
 		console.log("Connected");
+		ws.send(JSON.stringify({ id: id }));
 	};
 
 	ws.onmessage = (event): void => {
@@ -102,25 +104,70 @@ async function newGameSolo(ws: WebSocket): Promise<void> {
 	};
 }
 
-async function newGameType(type: string): Promise<void> {
+async function newGameType(id: number, type: string): Promise<void> {
 	const ws = await openWebSocketConnection(type);
-	newGameSolo(ws);
+	newGameSolo(id, ws);
 }
 
 async function newRankedGame(): Promise<void> {
-	newGameType("ranked");
+	newGameType(-1, "ranked");
 }
 
 async function newGameVsAI(): Promise<void> {
-	newGameType("AI");
+	/** @todo get options from front interface */
+	const options : GameOptions = {
+		map: "default",
+		ball: "default",
+		rotatingPlayer: true,
+		spin: true,
+		windAffectsBall: true
+	};
+
+	const reply = await sendPostRequestToBack("/api/game/new_game", JSON.stringify(options));
+	let id = -1;
+	try {
+		const result: ServerRes = await reply.json();
+		if (result.success)
+			id = Number(result.message);
+		else
+			console.log("Error:", result.message);
+	} catch (err) {
+		console.error("Caught error:", err);
+		return;
+	}
+	if (id >= 0)
+		newGameType(id, "AI");
 }
 
 async function newLocalGame(): Promise<void> {
+	/** @todo get options from front interface */
+	const options : GameOptions = {
+		map: "default",
+		ball: "default",
+		rotatingPlayer: true,
+		spin: true,
+		windAffectsBall: true
+	};
+
+	const reply = await sendPostRequestToBack("/api/game/new_game", JSON.stringify(options));
+	let id = -1;
+	try {
+		const result: ServerRes = await reply.json();
+		if (result.success)
+			id = Number(result.message);
+		else
+			console.log("Error:", result.message);
+	} catch (err) {
+		console.error("Caught error:", err);
+		return;
+	}
+	if (id < 0) {
+		console.log("Negative ID");
+		return;
+	}
 
 	const player1 = await openWebSocketConnection("local");
 	const player2 = await openWebSocketConnection("local");
-
-	const id = randomInt(0, 5000);
 
 	player1.onopen = (): void => {
 		console.log("Player 1 connected"); /** @todo remove */

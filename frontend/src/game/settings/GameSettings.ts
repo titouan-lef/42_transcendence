@@ -14,6 +14,14 @@ function swapPlayer(id: 1 | 2): 1 | 2 {
 	return id === 1 ? 2 : 1;
 }
 
+interface GameOptions { /** @toto include GameOptions in GameSettings ? */
+	map: MapOption;
+	ball: BallOption;
+	rotatingPlayer: boolean;
+	spin: boolean;
+	windAffectsBall: boolean;
+}
+
 class GameSettings {
 	map: MapOption;
 	wind: PlanePosition;
@@ -44,4 +52,4 @@ class GameSettings {
 	}
 }
 
-export { MapOption, BallOption, PlayerKeys, PlayerSettings, GameSettings };
+export { MapOption, BallOption, PlayerKeys, PlayerSettings, GameOptions, GameSettings };

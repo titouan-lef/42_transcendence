@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { GameSettings } from "../settings/GameSettings.js";
+import { GameOptions, GameSettings } from "../settings/GameSettings.js";
 import { PLAYER_DIMENSION, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY } from "../settings/values.js";
 import { PlayerControls, Position, DataMessage, Rotation } from "../web_sockets/types_transfert.js";
 
@@ -19,9 +19,9 @@ abstract class Player {
 	private linearVelocityZ = 0;
 	private angularVelocityY = 0;
 
-	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings, id: 1 | 2, username :string) {
-		this.applyingSpin = gameSettings.spin;
-		this.rotatingPlayer = gameSettings.rotatingPlayer;
+	constructor(scene: babylon.Scene, position: babylon.Vector2, options: GameOptions, id: 1 | 2, username :string) {
+		this.applyingSpin = options.spin;
+		this.rotatingPlayer = options.rotatingPlayer;
 		this.player = this.setPlayer(scene, position, id);
 		this.body = this.setPlayerPhysic(scene);
 		this.baseRotation = this.setBaseRotation(id);

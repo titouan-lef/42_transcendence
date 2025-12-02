@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { GameSettings, PlayerSettings } from "../settings/GameSettings.js";
+import { GameOptions, GameSettings, PlayerSettings } from "../settings/GameSettings.js";
 import { PlayerControls, DataMessage } from "../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
 import { Player } from "./Player.js";
@@ -7,8 +7,8 @@ import { Player } from "./Player.js";
 class Human extends Player {
 	private readonly socket: WebSocket;
 
-	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings, settings: PlayerSettings) {
-		super(scene, position, gameSettings, settings.playerId, settings.username);
+	constructor(scene: babylon.Scene, position: babylon.Vector2, options: GameOptions, settings: PlayerSettings) {
+		super(scene, position, options, settings.playerId, settings.username);
 
 		this.socket = settings.socket;
 

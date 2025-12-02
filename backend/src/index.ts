@@ -7,7 +7,7 @@ import fastifyStatic from "@fastify/static";
 import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
 import { connectUser, disconnectUser, whoami, changePicture, verifyAuth, getPicture, UserBody } from "./user_management/connect_user.js";
-import { findLocalGame, findRankedGame, localGameVsAI } from "./game/web_sockets/connection.js";
+import { findLocalGame, findRankedGame, localGameVsAI, registerGameOptions } from "./game/web_sockets/connection.js";
 import { getFriendList, newFriend, removeFriend } from "./friends.js";
 
 const APP = fastify();
@@ -49,6 +49,8 @@ APP.post("/api/user/change_picture", { preHandler: verifyAuth }, changePicture);
 APP.post("/api/friends/list", getFriendList);
 APP.post<{ Body: UserBody }>("/api/friends/add", { preHandler: verifyAuth }, newFriend);
 APP.post<{ Body: UserBody }>("/api/friends/remove", { preHandler: verifyAuth }, removeFriend);
+
+APP.post("/api/game/new_game", registerGameOptions);
 
 /**
  * Register plugins like `fastifyCors` or `fastifyCookies` globally, Fastify applies those preHandlers and hooks immediately.

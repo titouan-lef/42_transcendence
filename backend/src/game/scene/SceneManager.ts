@@ -87,8 +87,8 @@ class SceneManager {
 
 	private createBall(scene: babylon.Scene, settings: GameSettings): void {
 		const ballList: BallOption[] = ["default", "invisible", "tricky", "pulse", "snake"];
-		let ball = settings.ball;
-		if (settings.ball === "random") {
+		let ball = settings.options.ball;
+		if (settings.options.ball === "random") {
 			ball = ballList[Math.floor(Math.random() * 5)];
 		}
 		const sockets: WebSocket[] = [];
@@ -118,7 +118,7 @@ class SceneManager {
 
 	private createMap(scene: babylon.Scene, settings: GameSettings): void {
 		const mapList: MapOption[] = ["default", "volcano", "sky", "desert"];
-		let map = settings.map;
+		let map = settings.options.map;
 		if (map === "random")
 			map = mapList[Math.floor(Math.random() * 4)];
 		const sockets: WebSocket[] = [];
@@ -147,12 +147,12 @@ class SceneManager {
 		const player1PosX = MAP_SIZE.x / 2 - (PLAYER_DIMENSION.z + WALL_WIDTH);
 		const player2PosX = (PLAYER_DIMENSION.z + WALL_WIDTH) -(MAP_SIZE.x / 2);
 		const playersPoxY = PLAYER_DIMENSION.y / 2;
-		const player1 = new Human(scene, new babylon.Vector2(player1PosX, playersPoxY), settings, settings.player1);
+		const player1 = new Human(scene, new babylon.Vector2(player1PosX, playersPoxY), settings.options, settings.player1);
 		let player2;
 		if (settings.player2)
-			player2 = new Human(scene, new babylon.Vector2(player2PosX, playersPoxY), settings, settings.player2);
+			player2 = new Human(scene, new babylon.Vector2(player2PosX, playersPoxY), settings.options, settings.player2);
 		else
-			player2 = new AI(scene, new babylon.Vector2(player2PosX, playersPoxY), settings);
+			player2 = new AI(scene, new babylon.Vector2(player2PosX, playersPoxY), settings.options);
 		this.players.push(player1);
 		this.players.push(player2);
 	}
@@ -226,7 +226,7 @@ class SceneManager {
 			this.sendCountDown(player1, player2, time);
 			if (time <= 0) {
 				let startingDirection;
-				if (!settings.rotatingPlayer && !settings.spin)
+				if (!settings.options.rotatingPlayer && !settings.options.spin)
 					startingDirection = new babylon.Vector3((Math.random() - 0.5) * 2, 0, (Math.random() - 0.5));
 				this.ball?.launchBall(undefined, startingDirection);
 				this.ball?.setGameStopped(false);
