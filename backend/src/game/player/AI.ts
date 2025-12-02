@@ -2,26 +2,30 @@ import * as babylon from "@babylonjs/core";
 import { GameOptions } from "../settings/GameSettings.js";
 import { DataMessage, PlayerControls } from "#shared/types_transfert.js";
 import { Player } from "./Player.js";
-import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { BallTemplate } from "../ball/BallTemplate.js";
+import { ActionAi, Brain } from "./Brain/Brain.js";
+import { DefaultBrain } from "./Brain/concrete_brain/DefaultBrain.js";
 
 class AI extends Player {
 	private readonly updateInterval: ReturnType<typeof setInterval>;
-	private ballToWatch: BallTemplate | null = null;
 	private readonly movementIntervalId: ReturnType<typeof setInterval>;
-	private ballPosPredict: babylon.Vector3 | null = null;
 	private controls: PlayerControls;
 
-	private wantToShootLeft = false;
-	private wantToShootRight = false;
-	private isShootingLeft = false;
-	private isShootingRight = false;
+	private brain: Brain;
+
 	private isEndingShoot = false;
 	private shootAnimationFrame = 0;
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, options: GameOptions) {
 		super(scene, position, options, 2, "AI");
-		this.controls = {
+		this.brain = new DefaultBrain();
+		this.controls = this.getInitControl();
+		this.movementIntervalId = this.movementInterval();
+		this.updateInterval = setInterval(() => this.update(), 1000);
+	}
+
+	private getInitControl(): PlayerControls {
+		return {
 			mov_right: false,
 			mov_left: false,
 			rot_right: false,
@@ -34,155 +38,60 @@ class AI extends Player {
 			emoteAngry: false,
 			dash: false
 		};
-		this.movementIntervalId = this.movement();
-		this.updateInterval = setInterval(() => {
-			this.update();
-		}, 1);
 	}
 
-	private movement(): ReturnType<typeof setInterval> {
-		const movementIntervalId = setInterval(() => {
-			if (this.isEndingShoot) {
-				this.shootAnimationFrame++;
-				if (this.shootAnimationFrame === 4) {
-					this.isEndingShoot = false;
-					this.shootAnimationFrame = 0;
-					this.controls.normalMode = true;
-					this.controls.emoteAngry = true;
-				}
-				this.setControls(this.controls);
-				return ;
-			}
-			this.resetState();
-			if (!this.ballPosPredict) {
-				this.goMiddle();
-				this.shootAnimationFrame = 0;
-				this.controls.normalMode = true;
-			} else {
-				this.defend();
-				this.shoot();
-			}
+	private movementInterval(): ReturnType<typeof setInterval> {
+		return setInterval(() => {
+			this.movement();
 			this.setControls(this.controls);
 		}, 80); // let this like this
-		return movementIntervalId;
 	}
 
-	private resetState(): void {
-		this.controls = {
-			mov_right: false,
-			mov_left: false,
-			rot_right: false,
-			rot_left: false,
-			normalMode: false,
-			spinMode: false,
-			emoteStrong: false,
-			emoteSad: false,
-			emoteLol: false,
-			emoteAngry: false,
-			dash: false
-		};
-		this.isShootingRight = this.wantToShootRight;
-		this.isShootingLeft = this.wantToShootLeft;
-		this.wantToShootLeft = false;
-		this.wantToShootRight = false;
+	private movement(): void {
+		if (this.isEndingShoot) {
+			this.shootAnimationFrame++;
+			if (this.shootAnimationFrame === 4) {
+				this.isEndingShoot = false;
+				this.shootAnimationFrame = 0;
+				this.controls.normalMode = true;
+				this.controls.emoteAngry = true;
+			}
+			return ;
+		}
+		this.controls = this.getInitControl();
+		const action = this.brain.getAction(this.player.position.z);
+		this.applyAction(action);
 	}
 
-	private goMiddle(): void {
-		if (this.player.position.z <= -0.1)
-			this.controls.mov_right = true;
-		else if (this.player.position.z >= 0.1)
-			this.controls.mov_left = true;
-	}
+	private applyAction(action: ActionAi): void {
+		this.controls.mov_left = action.mov_left;
+		this.controls.mov_right = action.mov_right;
 
-	private shoot(): void {
-		if ((!this.wantToShootLeft && !this.wantToShootRight)
-		|| this.wantToShootLeft !== this.isShootingLeft
-		|| this.wantToShootRight !== this.isShootingRight) {
+		if (!action.atk_left && !action.atk_right) {
 			this.shootAnimationFrame = 0;
-			this.controls.normalMode = true;	
+			this.controls.normalMode = true;
 			return ;
 		}
 
 		this.shootAnimationFrame++;
-		//if (this.shootAnimationFrame <= 1) // elan
-		//this.wantToShootRight ? this.controls.rot_left = true : this.controls.rot_right = true;
-		if (this.shootAnimationFrame < 2) // shoot
-			this.wantToShootRight ? this.controls.rot_right = true : this.controls.rot_left = true;
-		else if (this.shootAnimationFrame === 2) { //reset
+		if (this.shootAnimationFrame < 2) {// shoot
+			if (action.atk_right)
+				this.controls.rot_right = true;
+			else
+				this.controls.rot_left = true;
+		} else if (this.shootAnimationFrame === 2) { //reset
 			this.isEndingShoot = true;
 		}
 	}
 
-	private defend(): void {
-		if (!this.ballPosPredict)
-			return ;
-
-		if (this.ballPosPredict.z < this.player.position.z - PLAYER_DIMENSION.z / 2)
-			this.controls.mov_right = true; 
-		else if (this.ballPosPredict.z > this.player.position.z + PLAYER_DIMENSION.z / 2)
-			this.controls.mov_left = true;
-		else {
-			this.ballPosPredict.z < this.player.position.z ? this.wantToShootLeft = true : this.wantToShootRight = true;
-		}
-	}
-
-	private predictZAtPlayerX(): number | null {
-		const playerPosX = this.getPosition().x;
-		if (!this.ballToWatch || this.ballToWatch.getGoal())
-			return null;
-		const ballPosition = this.ballToWatch.getPosition();
-		const ballDirection = this.ballToWatch.getDirection();
-		let posX = ballPosition.x;
-		let posZ = ballPosition.z;
-		let dirX = ballDirection.x;
-		let dirZ = ballDirection.z;
-
-		if (dirX === 0)
-			return null;
-		/**@todo should not take bottom and topwall in account and should go middle if it hits bottomwall*/
-		/**@todo return direction too ? so ia can choose to shoot or not*/
-		const wallTop = -(MAP_SIZE.x + WALL_WIDTH) / 2;
-		const wallBottom =  (MAP_SIZE.x + WALL_WIDTH) / 2;
-		const wallLeft = -(MAP_SIZE.z + WALL_WIDTH) / 2;
-		const wallRight =  (MAP_SIZE.z + WALL_WIDTH) / 2;
-
-		/**@todo */
-		for (let i = 0; i < 20; i++) {
-			const tx = dirX > 0 ? (wallBottom - posX) / dirX : (wallTop - posX) / dirX; // time ball takes to hit the wall
-			const tz = dirZ > 0 ? (wallRight - posZ) / dirZ : (wallLeft - posZ) / dirZ;
-
-			const tPlayer = (playerPosX - posX) / dirX;
-
-			if (tPlayer >= 0 && tPlayer <= Math.min(tx, tz)) {
-				return posZ + dirZ * tPlayer; //if ball will reach the player line
-			}
-
-			/**@todo check enemy player too ? */
-
-			if (tx < tz) { // else we change direction of the ball
-				posX = dirX > 0 ? wallBottom : wallTop;
-				posZ += dirZ * tx;
-				dirX *= -1;
-			} else {
-				posZ = dirZ > 0 ? wallRight : wallLeft;
-				posX += dirX * tz;
-				dirZ *= -1;
-			}
-		}
-
-		return null;
-	}
-
 	setBallToWatch(ball: BallTemplate): void {
-		this.ballToWatch = ball;
+		this.brain.setBallToWatch(ball);
 	}
 
 	update(): void { /** @todo real AI */
-		const predictedZ = this.predictZAtPlayerX();
-		!predictedZ ? this.ballPosPredict = null : this.ballPosPredict = new babylon.Vector3(this.player.position.x, 0, predictedZ);
+		this.brain.refreshView();
 	}
 
-	/**@todo to do ? */
 	async send(message: DataMessage): Promise<void> {
 		// if (message.status === Status.POSITIONS) {
 		// 	this.ballPosition = message.ball;
