@@ -165,8 +165,8 @@ class Game {
 			map: this.sceneManager.getMapType(),
 			wind: this.sceneManager.getWind(),
 			ball: "default",
-			rotatingPlayer: this.settings.rotatingPlayer,
-			spin: this.settings.spin
+			rotatingPlayer: this.settings.options.rotatingPlayer,
+			spin: this.settings.options.spin
 		};
 
 		const ball = this.sceneManager.getBall();

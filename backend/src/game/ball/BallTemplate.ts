@@ -36,8 +36,8 @@ abstract class BallTemplate {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.type = type;
 		this.mesh.position.y = BALL_DIAMETER / 2;
-		this.mesh.metadata = { type: "collider", pushable: true, windAffected: settings.windAffectsBall };
-		this.maxSpeed = MAX_SPEED * ((!settings.rotatingPlayer && !settings.spin) ? 1.3 : 1);
+		this.mesh.metadata = { type: "collider", pushable: true, windAffected: settings.options.windAffectsBall };
+		this.maxSpeed = MAX_SPEED * ((!settings.options.rotatingPlayer && !settings.options.spin) ? 1.3 : 1);
 		this.sockets = sockets;
 		this.physic = this.setPhysic(scene);
 		
