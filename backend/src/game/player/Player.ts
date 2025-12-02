@@ -206,7 +206,7 @@ abstract class Player {
 			}
 			this.linearVelocityZ = (Number(this.keyPressed.mov_right) - Number(this.keyPressed.mov_left)) * PLAYER_MOVEMENT_VELOCITY * (2 * (this.id - 1) - 1);
 			if (this.rotatingPlayer)
-				this.angularVelocityY = (Number(this.keyPressed.rot_right) - Number(this.keyPressed.rot_left)) * PLAYER_ROTATION_VELOCITY * (2 * (this.id - 1) - 1);
+				this.angularVelocityY = (Number(this.keyPressed.rot_right) - Number(this.keyPressed.rot_left)) * PLAYER_ROTATION_VELOCITY;
 			if (this.dashCooldown > 0)
 				this.dashCooldown -= scene.metadata.gameSpeed;
 			if (this.isDashing) {

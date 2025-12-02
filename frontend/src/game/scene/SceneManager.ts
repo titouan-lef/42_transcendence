@@ -13,7 +13,6 @@ import { CountDown } from "./CountDown.js";
 import { DataMessage, EventMessage, GoalMessage, EmoteMessage, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
 import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
 import { ParticuleManager as ParticleManager } from "./ParticuleManager.js";
-import { WindDirection } from "./WindDirection.js";
 
 class SceneManager {
 	private ball: Ball | null = null;
@@ -23,7 +22,6 @@ class SceneManager {
 	private readonly players: Player[] = [];
 	private readonly textures: Record<string, babylon.Texture> = {};
 	private score: Score;
-	private windDirection: WindDirection | null = null;
 	private readonly environnementManager: EnvironmentManager;
 	private readonly particleManager: ParticleManager;
 	private texturesCreated = false;
@@ -189,20 +187,13 @@ class SceneManager {
 		this.particleManager.clear();
 		this.createBall(scene, settings.ball);
 		this.createMap(scene, settings.map, settings.wind);
-		this.createWindDirection(scene, settings.wind);
 		this.environnementManager.clear();
-	}
-
-	private createWindDirection(scene: babylon.Scene, wind: PlanePosition): void {
-		if (wind.x || wind.z)
-			this.windDirection = new WindDirection(scene, wind, this.textures.windDirection);
 	}
 
 	destroyEnvironnement(score: babylon.Vector2 | null): void {
 		this.destroyCountDown();
 		this.destroyBall();
 		this.destroyMap();
-		this.destroyWindDirection();
 		if (score)
 			this.score.changeScore([score.x, score.y]);
 	}
@@ -234,11 +225,6 @@ class SceneManager {
 	private destroyMap(): void  {
 		this.map?.destroy();
 		this.map = null;
-	}
-
-	private destroyWindDirection(): void  {
-		this.windDirection?.destroy();
-		this.windDirection = null;
 	}
 
 	private destroyPlayers(): void {

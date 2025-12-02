@@ -20,7 +20,9 @@ export const SHOW_DISPOSE_LOGS = false;
 export const POINTS_TO_WIN = 11;
 export const START_TIMEOUT = 4; // in seconds
 const FPS = 60;
-export const GAME_STEPS_INTERVAL = 1000 / FPS;
+const PHYSIC_STEP_PER_SEC = 60;
+export const GAME_STEP_INTERVAL = 1000 / FPS;
+export const PHYSIC_STEP_INTERVAL = 1000 / PHYSIC_STEP_PER_SEC;
 
 /**MAP GENERAL SETTINGS */
 export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100); //BACK + FRONT
