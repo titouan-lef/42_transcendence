@@ -11,12 +11,12 @@ class CanonBall extends BallTemplate {
 	private stunTarget;
 	private currentLifetime = 1;
 
-	constructor(scene: babylon.Scene, id: number, sockets: WebSocket[], settings: GameSettings) {
+	constructor(scene: babylon.Scene, id: number, sockets: WebSocket[], settings: GameSettings, stun: "spin" | "normal") {
 		super(scene, "canon", sockets, settings);
 		this.id = id;
-		this.mesh.metadata.stun = Math.random() < 0.5 ? "spin" : "normal";
-		this.stunTarget = this.mesh.metadata.stun === "spin" ? 1 : 0;
-		this.particleColor = this.mesh.metadata.stun === "spin" ? COLORS3.red : COLORS3.grey;
+		this.stunTarget = stun === "spin" ? 1 : 0;
+		this.mesh.metadata.stun = stun;
+		this.particleColor = COLORS3.grey;
 		this.canonBallSceneObserver = this.canonObserveScene();
 		this.gameStopped = false;
 	}
@@ -35,10 +35,10 @@ class CanonBall extends BallTemplate {
 	}
 
 	private checkOutOfFieldBall(position: babylon.Vector3): boolean {
-		if (position.x > MAP_SIZE.x + WALL_WIDTH / 2
-		|| position.x < -(MAP_SIZE.x + WALL_WIDTH / 2)
-		|| position.z > MAP_SIZE.z + WALL_WIDTH / 2
-		|| position.z < -(MAP_SIZE.z + WALL_WIDTH / 2)) {
+		if (position.x > MAP_SIZE.x / 2 + WALL_WIDTH / 2
+		|| position.x < -(MAP_SIZE.x / 2 + WALL_WIDTH / 2)
+		|| position.z > MAP_SIZE.z / 2 + WALL_WIDTH / 2
+		|| position.z < -(MAP_SIZE.z / 2 + WALL_WIDTH / 2)) {
 			return true;
 		}
 		return false;

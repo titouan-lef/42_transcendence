@@ -80,7 +80,7 @@ class SceneManager {
 		let color;
 		switch (ballType) {
 			case "invisible":
-				color = COLORS3.magenta;
+				color = COLORS3.red;
 				break;
 			case "tricky":
 				color = COLORS3.orange;
@@ -194,7 +194,7 @@ class SceneManager {
 		this.destroyBall();
 		this.destroyMap();
 		if (score)
-			this.score.changeText([score.x, score.y], "score");
+			this.score.changeScore([score.x, score.y]);
 	}
 
 	/** debug function */

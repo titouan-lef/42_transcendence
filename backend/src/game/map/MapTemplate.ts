@@ -32,7 +32,7 @@ abstract class MapTemplate {
 		const size = new babylon.Vector3(MAP_SIZE.x, WALL_HEIGHT, WALL_WIDTH);
 		const border = this.createLimit(scene, size);
 		border.position = new babylon.Vector3(position.x, WALL_HEIGHT/2, position.z);
-		border.metadata = { type: "collider", nature: "environnement" };
+		border.metadata = { type: "collider" };
 		return border;
 	}
 
