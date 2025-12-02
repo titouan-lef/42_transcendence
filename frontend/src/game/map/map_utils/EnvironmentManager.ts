@@ -75,16 +75,14 @@ class EnvironmentManager {
 
 	private handleCanonBall(scene: babylon.Scene, textures: Record<string, babylon.Texture>, canonBall: ObjectMessage): void {
 		if (canonBall.id >= this.objects?.length) {
-			const color = canonBall.size ? COLORS3.red : COLORS3.white;
-			const newBall = new Ball(scene, "default", textures, color);
-			//newBall.replaceMaterial(scene, COLORS3.black);
+			const newBall = new Ball(scene, "default", textures, COLORS3.grey);
 			newBall.setPosition(canonBall.position);
 			this.objects?.push(newBall);
 		} else {
 			const currentCanonBall = this.objects?.at(canonBall.id);
 			if (!(currentCanonBall instanceof Ball))
 				return ;
-			if (canonBall.currentLifetime === 0)
+			if (canonBall.currentLifetime === 0) 
 				currentCanonBall.destroy();
 			else
 				currentCanonBall.setPosition(canonBall.position);
@@ -93,15 +91,15 @@ class EnvironmentManager {
 
 	private handleCanon(scene: babylon.Scene, canon: ObjectSpawnerMessage): void {
 		if (canon.id >= this.objectSpawners?.length) {
-			this.objectSpawners?.push(new Canon(scene, canon.id));
+			this.objectSpawners?.push(new Canon(scene, canon.id, canon.stun));
 		} else {
 			const currentCanon = this.objectSpawners?.at(canon.id);
 			if (!(currentCanon instanceof Canon))
 				return ;
 			if (canon.currentLifetime === 0)
 				currentCanon.destroy();
-			else
-				currentCanon.updatePosition(canon.position);
+			else 
+				currentCanon.update(scene, canon);
 		}
 	}
 
@@ -109,6 +107,10 @@ class EnvironmentManager {
 		while (this.objects.length) {
 			this.objects[0].destroy();
 			this.objects.splice(0, 1);
+		}
+		while (this.objectSpawners.length) {
+			this.objectSpawners[0].destroy();
+			this.objectSpawners.splice(0, 1);
 		}
 	}
 }

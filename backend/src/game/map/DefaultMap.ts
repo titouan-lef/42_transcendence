@@ -1,12 +1,10 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { MAP_SIZE } from "../settings/values.js";
-import { Object } from "../web_sockets/types_transfert.js";
 
 class DefaultMap extends MapTemplate {
 	constructor(scene: babylon.Scene) {
 		super(scene, "default");
-		this.availableObjects.push(Object.CANON_BALL);
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {

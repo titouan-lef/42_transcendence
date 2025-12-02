@@ -78,10 +78,10 @@ class SceneManager {
 	private checkOutOfFieldBall(position: Position | undefined): boolean {
 		if (!position)
 			return false;
-		if (position.x > MAP_SIZE.x + WALL_WIDTH / 2
-		|| position.x < -(MAP_SIZE.x + WALL_WIDTH / 2)
-		|| position.z > MAP_SIZE.z + WALL_WIDTH / 2
-		|| position.z < -(MAP_SIZE.z + WALL_WIDTH / 2)) {
+		if (position.x > MAP_SIZE.x / 2 + WALL_WIDTH / 2
+		|| position.x < -(MAP_SIZE.x / 2 + WALL_WIDTH / 2)
+		|| position.z > MAP_SIZE.z / 2 + WALL_WIDTH / 2
+		|| position.z < -(MAP_SIZE.z / 2 + WALL_WIDTH / 2)) {
 			return true;
 		}
 		return false;

@@ -102,7 +102,8 @@ interface ObjectSpawnerMessage {
 	id: number,
 	position: Position,
 	rotation: Rotation,
-	currentLifetime: number
+	currentLifetime: number,
+	stun: "spin" | "normal"
 }
 
 interface EventMessage {

@@ -7,6 +7,10 @@ class SkyMap extends MapTemplate {
 	constructor(scene: babylon.Scene) {
 		super(scene, "sky");
 		this.availableObjects.push(Object.LIGHTNING);
+		if (Math.random() > 0.5)
+			this.availableObjects.push(Object.CANON_BALL);
+		if (Math.random() > 0.5)
+			this.availableObjects.push(Object.CANON_BALL);
 		this.wind = {
 			x: (Math.random() - 0.5) * WIND_FORCE,
 			z: (Math.random() - 0.5) * WIND_FORCE

@@ -129,23 +129,29 @@ export const D_GLOW_INTENSITY = 0.6;
 
 /**SKY MAP */
 export const R_PARTICLE_NUMBER = 4000;
-export const LIGHTNING_COLLISION_RADIUS = 5; //BACK + FRONT
 export const R_GLOW_INTENSITY = 0.3;
 
 /**VOLCANO MAP */
 export const V_PARTICLE_NUMBER = 4000;
-export const METEOR_DIAMETER = 2; //BACK + FRONT
-export const METEOR_PARTICLE_INTERVAL = 5000;
-export const METEOR_COLLISION_RADIUS = METEOR_DIAMETER; //BACK + FRONT
 export const V_GLOW_INTENSITY = 0.7;
 
 /**DESERT MAP */
 export const W_PARTICLE_NUMBER = 3000;
 export const WIND_FORCE = 10; //BACK + FRONT
-export const TORNADO_COLLISION_RADIUS = 3; //BACK + FRONT
-export const TORNADO_HEIGHT = 40;
 export const W_GLOW_INTENSITY = 0.3;
 
+/**OBJECTS */
+
+export const LIGHTNING_COLLISION_RADIUS = 5; //BACK + FRONT
+
+export const METEOR_DIAMETER = 2; //BACK + FRONT
+export const METEOR_PARTICLE_INTERVAL = 5000;
+export const METEOR_COLLISION_RADIUS = METEOR_DIAMETER; //BACK + FRONT
+
+export const TORNADO_COLLISION_RADIUS = 3; //BACK + FRONT
+export const TORNADO_HEIGHT = 40;
+
+export const CANON_DIMENSION = new babylon.Vector3(3, 3, 7); //BACK + FRONT
 
 /**PLAYER */
 export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x //BACK + FRONT

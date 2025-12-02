@@ -48,7 +48,12 @@ export const TORNADO_LIFETIME = 300;
 export const TORNADO_ATTRACTION_STRENGTH = 100;
 export const TORNADO_COLLISION_RADIUS = 3; //BACK + FRONT
 
+export const CANON_DIMENSION = new babylon.Vector3(3, 3, 7); //BACK + FRONT
 export const CANON_BALL_INTERVAL = 300;
+export const CANON_LINEAR_VELOCITY_X = 10;
+export const CANON_ANGULAR_VELOCITY_Y = 1;
+export const CANON_MAX_COUNT = 2;
+export const CANON_CHANGE_STUN_INTERVAL = 420;
 
 /**PLAYER */
 export const PLAYER_DIMENSION: babylon.Vector3 =  new babylon.Vector3(3, 3, 12); // z > 2 * x //BACK + FRONT
