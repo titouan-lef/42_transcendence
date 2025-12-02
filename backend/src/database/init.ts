@@ -73,8 +73,8 @@ async function initDB(): Promise<void> {
 	if (!databaseExist()) {
 		// No foreign key.
 		await createSeasonTable();
-		await initRuleTable(); 
-		await initBallTable(); 
+		await initRuleTable();
+		await initBallTable();
 		await initMapTable();
 		await initThemeTable();
 		// Foreign key.
