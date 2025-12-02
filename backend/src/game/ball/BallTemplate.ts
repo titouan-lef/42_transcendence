@@ -53,7 +53,7 @@ abstract class BallTemplate {
 		this.realDirection = this.physic.body.getLinearVelocity();
 		
 		this.sceneObservable = scene.onBeforeRenderObservable;
-		this.sceneObserver = this.applyMovementChanges(scene);
+		this.sceneObserver = this.observeScene(scene);
 	}
 
 	/**block the ball from having a Y velocity */
@@ -77,7 +77,7 @@ abstract class BallTemplate {
 	}
 
 	/** Spin doesn't apply to snake ball for obvious reasons */
-	protected applyMovementChanges(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
+	protected observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
 			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y (only visual but will be sent to front)
 			if (this.gameStopped)
@@ -85,16 +85,7 @@ abstract class BallTemplate {
 			if (this.particleCooldown > 0)
 				this.particleCooldown--;
 			this.unstuckTimer += scene.metadata.gameSpeed;
-			if (this.justCollided) {
-				this.realDirection = this.physic.body.getLinearVelocity(); // remember original velocity, to apply movement changes on it
-				this.justCollided = false; 
-				this.forceDirection = -1; // reset forceDirection
-				this.force = BALL_ANGULAR_FORCE; // reset angularForce
-			}
-			if (this.force <= 0)
-				this.forceDirection *= -1;
-			this.applySpin();
-			this.nerfSpeed();
+			this.applyMovementChanges();
 			this.effectInterval += scene.metadata.gameSpeed;
 			this.activateEffect();
 			if (this.unstuckTimer >= UNSTUCK_TIMER) {
@@ -103,6 +94,19 @@ abstract class BallTemplate {
 			}
 		});
 		return sceneObserver;
+	}
+
+	protected applyMovementChanges(): void {
+		if (this.justCollided) {
+			this.realDirection = this.physic.body.getLinearVelocity(); // remember original velocity, to apply movement changes on it
+			this.justCollided = false; 
+			this.forceDirection = -1; // reset forceDirection
+			this.force = BALL_ANGULAR_FORCE; // reset angularForce
+		}
+		if (this.force <= 0)
+			this.forceDirection *= -1;
+		this.applySpin();
+		this.nerfSpeed();
 	}
 
 	/** applies two contradictory forces on either side of the ball */
