@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { CookieSerializeOptions } from '@fastify/cookie';
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { sendReply } from "../utils/reply.js";
+import { sendReply } from "../utils/HTTP.js";
 import { isValidPassword } from "../utils/hash_string.js";
 import { doesUserExist, getUserPassword } from "../database/user.js";
 
@@ -31,12 +31,12 @@ async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: 
 	const hashPassword: string = await getUserPassword(id);
 
 	if (!isValidPassword(password, hashPassword)) {
-		sendReply(reply, 201, false, "Wrong id or password");
+		sendReply(reply, 400, false, "Wrong id or password");
 		return;
 	}
 	const token = jwt.sign({ id }, SECRET);
 	reply.setCookie("token", token, COOKIES_OPTIONS);
-	sendReply(reply, 201, true, "Successfuly loged in");
+	sendReply(reply, 200, true, "Successfuly loged in");
 }
 
 async function disconnectUser(req: FastifyRequest, reply: FastifyReply): Promise<void> {
