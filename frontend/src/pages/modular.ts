@@ -1,5 +1,5 @@
 import { ELEM, loadPage } from "../routes/page";
-import { sendGetRequestToBack, ServerRes } from "../services/api_request";
+import { sendGetRequestToBack } from "../services/api_request";
 import { getSafeElement } from "../utils/getSafeElement";
 import { ASIDE_BOX, ASIDE_CONNECTED, ASIDE_NOT_CONNECTED, asideConnectedEvents, asideDisconnectedEvents, loadAside } from "./modules/box_aside";
 import { MAIN_BOX, mainBoxEvents } from "./modules/box_main";

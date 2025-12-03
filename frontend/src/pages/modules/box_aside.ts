@@ -1,5 +1,5 @@
 import { createButtonHtml } from "../../components/button";
-import { getMessage, sendGetRequestToBack, sendPostRequestToBack, ServerRes } from "../../services/api_request";
+import { getMessage, sendGetRequestToBack, sendPostRequestToBack } from "../../services/api_request";
 import { disconnectUser } from "../../services/user_management/login";
 import { applyColor } from "../../utils/applyColor";
 import { getSafeElement } from "../../utils/getSafeElement";
