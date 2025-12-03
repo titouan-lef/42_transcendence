@@ -12,6 +12,10 @@ interface ServerRes {
 	message: string;
 }
 
+//////////////////////////////////////////
+//			API requests				//
+//////////////////////////////////////////
+
 async function printReplyInDiv(reply: Response, targetDivId: string): Promise<void> {
 	try {
 		const result: ServerRes = await reply.json();
@@ -69,54 +73,13 @@ async function getMessage(reply: Response): Promise<string> {
 	return "";
 }
 
-async function openWebSocketConnection(endpoint?: string): Promise<WebSocket> {
-	if (endpoint)
-		return new WebSocket(`${WS_URL}/${endpoint}`);
-	return new WebSocket(`${WS_URL}`);
-}
-
-async function newGameSolo(id: number, ws: WebSocket): Promise<void> {
-	ws.onopen = (): void => {
-		console.log("Connected");
-		ws.send(JSON.stringify({ id: id }));
-	};
-
-	ws.onmessage = (event): void => {
-		const message : DataMessage = JSON.parse(event.data);
-		switch (message.status) {
-			case (Status.OPTIONS):
-				newGame(message, ws);
-				break;
-			case (Status.OBJECT): /** @todo remove after object refacto */
-				updateGameObject(message);
-				break;
-			default:
-				return;
-		}
-	};
-
-	ws.onerror = (err): void => {
-		console.error("WebSocket error:", err);
-	};
-
-	ws.onclose = (event): void => {
-		console.log("Closed:", event.code, event.reason);
-	};
-}
-
-async function newGameType(id: number, type: string): Promise<void> {
-	let ws: WebSocket;
-	if (type === "ranked") {
-		ws = await openWebSocketConnection(id.toString());
-	} else {
-		ws = await openWebSocketConnection(type);
-	}
-	newGameSolo(id, ws);
-}
+//////////////////////////////////////////
+//			Game management				//
+//////////////////////////////////////////
 
 async function askForGame(): Promise<boolean> {
 	try {
-		const reply = await sendGetRequestToBack("/api/game/new_game");
+		const reply = await sendGetRequestToBack("/api/game/ranked_game");
 		const result: ServerRes = await reply.json();
 		if (result.success) {
 			return true;
@@ -157,7 +120,7 @@ async function newRankedGame(): Promise<void> {
 	const id = await waitForGame();
 	if (id === null)
 		return;
-	newGameType(id, "ranked");
+	newGameSolo(id);
 }
 
 async function newGameVsAI(): Promise<void> {
@@ -170,7 +133,7 @@ async function newGameVsAI(): Promise<void> {
 		windAffectsBall: true
 	};
 
-	const reply = await sendPostRequestToBack("/api/game/option", JSON.stringify(options));
+	const reply = await sendPostRequestToBack("/api/game/ai_game", JSON.stringify(options));
 	let id = -1;
 	try {
 		const result: ServerRes = await reply.json();
@@ -183,7 +146,42 @@ async function newGameVsAI(): Promise<void> {
 		return;
 	}
 	if (id >= 0)
-		newGameType(id, "AI");
+		newGameSolo(id);
+}
+
+//////////////////////////////////////////
+//		WebSocket management			//
+//////////////////////////////////////////
+
+async function newGameSolo(id: number): Promise<void> {
+	const ws = new WebSocket(`${WS_URL}/${id}`);
+
+	ws.onopen = (): void => {
+		console.log("Connected");
+		ws.send(JSON.stringify({ id: id }));
+	};
+
+	ws.onmessage = (event): void => {
+		const message : DataMessage = JSON.parse(event.data);
+		switch (message.status) {
+			case (Status.OPTIONS):
+				newGame(message, ws);
+				break;
+			case (Status.OBJECT): /** @todo remove after object refacto */
+				updateGameObject(message);
+				break;
+			default:
+				return;
+		}
+	};
+
+	ws.onerror = (err): void => {
+		console.error("WebSocket error:", err);
+	};
+
+	ws.onclose = (event): void => {
+		console.log("Closed:", event.code, event.reason);
+	};
 }
 
 async function newLocalGame(): Promise<void> {
@@ -196,7 +194,7 @@ async function newLocalGame(): Promise<void> {
 		windAffectsBall: true
 	};
 
-	const reply = await sendPostRequestToBack("/api/game/option", JSON.stringify(options));
+	const reply = await sendPostRequestToBack("/api/game/local_game", JSON.stringify(options));
 	let id = -1;
 	try {
 		const result: ServerRes = await reply.json();
@@ -213,8 +211,8 @@ async function newLocalGame(): Promise<void> {
 		return;
 	}
 
-	const player1 = await openWebSocketConnection("local");
-	const player2 = await openWebSocketConnection("local");
+	const player1 = new WebSocket(`${WS_URL}/${id}`);
+	const player2 = new WebSocket(`${WS_URL}/${id}`);
 
 	player1.onopen = (): void => {
 		console.log("Player 1 connected"); /** @todo remove */
@@ -254,4 +252,4 @@ async function newLocalGame(): Promise<void> {
 	};
 }
 
-export { ServerRes, getMessage, sendPostRequestToBack, sendGetRequestToBack, sendFile, printReplyInDiv, newRankedGame, newLocalGame, newGameVsAI };
+export { getMessage, sendPostRequestToBack, sendGetRequestToBack, sendFile, printReplyInDiv, newRankedGame, newLocalGame, newGameVsAI };

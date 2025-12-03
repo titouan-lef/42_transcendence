@@ -7,7 +7,7 @@ import fastifyStatic from "@fastify/static";
 import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
 import { connectUser, disconnectUser, whoami, changePicture, verifyAuth, getPicture, UserBody } from "./user_management/connect_user.js";
-import { addPlayerToMatchmakingSystem, isGameFound, localGame, localGameVsAI, rankedGame, registerGameOptions } from "./game/web_sockets/connection.js";
+import { addPlayerToMatchmakingSystem, isGameFound, newAIGame, newGame, newLocalGame } from "./game/web_sockets/connection.js";
 import { getFriendList, newFriend, removeFriend } from "./friends.js";
 
 const APP = fastify();
@@ -51,8 +51,9 @@ APP.post<{ Body: UserBody }>("/api/friends/add", { preHandler: verifyAuth }, new
 APP.post<{ Body: UserBody }>("/api/friends/remove", { preHandler: verifyAuth }, removeFriend);
 
 // --- Games ---
-APP.post("/api/game/option", registerGameOptions);
-APP.get("/api/game/new_game", { preHandler: verifyAuth }, addPlayerToMatchmakingSystem);
+APP.post("/api/game/local_game", newLocalGame);
+APP.post("/api/game/ai_game", newAIGame);
+APP.get("/api/game/ranked_game", { preHandler: verifyAuth }, addPlayerToMatchmakingSystem);
 APP.get("/api/game/waiting", { preHandler: verifyAuth }, isGameFound);
 
 /**
@@ -63,9 +64,9 @@ APP.get("/api/game/waiting", { preHandler: verifyAuth }, isGameFound);
  */
 // --- Web Socket route handlers ---
 APP.register(() => {
-	APP.get('/ws/:id', { websocket: true }, rankedGame);
-	APP.get('/ws/local', { websocket: true }, localGame);
-	APP.get('/ws/AI', { websocket: true }, localGameVsAI);
+	APP.get('/ws/:id', { websocket: true }, newGame);
+	// APP.get('/ws/local', { websocket: true }, localGame);
+	// APP.get('/ws/AI', { websocket: true }, localGameVsAI);
 });
 
 // --- Start server ---
