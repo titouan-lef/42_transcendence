@@ -17,7 +17,7 @@ declare module 'fastify' {
 const GAME_SETTINGS = new Map<number, GameOptions>();
 
 const WAITING_PLAYERS: string[] = [];
-const ACTIVES_SOCKETS = new Map<string, WebSocket>();
+const RANKED_WAITING = new Map<number, WebSocket>();
 const LOCAL_GAMES = new Map<number, WebSocket>();
 
 /**
@@ -55,19 +55,10 @@ async function verifyAuthWS(socket: WebSocket, req: FastifyRequest): Promise<str
 		socket.close(1008, "User does not exist");
 		return null;
 	}
-	const user = payload.id;
-	if (ACTIVES_SOCKETS.has(user)) {
-		socket.close(1008, "Already playing");
-		return null;
-	}
-	if (WAITING_PLAYERS.includes(user)) {
-		socket.close(1008, "Already looking for a game");
-		return null;
-	}
-	return user;
+	return payload.id;
 }
 
-async function findLocalGame(socket: WebSocket, req: FastifyRequest): Promise<void> {
+async function localGame(socket: WebSocket, req: FastifyRequest): Promise<void> {
 	console.log("New WebSocket connection for local game"); /** @todo remove */
 
 	startHeartbeat(socket);
@@ -98,6 +89,68 @@ async function findLocalGame(socket: WebSocket, req: FastifyRequest): Promise<vo
 		const settings = new GameSettings(options, player1, "Player 1", player2, "Player 2");
 		startGame(id, settings);
 	});
+}
+
+async function addPlayerToMatchmakingSystem(req: FastifyRequest, reply: FastifyReply): Promise<void> {
+	const user = req.user;
+	if (!user)
+		return;
+	WAITING_PLAYERS.push(user);
+	sendReply(reply, 200, true, "Looking for a game");
+	console.log(user, "is waiting for a game"); /** @todo remove */
+}
+
+function wait(ms: number): Promise<void> {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const MATCHS = new Map<string, number>();
+
+/** stupid matchmaking */
+async function askMatchmakingSystem(username: string): Promise<number> {
+	console.log("look for", username);
+	const id = MATCHS.get(username);
+	if (id !== undefined) {
+		MATCHS.delete(username);
+		return id;
+	}
+	if (WAITING_PLAYERS.length >= 2) {
+		console.log("New game found", MATCHS);
+		const id = getNewGameId();
+		const [player1, player2] = WAITING_PLAYERS.splice(0, 2);
+		const enemy = player1 === username ? player2 : player1;
+		MATCHS.set(enemy, id);
+		GAME_SETTINGS.set(id, getRandomOptions());
+		return id;
+	}
+	console.log("No game found", MATCHS);
+	return (-1);
+}
+
+async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<void> {
+	const user = req.user;
+	if (!user)
+		return;
+	if (!WAITING_PLAYERS.includes(user) && !MATCHS.has(user)) {
+		sendReply(reply, 501, false, "stop"); /** @todo check error code */
+		return;
+	}
+
+	let waited = 0;
+	const timeout = 10000;
+	let id = -1;
+	while (id < 0) {
+		if (waited >= timeout) {
+			sendReply(reply, 500, false, "No game found yet"); /** @todo check error code but not the same as before */
+			return;
+		}
+		id = await askMatchmakingSystem(user);
+		if (id < 0) {
+			await wait(1000);
+			waited += 1000;
+		}
+	}
+	sendReply(reply, 200, true, id.toString());
 }
 
 async function registerGameOptions(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
@@ -132,7 +185,7 @@ async function localGameVsAI(socket: WebSocket, req: FastifyRequest): Promise<vo
 		}
 		GAME_SETTINGS.delete(id);
 
-		startHeartbeat(socket); 
+		startHeartbeat(socket);
 
 		const settings = new GameSettings(options, socket, "Player 1");
 		startGame(id, settings);
@@ -151,47 +204,45 @@ function getRandomOptions(): GameOptions {
 	return options;
 }
 
-function newGame(player1: string, player2: string): void {
-	console.log(`New game with ${player1} et ${player2}`); /** @todo remove */
-	const socket1 = ACTIVES_SOCKETS.get(player1);
-	const socket2 = ACTIVES_SOCKETS.get(player2);
+async function rankedGame(socket: WebSocket, req: FastifyRequest): Promise<void> {
+	socket.once("message", (message) => {
+		let id: number;
+		try {
+			id = getGameId(message.toString());
+		} catch {
+			socket.close(1003, "Invalid message format");
+			return;
+		}
+		startHeartbeat(socket);
+		if (!RANKED_WAITING.get(id)) {
+			RANKED_WAITING.set(id, socket);
+			return;
+		}
+		const options = GAME_SETTINGS.get(id);
+		if (!options) {
+			socket.close(1003, "Not a valid game id");
+			return;
+		}
+		GAME_SETTINGS.delete(id);
+		const player2 = RANKED_WAITING.get(id);
+		RANKED_WAITING.delete(id);
+		const settings = new GameSettings(options, socket, "Player 1", player2, "Player 2");
+		startGame(id, settings);
+		console.log("New ranked game");
+	});
 
-	if (!socket1 || !socket2) {
-		if (!socket1)
-			WAITING_PLAYERS.push(player2);
-		else
-			WAITING_PLAYERS.push(player1);
-		return console.error("One of the players is no longer connected.");
-	}
-
-	const setting = new GameSettings(getRandomOptions(), socket1, player1, socket2, player2);
-
-	startGame(-1, setting);
-}
-
-async function findRankedGame(socket: WebSocket, req: FastifyRequest): Promise<void> {
 	console.log("New WebSocket connection"); /** @todo remove */
 	const user = await verifyAuthWS(socket, req);
 	if (!user)
 		return;
 	console.log("Identified", user);
-	ACTIVES_SOCKETS.set(user, socket);
-	WAITING_PLAYERS.push(user);
-	console.log(user, "is waiting for a game"); /** @todo remove */
-
-	startHeartbeat(socket);
-
-	if (WAITING_PLAYERS.length >= 2) { /** @todo real match making system */
-		const [players1, players2] = WAITING_PLAYERS.splice(0, 2);
-		newGame(players1, players2);
-	}
 
 	socket.on("close", () => {
-		ACTIVES_SOCKETS.delete(user);
+		/** @todo delete from RANKED_WAITING */
 		const index = WAITING_PLAYERS.indexOf(user);
 		if (index !== -1)
 			WAITING_PLAYERS.splice(index, 1);
 	});
 }
 
-export { registerGameOptions, findRankedGame, findLocalGame, localGameVsAI };
+export { registerGameOptions, addPlayerToMatchmakingSystem, isGameFound, rankedGame, localGame, localGameVsAI };

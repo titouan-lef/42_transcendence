@@ -7,7 +7,7 @@ import fastifyStatic from "@fastify/static";
 import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
 import { connectUser, disconnectUser, whoami, changePicture, verifyAuth, getPicture, UserBody } from "./user_management/connect_user.js";
-import { findLocalGame, findRankedGame, localGameVsAI, registerGameOptions } from "./game/web_sockets/connection.js";
+import { addPlayerToMatchmakingSystem, isGameFound, localGame, localGameVsAI, rankedGame, registerGameOptions } from "./game/web_sockets/connection.js";
 import { getFriendList, newFriend, removeFriend } from "./friends.js";
 
 const APP = fastify();
@@ -50,7 +50,10 @@ APP.post("/api/friends/list", getFriendList);
 APP.post<{ Body: UserBody }>("/api/friends/add", { preHandler: verifyAuth }, newFriend);
 APP.post<{ Body: UserBody }>("/api/friends/remove", { preHandler: verifyAuth }, removeFriend);
 
-APP.post("/api/game/new_game", registerGameOptions);
+// --- Games ---
+APP.post("/api/game/option", registerGameOptions);
+APP.get("/api/game/new_game", { preHandler: verifyAuth }, addPlayerToMatchmakingSystem);
+APP.get("/api/game/waiting", { preHandler: verifyAuth }, isGameFound);
 
 /**
  * Register plugins like `fastifyCors` or `fastifyCookies` globally, Fastify applies those preHandlers and hooks immediately.
@@ -60,8 +63,8 @@ APP.post("/api/game/new_game", registerGameOptions);
  */
 // --- Web Socket route handlers ---
 APP.register(() => {
-	APP.get('/ws/ranked', { websocket: true }, findRankedGame);
-	APP.get('/ws/local', { websocket: true }, findLocalGame);
+	APP.get('/ws/ranked', { websocket: true }, rankedGame);
+	APP.get('/ws/local', { websocket: true }, localGame);
 	APP.get('/ws/AI', { websocket: true }, localGameVsAI);
 });
 

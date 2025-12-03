@@ -109,8 +109,50 @@ async function newGameType(id: number, type: string): Promise<void> {
 	newGameSolo(id, ws);
 }
 
+async function askForGame(): Promise<boolean> {
+	try {
+		const reply = await sendGetRequestToBack("/api/game/new_game");
+		const result: ServerRes = await reply.json();
+		if (result.success) {
+			return true;
+		} else {
+			console.log("Error:", result.message);
+			return false;
+		}
+	} catch (err) {
+		console.error("Caught error:", err);
+		return false;
+	}
+}
+
+async function waitForGame(): Promise<number | null> {
+	let id = -1;
+	try {
+		while (id < 0) {
+			const reply = await sendGetRequestToBack("/api/game/waiting");
+			const result: ServerRes = await reply.json();
+			if (result.success)
+				id = Number(result.message);
+			if (result.message === "stop")
+				break;
+		}
+	} catch (err) {
+		console.error("Caught error:", err);
+		return null;
+	}
+	if (id >= 0)
+		return id;
+	console.log("No game found");
+	return null; 
+}
+
 async function newRankedGame(): Promise<void> {
-	newGameType(-1, "ranked");
+	if (!await askForGame())
+		return;
+	const id = await waitForGame();
+	if (id === null)
+		return;
+	newGameType(id, "ranked");
 }
 
 async function newGameVsAI(): Promise<void> {
@@ -123,7 +165,7 @@ async function newGameVsAI(): Promise<void> {
 		windAffectsBall: true
 	};
 
-	const reply = await sendPostRequestToBack("/api/game/new_game", JSON.stringify(options));
+	const reply = await sendPostRequestToBack("/api/game/option", JSON.stringify(options));
 	let id = -1;
 	try {
 		const result: ServerRes = await reply.json();
@@ -149,7 +191,7 @@ async function newLocalGame(): Promise<void> {
 		windAffectsBall: true
 	};
 
-	const reply = await sendPostRequestToBack("/api/game/new_game", JSON.stringify(options));
+	const reply = await sendPostRequestToBack("/api/game/option", JSON.stringify(options));
 	let id = -1;
 	try {
 		const result: ServerRes = await reply.json();
