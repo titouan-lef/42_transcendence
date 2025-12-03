@@ -1,7 +1,7 @@
 import { isOneStringEmtpy } from "../../utils/strings.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
 import { printReplyInDiv, sendPostRequestToBack } from "../api_request.js";
-import { ASIDE_CONNECTED, asideConnectedEvents, loadAside } from "../../pages/modules/box_aside.js";
+import { connectUser } from "./login.js";
 
 async function newUser(): Promise<void> {
 
@@ -34,12 +34,10 @@ async function newUser(): Promise<void> {
 	const reply = await sendPostRequestToBack("api/user/new_user", JSON.stringify(data));
 	printReplyInDiv(reply, "print-content");
 
-	/** @todo connect user if request succeed */
+	if (reply.status !== 201)
+		return;
 
-	const modal = getSafeElement('modal', HTMLDialogElement);
-	modal.close();
-
-	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
+	connectUser();
 }
 
 export { newUser };

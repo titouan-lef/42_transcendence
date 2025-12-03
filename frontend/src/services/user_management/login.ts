@@ -22,7 +22,9 @@ async function connectUser(): Promise<void> {
 	const reply = await sendPostRequestToBack("api/user/login", JSON.stringify(data));
 	printReplyInDiv(reply, "print-content");
 
-	/** @todo change modal only in case of success */
+	if (reply.status !== 200)
+		return;
+
 	const modal = getSafeElement('modal', HTMLDialogElement);
  
 	modal.close();
