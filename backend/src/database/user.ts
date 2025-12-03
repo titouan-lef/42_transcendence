@@ -91,15 +91,6 @@ async function getUserPicture(username: string): Promise<string | undefined> {
 	return row?.avatar;
 }
 
-async function deleteUser(username: string): Promise<void> {
-	await applyQuery(
-		async (db) => await db.run(
-			`DELETE FROM ${TABLE_NAME} WHERE username = ?`,
-			[username]
-		), "delete" + TABLE_NAME
-	);
-}
-
 async function updateUser(username: string, updates: Partial<Omit<User, "username" | "createdAt">>): Promise<void> {
 	await applyQuery(async (db) => {
 		const fields = Object.keys(updates).map((key) => `${key} = ?`).join(", ");
@@ -110,4 +101,4 @@ async function updateUser(username: string, updates: Partial<Omit<User, "usernam
 	}, "updateUser");
 }
 
-export { User, createUserTable, getUserPassword, doesUserExist, insertUser, updateUser, deleteUser, changeUserPicture, getUserPicture };
+export { User, createUserTable, getUserPassword, doesUserExist, insertUser, updateUser, changeUserPicture, getUserPicture };
