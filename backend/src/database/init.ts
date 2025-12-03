@@ -60,6 +60,7 @@ async function initRuleTable(): Promise<void> {
 	await createRuleTable();
 	await insertRule("spin");
 	await insertRule("rotation");
+	await insertRule("canon");
 	await insertRule("wind");
 }
 
