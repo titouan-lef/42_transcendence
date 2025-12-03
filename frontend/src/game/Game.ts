@@ -14,6 +14,7 @@ class Game {
 	private settings: GameSettings;
 	private originalGetDelta: (() => number) | null = null;
 	private firstFrame = true;
+	private stats: HTMLDivElement | null = null;
 
 	constructor (canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.engine = engine;
@@ -29,8 +30,8 @@ class Game {
 			const message : DataMessage = JSON.parse(event.data);
 			switch (message.status) {
 				case (Status.STOP):
-					this.stop();
-					stopGame();
+					//this.close();
+					this.showStats();
 					break;
 				case (Status.RENDER):
 					this.setDeltaTime(message.deltaMultiplicator);
@@ -88,18 +89,48 @@ class Game {
 		});
 	}
 
-	/**@todo usefull ? */
-	hide(): void {
+	private showStats(): void {
 		this.engine.stopRenderLoop();
+		this.stats = this.createStats();
 	}
 
-	stop(): void {
+	private createStats(): HTMLDivElement {
+		const stats = document.createElement("div");
+		stats.style.position = "fixed";
+		stats.style.top = "0";
+		stats.style.left = "0";
+		stats.style.width = "100%";
+		stats.style.height = "100%";
+		stats.style.background = "rgba(0,0,0,0.6)";
+		stats.style.display = "flex";
+		stats.style.flexDirection = "column";
+		stats.style.justifyContent = "center";
+		stats.style.alignItems = "center";
+		stats.style.color = "white";
+		stats.style.fontSize = "24px";
+
+		const text = document.createElement("div");
+		text.textContent = "Game finished";
+
+		const btn = document.createElement("button");
+		btn.textContent = "Close";
+		btn.style.marginTop = "20px";
+		btn.onclick = (): void => {
+			stopGame();
+			this.stats?.remove();
+		};
+
+		stats.appendChild(text);
+		stats.appendChild(btn);
+		document.body.appendChild(stats);
+		return stats;
+	}
+
+	closeGame(): void {
 		this.sceneManager.destroyScene();
-		this.scene.onAfterRenderObservable.clear();
 		this.camera.dispose();
 		if (SHOW_DISPOSE_LOGS)
 			this.sceneManager.showDisposeLogs(this.scene);
-		this.engine.stopRenderLoop();
 		this.scene.dispose();
 		this.engine.dispose();
 		this.canvas.remove();

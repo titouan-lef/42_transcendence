@@ -20,6 +20,7 @@ interface GameOptions { /** @toto include GameOptions in GameSettings ? */
 	spin: boolean;
 	windAffectsBall: boolean;
 	dashingPlayer: boolean;
+	canonCount: number;
 }
 
 class GameSettings {

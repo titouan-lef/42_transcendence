@@ -12,60 +12,63 @@ export class ParticuleManager {
 
 	/** particles on collides */
 	createCollisionParticles(scene: babylon.Scene, position: Position, color: babylon.Color3): babylon.ParticleSystem {
-		const collisionParticles = new babylon.ParticleSystem("collision", 100, scene);
-		collisionParticles.particleTexture = this.textures.spark.clone();
-		collisionParticles.emitter = new babylon.Vector3(position.x, position.y, position.z);
-		collisionParticles.createSphereEmitter(BALL_DIAMETER * 2);
-		collisionParticles.renderingGroupId = 1;
-		collisionParticles.color1 = new babylon.Color4(color.r, color.g, color.b, 1.0);
-		collisionParticles.colorDead = new babylon.Color4(color.r, color.g, color.b, 1.0);
-		collisionParticles.minSize = 0.3;
-		collisionParticles.maxSize = 0.3;
-		collisionParticles.minLifeTime = 0.2;
-		collisionParticles.maxLifeTime = 0.2;
-		collisionParticles.minEmitPower = 4;
-		collisionParticles.maxEmitPower = 6;
-		collisionParticles.emitRate = 0;
-		collisionParticles.manualEmitCount = 100;
-		return collisionParticles;
+		const particle = new babylon.ParticleSystem("collision", 100, scene);
+		particle.particleTexture = this.textures.spark.clone();
+		particle.emitter = new babylon.Vector3(position.x, position.y, position.z);
+		particle.createSphereEmitter(BALL_DIAMETER * 2);
+		particle.renderingGroupId = 1;
+		particle.color1 = new babylon.Color4(color.r, color.g, color.b, 1.0);
+		particle.minSize = 0.3;
+		particle.maxSize = 0.3;
+		particle.minLifeTime = 0.5;
+		particle.maxLifeTime = 0.5;
+		particle.minEmitPower = 4;
+		particle.maxEmitPower = 6;
+		particle.emitRate = 0;
+		particle.manualEmitCount = 100;
+		return particle;
 	}
 
 	/** particles on goal */
 	createExplosionParticles(scene: babylon.Scene, position: Position, size: number): babylon.ParticleSystem {
-		const explosionParticles = new babylon.ParticleSystem("explosion", 200, scene);
-		explosionParticles.particleTexture = this.textures.flare.clone();
-		explosionParticles.emitter = new babylon.Vector3(position.x, position.y, position.z);
-		explosionParticles.createSphereEmitter(BALL_DIAMETER * 10 * size);
-		explosionParticles.renderingGroupId = 1;
-		explosionParticles.color1 = new babylon.Color4(1, 0.5, 0, 1);
-		explosionParticles.color2 = new babylon.Color4(1, 0.2, 0, 1);
-		explosionParticles.colorDead = new babylon.Color4(0, 0, 0, 0);
-		explosionParticles.minSize = 5 * size;
-		explosionParticles.maxSize = 10 * size;
-		explosionParticles.minEmitPower = 5 * size;
-		explosionParticles.maxEmitPower = 15 * size;
-		explosionParticles.updateSpeed = 0.02;
-		explosionParticles.emitRate = 0;
-		explosionParticles.manualEmitCount = 200;
-		return explosionParticles;
+		const particle = new babylon.ParticleSystem("explosion", 200, scene);
+		particle.particleTexture = this.textures.flare.clone();
+		particle.emitter = new babylon.Vector3(position.x, position.y, position.z);
+		particle.createSphereEmitter(BALL_DIAMETER * 10 * size);
+		particle.renderingGroupId = 1;
+		particle.color1 = new babylon.Color4(1, 0.5, 0, 1);
+		particle.color2 = new babylon.Color4(1, 0.2, 0, 1);
+		particle.colorDead = new babylon.Color4(0, 0, 0, 0);
+		particle.minSize = 5 * size;
+		particle.maxSize = 10 * size;
+		particle.minLifeTime = 2;
+		particle.maxLifeTime = 2;
+		particle.minEmitPower = 5 * size;
+		particle.maxEmitPower = 15 * size;
+		particle.updateSpeed = 0.02;
+		particle.emitRate = 0;
+		particle.manualEmitCount = 200;
+		return particle;
 	}
 
 	/** particles on impulses */
 	createImpulseParticles(scene: babylon.Scene, position: Position, color: babylon.Color3): babylon.ParticleSystem {
-		const explosionParticles = new babylon.ParticleSystem("impulse", 100, scene);
-		explosionParticles.particleTexture = this.textures.flare.clone();
-		explosionParticles.emitter = new babylon.Vector3(position.x, position.y, position.z);
-		explosionParticles.createSphereEmitter(BALL_DIAMETER * 2);
-		explosionParticles.renderingGroupId = 1;
-		explosionParticles.color1 = new babylon.Color4(color.r, color.g, color.b, 1.0);
-		explosionParticles.minSize = 3;
-		explosionParticles.maxSize = 3;
-		explosionParticles.minEmitPower = 2;
-		explosionParticles.maxEmitPower = 4;
-		explosionParticles.updateSpeed = 0.02;
-		explosionParticles.emitRate = 0;
-		explosionParticles.manualEmitCount = 100;
-		return explosionParticles;
+		const particle = new babylon.ParticleSystem("impulse", 100, scene);
+		particle.particleTexture = this.textures.flare.clone();
+		particle.emitter = new babylon.Vector3(position.x, position.y, position.z);
+		particle.createSphereEmitter(BALL_DIAMETER * 2);
+		particle.renderingGroupId = 1;
+		particle.color1 = new babylon.Color4(color.r, color.g, color.b, 1.0);
+		particle.minSize = 3;
+		particle.maxSize = 3;
+		particle.minLifeTime = 1;
+		particle.maxLifeTime = 1;
+		particle.minEmitPower = 2;
+		particle.maxEmitPower = 4;
+		particle.updateSpeed = 0.02;
+		particle.emitRate = 0;
+		particle.manualEmitCount = 100;
+		return particle;
 	}
 
 	/** Spawn particules */

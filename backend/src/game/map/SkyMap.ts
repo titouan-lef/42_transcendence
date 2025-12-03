@@ -4,8 +4,8 @@ import { MAP_SIZE, WIND_FORCE } from "../settings/values.js";
 import { Object } from "../web_sockets/types_transfert.js";
 
 class SkyMap extends MapTemplate {
-	constructor(scene: babylon.Scene) {
-		super(scene, "sky");
+	constructor(scene: babylon.Scene, canonCount: number) {
+		super(scene, "sky", canonCount);
 		this.availableObjects.push(Object.LIGHTNING);
 		if (Math.random() > 0.5)
 			this.availableObjects.push(Object.CANON_BALL);

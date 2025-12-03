@@ -178,7 +178,8 @@ class Game {
 			wind: this.sceneManager.getWind(),
 			ball: "default",
 			rotatingPlayer: this.settings.options.rotatingPlayer,
-			spin: this.settings.options.spin
+			spin: this.settings.options.spin,
+			canonCount: this.settings.options.canonCount
 		};
 
 		const ball = this.sceneManager.getBall();

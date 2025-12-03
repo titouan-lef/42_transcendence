@@ -4,8 +4,8 @@ import { MAP_SIZE } from "../settings/values.js";
 import { Object } from "../web_sockets/types_transfert.js";
 
 class VolcanoMap extends MapTemplate {
-	constructor(scene: babylon.Scene) {
-		super(scene, "volcano");
+	constructor(scene: babylon.Scene, canonCount: number) {
+		super(scene, "volcano", canonCount);
 		this.availableObjects.push(Object.METEOR);
 		if (Math.random() > 0.5)
 			this.availableObjects.push(Object.CANON_BALL);
