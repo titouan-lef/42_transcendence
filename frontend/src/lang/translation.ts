@@ -109,6 +109,10 @@ const TRANSLATOR = {
 		en: "prefered ball",
 		fr: "balle favorite"
 	},
+	last_games: {
+		en: "last games",
+		fr: "dernières parties"
+	},
 } as const satisfies Record<string, Expression>;
 
 export { CodeLang, TRANSLATOR };

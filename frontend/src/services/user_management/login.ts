@@ -1,7 +1,7 @@
 import { isOneStringEmtpy } from "../../utils/strings.js";
 import { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv } from "../api_request.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
-import { ASIDE_CONNECTED, ASIDE_NOT_CONNECTED, asideConnectedEvents, asideDisconnectedEvents, loadAside } from "../../pages/modules/box_aside.js";
+import { ASIDE_CONNECTED, asideConnectedEvents, loadAside } from "../../pages/modules/box_aside.js";
 import { updateFriendList } from "../../pages/modules/box_aside_friendlist.js";
 import { loadModularPage } from "../../pages/modular.js";
 import { openDialog2FA } from "../../pages/modules/dialog.js";
@@ -35,8 +35,10 @@ async function connectUser(): Promise<void> {
 		return;
 
 	const modal = getSafeElement('modal', HTMLDialogElement);
+
 	modal.close();
 	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
+	/** @todo add load main */
 	updateFriendList();
 }
 
@@ -53,6 +55,7 @@ async function sendSecureCode(): Promise<void> {
 		return;
 
 	const modal = getSafeElement('modal', HTMLDialogElement);
+	/** @todo add load main */
 	modal.close();
 	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
 	updateFriendList();
