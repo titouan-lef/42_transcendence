@@ -6,30 +6,34 @@ describe("EloStorage", function () {
   const season = 1;
   const users = ["ael-atmi", "tilegran", "tle-floc", "lguerbig", "pchalmin"];
 
-  beforeEach(async function () {
+    beforeEach(async function () {
     const EloFactory = await ethers.getContractFactory("EloStorage");
     elo = await EloFactory.deploy();
   });
 
-  it("set/get/update ELO for multiple users", async function () {
+  it("should set and get ELO data for multiple users", async function () {
     for (const u of users) {
-      await elo.setElo(u, season, 1200);
-      const val = await elo.getElo(u, season);
-      expect(val).to.equal(1200);
+      await elo.setEloData(u, season, 1200, 200);
+      const [rating, ratingRd] = await elo.getEloData(u, season);
+      expect(rating).to.equal(1200);
+      expect(ratingRd).to.equal(200);
     }
 
-    await elo.updateElo("ael-atmi", season, 100);
-    expect(await elo.getElo("ael-atmi", season)).to.equal(1300);
+    await elo.setRating("ael-atmi", season, 1300);
+    const [ratingA, ratingRdA] = await elo.getEloData("ael-atmi", season);
+    expect(ratingA).to.equal(1300);
+    expect(ratingRdA).to.equal(200);
 
-    await elo.updateElo("tilegran", season, -1500);
-    expect(await elo.getElo("tilegran", season)).to.equal(1);
+    await elo.setRatingRd("tilegran", season, 250);
+    const [ratingT, ratingRdT] = await elo.getEloData("tilegran", season);
+    expect(ratingT).to.equal(1200);
+    expect(ratingRdT).to.equal(250);
+  });
 
-    await elo.updateElo("tle-floc", season, -100);
-    expect(await elo.getElo("tle-floc", season)).to.equal(1100);
 
-    await elo.updateElo("lguerbig", season, 1000);
-    expect(await elo.getElo("lguerbig", season)).to.equal(2200);
-
-    expect(await elo.getElo("unknown", season)).to.equal(0);
+  it("should return default 0 for unknown users", async function () {
+    const [rating, ratingRd]= await elo.getEloData("unknown", season);
+    expect(rating).to.equal(0);
+    expect(ratingRd).to.equal(0);
   });
 });
