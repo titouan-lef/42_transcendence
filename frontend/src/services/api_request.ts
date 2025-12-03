@@ -105,7 +105,12 @@ async function newGameSolo(id: number, ws: WebSocket): Promise<void> {
 }
 
 async function newGameType(id: number, type: string): Promise<void> {
-	const ws = await openWebSocketConnection(type);
+	let ws: WebSocket;
+	if (type === "ranked") {
+		ws = await openWebSocketConnection(id.toString());
+	} else {
+		ws = await openWebSocketConnection(type);
+	}
 	newGameSolo(id, ws);
 }
 

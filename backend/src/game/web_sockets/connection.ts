@@ -95,6 +95,10 @@ async function addPlayerToMatchmakingSystem(req: FastifyRequest, reply: FastifyR
 	const user = req.user;
 	if (!user)
 		return;
+	if (WAITING_PLAYERS.includes(user)) {
+		sendReply(reply, 200, true, "Already for a game");
+		return ;
+	}
 	WAITING_PLAYERS.push(user);
 	sendReply(reply, 200, true, "Looking for a game");
 	console.log(user, "is waiting for a game"); /** @todo remove */
@@ -204,45 +208,31 @@ function getRandomOptions(): GameOptions {
 	return options;
 }
 
-async function rankedGame(socket: WebSocket, req: FastifyRequest): Promise<void> {
-	socket.once("message", (message) => {
-		let id: number;
-		try {
-			id = getGameId(message.toString());
-		} catch {
-			socket.close(1003, "Invalid message format");
-			return;
-		}
-		startHeartbeat(socket);
-		if (!RANKED_WAITING.get(id)) {
-			RANKED_WAITING.set(id, socket);
-			return;
-		}
-		const options = GAME_SETTINGS.get(id);
-		if (!options) {
-			socket.close(1003, "Not a valid game id");
-			return;
-		}
-		GAME_SETTINGS.delete(id);
-		const player2 = RANKED_WAITING.get(id);
-		RANKED_WAITING.delete(id);
-		const settings = new GameSettings(options, socket, "Player 1", player2, "Player 2");
-		startGame(id, settings);
-		console.log("New ranked game");
-	});
+interface GameParams {
+	id: number;
+}
 
-	console.log("New WebSocket connection"); /** @todo remove */
-	const user = await verifyAuthWS(socket, req);
-	if (!user)
+async function rankedGame(socket: WebSocket, req: FastifyRequest<{ Params: GameParams }>): Promise<void> {
+	const gameId = Number(req.params.id);
+	console.log('New player in game', gameId);
+	/** @todo check that this game is for this user */
+	startHeartbeat(socket);
+	if (!RANKED_WAITING.get(gameId)) {
+		RANKED_WAITING.set(gameId, socket);
 		return;
-	console.log("Identified", user);
-
-	socket.on("close", () => {
-		/** @todo delete from RANKED_WAITING */
-		const index = WAITING_PLAYERS.indexOf(user);
-		if (index !== -1)
-			WAITING_PLAYERS.splice(index, 1);
-	});
+	}
+	const options = GAME_SETTINGS.get(gameId);
+	if (options === undefined) {
+		console.log('Not a valid game id: ', gameId);
+		socket.close(1003, "Not a valid game id");
+		return;
+	}
+	GAME_SETTINGS.delete(gameId);
+	const player2 = RANKED_WAITING.get(gameId);
+	RANKED_WAITING.delete(gameId);
+	const settings = new GameSettings(options, socket, "Player 1", player2, "Player 2"); /** @todo get real player usernames */
+	startGame(gameId, settings);
+	console.log("New ranked game");
 }
 
 export { registerGameOptions, addPlayerToMatchmakingSystem, isGameFound, rankedGame, localGame, localGameVsAI };
