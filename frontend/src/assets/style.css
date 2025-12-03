@@ -51,13 +51,15 @@
 	--color-tx-sec:		#477b99;
 	--color-warning:	#9c2b2b;
 	--color-shadow:		#6e6e6e;
+	--color-win:		#8aff8a;
+	--color-lose:		#aa2222;
 }
 
 /*
 	Gradients for background
 		use bg-grad-<direction>-<value in px> from-<color name>
 		to get a linear gradient to <direction> with size of <value in px> from color <color name>
-		(default value of color is --color-dark)
+		(default value of color is --color-dark, also, you can use it without size specified to gradient 100% of size)
 	Only 'to top' and 'to left' are used, add 'to bottom' or 'to right' if needed.
 */
 @utility bg-grad-t-* {
@@ -73,5 +75,13 @@
 		to left,
 		var(--tw-gradient-from, var(--color-dark)),
 		transparent calc(--value(integer) * 1px)
+	);
+}
+
+@utility bg-grad-l {
+	background-image: linear-gradient(
+		to left,
+		var(--tw-gradient-from, var(--color-dark)),
+		transparent
 	);
 }

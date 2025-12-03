@@ -4,6 +4,7 @@ import { getSafeElement } from "../utils/getSafeElement.js";
 const ELEM_ID = 'main-content';
 const ELEM = getSafeElement(ELEM_ID, HTMLElement);
 
+/** @todo manage back and forward buttons */
 // let currentPage: HTMLElement;
 
 function loadPage(page: string, eventLoader: () => void): void {

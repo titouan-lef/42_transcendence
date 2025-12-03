@@ -6,7 +6,7 @@ import { loadModularPage } from "./modular";
 const WELCOME_STYLE = `
 flex items-center justify-center h-screen
 text-[clamp(100px,50vmin,500px)] text-balance
-font-jaro font-bold
+font-jaro
 ${applyColor('alt')}
 `;
 
