@@ -2,8 +2,8 @@ import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
-import { DataMessage, OptionMessage, Status } from "./types_transfert.js";
-import { stopGame } from "./canvas_creation.js";
+import { DataMessage, GameStats, OptionMessage, Status, StopMessage } from "./types_transfert.js";
+import { GameStatistics } from "./screen/GameStatistics.js";
 
 class Game {
 	private readonly engine: babylon.Engine;
@@ -14,7 +14,7 @@ class Game {
 	private settings: GameSettings;
 	private originalGetDelta: (() => number) | null = null;
 	private firstFrame = true;
-	private stats: HTMLDivElement | null = null;
+	private stats: GameStatistics | null = null;
 
 	constructor (canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.engine = engine;
@@ -31,7 +31,7 @@ class Game {
 			switch (message.status) {
 				case (Status.STOP):
 					//this.close();
-					this.showStats();
+					this.showStats(message);
 					break;
 				case (Status.RENDER):
 					this.setDeltaTime(message.deltaMultiplicator);
@@ -89,41 +89,9 @@ class Game {
 		});
 	}
 
-	private showStats(): void {
+	private showStats(message: StopMessage): void {
 		this.engine.stopRenderLoop();
-		this.stats = this.createStats();
-	}
-
-	private createStats(): HTMLDivElement {
-		const stats = document.createElement("div");
-		stats.style.position = "fixed";
-		stats.style.top = "0";
-		stats.style.left = "0";
-		stats.style.width = "100%";
-		stats.style.height = "100%";
-		stats.style.background = "rgba(0,0,0,0.6)";
-		stats.style.display = "flex";
-		stats.style.flexDirection = "column";
-		stats.style.justifyContent = "center";
-		stats.style.alignItems = "center";
-		stats.style.color = "white";
-		stats.style.fontSize = "24px";
-
-		const text = document.createElement("div");
-		text.textContent = "Game finished";
-
-		const btn = document.createElement("button");
-		btn.textContent = "Close";
-		btn.style.marginTop = "20px";
-		btn.onclick = (): void => {
-			stopGame();
-			this.stats?.remove();
-		};
-
-		stats.appendChild(text);
-		stats.appendChild(btn);
-		document.body.appendChild(stats);
-		return stats;
+		this.stats = new GameStatistics(message.gameStats);
 	}
 
 	closeGame(): void {

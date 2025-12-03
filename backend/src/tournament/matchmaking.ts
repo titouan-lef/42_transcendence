@@ -26,8 +26,8 @@ async function addPlayerToMatchmakingSystem(req: FastifyRequest, reply: FastifyR
 
 function getRandomOptions(): GameOptions {
 	const options: GameOptions = {
-		map: "random",
-		ball: "random",
+		map: ["default", "sky", "volcano", "desert"],
+		ball: ["default", "snake", "tricky", "invisible", "pulse"],
 		rotatingPlayer: randomBoolean(),
 		spin: randomBoolean(),
 		windAffectsBall: randomBoolean(),

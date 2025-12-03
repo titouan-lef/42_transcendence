@@ -69,15 +69,10 @@ async function getReplyMessage(reply: Response): Promise<string> {
 //////////////////////////////////////////
 //			Game management				//
 //////////////////////////////////////////
-const BALL_LIST: BallOption[] = ["default", "invisible", "tricky", "pulse", "snake"];
-type BallChoice = "random" | BallOption[];
-const MAPLIST: MapOption[] = ["default", "volcano", "sky", "desert"];
-type MapChoice = "random" | MapOption[];
-
 
 interface GameOptions { /** @toto include GameOptions in GameSettings ? */
-	map: MapChoice;
-	ball: BallChoice;
+	map: MapOption[];
+	ball: BallOption[];
 	rotatingPlayer: boolean;
 	spin: boolean;
 	windAffectsBall: boolean;
@@ -119,8 +114,8 @@ async function newRankedGame(): Promise<void> {
 async function newGameVsAI(): Promise<void> {
 	/** @todo get options from front interface */
 	const options : GameOptions = {
-		map: ["default"],
-		ball: ["default"],
+		map: ["default", "sky", "volcano", "desert"],
+		ball: ["default", "snake", "tricky", "invisible", "pulse"],
 		rotatingPlayer: true,
 		spin: true,
 		windAffectsBall: true,
@@ -174,8 +169,8 @@ async function newGameSolo(id: number): Promise<void> {
 async function newLocalGame(): Promise<void> {
 	/** @todo get options from front interface */
 	const options : GameOptions = {
-		map: ["default"],
-		ball: ["default"],
+		map: ["default", "sky", "volcano", "desert"],
+		ball: ["default", "snake", "tricky", "invisible", "pulse"],
 		rotatingPlayer: true,
 		spin: true,
 		windAffectsBall: true,

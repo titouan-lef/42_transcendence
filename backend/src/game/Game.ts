@@ -5,7 +5,7 @@ import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
 import { GAME_STEP_INTERVAL, PHYSIC_STEP_INTERVAL, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import fs from "fs";
-import { Status, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage } from "./web_sockets/types_transfert.js";
+import { Status, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage, GameStats, Point, PlayerInfo, Rules } from "./web_sockets/types_transfert.js";
 import { Player } from "./player/Player.js";
 import { Human } from "./player/Human.js";
 import { stopGame } from "./game_manager.js";
@@ -22,6 +22,9 @@ class Game {
 	private physicStepsInterval = PHYSIC_STEP_INTERVAL;
 	private inAnimation = false;
 	private score: babylon.Vector2;
+	private gameTimerIntervalId: ReturnType<typeof setInterval>;
+	private gameTimer = 0;
+	private readonly points: Point[] = [];
 
 	constructor (id: number, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.id = id;
@@ -33,6 +36,9 @@ class Game {
 		this.scene.metadata = { gameSpeed: 1 };
 		this.score = new babylon.Vector2(0, 0);
 		this.setScene();
+		this.gameTimerIntervalId = setInterval(() => {
+			this.gameTimer++;
+		}, 1000);
 	}
 
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
@@ -63,6 +69,7 @@ class Game {
 	}
 
 	stop(): void {
+		clearInterval(this.gameTimerIntervalId);
 		this.stopSendingPositions();
 		this.sceneManager.destroyScene();
 		this.scene.onAfterRenderObservable.clear();
@@ -165,9 +172,38 @@ class Game {
 	private async sendStop(player1: Player, player2: Player) : Promise<void> {
 		const stop: StopMessage = {
 			status: Status.STOP,
+			gameStats: this.createStats()
 		};
 		player1.send(stop);
 		player2.send(stop);
+	}
+
+	private createStats(): GameStats {
+		const player1 = {
+			name: this.settings.player1.username,
+			score: this.score.x
+		};
+		const player2 = {
+			name: this.settings.player1.username,//change to player1
+			score: this.score.y
+		};
+		const rules = {
+			ballOptions: this.settings.options.ball,
+			mapOptions: this.settings.options.map,
+			rotatingPlayer: this.settings.options.rotatingPlayer,
+			spin: this.settings.options.spin,
+			dashingPlayer: this.settings.options.dashingPlayer,
+			windAffectsBall: this.settings.options.windAffectsBall,
+			canonCount: this.settings.options.canonCount
+		};
+		const gameStats = {
+			player1: player1,
+			player2: player2,
+			gameTimer: this.gameTimer,
+			points: this.points,
+			rules: rules
+		};
+		return gameStats;
 	}
 
 	private async sendOptions(player1: Player, player2: Player) : Promise<void> {
