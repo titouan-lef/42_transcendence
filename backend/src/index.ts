@@ -65,8 +65,6 @@ APP.get("/api/game/waiting", { preHandler: verifyAuth }, isGameFound);
 // --- Web Socket route handlers ---
 APP.register(() => {
 	APP.get('/ws/:id', { websocket: true }, newGame);
-	// APP.get('/ws/local', { websocket: true }, localGame);
-	// APP.get('/ws/AI', { websocket: true }, localGameVsAI);
 });
 
 // --- Start server ---

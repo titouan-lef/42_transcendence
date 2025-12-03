@@ -21,6 +21,7 @@ enum GameType { RANKED, LOCAL, AI };
 interface GameData {
 	type: GameType;
 	options: GameOptions;
+	players: string[];
 };
 
 const GAME_SETTINGS = new Map<number, GameData>();
@@ -73,12 +74,10 @@ async function askMatchmakingSystem(username: string): Promise<number> {
 	}
 	if (WAITING_PLAYERS.length >= 2) {
 		console.log("New game found", MATCHS);
-		const id = await registerGameOptions(getRandomOptions(), GameType.RANKED);
-		// const id = getNewGameId();
 		const [player1, player2] = WAITING_PLAYERS.splice(0, 2);
+		const id = await registerGameOptions(getRandomOptions(), GameType.RANKED, [player1, player2]);
 		const enemy = player1 === username ? player2 : player1;
 		MATCHS.set(enemy, id);
-		// GAME_SETTINGS.set(id, { type: GameType.RANKED, options: getRandomOptions() });
 		return id;
 	}
 	console.log("No game found", MATCHS);
@@ -89,9 +88,9 @@ async function askMatchmakingSystem(username: string): Promise<number> {
 //			HTTP routes handeling		//
 //////////////////////////////////////////
 
-async function registerGameOptions(options: GameOptions , type: GameType): Promise<number> {
+async function registerGameOptions(options: GameOptions , type: GameType, players: string[]): Promise<number> {
 	const id = getNewGameId();
-	GAME_SETTINGS.set(id, { type: type, options: options });
+	GAME_SETTINGS.set(id, { type: type, options: options, players: players });
 	return id;
 }
 
@@ -123,13 +122,13 @@ async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<vo
 
 async function newLocalGame(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
 	const options: GameOptions = req.body;
-	const id = await registerGameOptions(options, GameType.LOCAL);
+	const id = await registerGameOptions(options, GameType.LOCAL, []);
 	sendReply(reply, 200, true, id.toString());
 }
 
 async function newAIGame(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
 	const options: GameOptions = req.body;
-	const id = await registerGameOptions(options, GameType.AI);
+	const id = await registerGameOptions(options, GameType.AI, []);
 	sendReply(reply, 200, true, id.toString());
 }
 
@@ -137,13 +136,7 @@ async function newAIGame(req: FastifyRequest<{ Body: GameOptions }>, reply: Fast
 //			New game creations			//
 //////////////////////////////////////////
 
-async function localGame(socket: WebSocket, gameId: number): Promise<void> {
-	
-	const options = GAME_SETTINGS.get(gameId)?.options;
-	if (options === undefined) {
-		socket.close(1003, "Not a valid game id");
-		return;
-	}
+async function localGame(socket: WebSocket, gameId: number, gameData: GameData): Promise<void> {
 
 	const player1 = LOCAL_GAMES.get(gameId);
 	if (player1 === undefined) {
@@ -153,41 +146,26 @@ async function localGame(socket: WebSocket, gameId: number): Promise<void> {
 	const player2 = socket;
 	GAME_SETTINGS.delete(gameId);
 	LOCAL_GAMES.delete(gameId);
-
-	const settings = new GameSettings(options, player1, "Player 1", player2, "Player 2");
+	const settings = new GameSettings(gameData.options, player1, "Player 1", player2, "Player 2");
 	startGame(gameId, settings);
 }
 
-async function aiGame(socket: WebSocket, gameId: number): Promise<void> {
-
-	const options = GAME_SETTINGS.get(gameId)?.options;
-	if (options === undefined) {
-		socket.close(1003, "Not a valid game id");
-		return;
-	}
+async function aiGame(socket: WebSocket, gameId: number, gameData: GameData): Promise<void> {
 	GAME_SETTINGS.delete(gameId);
-
-	startHeartbeat(socket);
-
-	const settings = new GameSettings(options, socket, "Player 1");
+	const settings = new GameSettings(gameData.options, socket, "Player 1");
 	startGame(gameId, settings);
 	console.log("New local game vs AI");
 }
 
-async function rankedGame(socket: WebSocket, gameId: number): Promise<void> {
+async function rankedGame(socket: WebSocket, gameId: number, gameData: GameData): Promise<void> {
 	if (!RANKED_WAITING.get(gameId)) {
 		RANKED_WAITING.set(gameId, socket);
-		return;
-	}
-	const options = GAME_SETTINGS.get(gameId)?.options;
-	if (options === undefined) {
-		socket.close(1003, "Not a valid game id");
 		return;
 	}
 	GAME_SETTINGS.delete(gameId);
 	const player2 = RANKED_WAITING.get(gameId);
 	RANKED_WAITING.delete(gameId);
-	const settings = new GameSettings(options, socket, "Player 1", player2, "Player 2"); /** @todo get real player usernames */
+	const settings = new GameSettings(gameData.options, socket, "Player 1", player2, "Player 2"); /** @todo get real player usernames */
 	startGame(gameId, settings);
 	console.log("New ranked game");
 }
@@ -238,17 +216,16 @@ async function verifyAuthWS(socket: WebSocket, req: FastifyRequest): Promise<str
 	return payload.id;
 }
 
-async function identifyGame(socket: WebSocket, gameId: number): Promise<void> {
-	const type = GAME_SETTINGS.get(gameId)?.type;
-	switch (type) {
+async function identifyGame(socket: WebSocket, gameId: number, gameData: GameData): Promise<void> {
+	switch (gameData.type) {
 		case GameType.RANKED:
-			rankedGame(socket, gameId);
+			rankedGame(socket, gameId, gameData);
 			break;
 		case GameType.LOCAL:
-			localGame(socket, gameId);
+			localGame(socket, gameId, gameData);
 			break;
 		case GameType.AI:
-			aiGame(socket, gameId);
+			aiGame(socket, gameId, gameData);
 			break;
 		default:
 			socket.close(1003, "Not a valid game id");
@@ -258,9 +235,20 @@ async function identifyGame(socket: WebSocket, gameId: number): Promise<void> {
 
 async function newGame(socket: WebSocket, req: FastifyRequest<{ Params: GameParams }>): Promise<void> {
 	const gameId = Number(req.params.id);
-	/** @todo check that this game is for this user */
+	const gameData = GAME_SETTINGS.get(gameId);
+	if (gameData === undefined) {
+		socket.close(1003, "Not a valid game id");
+		return;
+	}
+	if (gameData.type === GameType.RANKED) {
+		const user = await verifyAuthWS(socket, req);
+		if(!user || !gameData.players.includes(user)) {
+			socket.close(1003, "You do not belong in this game");
+			return;
+		}
+	}
 	startHeartbeat(socket);
-	identifyGame(socket, gameId);
+	identifyGame(socket, gameId, gameData);
 }
 
 export { addPlayerToMatchmakingSystem, isGameFound, newGame, newLocalGame, newAIGame };
