@@ -39,8 +39,26 @@ interface StartMessage {
 	enemyName: string
 }
 
+// interface Point {
+// 	ball: BallOption,
+// 	map: MapOption
+// }
+
+// interface Rules {
+
+// }
+
+// interface GameStats {
+// 	player1Score: number,
+// 	player2Score: number,
+// 	gameTimer: number,
+// 	points: Point[],
+// 	rules: Rules
+// }
+
 interface StopMessage {
-	status: Status.STOP
+	status: Status.STOP//,
+	//gameStats: GameStats
 }
 
 interface TimingMessage {
@@ -68,6 +86,7 @@ interface OptionMessage {
 	rotatingPlayer: boolean;
 	spin: boolean;
 	dashingPlayer: boolean;
+	canonCount: number;
 }
 
 interface PositionsMessage {

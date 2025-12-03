@@ -3,8 +3,8 @@ import { MapTemplate } from "./MapTemplate.js";
 import { MAP_SIZE } from "../settings/values.js";
 
 class DefaultMap extends MapTemplate {
-	constructor(scene: babylon.Scene) {
-		super(scene, "default");
+	constructor(scene: babylon.Scene, canonCount: number) {
+		super(scene, "default", canonCount);
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {

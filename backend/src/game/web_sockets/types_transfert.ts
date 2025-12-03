@@ -67,6 +67,7 @@ interface OptionMessage {
 	ball: BallOption;
 	rotatingPlayer: boolean;
 	spin: boolean;
+	canonCount: number;
 }
 
 interface PositionsMessage {

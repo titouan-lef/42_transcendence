@@ -82,6 +82,7 @@ interface GameOptions { /** @toto include GameOptions in GameSettings ? */
 	spin: boolean;
 	windAffectsBall: boolean;
 	dashingPlayer: boolean;
+	canonCount: number;
 }
 
 async function askForGame(): Promise<boolean> {
@@ -123,7 +124,8 @@ async function newGameVsAI(): Promise<void> {
 		rotatingPlayer: true,
 		spin: true,
 		windAffectsBall: true,
-		dashingPlayer: true
+		dashingPlayer: true,
+		canonCount: 1
 	};
 
 	const reply = await sendPostRequestToBack("/api/game/ai_game", JSON.stringify(options));
@@ -177,7 +179,8 @@ async function newLocalGame(): Promise<void> {
 		rotatingPlayer: true,
 		spin: true,
 		windAffectsBall: true,
-		dashingPlayer: true
+		dashingPlayer: true,
+		canonCount: 1
 	};
 
 	const reply = await sendPostRequestToBack("/api/game/local_game", JSON.stringify(options));

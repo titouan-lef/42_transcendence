@@ -17,7 +17,7 @@ export const COLORS3 = {
 export const SHOW_DISPOSE_LOGS = false;
 
 /**GAMEPLAY GENERAL SETTINGS */
-export const POINTS_TO_WIN = 11;
+export const POINTS_TO_WIN = 2;
 export const START_TIMEOUT = 4; // in seconds
 const FPS = 60;
 const PHYSIC_STEP_PER_SEC = 60;

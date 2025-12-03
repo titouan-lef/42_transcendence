@@ -31,7 +31,8 @@ function getRandomOptions(): GameOptions {
 		rotatingPlayer: randomBoolean(),
 		spin: randomBoolean(),
 		windAffectsBall: randomBoolean(),
-		dashingPlayer: randomBoolean()
+		dashingPlayer: randomBoolean(),
+		canonCount: 1 /**@todo remplace with random */
 	};
 	return options;
 }

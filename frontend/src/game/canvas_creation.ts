@@ -70,7 +70,7 @@ async function newGame(options: OptionMessage, player1: WebSocket, player2?: Web
 }
 
 async function stopGame(): Promise<void> {
-	game?.stop();
+	game?.closeGame();
 	game = null;
 }
 

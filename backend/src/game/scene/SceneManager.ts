@@ -150,16 +150,16 @@ class SceneManager {
 			throw new Error("Map empty");
 		switch (map) {
 			case "default":
-				this.map = new DefaultMap(scene);
+				this.map = new DefaultMap(scene, settings.options.canonCount);
 				break;
 			case "volcano":
-				this.map = new VolcanoMap(scene);
+				this.map = new VolcanoMap(scene, settings.options.canonCount);
 				break;
 			case "sky":
-				this.map = new SkyMap(scene);
+				this.map = new SkyMap(scene, settings.options.canonCount);
 				break;
 			case "desert":
-				this.map = new DesertMap(scene);
+				this.map = new DesertMap(scene, settings.options.canonCount);
 				break;
 			default:
 				throw new Error("switch map fail");

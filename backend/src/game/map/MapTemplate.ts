@@ -14,13 +14,17 @@ abstract class MapTemplate {
 	protected gameStopped = true;
 	protected availableObjects: Object[] = [];
 
-	constructor(scene: babylon.Scene, type: MapOption) {
+	constructor(scene: babylon.Scene, type: MapOption, canonCount: number) {
 		this.type = type;
 		this.ground = this.createGround(scene);
 		this.groundPhysic = new babylon.PhysicsAggregate(this.ground, babylon.PhysicsShapeType.BOX, { mass: 0, restitution: 0, friction: 1 }, scene);
 
 		this.limits = this.createLimits(scene);
 		this.limits.forEach(limit => this.setLimitPhysic(scene, limit));
+		for (let i = 0; i < canonCount; i++) {
+			if (Math.random() > 0.5)
+				this.availableObjects.push(Object.CANON_BALL);
+		};
 	}
 
 	private setLimitPhysic(scene: babylon.Scene, limit: babylon.Mesh): void {

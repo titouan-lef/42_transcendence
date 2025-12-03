@@ -4,13 +4,9 @@ import { MAP_SIZE, WIND_FORCE } from "../settings/values.js";
 import { Object } from "../web_sockets/types_transfert.js";
 
 class DesertMap extends MapTemplate {
-	constructor(scene: babylon.Scene) {
-		super(scene, "desert");
+	constructor(scene: babylon.Scene, canonCount: number) {
+		super(scene, "desert", canonCount);
 		this.availableObjects.push(Object.TORNADO);
-		if (Math.random() > 0.5)
-			this.availableObjects.push(Object.CANON_BALL);
-		if (Math.random() > 0.5)
-			this.availableObjects.push(Object.CANON_BALL);
 		this.wind = {
 			x: (Math.random() - 0.5) * WIND_FORCE,
 			z: (Math.random() - 0.5) * WIND_FORCE
