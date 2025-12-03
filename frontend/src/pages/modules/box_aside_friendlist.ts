@@ -1,33 +1,11 @@
 /**	@todo friendlist test front bellow, maybe move it to appropriate folder if linked to back */
 
 import { createButtonHtml } from "../../components/button";
+import { sendGetRequestToBack, sendPostRequestToBack, ServerRes } from "../../services/api_request";
 import { applyColor } from "../../utils/applyColor";
 import { getSafeElement } from "../../utils/getSafeElement";
 
-const FRIENDLIST = [
-	"b_friend_1",
-	"a_fd_2",
-	"friend_3",
-	"friend_4_with_too_long_name",
-	"friend_5",
-	"friend_6",
-	"friendd_7",
-	"friendd_w7",
-	"friendd_d7",
-	"friendd_fe7",
-	"friendd_e7",
-	"friendd_nf7b",
-	"friendd_7w",
-	"friendd_wwnvb7",
-	"friendde_7",
-	"friendd_fdvd7",
-	"friendd_ce7",
-	"friendd_12q7",
-	"friendd_xc7",
-	"friendd_zzz7",
-	"friendd_befbvre7",
-	"friendd_vwwwwww7",
-];
+const FRIENDLIST: string[] = [];
 
 const DETAILS_STYLE = `
 	rounded-2xl
@@ -67,10 +45,23 @@ const SEPARATOR_STYLE = `
 	border-1 border-variant
 `;
 
+async function getFriendList(): Promise<void> {
+
+	FRIENDLIST.length = 0;
+	const whoami = await sendGetRequestToBack("/api/user/whoami");
+	const result: ServerRes = await whoami.json();
+	const reply = await sendPostRequestToBack("/api/friends/list", JSON.stringify({ user: result.message }));
+	const data: string[] = await reply.json();
+	data.forEach(element => {
+		FRIENDLIST.push(element);
+	});;
+}
+
 /** @todo replace FRIENDLIST and this to fetch all friends from db, keep same generating logic to generate button ids (events) */
 function generateFriendList(): void {
 	const elem = getSafeElement("friendlist", HTMLElement);
 	elem.innerHTML = '';
+	getFriendList();
 	FRIENDLIST.sort();
 
 	FRIENDLIST.forEach(friend => {
