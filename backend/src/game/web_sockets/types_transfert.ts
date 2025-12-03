@@ -39,8 +39,39 @@ interface StartMessage {
 	enemyName: string
 }
 
+interface Point {
+	ball: BallOption,
+	map: MapOption,
+	timer: number,
+	goaler: 1 | 2
+}
+
+interface Rules {
+	ballOptions: BallOption[],
+	mapOptions: MapOption[],
+	rotatingPlayer: boolean,
+	spin: boolean,
+	dashingPlayer: boolean,
+	windAffectsBall: boolean,
+	canonCount: number
+}
+
+interface PlayerInfo {
+	name: string,
+	score: number
+}
+
+interface GameStats {
+	player1: PlayerInfo,
+	player2: PlayerInfo,
+	gameTimer: number,
+	points: Point[],
+	rules: Rules
+}
+
 interface StopMessage {
-	status: Status.STOP
+	status: Status.STOP,
+	gameStats: GameStats
 }
 
 interface TimingMessage {
@@ -140,3 +171,4 @@ interface PlayerControls {
 
 export { Position, PlanePosition, Rotation, DataMessage, PlayerControls, ParticlesType, Status, Object, EmoteChoice, ObjectSpawner };
 export { StartMessage, StopMessage, TimingMessage, RenderMessage, GoalMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage, EmoteMessage, ObjectSpawnerMessage };
+export { GameStats, PlayerInfo, Rules, Point };

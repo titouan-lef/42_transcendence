@@ -11,10 +11,10 @@ import { SkyMap } from "../map/SkyMap.js";
 import { DesertMap } from "../map/DesertMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
-import { GameSettings, MapOption, BallOption, MAP_LIST, BALL_LIST } from "../settings/GameSettings.js";
+import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
-import { EventMessage, ParticlesType, PlanePosition, Position, RenderMessage, Status, TimingMessage, EmoteMessage, EmoteChoice } from "../web_sockets/types_transfert.js";
+import { PlanePosition, Position, RenderMessage, Status, TimingMessage, EmoteMessage, EmoteChoice } from "../web_sockets/types_transfert.js";
 import { Human } from "../player/Human.js";
 import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
 import { AI } from "../player/AI.js";
@@ -113,12 +113,10 @@ class SceneManager {
 
 	private createBall(scene: babylon.Scene, settings: GameSettings): void {
 		let ball: BallOption;
-		if (settings.options.ball === "random")
-			ball = BALL_LIST[Math.floor(Math.random() * BALL_LIST.length)];
-		else if (settings.options.ball.length)
+		if (settings.options.ball.length)
 			ball = settings.options.ball[Math.floor(Math.random() * settings.options.ball.length)];
 		else
-			throw new Error("ball empty");
+			ball = "default";
 		switch (ball) {
 			case "default":
 				this.ball = new DefaultBall(scene, this.sockets, settings);
@@ -142,12 +140,10 @@ class SceneManager {
 
 	private createMap(scene: babylon.Scene, settings: GameSettings): void {
 		let map: MapOption;
-		if (settings.options.map === "random")
-			map = MAP_LIST[Math.floor(Math.random() * MAP_LIST.length)];
-		else if (settings.options.map.length)
+		if (settings.options.map.length)
 			map = settings.options.map[Math.floor(Math.random() * settings.options.map.length)];
 		else
-			throw new Error("Map empty");
+			map = "default";
 		switch (map) {
 			case "default":
 				this.map = new DefaultMap(scene, settings.options.canonCount);

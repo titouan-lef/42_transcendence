@@ -1,11 +1,7 @@
 import { WebSocket } from "ws";
 
-const MAP_LIST: MapOption[] = ["default", "volcano", "sky", "desert"];
 type MapOption = "default" | "volcano" | "sky" | "desert";
-type MapChoice = "random" | MapOption[];
-const BALL_LIST: BallOption[] = ["default", "invisible", "tricky", "pulse", "snake"];
 type BallOption = "default" | "invisible" | "tricky" | "pulse" | "snake" | "canon";
-type BallChoice = "random" | BallOption[];
 
 interface PlayerSettings {
 	readonly playerId: 1 | 2 ;
@@ -14,8 +10,8 @@ interface PlayerSettings {
 }
 
 interface GameOptions { /** @toto include GameOptions in GameSettings ? */
-	map: MapChoice;
-	ball: BallChoice;
+	map: MapOption[];
+	ball: BallOption[];
 	rotatingPlayer: boolean;
 	spin: boolean;
 	windAffectsBall: boolean;
@@ -46,4 +42,4 @@ class GameSettings {
 	}
 }
 
-export { MapChoice, MapOption, BallOption, PlayerSettings, GameSettings, MAP_LIST, GameOptions, BALL_LIST };
+export { MapOption, BallOption, PlayerSettings, GameSettings, GameOptions };

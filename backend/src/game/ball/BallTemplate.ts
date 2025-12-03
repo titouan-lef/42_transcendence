@@ -99,7 +99,7 @@ abstract class BallTemplate {
 	protected applyMovementChanges(): void {
 		if (this.justCollided) {
 			this.realDirection = this.physic.body.getLinearVelocity(); // remember original velocity, to apply movement changes on it
-			this.justCollided = false; 
+			this.justCollided = false;
 			this.forceDirection = -1; // reset forceDirection
 			this.force = BALL_ANGULAR_FORCE; // reset angularForce
 		}
