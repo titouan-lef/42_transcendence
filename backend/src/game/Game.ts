@@ -183,8 +183,9 @@ class Game {
 			name: this.settings.player1.username,
 			score: this.score.x
 		};
+		const player2name = this.settings.player2 ? this.settings.player2.username : "IA";
 		const player2 = {
-			name: this.settings.player1.username,//change to player1
+			name: player2name ,//change to player1
 			score: this.score.y
 		};
 		const rules = {
