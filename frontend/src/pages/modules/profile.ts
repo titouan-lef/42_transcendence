@@ -25,7 +25,8 @@ const DRAWER_BOX_STYLE = `
 	m-auto p-6 rounded-l-2xl
 	h-full w-full
 	${applyColor('alt')}
-	bg-grad-l-225
+	bg-grad-l-215 from-dark
+	flex-1 min-h-0
 `;
 
 const DRAWER_HEADER_STYLE = `
@@ -45,6 +46,7 @@ size-[50px] stroke-2 text-warning
 `;
 
 const DRAWER_BODY_STYLE = `
+flex-1 min-h-0
 h-full w-full py-[25px] pl-10 pr-[190px]
 flex flex-row justify-start items-center
 `;
@@ -97,12 +99,13 @@ function openProfile(): void {
 						${createButtonHtml(['settings'], 'btn-settings', { 'class': `${NAV_BTN_STYLE}` })}
 					</nav>
 					<div id='profile-content' class='${DRAWER_CONTENT_STYLE}'>
-						${SUMMARY}
 					</div>
 				</div>
 			</div>
 		</div>
 	`;
+
+	loadSummary();
 
 	drawer.querySelectorAll('*[id]').forEach(elem => {
 		switch (elem.id) {
