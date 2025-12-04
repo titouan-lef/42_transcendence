@@ -253,8 +253,8 @@ class SceneManager {
 	}
 
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
-		if (this.doesGameEnded())
-			return;
+		// if (this.doesGameEnded()) /**@todo ok ?  */
+		// 	return;
 		const player1 = this.getPlayer(1);
 		const player2 = this.getPlayer(2);
 		if (!player1 || !player2)

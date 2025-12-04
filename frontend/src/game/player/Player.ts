@@ -190,9 +190,13 @@ class Player {
 		this.emote = new Emote(scene, texture, this.player);
 	}
 
-	destroy(): void {
+	clearListeners(): void {
 		window.removeEventListener("keydown", this.handleKeyDown);
 		window.removeEventListener("keyup", this.handleKeyUp);
+	}
+
+	destroy(): void {
+		this.clearListeners();
 		this.stunAnimation?.destroy();
 		this.emote?.destroy();
 		this.sceneObservable?.remove(this.sceneObserver);
