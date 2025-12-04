@@ -10,8 +10,8 @@ contract EloStorage {
 	}
 
 	modifier onlyOwner() {
-        	require(msg.sender == owner, "Only the owner can call this function.");
-        	_;
+		require(msg.sender == owner, "Only the owner can call this function.");
+		_;
 	}
 
 	struct EloData {
