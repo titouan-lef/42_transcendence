@@ -1,12 +1,14 @@
 import fastify from "fastify";
 import fastifyCors from "@fastify/cors";
 import fastifyCookies from "@fastify/cookie";
-import websocketPlugin from "@fastify/websocket";
+import fastifyWebsocket from "@fastify/websocket";
+import fastifyMultipart from '@fastify/multipart';
+import fastifyStatic from "@fastify/static";
 import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
-import { connectUser, disconnectUser, whoami, verifyAuth } from "./user_management/connect_user.js";
+import { connectUser, disconnectUser, whoami, changePicture, verifyAuth, getPicture, UserBody } from "./user_management/connect_user.js";
 import { findLocalGame, findRankedGame, localGameVsAI } from "./game/web_sockets/connection.js";
-import { FriendListBody, getFriendList, newFriend, removeFriend } from "./friends.js";
+import { getFriendList, newFriend, removeFriend } from "./friends.js";
 
 const APP = fastify();
 
@@ -24,7 +26,12 @@ APP.register(fastifyCors, {
 	credentials: true, // allow cookies
 });
 APP.register(fastifyCookies);
-APP.register(websocketPlugin);
+APP.register(fastifyWebsocket);
+APP.register(fastifyMultipart);
+APP.register(fastifyStatic, {
+	root: "/app/pictures/",
+	prefix: "/pictures/"
+});
 
 //////////////////////////////////
 // --- HTTPS route handlers --- //
@@ -35,11 +42,13 @@ APP.post("/api/user/new_user", addNewUser);
 APP.post("/api/user/login", connectUser);
 APP.get("/api/user/logout", { preHandler: verifyAuth }, disconnectUser);
 APP.get("/api/user/whoami", { preHandler: verifyAuth }, whoami);
+APP.post("/api/user/picture", getPicture);
+APP.post("/api/user/change_picture", { preHandler: verifyAuth }, changePicture);
 
 // --- Friends ---
 APP.post("/api/friends/list", getFriendList);
-APP.post<{ Body: FriendListBody; }>("/api/friends/add", { preHandler: verifyAuth }, newFriend);
-APP.post<{ Body: FriendListBody; }>("/api/friends/remove", { preHandler: verifyAuth }, removeFriend);
+APP.post<{ Body: UserBody }>("/api/friends/add", { preHandler: verifyAuth }, newFriend);
+APP.post<{ Body: UserBody }>("/api/friends/remove", { preHandler: verifyAuth }, removeFriend);
 
 /**
  * Register plugins like `fastifyCors` or `fastifyCookies` globally, Fastify applies those preHandlers and hooks immediately.

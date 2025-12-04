@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
+RUN mkdir -p ./pictures
+
 RUN npm run format:check
 RUN npm run build
 

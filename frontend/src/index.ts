@@ -1,6 +1,5 @@
 import fastify, { FastifyRequest, FastifyReply } from "fastify";
 import fastifyStatic from "@fastify/static";
-import path from "path";
 
 const IP = process.env.IP || "localhost";
 
@@ -17,12 +16,12 @@ APP.get("/config.js", (req: FastifyRequest, reply: FastifyReply) => {
 
 // Serve static files
 APP.register(fastifyStatic, {
-	root: path.join("/app/dist"),
+	root: "/app/dist",
 	prefix: "/dist/"
 });
 
 APP.register(fastifyStatic, {
-	root: path.join("/app/public"),
+	root: "/app/public",
 	prefix: "/",
 	decorateReply: false,
 	index: ["index.html"]

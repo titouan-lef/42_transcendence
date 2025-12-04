@@ -5,12 +5,12 @@ interface User {
 	pseudo: string;
 	createdAt: string;
 	hashedPassword: string;
-	ppLink: string | null;
-	themeId: number | null; /** @todo null for the random  or default theme ?*/ 
+	avatar: string | null;
+	themeId: number | null; /** @todo null for the random or default theme ?*/ 
 }
 
 const TABLE_NAME = "User";
-const DEFAULT_PPLINK = "";/**@todo to complete*/
+const DEFAULT_AVATAR = "";/**@todo to complete*/
 const DEFAULT_THEME = "";/**@todo to complete*/
 
 async function createUserTable(): Promise<void> {
@@ -21,7 +21,7 @@ async function createUserTable(): Promise<void> {
 			pseudo TEXT NOT NULL,
 			createdAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 			hashedPassword TEXT NOT NULL,
-			ppLink TEXT NOT NULL,
+			avatar TEXT NOT NULL,
 			themeId INTEGER REFERENCES Theme(id));`
 		), "create" + TABLE_NAME + "Table"
 	);
@@ -30,8 +30,8 @@ async function createUserTable(): Promise<void> {
 async function insertUser(username: string, pseudo: string, hashedPassword: string): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (username, pseudo, hashedPassword, ppLINK, themeId) VALUES (?, ?, ?, ?, ?)`,
-			[username, pseudo, hashedPassword, DEFAULT_PPLINK, DEFAULT_THEME]
+			`INSERT INTO ${TABLE_NAME} (username, pseudo, hashedPassword, avatar, themeId) VALUES (?, ?, ?, ?, ?)`,
+			[username, pseudo, hashedPassword, DEFAULT_AVATAR, DEFAULT_THEME]
 		), "insert" + TABLE_NAME
 	);
 }
@@ -63,6 +63,28 @@ async function getUserPassword(username: string): Promise<string> {
 	return row?.hashedPassword ?? "";
 }
 
+async function changeUserPicture(username: string, avatar:string): Promise<void> {
+	await applyQuery(
+		async (db) => await db.get(
+			`UPDATE ${TABLE_NAME}
+			SET avatar = ?
+			WHERE username = ?;`,
+			[avatar, username]
+		), "get" + TABLE_NAME + "Picture"
+	);
+}
+
+async function getUserPicture(username: string): Promise<string | undefined> {
+	const row = await applyQuery(
+		async (db) => await db.get(
+			`SELECT avatar FROM ${TABLE_NAME}
+			WHERE username = ?;`,
+			[username]
+		), "get" + TABLE_NAME + "Picture"
+	);
+	return row?.avatar;
+}
+
 async function deleteUser(username: string): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
@@ -72,7 +94,7 @@ async function deleteUser(username: string): Promise<void> {
 	);
 }
 
-export { User, createUserTable, getUserPassword, doesUserExist, insertUser };
+export { User, createUserTable, getUserPassword, doesUserExist, insertUser, changeUserPicture, getUserPicture };
 /**
  * 
  * @todo will be used, but must be modified
