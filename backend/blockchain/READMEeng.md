@@ -22,7 +22,7 @@ npm -v # Should print "10.9.4".
 mkdir DeploySmartContract
 cd DeploySmartContract
 npm init -y
-npm install --save-dev hardhat@v2.26.5 @nomicfoundation/hardhat-toolbox typescript ts-node chai @types/chai @types/mocha dotenv
+npm install --save-dev hardhat@hh2 dotenv
 ```
 
 Then, start Hardhat to set up a TypeScript project:
@@ -43,6 +43,7 @@ Welcome to Hardhat v2.26.5
 ✔ What do you want to do? · Create a TypeScript project
 ✔ Hardhat project root: · /path/to/your/folder
 ✔ Do you want to add a .gitignore? (Y/n) · y
+✔ Do you want to install this sample project's dependencies with npm (@nomicfoundation/hardhat-toolbox)? (Y/n) · y
 ```
 
 You should now have the following files and folders:
@@ -124,8 +125,7 @@ Create a scripts directory:
 ```bash
 mkdir scripts
 ```
-Inside it, add the file `deploy.ts` and the interacts folder containing the files:
-`getElo.ts`, `setElo.ts`, `updateElo.ts`, and `showPlayers.ts`.
+Inside it, add the file `deploy.ts` and the interacts folder containing the file useSmartcontract.ts.
 
 In one terminal, start the local Hardhat network:
 
@@ -167,10 +167,8 @@ EloStorage deployed to: 0x5FbDB2315678afecb367f032d93F642f64180aa3 //copy this i
 Once deployed locally, you can interact with the contract to verify that it works correctly:
 
 ```bash
-npx hardhat run scripts/interact/setElo.ts --network localhost
-npx hardhat run scripts/interact/getElo.ts --network localhost
-npx hardhat run scripts/interact/updateElo.ts --network localhost
-npx hardhat run scripts/interact/showPlayers.ts --network localhost
+npx hardhat run scripts/interact/useSmartcontract.ts --network localhost
+
 ```
 
 If everything works properly, you can deploy the Smart Contract to the Avalanche Fuji Testnet:
@@ -185,10 +183,7 @@ EloStorage deployed to: 0x5FbDB2315678afecb367f032d93F642f64180aa3 //copy this i
 Finally, you can interact directly with the testnet blockchain using the following commands:
 
 ```bash
-npx hardhat run scripts/interact/setElo.ts --network fuji
-npx hardhat run scripts/interact/getElo.ts --network fuji
-npx hardhat run scripts/interact/updateElo.ts --network fuji
-npx hardhat run scripts/interact/showPlayers.ts --network fuji
+npx hardhat run scripts/interact/useSmartcontract.ts --network fuji
 ```
 
 ## Retrieving the ABI for use with SmartContract in the Backend
