@@ -50,7 +50,7 @@ async function main() {
 	await getElo(username, season);
 }
 
-// Exécuter le script
+// Exec the script
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
