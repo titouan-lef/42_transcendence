@@ -67,7 +67,6 @@ const ASIDE_BOX = `
 			<img src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
 		</div>
 		<div id="aside-status" class="${FRIENDLIST_BOX_STYLE}">
-			${ASIDE_NOT_CONNECTED}
 		</div>
 	</div>
 </aside>

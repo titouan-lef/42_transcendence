@@ -3,6 +3,7 @@ import { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv } from "..
 import { getSafeElement } from "../../utils/getSafeElement.js";
 import { ASIDE_CONNECTED, ASIDE_NOT_CONNECTED, asideConnectedEvents, asideDisconnectedEvents, loadAside } from "../../pages/modules/box_aside.js";
 import { updateFriendList } from "../../pages/modules/box_aside_friendlist.js";
+import { loadModularPage } from "../../pages/modular.js";
 
 async function connectUser(): Promise<void> {
 	const userId: HTMLInputElement = getSafeElement("userID", HTMLInputElement);
@@ -36,18 +37,9 @@ async function connectUser(): Promise<void> {
 	updateFriendList();
 }
 
-function disconnectUser(): void {
-
-	/** @wip changing style here */
-	loadAside(ASIDE_NOT_CONNECTED, asideDisconnectedEvents);
-	const modal = getSafeElement('modal', HTMLDialogElement);
-
-	modal.close();
+async function disconnectUser(): Promise<void> {
+	await sendGetRequestToBack("/api/user/logout");
+	loadModularPage();
 }
 
-async function whoami(): Promise<void> {
-	const reply = await sendGetRequestToBack("api/user/whoami");
-	printReplyInDiv(reply, "feedback_id");
-}
-
-export { connectUser, disconnectUser, whoami };
+export { connectUser, disconnectUser };

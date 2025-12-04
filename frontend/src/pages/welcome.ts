@@ -1,6 +1,6 @@
-import { ELEM, loadPage } from "../routes/page";
+import { ELEM } from "../routes/page";
 import { applyColor } from "../utils/applyColor";
-import { MODULAR, modularEvents } from "./modular";
+import { loadModularPage } from "./modular";
 
 /** @todo clamp : better responsivity (not working well here) */
 const WELCOME_STYLE = `
@@ -16,13 +16,8 @@ const WELCOME = `
 </div>
 `;
 
-function goToModular(): void {
-	ELEM.removeEventListener('click', goToModular);
-	loadPage(MODULAR, modularEvents);
-}
-
 function welcomeEvents(): void {
-	ELEM.addEventListener('click', goToModular);
+	ELEM.addEventListener('click', loadModularPage);
 }
 
 export { WELCOME, welcomeEvents };
