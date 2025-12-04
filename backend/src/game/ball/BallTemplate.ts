@@ -309,6 +309,14 @@ abstract class BallTemplate {
 		return { x: linearVelocity.x, y: linearVelocity.y, z: linearVelocity.z };
 	}
 
+	isSpinningLeft(): boolean {
+		return this.spinningLeft;
+	}
+
+	isSpinningRight(): boolean {
+		return this.spinningRight;
+	}
+
 	getVisibility(): number {
 		return this.mesh.visibility;
 	}
