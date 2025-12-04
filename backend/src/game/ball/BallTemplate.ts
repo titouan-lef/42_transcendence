@@ -231,7 +231,6 @@ abstract class BallTemplate {
 	}
 
 	start(): void {
-		this.mesh.visibility = 1;
 		this.gameStopped = false;
 	}
 
@@ -254,7 +253,6 @@ abstract class BallTemplate {
 
 	/** hides ball on goal and stop intervals */
 	stop(): void {
-		this.mesh.visibility = 0;
 		this.gameStopped = true;
 	}
 

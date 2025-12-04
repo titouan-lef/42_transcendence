@@ -44,7 +44,7 @@ class SceneManager {
 	private observeScene(scene: babylon.Scene, settings: GameSettings): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
 			if (this.checkOutOfFieldBall(this.ball?.getPosition())) {
-				this.gameStopped = true;
+				this.gameStopped = true; //ICI
 				this.ball?.stop();
 				this.ball?.reset();
 				this.map?.stop();
@@ -55,6 +55,37 @@ class SceneManager {
 			this.checkPlayerEmote();
 		});
 		return sceneObserver;
+	}
+
+	startCountdown(scene: babylon.Scene, time: number, settings: GameSettings): ReturnType<typeof setInterval> {
+		const countdownIntervalId = setInterval(() => {
+			const player1 = this.getPlayer(1);
+			const player2 = this.getPlayer(2);
+			if (!player1 || !player2)
+				return;
+			this.sendCountDown(player1, player2, time);
+			if (time <= 0) {
+				let startingDirection;
+				if (!settings.options.rotatingPlayer && !settings.options.spin)
+					startingDirection = new babylon.Vector3((Math.random() - 0.5) * 2, 0, (Math.random() - 0.5));
+				this.ball?.launchBall(undefined, startingDirection);
+				this.ball?.start();
+				if (this.map) {
+					this.map?.start();
+					this.environmentManager.initObjectsParameters(scene, this.map.getAvailableObjects(), this.map.getWind());
+					this.environmentManager.startSpawn();
+				}
+				if (player2 instanceof AI)
+					player2.update();
+				if (this.countdownIntervalId) {
+					this.gameStopped = false;
+					clearInterval(this.countdownIntervalId);
+					this.countdownIntervalId = null;
+				}
+			}
+			time--;
+		}, 1000);
+		return countdownIntervalId;
 	}
 
 	private checkPlayerEmote(): void {
@@ -219,36 +250,6 @@ class SceneManager {
 
 	doesGameEnded(): boolean {
 		return this.gameStopped;
-	}
-
-	startCountdown(scene: babylon.Scene, time: number, settings: GameSettings): ReturnType<typeof setInterval> {
-		const countdownIntervalId = setInterval(() => {
-			const player1 = this.getPlayer(1);
-			const player2 = this.getPlayer(2);
-			if (!player1 || !player2)
-				return;
-			this.sendCountDown(player1, player2, time);
-			if (time <= 0) {
-				let startingDirection;
-				if (!settings.options.rotatingPlayer && !settings.options.spin)
-					startingDirection = new babylon.Vector3((Math.random() - 0.5) * 2, 0, (Math.random() - 0.5));
-				this.ball?.launchBall(undefined, startingDirection);
-				this.ball?.start();
-				if (this.map) {
-					this.map?.start();
-					this.environmentManager.initObjectsParameters(scene, this.map.getAvailableObjects(), this.map.getWind());
-					this.environmentManager.startSpawn();
-				}
-				if (player2 instanceof AI)
-					player2.update();
-				if (this.countdownIntervalId) {
-					clearInterval(this.countdownIntervalId);
-					this.countdownIntervalId = null;
-				}
-			}
-			time--;
-		}, 1000);
-		return countdownIntervalId;
 	}
 
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
