@@ -14,7 +14,7 @@ class SnakeBall extends BallTemplate {
 	activateEffect(): void {};
 
 	/** Redefine MovementChanges since spin doesn t apply to snake ball */
-	applyMovementChanges(): void {
+	applyMovementChanges(scene: babylon.Scene): void {
 		if (this.justCollided) {
 			this.realDirection = this.physic.body.getLinearVelocity();
 			this.justCollided = false;
@@ -33,7 +33,7 @@ class SnakeBall extends BallTemplate {
 			new babylon.Vector3(-this.realDirection.z * (SNAKE_BALL_ANGULAR_FORCE - this.force), 0, this.realDirection.x * (SNAKE_BALL_ANGULAR_FORCE - this.force)),
 			this.mesh.position
 		);
-		this.nerfSpeed();
+		this.adjustSpeed(scene);
 	}
 }
 

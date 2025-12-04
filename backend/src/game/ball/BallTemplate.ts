@@ -1,13 +1,12 @@
 import * as babylon from "@babylonjs/core";
 import { BallOption, GameSettings } from "../settings/GameSettings.js";
-import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, UNSTUCK_TIMER, COLORS3, PLAYER_STUN_DURATION } from "../settings/values.js";
+import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, UNSTUCK_TIMER, COLORS3, PLAYER_STUN_DURATION, MIN_SPEED, BUFF_SPEED_INTERVAL, INCREASE_GENERAL_SPEED_INTERVAL } from "../settings/values.js";
 import { EventMessage, ParticlesType, Position, Status } from "../web_sockets/types_transfert.js";
 import { WebSocket } from "ws";
 import { vec3ToPos } from "../utils.js";
-import { Player } from "../player/Player.js";
 
 abstract class BallTemplate {
-
+	protected readonly mesh: babylon.Mesh;
 	private readonly type: BallOption;
 	protected particleColor: babylon.Color3 = COLORS3.black;
 	protected readonly physic: babylon.PhysicsAggregate;
@@ -17,29 +16,37 @@ abstract class BallTemplate {
 	private goalPosition: babylon.Vector3 | null = null;
 	protected justCollided = false;
 	protected realDirection: babylon.Vector3;
-	private spinningLeft = false;
-	private spinningRight = false;
 	protected force = BALL_ANGULAR_FORCE;
-	protected forceDirection = -1;
 	protected readonly sockets: WebSocket[];
 	protected readonly sceneObservable: babylon.Observable<babylon.Scene>;
 	protected readonly sceneObserver: babylon.Observer<babylon.Scene>;
 	private readonly yObservable: babylon.Observable<babylon.Scene>;
 	private readonly yObserver: babylon.Observer<babylon.Scene>;
+	protected gameStopped = true;
+	private readonly originalMaxSpeed;
+	private readonly originalMinSpeed;
+	protected speedIncreaseFactor = 1;
+	
+	private spinningRight = false;
+	private spinningLeft = false;
+	protected forceDirection = -1;
 	private unstuckTimer = 0;
 	private particleCooldown = 0;
-	private readonly maxSpeed;
-	
+	private buffSpeedTimer = 0;
 	protected effectInterval = 0;
-	protected readonly mesh: babylon.Mesh;
-	protected gameStopped = true;
+	private maxSpeed;
+	private minSpeed;
+	private increaseMaxMinSpeedTimer = 0;
 
 	constructor(scene: babylon.Scene, type: BallOption, sockets: WebSocket[], settings: GameSettings) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.type = type;
 		this.mesh.position.y = BALL_DIAMETER / 2;
 		this.mesh.metadata = { type: "collider", pushable: true, windAffected: settings.options.windAffectsBall };
-		this.maxSpeed = MAX_SPEED * ((!settings.options.rotatingPlayer && !settings.options.spin) ? 1.3 : 1);
+		this.originalMaxSpeed = MAX_SPEED * ((!settings.options.rotatingPlayer && !settings.options.spin) ? 1.3 : 1);
+		this.originalMinSpeed = MIN_SPEED * ((!settings.options.rotatingPlayer && !settings.options.spin) ? 1 : -1);
+		this.maxSpeed = this.originalMaxSpeed;
+		this.minSpeed = this.originalMinSpeed;
 		this.sockets = sockets;
 		this.physic = this.setPhysic(scene);
 		
@@ -82,10 +89,16 @@ abstract class BallTemplate {
 			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y (only visual but will be sent to front)
 			if (this.gameStopped)
 				return;
+			this.increaseMaxMinSpeedTimer += scene.metadata.gameSpeed;
+			if (this.increaseMaxMinSpeedTimer >= INCREASE_GENERAL_SPEED_INTERVAL) {
+				this.increaseMaxMinSpeedTimer -= INCREASE_GENERAL_SPEED_INTERVAL;
+				this.maxSpeed += this.speedIncreaseFactor;
+				this.minSpeed += this.speedIncreaseFactor;
+			}
 			if (this.particleCooldown > 0)
 				this.particleCooldown--;
 			this.unstuckTimer += scene.metadata.gameSpeed;
-			this.applyMovementChanges();
+			this.applyMovementChanges(scene);
 			this.effectInterval += scene.metadata.gameSpeed;
 			this.activateEffect();
 			if (this.unstuckTimer >= UNSTUCK_TIMER) {
@@ -96,7 +109,7 @@ abstract class BallTemplate {
 		return sceneObserver;
 	}
 
-	protected applyMovementChanges(): void {
+	protected applyMovementChanges(scene: babylon.Scene): void {
 		if (this.justCollided) {
 			this.realDirection = this.physic.body.getLinearVelocity(); // remember original velocity, to apply movement changes on it
 			this.justCollided = false;
@@ -106,7 +119,7 @@ abstract class BallTemplate {
 		if (this.force <= 0)
 			this.forceDirection *= -1;
 		this.applySpin();
-		this.nerfSpeed();
+		this.adjustSpeed(scene);
 	}
 
 	/** applies two contradictory forces on either side of the ball */
@@ -218,16 +231,25 @@ abstract class BallTemplate {
 	}
 
 	/** damp ball if too fast */
-	protected nerfSpeed(): void {
+	protected adjustSpeed(scene: babylon.Scene): void {
 		const velocity = this.physic.body.getLinearVelocity();
 		const speed = velocity.length();
-		let dampingFactor = 0;
 
+		let dampingFactor = 0;
 		if (speed > this.maxSpeed) {
 			const excessRatio = (speed - this.maxSpeed) / speed; // On ] 0; 1 ]
 			dampingFactor = excessRatio * NERF_SPEED_FACTOR;
 		}
 		this.physic.body.setLinearDamping(dampingFactor);
+
+		if (speed < this.minSpeed) {
+			this.buffSpeedTimer += scene.metadata.gameSpeed;
+			if (this.buffSpeedTimer >= BUFF_SPEED_INTERVAL) {
+				this.buffSpeedTimer -= BUFF_SPEED_INTERVAL;
+				this.physic.body.applyImpulse(velocity.normalize().scale(30), this.mesh.position);
+				this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position), 1);
+			}
+		}
 	}
 
 	start(): void {
@@ -239,13 +261,23 @@ abstract class BallTemplate {
 		this.mesh.position = new babylon.Vector3(0, 0, 0);
 		this.physic.body.disablePreStep = false;
 		this.physic.body.setLinearVelocity(new babylon.Vector3(0, 0, 0));
+		this.spinningRight = false;
+		this.spinningLeft = false;
+		this.unstuckTimer = 0;
+		this.particleCooldown = 0;
+		this.buffSpeedTimer = 0;
+		this.forceDirection = -1;
+		this.effectInterval = 0;
+		this.maxSpeed = this.originalMaxSpeed;
+		this.minSpeed = this.originalMinSpeed;
+		this.increaseMaxMinSpeedTimer = 0;
 	}
 
 	/**launch ball */
 	launchBall(directionX?: 1 | -1, customStartingDirection?: babylon.Vector3): void {
 		const startingDirection = directionX ? directionX : (Math.random() < 0.5 ? 1 : -1);
 		customStartingDirection ?
-			this.physic.body.setLinearVelocity(customStartingDirection.normalize().scale(50)) :
+			this.physic.body.setLinearVelocity(customStartingDirection.normalize().scale(30)) :
 			this.physic.body.setLinearVelocity(new babylon.Vector3(startingDirection * 30, 0, 0));
 		this.sendParticuleEvent(this.sockets, "impulse", vec3ToPos(this.mesh.position), 1);
 		this.justCollided = true;

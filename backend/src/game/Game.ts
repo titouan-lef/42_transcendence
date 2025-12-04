@@ -5,7 +5,7 @@ import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
 import { GAME_STEP_INTERVAL, PHYSIC_STEP_INTERVAL, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import fs from "fs";
-import { Status, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage, GameStats, Point, PlayerInfo, Rules } from "./web_sockets/types_transfert.js";
+import { Status, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage, GameStats, Point } from "./web_sockets/types_transfert.js";
 import { Player } from "./player/Player.js";
 import { Human } from "./player/Human.js";
 import { stopGame } from "./game_manager.js";
@@ -17,8 +17,9 @@ class Game {
 	private readonly sceneManager: SceneManager;
 	private readonly settings: GameSettings;
 	private readonly camera: babylon.ArcRotateCamera; // the engine need a camera
-	private gameStepsIntervalId?: ReturnType<typeof setInterval>; /** @todo type is supposed to be NodeJS.Timer but does not work */
+	private gameStepsIntervalId?: ReturnType<typeof setInterval>;
 	private gameStepsInterval = GAME_STEP_INTERVAL;
+	private physicStepsIntervalId?: ReturnType<typeof setInterval>;
 	private physicStepsInterval = PHYSIC_STEP_INTERVAL;
 	private inAnimation = false;
 	private score: babylon.Vector2;
@@ -66,6 +67,8 @@ class Game {
 	pause(): void {
 		if (this.gameStepsIntervalId)
 			clearInterval(this.gameStepsIntervalId);
+		if (this.physicStepsIntervalId)
+			clearInterval(this.physicStepsIntervalId);
 	}
 
 	stop(): void {
@@ -253,12 +256,14 @@ class Game {
 	}
 
 	startRender(): void {
-		this.gameStepsIntervalId = setInterval(() => {
+		this.physicStepsIntervalId = setInterval(() => {
 			const physics = this.scene.getPhysicsEngine();
 			if (physics)
 				physics._step(this.physicStepsInterval / 1000 * this.scene.metadata.gameSpeed);
+		}, this.physicStepsInterval);
+		
+		this.gameStepsIntervalId = setInterval(() => {
 			this.scene.render();
-
 			const player1 = this.sceneManager.getPlayer(1);
 			const player2 = this.sceneManager.getPlayer(2);
 			if (!player1 || !player2)
@@ -294,6 +299,7 @@ class Game {
 	stopSendingPositions(): void {
 		if (!this.gameStepsIntervalId)
 			return;
+		clearInterval(this.physicStepsIntervalId);
 		clearInterval(this.gameStepsIntervalId);
 		this.gameStepsIntervalId = undefined;
 
