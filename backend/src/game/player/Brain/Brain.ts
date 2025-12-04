@@ -8,6 +8,8 @@ enum AttackAi { LEFT, RIGHT, WAIT };
 interface Movement {
 	pos: babylon.Vector2;
 	dir: babylon.Vector2;
+	isSpinningLeft: boolean;
+	isSpinningRight: boolean;
 }
 
 interface ActionAi {
@@ -18,17 +20,19 @@ interface ActionAi {
 }
 
 abstract class Brain {
+	// Size constant.
 	static readonly HALF_WIDTH = MAP_SIZE.z / 2;
 	static readonly HALF_HEIGHT = MAP_SIZE.x / 2 - WALL_WIDTH - PLAYER_DIMENSION.z;
 
-	static readonly LEFT_HEIGHT = new babylon.Vector3(0, -1, -this.HALF_WIDTH );
-	static readonly RIGHT_HEIGHT = new babylon.Vector3(0, -1, this.HALF_WIDTH );
-	static readonly TOP_WIDTH = new babylon.Vector3(1, 0, this.HALF_HEIGHT );
+	// Line equation.
+	static readonly EQ_LEFT_SIDE = new babylon.Vector3(0, -1, -this.HALF_WIDTH );
+	static readonly EQ_RIGHT_SIDE = new babylon.Vector3(0, -1, this.HALF_WIDTH );
+	static readonly EQ_TOP = new babylon.Vector3(1, 0, this.HALF_HEIGHT );
 
 	protected atkDirection: AttackAi;
 	private ballToWatch: BallTemplate | null = null;
 	private destination: DestinationAi;
-	private ballPosPredict: number;
+	private ballZPredict: number;
 
 	protected abstract intersectionTop(movement: Movement): number;
 
@@ -36,24 +40,25 @@ abstract class Brain {
 		this.ballToWatch = null;
 		this.destination = DestinationAi.REACHING;
 		this.atkDirection = AttackAi.WAIT;
-		this.ballPosPredict = 0;
+		this.ballZPredict = 0;
 	}
 
 	refreshView(): void {
 		this.atkDirection = AttackAi.WAIT;
 		if (this.ballToWatch === null || this.ballToWatch.getGoal()) {
-			this.ballPosPredict = 0;
+			this.ballZPredict = 0;
 			return;
 		}
 		const ballPosition = this.ballToWatch.getPosition();
 		const ballDirection = this.ballToWatch.getDirection();
 		const mouvement: Movement = {
 			pos: new babylon.Vector2(ballPosition.x, ballPosition.z),
-			dir: new babylon.Vector2(ballDirection.x, ballDirection.z)
+			dir: new babylon.Vector2(ballDirection.x, ballDirection.z),
+			isSpinningLeft: this.ballToWatch.isSpinningLeft(),
+			isSpinningRight: this.ballToWatch.isSpinningRight()
 		};
 		const zPos = this.intersectionTop(mouvement);
-		this.ballPosPredict = Math.round(zPos * 10) / 10;
-		console.log("Me: " + this.ballPosPredict); /** @todo remove */
+		this.ballZPredict = Math.round(zPos * 10) / 10;
 	}
 
 	setBallToWatch(ball: BallTemplate): void {
@@ -66,19 +71,16 @@ abstract class Brain {
 	}
 
 	private defineDestination(aiPosZ: number): void {
-		const distanceDestination = Math.abs(this.ballPosPredict - aiPosZ);
+		const distanceDestination = Math.abs(this.ballZPredict - aiPosZ);
 		if (distanceDestination < PLAYER_DIMENSION.z / 4) {
 			this.destination = DestinationAi.REACHING;
 			return;
 		}
-		if (this.ballPosPredict < aiPosZ)
-			this.destination = DestinationAi.RIGHT;
-		else
-			this.destination = DestinationAi.LEFT;
+		this.destination = (this.ballZPredict < aiPosZ) ? DestinationAi.RIGHT : DestinationAi.LEFT;
 	}
 
 	private applyAction(): ActionAi {
-		const action: ActionAi = this.getDefaultAction();
+		const action = this.getDefaultAction();
 		switch (this.destination) {
 			case DestinationAi.LEFT:
 				action.mov_left = true;
@@ -87,10 +89,7 @@ abstract class Brain {
 				action.mov_right = true;
 				break;
 			case DestinationAi.REACHING:
-				if (this.atkDirection === AttackAi.LEFT)
-					action.atk_left = true;//this.wantToShootLeft = true;
-				else if (this.atkDirection === AttackAi.RIGHT)
-					action.atk_right = true;
+				this.applyActionDestReaching(action);
 				break;
 			default:
 				throw new Error("AI switch destination");
@@ -105,6 +104,21 @@ abstract class Brain {
 			atk_left: false,
 			atk_right: false,
 		};
+	}
+
+	private applyActionDestReaching(action: ActionAi): void {
+		switch (this.atkDirection) {
+			case AttackAi.LEFT:
+				action.atk_left = true;
+				break;
+			case AttackAi.RIGHT:
+				action.atk_right = true;
+				break;
+			case AttackAi.WAIT:
+				break;
+			default:
+				throw new Error("AI switch destination");
+		}
 	}
 }
 
