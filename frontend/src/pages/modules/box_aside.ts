@@ -1,4 +1,5 @@
 import { createButtonHtml } from "../../components/button";
+import { sendGetRequestToBack, sendPostRequestToBack, ServerRes } from "../../services/api_request";
 import { disconnectUser } from "../../services/user_management/login";
 import { applyColor } from "../../utils/applyColor";
 import { getSafeElement } from "../../utils/getSafeElement";
@@ -64,13 +65,27 @@ const ASIDE_BOX = `
 <aside id="aside" class="${ASIDE_STYLE}">
 	<div class="${ASIDE_BOX_STYLE}">
 		<div class="${AVATAR_STYLE}">
-			<img src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
+			<img id="avatar-img" src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
 		</div>
 		<div id="aside-status" class="${FRIENDLIST_BOX_STYLE}">
 		</div>
 	</div>
 </aside>
 `;
+
+async function updateAvatar(): Promise<void> {
+
+	const whoami = await sendGetRequestToBack("/api/user/whoami");
+	const result1: ServerRes = await whoami.json();
+	const reply = await sendPostRequestToBack("/api/user/picture", JSON.stringify({ user: result1.message }));
+	const result2: ServerRes = await reply.json();
+
+	const avatar = getSafeElement("avatar-img", HTMLImageElement);
+	if (reply.status === 200)
+		avatar.src = `/pictures/${result2.message}?t=${Date.now()}`;
+	else
+		avatar.src = "./images/avatar.png";
+}
 
 function asideConnectedEvents(): void {
 	const allElements = getSafeElement('aside', HTMLElement).querySelectorAll('*[id]');
@@ -113,7 +128,8 @@ function loadAside(asideContent: string, handler: () => void): void {
 	const aside = getSafeElement('aside-status', HTMLElement);
 
 	aside.innerHTML = asideContent;
+	updateAvatar();
 	handler();
 }
 
-export { ASIDE_BOX, ASIDE_CONNECTED, ASIDE_NOT_CONNECTED, loadAside, asideConnectedEvents, asideDisconnectedEvents };
+export { ASIDE_BOX, ASIDE_CONNECTED, ASIDE_NOT_CONNECTED, updateAvatar, loadAside, asideConnectedEvents, asideDisconnectedEvents };

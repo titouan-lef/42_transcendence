@@ -3,7 +3,12 @@ import { CookieSerializeOptions } from '@fastify/cookie';
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { sendReply } from "../utils/HTTP.js";
 import { isValidPassword } from "../utils/hash_string.js";
-import { doesUserExist, getUserPassword } from "../database/user.js";
+import { changeUserPicture, doesUserExist, getUserPassword, getUserPicture } from "../database/user.js";
+import fs from 'fs';
+import util from 'util';
+import { pipeline } from 'stream';
+
+const PUMP = util.promisify(pipeline);
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -48,6 +53,37 @@ async function whoami(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	sendReply(reply, 200, true, req.user);
 }
 
+interface UserBody {
+	user?: string;
+}
+
+async function getPicture(req: FastifyRequest<{ "Body": UserBody }>, reply: FastifyReply): Promise<void> {
+	const user = req.body?.user;
+	if(!user) {
+		sendReply(reply, 400, true, "No user given");
+		return;
+	}
+	const filename = await getUserPicture(user);
+	if (!filename) {
+		sendReply(reply, 204, true, "./images/avatar.png");
+		return;
+	}
+	sendReply(reply, 200, true, filename);
+}
+
+async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<void> {
+	const user = req.user;
+	if (!user)
+		return;
+	const part = await req.file();
+	if (!part)
+		return;
+	const path = `/app/pictures/${part.filename}`;
+	await PUMP(part.file, fs.createWriteStream(path));
+	await changeUserPicture(user, part.filename);
+	sendReply(reply, 200, true, "Profile picture updated");
+}
+
 async function verifyAuth(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const token = req.cookies?.token;
 	if (!token)
@@ -68,4 +104,4 @@ async function verifyAuth(req: FastifyRequest, reply: FastifyReply): Promise<voi
 	}
 }
 
-export { connectUser, disconnectUser, whoami, verifyAuth, SECRET };
+export { UserBody, connectUser, disconnectUser, whoami, getPicture, changePicture, verifyAuth, SECRET };

@@ -31,6 +31,14 @@ function createPostRequest(content: string): RequestInit {
 	};
 }
 
+function createFileRequest(file: FormData): RequestInit {
+	return {
+		method: "POST",
+		body: file,
+		credentials: "include" // necessary for cookies to work
+	};
+}
+
 function createGetRequest(): RequestInit {
 	return {
 		method: "GET",
@@ -40,6 +48,10 @@ function createGetRequest(): RequestInit {
 
 async function sendPostRequestToBack(endpoint: string, content: string) : Promise<Response> {
 	return await fetch(`${API_URL}/${endpoint}`, createPostRequest(content));
+}
+
+async function sendFile(file: FormData) : Promise<Response> {
+	return await fetch(`${API_URL}/api/user/change_picture`, createFileRequest(file));
 }
 
 async function sendGetRequestToBack(endpoint: string) : Promise<Response> {
@@ -138,4 +150,4 @@ async function newLocalGame(): Promise<void> {
 	};
 }
 
-export { ServerRes, sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv, newRankedGame, newLocalGame, newGameVsAI };
+export { ServerRes, sendPostRequestToBack, sendGetRequestToBack, sendFile, printReplyInDiv, newRankedGame, newLocalGame, newGameVsAI };
