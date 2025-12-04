@@ -8,6 +8,7 @@ class DefaultBall extends BallTemplate {
 	constructor(scene: babylon.Scene, sockets: WebSocket[], settings: GameSettings) {
 		super(scene, "default", sockets, settings);
 		this.particleColor = COLORS3.white;
+		this.speedIncreaseFactor = 3;
 	}
 
 	activateEffect(): void {}
