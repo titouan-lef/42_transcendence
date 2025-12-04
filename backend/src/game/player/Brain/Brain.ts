@@ -1,6 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../../settings/values.js";
 import { BallTemplate } from "../../ball/BallTemplate.js";
+import { round } from "../../../utils/math.js";
 
 enum DestinationAi { LEFT, RIGHT, REACHING };
 enum AttackAi { LEFT, RIGHT, WAIT };
@@ -30,39 +31,37 @@ abstract class Brain {
 	static readonly EQ_TOP = new babylon.Vector3(1, 0, this.HALF_HEIGHT );
 
 	protected atkDirection: AttackAi;
-	private ballToWatch: BallTemplate | null = null;
 	private destination: DestinationAi;
 	private ballZPredict: number;
 
 	protected abstract intersectionTop(movement: Movement): number;
 
 	constructor() {
-		this.ballToWatch = null;
 		this.destination = DestinationAi.REACHING;
 		this.atkDirection = AttackAi.WAIT;
 		this.ballZPredict = 0;
 	}
 
-	refreshView(): void {
+	refreshView(ball: BallTemplate | null): void {
 		this.atkDirection = AttackAi.WAIT;
-		if (this.ballToWatch === null || this.ballToWatch.getGoal()) {
+		if (ball === null || ball.getGoal()) {
 			this.ballZPredict = 0;
 			return;
 		}
-		const ballPosition = this.ballToWatch.getPosition();
-		const ballDirection = this.ballToWatch.getDirection();
-		const mouvement: Movement = {
-			pos: new babylon.Vector2(ballPosition.x, ballPosition.z),
-			dir: new babylon.Vector2(ballDirection.x, ballDirection.z),
-			isSpinningLeft: this.ballToWatch.isSpinningLeft(),
-			isSpinningRight: this.ballToWatch.isSpinningRight()
-		};
+		const mouvement = this.getBallMovement(ball);
 		const zPos = this.intersectionTop(mouvement);
-		this.ballZPredict = Math.round(zPos * 10) / 10;
+		this.ballZPredict = round(zPos, 1);
 	}
 
-	setBallToWatch(ball: BallTemplate): void {
-		this.ballToWatch = ball;
+	private getBallMovement(ball: BallTemplate): Movement {
+		const ballPosition = ball.getPosition();
+		const ballDirection = ball.getDirection();
+		return {
+			pos: new babylon.Vector2(ballPosition.x, ballPosition.z),
+			dir: new babylon.Vector2(ballDirection.x, ballDirection.z),
+			isSpinningLeft: ball.isSpinningLeft(),
+			isSpinningRight: ball.isSpinningRight()
+		};
 	}
 
 	getAction(aiPosZ: number): ActionAi {
@@ -123,4 +122,3 @@ abstract class Brain {
 }
 
 export { Brain, ActionAi, AttackAi, Movement };
-

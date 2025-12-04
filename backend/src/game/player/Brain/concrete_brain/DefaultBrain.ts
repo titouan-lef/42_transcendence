@@ -12,11 +12,13 @@ class DefaultBrain extends Brain {
 	}
 
 	private spinIntersection(movement: Movement): number {
-		const vecForce = (movement.isSpinningRight) ? new babylon.Vector2(movement.dir.y, -movement.dir.x) : new babylon.Vector2(-movement.dir.y, movement.dir.x);
-		const vecForceNormalize = vecForce.normalize();
-		const dirNormalize = movement.dir.normalize();
+		let vecForce = new babylon.Vector2(movement.dir.y, -movement.dir.x);
+		if (movement.isSpinningLeft)
+			vecForce = vecForce.negate();
+		vecForce.normalize();
+		const dirNormalize = movement.dir.normalizeToNew();
 		const coeff = 1.3;
-		movement.dir = new babylon.Vector2(dirNormalize.x, (coeff * vecForceNormalize.y + dirNormalize.y) / 2);
+		movement.dir = new babylon.Vector2(dirNormalize.x, (coeff * vecForce.y + dirNormalize.y) / 2);
 		return this.intersectionTopNoEffect(movement);
 	}
 
@@ -24,13 +26,8 @@ class DefaultBrain extends Brain {
 		const sideEquation = (movement.dir.y > 0) ? Brain.EQ_RIGHT_SIDE : Brain.EQ_LEFT_SIDE;
 		const ballTrajectory = this.getLineEquation(movement);
 		const intersectSide = this.intersection(ballTrajectory, sideEquation);
-		if (intersectSide === null) {
-			const intersectTop = this.intersection(ballTrajectory, Brain.EQ_TOP);
-			if (intersectTop === null)
-				return 0;
-			this.chooseAtkDirection(movement.dir.y);
-			return intersectTop.y;
-		}
+		if (intersectSide === null)
+			return this.calulateTopIntersection(movement, ballTrajectory);
 		movement.pos = intersectSide;
 		movement.dir.y *= -1;
 		return this.intersectionTopNoEffect(movement);
@@ -42,6 +39,14 @@ class DefaultBrain extends Brain {
 			-movement.dir.x,
 			movement.dir.x * movement.pos.y - movement.dir.y * movement.pos.x
 		);
+	}
+
+	private calulateTopIntersection(movement: Movement, ballTrajectory: babylon.Vector3): number {
+		const intersectTop = this.intersection(ballTrajectory, Brain.EQ_TOP);
+		if (intersectTop === null)
+			return 0;
+		this.chooseAtkDirection(movement.dir.y);
+		return intersectTop.y;
 	}
 
 	private intersection(line1: babylon.Vector3, line2: babylon.Vector3): babylon.Vector2 | null {
