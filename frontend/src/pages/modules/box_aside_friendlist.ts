@@ -49,19 +49,20 @@ async function getFriendList(): Promise<void> {
 
 	FRIENDLIST.length = 0;
 	const whoami = await sendGetRequestToBack("/api/user/whoami");
-	const result: ServerRes = await whoami.json();
-	const reply = await sendPostRequestToBack("/api/friends/list", JSON.stringify({ user: result.message }));
-	const data: string[] = await reply.json();
+	const result1: ServerRes = await whoami.json();
+	const reply = await sendPostRequestToBack("/api/friends/list", JSON.stringify({ user: result1.message }));
+	const result2: ServerRes = await reply.json();
+	const data: string[] = JSON.parse(result2.message);
 	data.forEach(element => {
 		FRIENDLIST.push(element);
-	});;
+	});
 }
 
 /** @todo replace FRIENDLIST and this to fetch all friends from db, keep same generating logic to generate button ids (events) */
-function generateFriendList(): void {
+async function generateFriendList(): Promise<void> {
 	const elem = getSafeElement("friendlist", HTMLElement);
 	elem.innerHTML = '';
-	getFriendList();
+	await getFriendList();
 	FRIENDLIST.sort();
 
 	FRIENDLIST.forEach(friend => {
