@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { addFriend, getFriendships, isFriendWith } from "./database/friendship.js";
+import { addFriendship, getFriendships, isFriendWith, removeFriendship } from "./database/friendship.js";
 import { sendReply } from "./utils/HTTP.js";
 import { doesUserExist } from "./database/user.js";
 
@@ -40,12 +40,35 @@ async function newFriend(req: FastifyRequest<{ "Body": FriendListBody }>, reply:
 		sendReply(reply, 404, false, "No such user");
 		return;
 	}
-	if (!isFriendWith(user, friend)) {
+	if (await isFriendWith(user, friend)) {
 		sendReply(reply, 400, false, `${friend} is already in your you friend list`);
 		return;
 	}
-	addFriend(user, friend);
+	addFriendship(user, friend);
 	sendReply(reply, 200, true, `${friend} added to you friend list`);
 }
 
-export { FriendListBody, getFriendList, newFriend };
+async function removeFriend(req: FastifyRequest<{ "Body": FriendListBody }>, reply: FastifyReply): Promise<void> {
+	const user = req.user;
+	if (!user) {
+		sendReply(reply, 401, false, "You are not connected");
+		return;
+	}
+	const friend = req.body?.user;
+	if(!friend) {
+		sendReply(reply, 400, false, "No friend given");
+		return;
+	}
+	if (!await doesUserExist(friend)) {
+		sendReply(reply, 404, false, "No such user");
+		return;
+	}
+	if (!await isFriendWith(user, friend)) {
+		sendReply(reply, 400, false, `${friend} is not your friend`);
+		return;
+	}
+	removeFriendship(user, friend);
+	sendReply(reply, 200, true, `${friend} removed to you friend list`);
+}
+
+export { FriendListBody, getFriendList, newFriend, removeFriend };

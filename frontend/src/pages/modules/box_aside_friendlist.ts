@@ -59,7 +59,7 @@ async function getFriendList(): Promise<void> {
 }
 
 /** @todo replace FRIENDLIST and this to fetch all friends from db, keep same generating logic to generate button ids (events) */
-async function generateFriendList(): Promise<void> {
+async function updateFriendList(): Promise<void> {
 	const elem = getSafeElement("friendlist", HTMLElement);
 	elem.innerHTML = '';
 	await getFriendList();
@@ -97,12 +97,13 @@ function openProfile(): void {
 	console.log('profile openned');
 }
 
-function inviteFriend(): void {
+function inviteFriend(): void { /** @todo we might not do it */
 	console.log('friend invited');
 }
 
-function deleteFriend(): void {
-	console.log('friend deleted');
+function deleteFriend(friend: string): void {
+	sendPostRequestToBack('/api/friends/remove', JSON.stringify({ user: friend }));
+	updateFriendList();
 }
 
 function friendsHandler(): void {
@@ -121,7 +122,7 @@ function friendsHandler(): void {
 					elem.addEventListener('click', inviteFriend);
 					break;
 				case `btn-delete-${friend}`:
-					elem.addEventListener('click', deleteFriend);
+					elem.addEventListener('click', () => deleteFriend(friend));
 					break;
 				default:
 					break;
@@ -130,4 +131,4 @@ function friendsHandler(): void {
 	});
 }
 
-export { FRIENDLIST, generateFriendList };
+export { FRIENDLIST, updateFriendList };
