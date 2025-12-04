@@ -7,21 +7,48 @@ import { ActionAi, Brain } from "./Brain/Brain.js";
 import { DefaultBrain } from "./Brain/concrete_brain/DefaultBrain.js";
 
 class AI extends Player {
-	private readonly updateInterval: ReturnType<typeof setInterval>;
-	private readonly movementIntervalId: ReturnType<typeof setInterval>;
+	private readonly updateIntervalId: ReturnType<typeof setInterval>;
+	private readonly makeActionIntervalId: ReturnType<typeof setInterval>;
 	private controls: PlayerControls;
-
 	private brain: Brain;
-
 	private isEndingShoot = false;
 	private shootAnimationFrame = 0;
+	private ballToWatch: BallTemplate | null;
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, options: GameOptions) {
 		super(scene, position, options, 2, "AI");
 		this.brain = new DefaultBrain();
 		this.controls = this.getInitControl();
-		this.movementIntervalId = this.movementInterval();
-		this.updateInterval = setInterval(() => this.update(), 1000);
+		this.makeActionIntervalId = this.makeActionInterval();
+		this.updateIntervalId = setInterval(() => this.update(), 1000);
+		this.ballToWatch = null;
+	}
+
+	private makeActionInterval(): ReturnType<typeof setInterval> {
+		return setInterval(() => {
+			this.defineControl();
+			this.setControls(this.controls);
+		}, 80); // let this like this
+	}
+
+	private defineControl(): void {
+		if (this.isEndingShoot) {
+			this.manageEndShoot();
+			return ;
+		}
+		const action = this.brain.getAction(this.player.position.z);
+		this.controls = this.getInitControl();
+		this.applyAction(action);
+	}
+
+	private manageEndShoot(): void {
+		this.shootAnimationFrame++;
+		if (this.shootAnimationFrame !== 4)
+			return;
+		this.isEndingShoot = false;
+		this.shootAnimationFrame = 0;
+		this.controls.normalMode = true;
+		this.controls.emoteAngry = true;
 	}
 
 	private getInitControl(): PlayerControls {
@@ -40,56 +67,36 @@ class AI extends Player {
 		};
 	}
 
-	private movementInterval(): ReturnType<typeof setInterval> {
-		return setInterval(() => {
-			this.movement();
-			this.setControls(this.controls);
-		}, 80); // let this like this
-	}
-
-	private movement(): void {
-		if (this.isEndingShoot) {
-			this.shootAnimationFrame++;
-			if (this.shootAnimationFrame === 4) {
-				this.isEndingShoot = false;
-				this.shootAnimationFrame = 0;
-				this.controls.normalMode = true;
-				this.controls.emoteAngry = true;
-			}
-			return ;
-		}
-		this.controls = this.getInitControl();
-		const action = this.brain.getAction(this.player.position.z);
-		this.applyAction(action);
-	}
-
 	private applyAction(action: ActionAi): void {
 		this.controls.mov_left = action.mov_left;
 		this.controls.mov_right = action.mov_right;
-
 		if (!action.atk_left && !action.atk_right) {
 			this.shootAnimationFrame = 0;
 			this.controls.normalMode = true;
-			return ;
-		}
+		} else
+			this.manageShootAnimation(action);
+	}
 
+	private manageShootAnimation(action: ActionAi): void {
 		this.shootAnimationFrame++;
-		if (this.shootAnimationFrame < 2) {// shoot
+		if (this.shootAnimationFrame > 2)
+			return;
+		if (this.shootAnimationFrame < 2) {// Shoot.
 			if (action.atk_right)
 				this.controls.rot_right = true;
 			else
 				this.controls.rot_left = true;
-		} else if (this.shootAnimationFrame === 2) { //reset
+		} else// Reset.
 			this.isEndingShoot = true;
-		}
 	}
 
 	setBallToWatch(ball: BallTemplate): void {
-		this.brain.setBallToWatch(ball);
+		this.ballToWatch = ball;
+		/** @todo define brain here I think */
 	}
 
 	update(): void { /** @todo real AI */
-		this.brain.refreshView();
+		this.brain.refreshView(this.ballToWatch);
 	}
 
 	async send(message: DataMessage): Promise<void> {
@@ -100,8 +107,8 @@ class AI extends Player {
 
 	destroy(): void {
 		super.destroy();
-		clearInterval(this.updateInterval);
-		clearInterval(this.movementIntervalId);
+		clearInterval(this.updateIntervalId);
+		clearInterval(this.makeActionIntervalId);
 	}
 }
 
