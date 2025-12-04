@@ -38,7 +38,7 @@ async function isFriendWith(user: string, friend: string): Promise<boolean> {
 	);
 }
 
-async function addFriend(user: string, friend: string): Promise<void> {
+async function addFriendship(user: string, friend: string): Promise<void> {
 	console.log(user, friend);
 	insertFriendship({ username: user, friendName: friend });
 }
@@ -60,16 +60,18 @@ async function getFriendships(username: string): Promise<string[] | undefined> {
 	return rows.map(row => row.friendName);
 }
 
-async function deleteFriendship(username: string): Promise<void> {
+async function removeFriendship(username: string, friendName: string): Promise<void> {
 	applyQuery(
 		async (db) => await db.run(
-			`DELETE FROM ${TABLE_NAME} WHERE username = ?`,
-			[username]
+			`DELETE FROM ${TABLE_NAME}
+			WHERE username = ?
+			AND friendName = ?`,
+			[username, friendName]
 		), "delete" + TABLE_NAME
 	);
 }
 
-export { Friendship, createFriendshipTable, getFriendships, isFriendWith, addFriend };
+export { Friendship, createFriendshipTable, getFriendships, isFriendWith, addFriendship, removeFriendship };
 /**
  * @todo see if we keep it
 async function updateFriendship(friendName: string, update: Partial<Omit<Friendship, "friendName">>): Promise<void> {
