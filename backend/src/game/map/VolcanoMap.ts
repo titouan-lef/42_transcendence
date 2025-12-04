@@ -7,10 +7,6 @@ class VolcanoMap extends MapTemplate {
 	constructor(scene: babylon.Scene, canonCount: number) {
 		super(scene, "volcano", canonCount);
 		this.availableObjects.push(Object.METEOR);
-		if (Math.random() > 0.5)
-			this.availableObjects.push(Object.CANON_BALL);
-		if (Math.random() > 0.5)
-			this.availableObjects.push(Object.CANON_BALL);
 	}
 
 	createGround(scene: babylon.Scene): babylon.Mesh {

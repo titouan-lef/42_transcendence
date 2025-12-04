@@ -160,7 +160,7 @@ class EnvironmentManager {
 
 	private parseAvailableObjects(availableObjects: Object[]): Object[] {
 		const parsedAvailableObjects: Object[] = [];
-		let canonCount = 0;
+		let canonCount = this.canoncurrentCount;
 		availableObjects.forEach(object => {
 			if (object === Object.CANON_BALL && canonCount === CANON_MAX_COUNT)
 				return ;
