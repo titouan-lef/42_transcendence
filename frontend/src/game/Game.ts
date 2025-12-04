@@ -91,6 +91,8 @@ class Game {
 
 	private showStats(message: StopMessage): void {
 		this.engine.stopRenderLoop();
+		this.sceneManager.getPlayer(1)?.clearListeners();
+		this.sceneManager.getPlayer(2)?.clearListeners();
 		this.stats = new GameStatistics(message.gameStats);
 	}
 
