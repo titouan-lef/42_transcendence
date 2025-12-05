@@ -7,8 +7,9 @@ import fastifyStatic from "@fastify/static";
 import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
 import { connectUser, disconnectUser, whoami, changePicture, verifyAuth, getPicture, UserBody } from "./user_management/connect_user.js";
-import { addPlayerToMatchmakingSystem, isGameFound, newAIGame, newGame, newLocalGame } from "./game/web_sockets/connection.js";
+import { isGameFound, newAIGame, newGame, newLocalGame } from "./game/web_sockets/connection.js";
 import { getFriendList, newFriend, removeFriend } from "./friends.js";
+import { addPlayerToMatchmakingSystem } from "./tournament/matchmaking.js";
 
 const APP = fastify();
 
