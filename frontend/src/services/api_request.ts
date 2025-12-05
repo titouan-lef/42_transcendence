@@ -72,7 +72,7 @@ async function getReplyMessage(reply: Response): Promise<string> {
 
 async function askForGame(): Promise<boolean> {
 	const reply = await sendGetRequestToBack("/api/game/ranked_game");
-	if (isRequestSuccessfull(reply)) {
+	if (!isRequestSuccessfull(reply)) {
 		console.log("Error:", getReplyMessage(reply));
 		return false;
 	}
