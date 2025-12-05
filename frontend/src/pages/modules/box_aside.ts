@@ -25,6 +25,9 @@ const AVATAR_STYLE = `
 grow-0
 rounded-2xl
 bg-white
+w-[150px]
+h-[150px]
+overflow-hidden
 `;
 
 const FRIENDLIST_BOX_STYLE = `
@@ -65,7 +68,7 @@ const ASIDE_BOX = `
 <aside id="aside" class="${ASIDE_STYLE}">
 	<div class="${ASIDE_BOX_STYLE}">
 		<div class="${AVATAR_STYLE}">
-			<img id="avatar-img" src="./images/avatar.png" alt="Avatar" width="150px" height="150px">
+			<img id="avatar-img" src="./images/avatar.png" alt="Avatar">
 		</div>
 		<div id="aside-status" class="${FRIENDLIST_BOX_STYLE}">
 		</div>
