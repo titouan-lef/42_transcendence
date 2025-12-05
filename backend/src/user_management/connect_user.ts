@@ -91,7 +91,7 @@ interface UserBody {
 async function verifyAuth(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const token = req.cookies?.token;
 	if (!token)
-		return sendReply(reply, 201, "Not logged in");
+		return sendReply(reply, 401, "Not logged in");
 
 	try {
 		// eslint-disable-next-line
