@@ -2,29 +2,18 @@ import { newGame, updateGameObject } from "../game/canvas_creation.js";
 import { GameOptions } from "../game/settings/GameSettings.js";
 import { DataMessage, Status } from "../game/types_transfert.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
-import { randomInt } from "../utils/numbers.js";
 
 declare const API_URL: string; // just telling the compiler that API_URL and WS_URL will exists during execution
 declare const WS_URL: string;
-
-interface ServerRes {
-	success: boolean;
-	message: string;
-}
 
 //////////////////////////////////////////
 //			API requests				//
 //////////////////////////////////////////
 
 async function printReplyInDiv(reply: Response, targetDivId: string): Promise<void> {
-	try {
-		const result: ServerRes = await reply.json();
-		const message = result.message || "Unknown response";
-		const container = getSafeElement(targetDivId, HTMLElement);
-		container.innerHTML = `<p>${message}</p>`;
-	} catch (err) {
-		console.error("Caught error:", err);
-	}
+	const message = await getReplyMessage(reply);
+	const container = getSafeElement(targetDivId, HTMLElement);
+	container.innerHTML = `<p>${message}</p>`;
 }
 
 function createPostRequest(content: string): RequestInit {
@@ -63,12 +52,16 @@ async function sendGetRequestToBack(endpoint: string) : Promise<Response> {
 	return await fetch(`${API_URL}/${endpoint}`, createGetRequest());
 }
 
-async function getMessage(reply: Response): Promise<string> {
+function isRequestSuccessfull(reply: Response): boolean {
+	return reply.status >= 200 && reply.status < 300;
+}
+
+async function getReplyMessage(reply: Response): Promise<string> {
 	try {
-		const message: ServerRes = await reply.json();
-		return message.message;
+		const message: string = await reply.text();
+		return message;
 	} catch (err) {
-		console.error("Invalid message received :", err);
+		console.error("Invalid reply:", err);
 	}
 	return "";
 }
@@ -78,40 +71,25 @@ async function getMessage(reply: Response): Promise<string> {
 //////////////////////////////////////////
 
 async function askForGame(): Promise<boolean> {
-	try {
-		const reply = await sendGetRequestToBack("/api/game/ranked_game");
-		const result: ServerRes = await reply.json();
-		if (result.success) {
-			return true;
-		} else {
-			console.log("Error:", result.message);
-			return false;
-		}
-	} catch (err) {
-		console.error("Caught error:", err);
+	const reply = await sendGetRequestToBack("/api/game/ranked_game");
+	if (isRequestSuccessfull(reply)) {
+		console.log("Error:", getReplyMessage(reply));
 		return false;
 	}
+	return true;
 }
 
 async function waitForGame(): Promise<number | null> {
 	let id = -1;
-	try {
-		while (id < 0) {
-			const reply = await sendGetRequestToBack("/api/game/waiting");
-			const result: ServerRes = await reply.json();
-			if (result.success)
-				id = Number(result.message);
-			if (result.message === "stop")
-				break;
-		}
-	} catch (err) {
-		console.error("Caught error:", err);
-		return null;
-	}
+	let reply: Response;
+	do {
+		reply = await sendGetRequestToBack("/api/game/waiting");
+		if (isRequestSuccessfull(reply))
+			id = Number(await getReplyMessage(reply));
+	} while (id < 0 && reply.status !== 404);
 	if (id >= 0)
 		return id;
-	console.log("No game found");
-	return null; 
+	return null;
 }
 
 async function newRankedGame(): Promise<void> {
@@ -134,17 +112,12 @@ async function newGameVsAI(): Promise<void> {
 	};
 
 	const reply = await sendPostRequestToBack("/api/game/ai_game", JSON.stringify(options));
-	let id = -1;
-	try {
-		const result: ServerRes = await reply.json();
-		if (result.success)
-			id = Number(result.message);
-		else
-			console.log("Error:", result.message);
-	} catch (err) {
-		console.error("Caught error:", err);
+	const message = await getReplyMessage(reply);
+	if (!isRequestSuccessfull(reply)) {
+		console.log("Error:", message);
 		return;
 	}
+	const id = Number(message);
 	if (id >= 0)
 		newGameSolo(id);
 }
@@ -195,17 +168,12 @@ async function newLocalGame(): Promise<void> {
 	};
 
 	const reply = await sendPostRequestToBack("/api/game/local_game", JSON.stringify(options));
-	let id = -1;
-	try {
-		const result: ServerRes = await reply.json();
-		if (result.success)
-			id = Number(result.message);
-		else
-			console.log("Error:", result.message);
-	} catch (err) {
-		console.error("Caught error:", err);
+	const message = await getReplyMessage(reply);
+	if (!isRequestSuccessfull(reply)) {
+		console.log("Error:", message);
 		return;
 	}
+	const id = Number(message);
 	if (id < 0) {
 		console.log("Negative ID");
 		return;
@@ -252,4 +220,4 @@ async function newLocalGame(): Promise<void> {
 	};
 }
 
-export { getMessage, sendPostRequestToBack, sendGetRequestToBack, sendFile, printReplyInDiv, newRankedGame, newLocalGame, newGameVsAI };
+export { getReplyMessage, sendPostRequestToBack, sendGetRequestToBack, sendFile, printReplyInDiv, newRankedGame, newLocalGame, newGameVsAI };

@@ -34,16 +34,19 @@ const LOCAL_GAMES = new Map<number, WebSocket>();
 //			Stupid matchmaking			//
 //////////////////////////////////////////
 
+const TIMEOUT = 10000; // in ms
+const SCAN_DELAY = 1000; // in ms
+
 async function addPlayerToMatchmakingSystem(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const user = req.user;
 	if (!user)
 		return;
 	if (WAITING_PLAYERS.includes(user)) {
-		sendReply(reply, 200, true, "Already for a game");
+		sendReply(reply, 200, "Already for a game");
 		return ;
 	}
 	WAITING_PLAYERS.push(user);
-	sendReply(reply, 200, true, "Looking for a game");
+	sendReply(reply, 200, "Looking for a game");
 	console.log(user, "is waiting for a game"); /** @todo remove */
 }
 
@@ -64,7 +67,7 @@ function getRandomOptions(): GameOptions {
 	return options;
 }
 
-/** stupid matchmaking */
+/** @todo change with real matchmaking */
 async function askMatchmakingSystem(username: string): Promise<number> {
 	console.log("look for", username);
 	const id = MATCHS.get(username);
@@ -99,37 +102,36 @@ async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<vo
 	if (!user)
 		return;
 	if (!WAITING_PLAYERS.includes(user) && !MATCHS.has(user)) {
-		sendReply(reply, 501, false, "stop"); /** @todo check error code */
+		sendReply(reply, 404, "stop"); /** @todo check error code */
 		return;
 	}
 
 	let waited = 0;
-	const timeout = 10000;
 	let id = -1;
 	while (id < 0) {
-		if (waited >= timeout) {
-			sendReply(reply, 500, false, "No game found yet"); /** @todo check error code but not the same as before */
+		if (waited >= TIMEOUT) {
+			sendReply(reply, 408, "No game found yet"); /** @todo check error code but not the same as before */
 			return;
 		}
 		id = await askMatchmakingSystem(user);
 		if (id < 0) {
-			await wait(1000);
-			waited += 1000;
+			await wait(SCAN_DELAY);
+			waited += SCAN_DELAY;
 		}
 	}
-	sendReply(reply, 200, true, id.toString());
+	sendReply(reply, 200, id.toString());
 }
 
 async function newLocalGame(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
 	const options: GameOptions = req.body;
 	const id = await registerGameOptions(options, GameType.LOCAL, []);
-	sendReply(reply, 200, true, id.toString());
+	sendReply(reply, 200, id.toString());
 }
 
 async function newAIGame(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
 	const options: GameOptions = req.body;
 	const id = await registerGameOptions(options, GameType.AI, []);
-	sendReply(reply, 200, true, id.toString());
+	sendReply(reply, 200, id.toString());
 }
 
 //////////////////////////////////////////

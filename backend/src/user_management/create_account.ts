@@ -12,11 +12,11 @@ interface NewUserBody {
 async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
 	const { username, pseudo, password } = req.body;
 	if (await doesUserExist(username)) {
-		sendReply(reply, 400, false, "username already taken");
+		sendReply(reply, 400, "username already taken");
 		return;
 	}
 	await insertUser(username, pseudo, hashString(password));
-	sendReply(reply, 201, true, "User created");
+	sendReply(reply, 201, "User created");
 }
 
 export { addNewUser };
