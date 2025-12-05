@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
-import { GameSettings } from "./settings/GameSettings.js";
+import { BallOption, GameSettings } from "./settings/GameSettings.js";
 import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
 import { GAME_STEP_INTERVAL, PHYSIC_STEP_INTERVAL, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
@@ -32,7 +32,7 @@ class Game {
 		this.engine = engine;
 		this.settings = settings;
 		this.camera = new babylon.ArcRotateCamera("Camera", 0, 0, 0, babylon.Vector3.Zero(), scene);
-		this.sceneManager = new SceneManager(engine, scene, settings);
+		this.sceneManager = new SceneManager(scene, settings);
 		this.scene = scene;
 		this.scene.metadata = { gameSpeed: 1 };
 		this.score = new babylon.Vector2(0, 0);
@@ -93,17 +93,32 @@ class Game {
 		});
 	}
 
+	private storePoint(goalerId: 1 | 2, ball: BallOption): void {
+		const map = this.sceneManager.getMapType();
+		const currentPoint = {
+			ball: ball,
+			map: map,
+			timer: this.gameTimer,
+			goaler: goalerId
+		};
+		this.points.push(currentPoint);
+	}
+
 	/**check collision for each balls */
 	async checkEndOfPoint(): Promise<void> {
 		const goalInfos = this.sceneManager.checkGoal();
-		if (goalInfos !== null && goalInfos.position !== null) {
+		if (goalInfos) {
+			const ball = this.sceneManager.getBall()?.getType();
+			if (!ball)
+				return ;
 			this.inAnimation = true;
-			goalInfos.goal === "player1" ? this.score.x += 1 : this.score.y += 1;
 			this.changeGameSpeed(0.1);
-			await this.sceneManager.goalAnimation(goalInfos.position);
+			await this.sceneManager.goalAnimation();
 			if (this.sceneManager.doesGameEnded()) // if closing game while animation
 				return;
 			this.changeGameSpeed(1);
+			goalInfos === "player1" ? this.score.x += 1 : this.score.y += 1;
+			this.storePoint(goalInfos === "player1" ? 1 : 2, ball);
 			this.sendScore();
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
 				stopGame(this.id);
@@ -188,7 +203,7 @@ class Game {
 		};
 		const player2name = this.settings.player2 ? this.settings.player2.username : "IA";
 		const player2 = {
-			name: player2name ,//change to player1
+			name: player2name,
 			score: this.score.y
 		};
 		const rules = {
@@ -272,12 +287,19 @@ class Game {
 		}, this.gameStepsInterval);
 	}
 
-	private defineCloseAction(player: Player, enemy: Player): void {
-		if (player instanceof Human) {
-			player.defineCloseAction(() => {
+	private defineCloseAction(leaver: Player, stayer: Player): void {
+		if (leaver instanceof Human) {
+			leaver.defineCloseAction(() => {
+				const leaverId = leaver.getId();
+				if (leaverId === 1)
+					this.score.y = POINTS_TO_WIN;
+				else
+					this.score.x = POINTS_TO_WIN;
 				stopGame(this.id);
-				if (enemy instanceof Human)
-					enemy.closeSocket();
+				if (stayer instanceof Human) {
+					// celui qui reste
+					stayer.closeSocket();
+				}
 			});
 		}
 	}

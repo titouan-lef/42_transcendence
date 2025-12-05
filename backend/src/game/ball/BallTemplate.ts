@@ -13,7 +13,6 @@ abstract class BallTemplate {
 	private readonly collisionObservable: babylon.Observable<babylon.IPhysicsCollisionEvent>;
 	private readonly collisionObserver: babylon.Observer<babylon.IPhysicsCollisionEvent>;
 	protected isInGoal: "player1" | "player2" | null = null;
-	private goalPosition: babylon.Vector3 | null = null;
 	protected justCollided = false;
 	protected realDirection: babylon.Vector3;
 	protected force = BALL_ANGULAR_FORCE;
@@ -157,10 +156,8 @@ abstract class BallTemplate {
 			const metadata = collisionEvent.collidedAgainst.transformNode.metadata;
 			if (!metadata)
 				return;
-			if (metadata.type === "goal") {
+			if (metadata.type === "goal")
 				this.isInGoal = metadata.player === 1 ? "player1" : "player2";
-				this.goalPosition = collisionEvent.point;
-			}
 			if (metadata.type === "collider") {
 				this.justCollided = true;
 				if (collisionEvent.point && this.particleCooldown <= 0 && !this.gameStopped) {
@@ -293,14 +290,8 @@ abstract class BallTemplate {
 	}
 
 	/** @todo check if better solution that the null everywere */
-	getGoal(): { goal: "player1" | "player2" | null, position: Position | null } {
-		const goal = this.isInGoal;
-		let position;
-		if (!this.goalPosition)
-			position = null;
-		else
-			position = vec3ToPos(this.goalPosition);
-		return { goal, position };
+	getGoal(): "player1" | "player2" | null {
+		return this.isInGoal;
 	}
 
 	getPosition(): Position {
