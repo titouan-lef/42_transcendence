@@ -113,6 +113,66 @@ const TRANSLATOR = {
 		en: "last games",
 		fr: "dernières parties"
 	},
+	wins: {
+		en: "wins",
+		fr: "victoires"
+	},
+	loses: {
+		en: "loses",
+		fr: "défaites"
+	},
+	win_rate: {
+		en: "win rate",
+		fr: "ratio de victoires"
+	},
+	chart: {
+		en: "chart",
+		fr: "évolution"
+	},
+	win_rate_chart: {
+		en: "{win_rate} {chart}",
+		fr: "{chart} du {win_rate}"
+	},
+	games_played: {
+		en: "games played",
+		fr: "parties jouées"
+	},
+	goals_avg: {
+		en: "goals average",
+		fr: "moyenne des buts"
+	},
+	games_time: {
+		en: "games time",
+		fr: "temps des parties"
+	},
+	elo_chart: {
+		en: "{elo} {chart}",
+		fr: "{chart} du {elo}"
+	},
+	diff_goals_chart: {
+		en: "goals difference chart",
+		fr: "{chart} de la différence des buts"
+	},
+	all: {
+		en: "all",
+		fr: "tout"
+	},
+	season: {
+		en: "season",
+		fr: "saison",
+	},
+	s1: {
+		en: "{season} one",
+		fr: "{season} une"
+	},
+	s2: {
+		en: "{season} two",
+		fr: "{season} deux"
+	},
+	s3: {
+		en: "{season} three",
+		fr: "{season} trois"
+	},
 } as const satisfies Record<string, Expression>;
 
 export { CodeLang, TRANSLATOR };
