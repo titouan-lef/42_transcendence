@@ -14,7 +14,7 @@ function planePosToVec3(pp: PlanePosition): Vector3 {
 }
 
 function randomBoolean() : boolean {
-	return !!Math.random();
+	return Boolean(Math.random());
 }
 
 export { vec3ToPos, planePosToVec3, randomBoolean };
