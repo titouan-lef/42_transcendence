@@ -14,7 +14,7 @@ import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
-import { PlanePosition, Position, RenderMessage, Status, TimingMessage, EmoteMessage, EmoteChoice } from "../web_sockets/types_transfert.js";
+import { PlanePosition, Position, RenderMessage, Status, TimingMessage, EmoteMessage, EmoteChoice, Point } from "../web_sockets/types_transfert.js";
 import { Human } from "../player/Human.js";
 import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
 import { AI } from "../player/AI.js";
@@ -23,7 +23,6 @@ class SceneManager {
 	private ball: BallTemplate | null = null;
 	private map: MapTemplate | null = null;
 	private readonly players: Player[] = [];
-	private engine: babylon.Engine;
 	private countdownIntervalId: ReturnType<typeof setInterval> | null = null;
 	private gameStopped = false;
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;
@@ -31,8 +30,7 @@ class SceneManager {
 	private readonly environmentManager: EnvironmentManager;
 	private sockets: WebSocket[] = [];
 
-	constructor(engine: babylon.Engine, scene: babylon.Scene, settings: GameSettings) {
-		this.engine = engine;
+	constructor(scene: babylon.Scene, settings: GameSettings) {
 		this.sockets.push(settings.player1.socket);
 		if (settings.player2) // non AI
 			this.sockets.push(settings.player2.socket);
@@ -208,15 +206,15 @@ class SceneManager {
 	}
 
 	/** @todo check if better solution that the null everywere */
-	checkGoal(): { goal: "player1" | "player2" | null, position: Position | null } | null {
+	checkGoal(): "player1" | "player2" | null {
 		const goalInfos = this.ball?.getGoal();
-		if (goalInfos && goalInfos.goal !== null)
+		if (goalInfos)
 			return goalInfos;
 		return null;
 	}
 
 	/** ball explodes, the time slow down */
-	async goalAnimation(position: Position): Promise<void> {
+	async goalAnimation(): Promise<void> {
 		if (this.map)
 			this.map.stop();
 		this.destroyBall();

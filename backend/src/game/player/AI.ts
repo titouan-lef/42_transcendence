@@ -128,7 +128,7 @@ class AI extends Player {
 
 	private predictZAtPlayerX(): number | null {
 		const playerPosX = this.getPosition().x;
-		if (!this.ballToWatch || this.ballToWatch.getGoal().goal)
+		if (!this.ballToWatch || this.ballToWatch.getGoal())
 			return null;
 		const ballPosition = this.ballToWatch.getPosition();
 		const ballDirection = this.ballToWatch.getDirection();

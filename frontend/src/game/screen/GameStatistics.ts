@@ -1,6 +1,6 @@
 import { stopGame } from "../canvas_creation";
 import { BallOption, MapOption } from "../settings/GameSettings";
-import { GameStats } from "../types_transfert";
+import { GameStats, Point } from "../types_transfert";
 
 export class GameStatistics {
 	private readonly stats: HTMLDivElement;
@@ -28,20 +28,21 @@ export class GameStatistics {
 
 	private createStats(gameStats: GameStats): void {
 		const time = document.createElement("div");
-		time.textContent = this.timeToString(gameStats.gameTimer);
+		time.textContent = "Game Duration: " + this.timeToString(gameStats.gameTimer);
 		this.stats.appendChild(time);
 
-		const name1 = document.createElement("p");
-		name1.textContent = gameStats.player1.name + "score: " + gameStats.player1.score;
+		const name1 = document.createElement("div");
+		name1.textContent = gameStats.player1.name + "	score: " + gameStats.player1.score;
 		this.stats.appendChild(name1);
 
-		const name2 = document.createElement("p");
-		name2.textContent = gameStats.player2.name + "score: " + gameStats.player2.score;
+		const name2 = document.createElement("div");
+		name2.textContent = gameStats.player2.name + "	score: " + gameStats.player2.score;
 		this.stats.appendChild(name2);
 
-		// const points = document.createElement("p");
-		// name2.textContent = gameStats.player2.name + "score: " + gameStats.player2.score;
-		// this.stats.appendChild(name2);
+		const points = document.createElement("div");
+		points.textContent = "Points: \n";
+		this.stats.appendChild(points);
+		this.pointToString(gameStats, points);
 	}
 
 	private createRules(gameStats: GameStats): void {
@@ -146,6 +147,17 @@ export class GameStatistics {
 		return btnRules;
 	}
 
+	private pointToString(gameStats: GameStats, pointDiv: HTMLDivElement): void {
+		const points = gameStats.points;
+		let goaler: string;
+		points.forEach(point => {
+			goaler = point.goaler === 1 ? gameStats.player1.name : gameStats.player2.name;
+			const newPointDiv = document.createElement("div");
+			newPointDiv.textContent = goaler + " has goaled with " + point.ball + "ball on " + point.map + "Map at " + this.timeToString(point.timer) + ".";
+			pointDiv.appendChild(newPointDiv);
+		});
+	}
+
 	private listToString(list: MapOption[] | BallOption[]): string {
 		let listString = "";
 		for (let i = 0; i < list.length; i++) {
@@ -161,7 +173,7 @@ export class GameStatistics {
 		const minutes = Math.floor(time / 60);
 		const seconds = time % 60;
 
-		let timeString = "Game Duration: ";
+		let timeString = "";
 		timeString += minutes;
 		timeString += "m";
 		if (seconds === 0)
