@@ -2,7 +2,7 @@ import { createButtonHtml } from "../../components/button";
 import { createParagraphHtml } from "../../components/paragraph";
 import { getSafeElement } from "../../utils/getSafeElement";
 import { setActiveBtn } from "./profile";
-import { loadDashboard } from "./profile_dashboard";
+import { createDashboardCard, loadDashboard } from "./profile_dashboard";
 import { generateHistory, loadHistory } from "./profile_history";
 
 const SEE_MORE_BTN = `
@@ -32,24 +32,9 @@ const SUMMARY = `
 	<div id='sum-dashboard' class="${SECTION_STYLE}">
 		${createParagraphHtml(['dashboard'], 'p-dashboard', { 'class': `${SECTION_TITLE_STYLE}` })}
 		<div class="p-4 flex h-[150px] w-full gap-4">
-			<div class="${SUMMARY_DASHBOARD_STYLE}">
-				${createParagraphHtml(['elo'], 'p-elo', { 'class': 'text-[20px] text-secondary' })}
-				<div class="w-full h-full items-center text-[48px] text-center">
-					500
-				</div>
-			</div>
-			<div class="${SUMMARY_DASHBOARD_STYLE}">
-				${createParagraphHtml(['prefered_map'], 'p-map', { 'class': 'text-[20px] text-secondary' })}
-				<div class="w-full h-full items-center text-[48px] text-center">
-					volcano
-				</div>
-			</div>
-			<div class="${SUMMARY_DASHBOARD_STYLE}">
-				${createParagraphHtml(['prefered_ball'], 'p-ball', { 'class': 'text-[20px] text-secondary' })}
-				<div class="w-full h-full items-center text-[48px] text-center">
-					snake
-				</div>
-			</div>
+			${createDashboardCard('win_rate', 0)}
+			${createDashboardCard('games_played', 0)}
+			${createDashboardCard('elo', 500)}
 		</div>
 	</div>
 	${createButtonHtml(['see_more'], 'btn-sum-dashboard', { 'class':`${SEE_MORE_BTN}` })}
