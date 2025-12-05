@@ -81,12 +81,12 @@ async function updateAvatar(): Promise<void> {
 	const whoami = await sendGetRequestToBack("/api/user/whoami");
 	const result1: ServerRes = await whoami.json();
 	const reply = await sendPostRequestToBack("/api/user/picture", JSON.stringify({ user: result1.message }));
-	const result2: ServerRes = await reply.json();
-
+	
 	const avatar = getSafeElement("avatar-img", HTMLImageElement);
-	if (reply.status === 200)
+	if (reply.status === 200) {
+		const result2: ServerRes = await reply.json();
 		avatar.src = `/pictures/${result2.message}?t=${Date.now()}`;
-	else
+	} else
 		avatar.src = "./images/avatar.png";
 }
 

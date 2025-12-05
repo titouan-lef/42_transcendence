@@ -1,5 +1,3 @@
-/**	@todo friendlist test front bellow, maybe move it to appropriate folder if linked to back */
-
 import { createButtonHtml } from "../../components/button";
 import { sendGetRequestToBack, sendPostRequestToBack, ServerRes } from "../../services/api_request";
 import { applyColor } from "../../utils/applyColor";
@@ -58,7 +56,7 @@ async function getFriendList(): Promise<void> {
 	});
 }
 
-/** @todo replace FRIENDLIST and this to fetch all friends from db, keep same generating logic to generate button ids (events) */
+/** @todo keep same generating logic to generate button ids (events) */
 async function updateFriendList(): Promise<void> {
 	const elem = getSafeElement("friendlist", HTMLElement);
 	elem.innerHTML = '';
@@ -86,10 +84,8 @@ async function updateFriendList(): Promise<void> {
 function closeAllDetails(): void {
 	FRIENDLIST.forEach(friend => {
 		const elem = getSafeElement(friend, HTMLDetailsElement);
-
-		if (elem.open) {
+		if (elem.open)
 			elem.open = false;
-		}
 	});
 }
 

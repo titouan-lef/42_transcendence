@@ -28,7 +28,7 @@ async function createUserTable(): Promise<void> {
 }
 
 async function insertUser(username: string, pseudo: string, hashedPassword: string): Promise<void> {
-	applyQuery(
+	await applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (username, pseudo, hashedPassword, avatar, themeId) VALUES (?, ?, ?, ?, ?)`,
 			[username, pseudo, hashedPassword, DEFAULT_AVATAR, DEFAULT_THEME]
