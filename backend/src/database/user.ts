@@ -23,6 +23,8 @@ async function createUserTable(): Promise<void> {
 			createdAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 			hashedPassword TEXT NOT NULL,
 			avatar TEXT NOT NULL,
+			is2FAEnabled BOOLEAN NOT NULL,
+			email TEXT,
 			themeId INTEGER REFERENCES Theme(id));`
 		), "create" + TABLE_NAME + "Table"
 	);
@@ -31,8 +33,8 @@ async function createUserTable(): Promise<void> {
 async function insertUser(username: string, pseudo: string, hashedPassword: string): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (username, pseudo, hashedPassword, avatar, themeId) VALUES (?, ?, ?, ?, ?)`,
-			[username, pseudo, hashedPassword, DEFAULT_AVATAR, DEFAULT_THEME]
+			`INSERT INTO ${TABLE_NAME} (username, pseudo, hashedPassword, avatar, is2FAEnabled, themeId) VALUES (?, ?, ?, ?, ?, ?)`,
+			[username, pseudo, hashedPassword, DEFAULT_AVATAR, false, DEFAULT_THEME]
 		), "insert" + TABLE_NAME
 	);
 }
@@ -68,14 +70,76 @@ async function getUserPassword(username: string): Promise<string> {
 	return row?.hashedPassword ?? "";
 }
 
-async function changeUserPicture(username: string, avatar:string): Promise<void> {
+async function getUserEmail(username: string): Promise<string> {
+	const row = await applyQuery(
+		async (db) => await db.get(
+			`SELECT email FROM ${TABLE_NAME} WHERE username = ?;`,
+			[username]
+		), "get" + TABLE_NAME + "Email"
+	);
+	return row?.email ?? "";
+}
+
+async function isEmailDefined(username: string): Promise<boolean> {
+	const row = await applyQuery(
+		async (db) => await db.get(
+			`SELECT email FROM ${TABLE_NAME} WHERE username = ?;`,
+			[username]
+		), "get" + TABLE_NAME + "Email"
+	);
+	if (row?.email)
+		return true;
+	return false;
+}
+
+async function is2FAEnabled(username: string): Promise<string> {
+	const row = await applyQuery(
+		async (db) => await db.get(
+			`SELECT is2FAEnabled FROM ${TABLE_NAME} WHERE username = ?;`,
+			[username]
+		), "get" + TABLE_NAME + "2FA"
+	);
+	return row?.is2FAEnabled ?? "";
+}
+
+async function update2FA(username: string, value: boolean): Promise<void> {
+	await applyQuery(
+		async (db) => await db.get(
+			`UPDATE ${TABLE_NAME}
+			SET is2FAEnabled = ?
+			WHERE username = ?;`,
+			[value, username]
+		), "update" + TABLE_NAME + "Email"
+	);
+}
+
+async function enabled2FA(username: string): Promise<void> {
+	await update2FA(username, true);
+}
+
+async function disabled2FA(username: string): Promise<void> {
+	await update2FA(username, false);
+}
+
+async function changeUserEmail(username: string, email: string): Promise<void> {
+	await applyQuery(
+		async (db) => await db.get(
+			`UPDATE ${TABLE_NAME}
+			SET email = ?
+			WHERE username = ?;`,
+			[email, username]
+		), "update" + TABLE_NAME + "Email"
+	);
+}
+
+async function changeUserPicture(username: string, avatar: string): Promise<void> {
 	await applyQuery(
 		async (db) => await db.get(
 			`UPDATE ${TABLE_NAME}
 			SET avatar = ?
 			WHERE username = ?;`,
 			[avatar, username]
-		), "get" + TABLE_NAME + "Picture"
+		), "update" + TABLE_NAME + "Picture"
 	);
 }
 
@@ -91,6 +155,20 @@ async function getUserPicture(username: string): Promise<string | undefined> {
 	return row?.avatar;
 }
 
+async function deleteUser(username: string): Promise<void> {
+	applyQuery(
+		async (db) => await db.run(
+			`DELETE FROM ${TABLE_NAME} WHERE username = ?`,
+			[username]
+		), "delete" + TABLE_NAME
+	);
+}
+
+/**
+ * 
+ * @todo will be used, but must be modified
+ * 
+ */
 async function updateUser(username: string, updates: Partial<Omit<User, "username" | "createdAt">>): Promise<void> {
 	await applyQuery(async (db) => {
 		const fields = Object.keys(updates).map((key) => `${key} = ?`).join(", ");
@@ -101,4 +179,4 @@ async function updateUser(username: string, updates: Partial<Omit<User, "usernam
 	}, "update" + TABLE_NAME);
 }
 
-export { User, createUserTable, getUserPassword, doesUserExist, insertUser, updateUser, changeUserPicture, getUserPicture };
+export { User, createUserTable, getUserPassword, doesUserExist, insertUser, updateUser, disabled2FA, enabled2FA, is2FAEnabled, isEmailDefined, changeUserEmail, changeUserPicture, getUserPicture };

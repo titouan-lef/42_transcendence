@@ -3,6 +3,7 @@ import { applyColor } from "../../utils/applyColor.js";
 import { SIGN_IN, signInHandler } from "./dialog_sign_in.js";
 import { SIGN_UP, signUpHandler } from "./dialog_sign_up.js";
 import { ADD_FRIEND, addFriendHandler } from "./dialog_add_friend.js";
+import { TWOFA, twoFAHandler } from "./dialog_2FA.js";
 
 const DIALOG_MAIN_STYLE = `
 	m-auto p-0 rounded-2xl
@@ -46,6 +47,10 @@ function exitDialog(modal: HTMLDialogElement, event: Event): void {
 	}
 }
 
+function openDialog2FA(): void {
+	loadDialog(TWOFA, twoFAHandler);
+}
+
 function openDialogSignIn(): void {
 	loadDialog(SIGN_IN, signInHandler);
 }
@@ -58,4 +63,4 @@ function openDialogAddFriend(): void {
 	loadDialog(ADD_FRIEND, addFriendHandler);
 }
 
-export { exitDialog, loadDialog, openDialogSignIn, openDialogSignUp, openDialogAddFriend };
+export { exitDialog, loadDialog, openDialogSignIn, openDialogSignUp, openDialogAddFriend, openDialog2FA };
