@@ -6,9 +6,10 @@ import fastifyMultipart from '@fastify/multipart';
 import fastifyStatic from "@fastify/static";
 import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
-import { connectUser, disconnectUser, whoami, changePicture, verifyAuth, getPicture, UserBody } from "./user_management/connect_user.js";
+import { connectUser, disconnectUser, whoami, changePicture, verifyAuth, getPicture, UserBody, changeEmail, EmailBody } from "./user_management/connect_user.js";
 import { isGameFound, newAIGame, newGame, newLocalGame } from "./game/web_sockets/connection.js";
 import { getFriendList, newFriend, removeFriend } from "./friends.js";
+import { activate2FA, desactivate2FA, verify2FA } from "./2FA.js";
 import { addPlayerToMatchmakingSystem } from "./tournament/matchmaking.js";
 
 const APP = fastify();
@@ -41,10 +42,16 @@ APP.register(fastifyStatic, {
 // --- Users --- 
 APP.post("/api/user/new_user", addNewUser);
 APP.post("/api/user/login", connectUser);
+APP.post<{ Body: EmailBody }>("/api/user/email", { preHandler: verifyAuth }, changeEmail);
 APP.get("/api/user/logout", { preHandler: verifyAuth }, disconnectUser);
 APP.get("/api/user/whoami", { preHandler: verifyAuth }, whoami);
 APP.post("/api/user/picture", getPicture);
 APP.post("/api/user/change_picture", { preHandler: verifyAuth }, changePicture);
+
+// --- 2FA ---
+APP.post("/api/user/secure", verify2FA);
+APP.get("/api/user/activate-secure", { preHandler: verifyAuth }, activate2FA);
+APP.get("/api/user/deactivate-secure", { preHandler: verifyAuth }, desactivate2FA);
 
 // --- Friends ---
 APP.post("/api/friends/list", getFriendList);
