@@ -38,7 +38,7 @@ async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<vo
 	let id = -1;
 	while (id < 0) {
 		if (waited >= TIMEOUT) {
-			sendReply(reply, 408, "No game found yet");
+			sendReply(reply, 408, "No game found yet"); /**@todo use translate tool */
 			return;
 		}
 		id = await askMatchmakingSystem(user);
@@ -92,17 +92,17 @@ function startHeartbeat(socket: WebSocket): void {
 async function verifyAuthWS(socket: WebSocket, req: FastifyRequest): Promise<string | null> {
 	const token = req.cookies?.token;
 	if (!token) {
-		socket.close(1008, "User not logged in");
+		socket.close(1008, "User not logged in"); /**@todo use translate tool ? */
 		return null;
 	}
 	// eslint-disable-next-line
 	const payload: JwtPayload = jwt.verify(token, SECRET) as JwtPayload;
 	if (!payload) {
-		socket.close(1008, "Invalid token");
+		socket.close(1008, "Invalid token"); /**@todo use translate tool ? */
 		return null;
 	}
 	if (!await doesUserExist(payload.id)) {
-		socket.close(1008, "User does not exist");
+		socket.close(1008, "User does not exist"); /**@todo use translate tool ? */ 
 		return null;
 	}
 	return payload.id;

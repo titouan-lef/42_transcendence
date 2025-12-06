@@ -17,12 +17,11 @@ async function addPlayerToMatchmakingSystem(req: FastifyRequest, reply: FastifyR
 	if (!user)
 		return;
 	if (isUserWaiting(user)) {
-		sendReply(reply, 400, "Already looking for a game");
+		sendReply(reply, 400, "Already looking for a game"); /**@todo use translate tool */
 		return;
 	}
 	WAITING_PLAYERS.push(user);
-	sendReply(reply, 200, "Looking for a game");
-	console.log(user, "is waiting for a game"); /** @todo remove */
+	sendReply(reply, 200, "Looking for a game"); /**@todo use translate tool */
 }
 
 function getRandomOptions(): GameOptions {

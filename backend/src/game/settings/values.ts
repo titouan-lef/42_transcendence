@@ -1,7 +1,6 @@
 import * as babylon from "@babylonjs/core";
 
 /**DEBUG FUNCTION */
-/**@todo should be false */
 export const SHOW_DISPOSE_LOGS = false;
 
 /**GAMEPLAY GENERAL SETTINGS */

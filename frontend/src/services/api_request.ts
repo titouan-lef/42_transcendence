@@ -175,7 +175,7 @@ async function newLocalGame(): Promise<void> {
 	}
 	const id = Number(message);
 	if (id < 0) {
-		console.log("Negative ID");
+		console.log("Negative ID"); /** @todo remove */
 		return;
 	}
 

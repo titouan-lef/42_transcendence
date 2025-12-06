@@ -36,17 +36,17 @@ async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: 
 	const hashPassword: string = await getUserPassword(id);
 
 	if (!isValidPassword(password, hashPassword)) {
-		sendReply(reply, 400, "Wrong id or password");
+		sendReply(reply, 400, "Wrong id or password"); /**@todo use translate tool */
 		return;
 	}
 	const token = jwt.sign({ id }, SECRET);
 	reply.setCookie("token", token, COOKIES_OPTIONS);
-	sendReply(reply, 200, "Successfuly loged in");
+	sendReply(reply, 200, "Successfuly loged in"); /**@todo use translate tool */
 }
 
 async function disconnectUser(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	reply.clearCookie("token", COOKIES_OPTIONS);
-	sendReply(reply, 200, "Logged out");
+	sendReply(reply, 200, "Logged out"); /**@todo use translate tool */
 }
 
 async function whoami(req: FastifyRequest, reply: FastifyReply): Promise<void> {
@@ -91,7 +91,7 @@ interface UserBody {
 async function verifyAuth(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const token = req.cookies?.token;
 	if (!token)
-		return sendReply(reply, 401, "Not logged in");
+		return sendReply(reply, 401, "Not logged in"); /**@todo use translate tool */
 
 	try {
 		// eslint-disable-next-line
@@ -99,12 +99,12 @@ async function verifyAuth(req: FastifyRequest, reply: FastifyReply): Promise<voi
 		const exists = await doesUserExist(payload.id);
 		if (!exists) {
 			reply.clearCookie("token", COOKIES_OPTIONS);
-			return sendReply(reply, 401, "User does not exist");
+			return sendReply(reply, 401, "User does not exist"); /**@todo use translate tool */
 		}
 		req.user = payload.id;
 	} catch {
 		reply.clearCookie("token", COOKIES_OPTIONS);
-		return sendReply(reply, 201, "Invalid token");
+		return sendReply(reply, 201, "Invalid token"); /**@todo use translate tool */
 	}
 }
 
