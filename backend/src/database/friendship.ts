@@ -11,19 +11,11 @@ async function createFriendshipTable(): Promise<void> {
 	applyQuery(
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			username TEXT NOT NULL,
-			friendName TEXT NOT NULL);`
+			friendName TEXT NOT NULL,
+			PRIMARY KEY (username, friendName)
+			);`
 		), "create" + TABLE_NAME + "Table"
-	);
-}
-
-async function insertFriendship(friendship: Friendship): Promise<void> {
-	applyQuery(
-		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (username, friendName) VALUES (? ,?)`,
-			[friendship.username, friendship.friendName]
-		), "create" + TABLE_NAME
 	);
 }
 
@@ -39,8 +31,12 @@ async function isFriendWith(user: string, friend: string): Promise<boolean> {
 }
 
 async function addFriendship(user: string, friend: string): Promise<void> {
-	console.log(user, friend);
-	insertFriendship({ username: user, friendName: friend });
+	await applyQuery(
+		async (db) => await db.run(
+			`INSERT INTO ${TABLE_NAME} (username, friendName) VALUES (? ,?)`,
+			[user, friend]
+		), "create" + TABLE_NAME
+	);
 }
 
 async function getAllFriendship(): Promise<Friendship[] | undefined> {
@@ -72,16 +68,3 @@ async function removeFriendship(username: string, friendName: string): Promise<v
 }
 
 export { Friendship, createFriendshipTable, getFriendships, isFriendWith, addFriendship, removeFriendship };
-/**
- * @todo see if we keep it
-async function updateFriendship(friendName: string, update: Partial<Omit<Friendship, "friendName">>): Promise<void> {
-	applyQuery(async (db) => {
-		const fields = Object.keys(update).map((k) => `${k} = ?`).join(", ");
-		if (!fields) 
-			return;
-		const values = Object.values(update);
-		await db.run(`UPDATE ${TABLE_NAME} SET ${fields} WHERE username = ?`,
-			[...values, friendName]);
-	}, "updateFriendship");
-}
- */
