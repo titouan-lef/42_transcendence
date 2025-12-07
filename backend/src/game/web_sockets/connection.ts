@@ -6,6 +6,7 @@ import { GameOptions } from "../settings/GameSettings.js";
 import { askMatchmakingSystem, isUserWaiting } from "../../tournament/matchmaking.js";
 import { GameType, getGameOptions, identifyGame, registerGameOptions } from "../game_manager.js";
 import { identifyUser } from "../../JWT.js";
+import { wait } from "../../utils/time.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -19,10 +20,6 @@ declare module 'fastify' {
 
 const TIMEOUT = 10000; // in ms
 const SCAN_DELAY = 1000; // in ms
-
-function wait(ms: number): Promise<void> {
-	return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const user = req.user;
