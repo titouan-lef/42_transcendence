@@ -1,12 +1,11 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { WebSocket } from "ws";
-import jwt, { JwtPayload } from "jsonwebtoken";
 import { doesUserExist } from "../../database/user.js";
-import { SECRET } from "../../user_management/connect_user.js";
 import { sendReply } from "../../utils/HTTP.js";
 import { GameOptions } from "../settings/GameSettings.js";
 import { askMatchmakingSystem, isUserWaiting } from "../../tournament/matchmaking.js";
 import { GameType, getGameOptions, identifyGame, registerGameOptions } from "../game_manager.js";
+import { identifyUser } from "../../JWT.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -95,17 +94,12 @@ async function verifyAuthWS(socket: WebSocket, req: FastifyRequest): Promise<str
 		socket.close(1008, "User not logged in"); /**@todo use translate tool ? */
 		return null;
 	}
-	// eslint-disable-next-line
-	const payload: JwtPayload = jwt.verify(token, SECRET) as JwtPayload;
-	if (!payload) {
-		socket.close(1008, "Invalid token"); /**@todo use translate tool ? */
+	const user = identifyUser(token);
+	if (!await doesUserExist(user)) {
+		socket.close(1008, "User does not exist");
 		return null;
 	}
-	if (!await doesUserExist(payload.id)) {
-		socket.close(1008, "User does not exist"); /**@todo use translate tool ? */ 
-		return null;
-	}
-	return payload.id;
+	return user;
 }
 
 async function newGame(socket: WebSocket, req: FastifyRequest<{ Params: GameParams }>): Promise<void> {

@@ -1,10 +1,9 @@
 import nodemailer from "nodemailer";
 import { FastifyRequest, FastifyReply } from "fastify";
-import jwt from "jsonwebtoken";
 import { randomInt } from "./utils/math.js";
 import { sendReply } from "./utils/HTTP.js";
-import { COOKIES_OPTIONS, SECRET } from "./user_management/connect_user.js";
-import { disabled2FA, enabled2FA, is2FAEnabled, isEmailDefined } from "./database/user.js";
+import { disabled2FA, enabled2FA, getUserEmail, is2FAEnabled, isEmailDefined } from "./database/user.js";
+import { addAuthCookies } from "./JWT.js";
 
 /** https://dev.to/veektor_v/send-emails-using-nodemailer-typescript-4763 */
 
@@ -13,8 +12,8 @@ const EMAIL = nodemailer.createTransport({
 	port: 465,
 	secure: true,
 	auth: {
-		user: "transcendence.pong.donotreply@gmail.com", /** @todo .env */
-		pass: "ylhjlempohhylssv", /** @todo .env */
+		user: process.env.EMAIL,
+		pass: process.env.EMAIL_PASSWORD,
 	},
 });
 
@@ -22,16 +21,16 @@ const CODES = new Map<string, number>();
 
 function sendEmailCode(email: string, code: number): void {
 	EMAIL.sendMail({
-		from: "transcendence.pong.donotreply@gmail.com", /** @todo .env */
+		from: process.env.EMAIL,
 		to: email,
 		subject: "Your 2FA Code",
 		text: `Your verification code is: ${code}`,
 	});
 }
 
-function request2FA(user: string): void {
+async function request2FA(user: string): Promise<void> {
 	const code = randomInt(1000, 9999);
-	const email = "lucienguerbigny@gmail.com"; /** @todo getEmail(id) */
+	const email = await getUserEmail(user);
 	sendEmailCode(email, code);
 	if (CODES.has(user))
 		CODES.delete(user);
@@ -45,15 +44,12 @@ interface Content2FA {
 
 async function verify2FA(req: FastifyRequest<{ "Body": Content2FA }>, reply: FastifyReply): Promise<void> {
 	const { user, code } = req.body;
-	if (!user)
-		return; /** @todo sendReply ?? */
 	if (Number(code) !== CODES.get(user)) {
 		sendReply(reply, 400, "Invalid code"); /** @todo use translate tool */
 		return;
 	}
 	CODES.delete(user);
-	const token = jwt.sign({ user }, SECRET);
-	reply.setCookie("token", token, COOKIES_OPTIONS);
+	addAuthCookies(reply, user);
 	sendReply(reply, 200, "Successfuly loged in"); /** @todo use translate tool */
 }
 
