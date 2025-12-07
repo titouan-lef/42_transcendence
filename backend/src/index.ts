@@ -8,10 +8,10 @@ import { initDB } from "./database/init.js";
 import { addNewUser } from "./user_management/create_account.js";
 import { connectUser, disconnectUser, whoami, changePicture, getPicture, UserBody, changeEmail, EmailBody } from "./user_management/connect_user.js";
 import { isGameFound, newAIGame, newGame, newLocalGame } from "./game/web_sockets/connection.js";
-import { getFriendList, newFriend, removeFriend } from "./friends.js";
-import { activate2FA, desactivate2FA, verify2FA } from "./2FA.js";
 import { addPlayerToMatchmakingSystem } from "./tournament/matchmaking.js";
-import { verifyAuth } from "./JWT.js";
+import { getFriendList, newFriend, removeFriend } from "./user_management/friends.js";
+import { activate2FA, desactivate2FA, verify2FA } from "./security/2FA.js";
+import { verifyAuth } from "./security/JWT.js";
 
 const APP = fastify();
 

@@ -5,8 +5,8 @@ import { changeUserEmail, changeUserPicture, getUserPassword, getUserPicture, is
 import fs from 'fs';
 import util from 'util';
 import { pipeline } from 'stream';
-import { request2FA } from "../2FA.js";
-import { addAuthCookies, removeAuthCookies } from "../JWT.js";
+import { request2FA } from "../security/2FA.js";
+import { addAuthCookies, removeAuthCookies } from "../security/JWT.js";
 import { wait } from "../utils/time.js";
 
 const PUMP = util.promisify(pipeline);

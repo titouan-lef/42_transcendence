@@ -1,8 +1,8 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { addFriendship, getFriendships, isFriendWith, removeFriendship } from "./database/friendship.js";
-import { sendReply } from "./utils/HTTP.js";
-import { doesUserExist, User } from "./database/user.js";
-import { UserBody } from "./user_management/connect_user.js";
+import { addFriendship, getFriendships, isFriendWith, removeFriendship } from "../database/friendship.js";
+import { sendReply } from "../utils/HTTP.js";
+import { doesUserExist, User } from "../database/user.js";
+import { UserBody } from "./connect_user.js";
 
 async function getFriendList(req: FastifyRequest<{ "Body": UserBody }>, reply: FastifyReply): Promise<void> {
 	const user = req.body?.user;

@@ -1,8 +1,8 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { CookieSerializeOptions } from '@fastify/cookie';
-import { sendReply } from "./utils/HTTP.js";
-import { doesUserExist } from "./database/user.js";
+import { sendReply } from "../utils/HTTP.js";
+import { doesUserExist } from "../database/user.js";
 
 const SECRET = String(process.env.JWT_SECRET);
 if (!SECRET)
