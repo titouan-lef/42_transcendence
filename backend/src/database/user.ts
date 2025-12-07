@@ -179,4 +179,4 @@ async function updateUser(username: string, updates: Partial<Omit<User, "usernam
 	}, "update" + TABLE_NAME);
 }
 
-export { User, createUserTable, getUserPassword, doesUserExist, insertUser, updateUser, disabled2FA, enabled2FA, is2FAEnabled, isEmailDefined, changeUserEmail, changeUserPicture, getUserPicture };
+export { User, createUserTable, getUserPassword, doesUserExist, insertUser, updateUser, disabled2FA, enabled2FA, is2FAEnabled, isEmailDefined, changeUserEmail, getUserEmail, changeUserPicture, getUserPicture };
