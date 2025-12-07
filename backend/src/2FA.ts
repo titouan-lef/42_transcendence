@@ -4,6 +4,7 @@ import { randomInt } from "./utils/math.js";
 import { sendReply } from "./utils/HTTP.js";
 import { disabled2FA, enabled2FA, getUserEmail, is2FAEnabled, isEmailDefined } from "./database/user.js";
 import { addAuthCookies } from "./JWT.js";
+import { wait } from "./utils/time.js";
 
 /** https://dev.to/veektor_v/send-emails-using-nodemailer-typescript-4763 */
 
@@ -45,6 +46,7 @@ interface Content2FA {
 async function verify2FA(req: FastifyRequest<{ "Body": Content2FA }>, reply: FastifyReply): Promise<void> {
 	const { user, code } = req.body;
 	if (Number(code) !== CODES.get(user)) {
+		wait(1000);  // wait 1 sec against brutforce
 		sendReply(reply, 400, "Invalid code"); /** @todo use translate tool */
 		return;
 	}

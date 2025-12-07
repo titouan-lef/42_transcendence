@@ -7,6 +7,7 @@ import util from 'util';
 import { pipeline } from 'stream';
 import { request2FA } from "../2FA.js";
 import { addAuthCookies, removeAuthCookies } from "../JWT.js";
+import { wait } from "../utils/time.js";
 
 const PUMP = util.promisify(pipeline);
 
@@ -22,7 +23,7 @@ async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: 
 	const hashPassword: string = await getUserPassword(user);
 
 	if (!isValidPassword(password, hashPassword)) {
-		/** @todo wait 1 sec to protect again brutforce */
+		await wait(1000); // wait 1 sec against brutforce
 		sendReply(reply, 400, "Wrong id or password"); /**@todo use translate tool */
 		return;
 	}
@@ -82,10 +83,12 @@ async function changeEmail(req: FastifyRequest<{ Body: EmailBody }>, reply: Fast
 async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const user = req.user;
 	if (!user)
-		return; /** @todo sendReply ? */
+		return;
 	const part = await req.file();
-	if (!part)
-		return; /** @todo sendReply ? */
+	if (!part) {
+		sendReply(reply, 400, "No file given");
+		return;
+	}
 	const path = `/app/pictures/${part.filename}`;
 	await PUMP(part.file, fs.createWriteStream(path));
 	await changeUserPicture(user, part.filename);
