@@ -27,13 +27,8 @@ async function connectUser(): Promise<void> {
 		return;
 
 	const modal = getSafeElement('modal', HTMLDialogElement);
- 
 	modal.close();
-
 	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
-
-	/** @todo load friend list */
-
 	updateFriendList();
 }
 

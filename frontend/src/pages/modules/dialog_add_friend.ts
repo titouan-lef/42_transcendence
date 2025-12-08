@@ -22,6 +22,7 @@ function addFriendHandler(modal: HTMLDialogElement): void {
 		const reply = await sendPostRequestToBack('/api/friends/add', JSON.stringify({ user: newFriendElem.value }));
 		if (reply.status === 401) {
 			/** @todo go to login page */
+			return;
 		} else if (reply.status !== 200) {
 			printReplyInDiv(reply, "print-content");
 			return;
