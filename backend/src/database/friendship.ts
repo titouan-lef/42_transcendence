@@ -22,7 +22,8 @@ async function createFriendshipTable(): Promise<void> {
 async function isFriendWith(user: string, friend: string): Promise<boolean> {
 	return !! await applyQuery(
 		async (db) => await db.get(
-			`SELECT friendName FROM ${TABLE_NAME}
+			`SELECT friendName
+			FROM ${TABLE_NAME}
 			WHERE username = ?
 			AND friendName = ?`,
 			[user, friend]
@@ -46,7 +47,9 @@ async function getAllFriendship(): Promise<Friendship[] | undefined> {
 async function getFriendships(username: string): Promise<string[] | undefined> {
 	const rows = await applyQuery(
 		async (db) => await db.all(
-			`SELECT friendName FROM ${TABLE_NAME} WHERE username = ?`,
+			`SELECT friendName
+			FROM ${TABLE_NAME}
+			WHERE username = ?`,
 			[username]
 		), "get" + TABLE_NAME
 	);

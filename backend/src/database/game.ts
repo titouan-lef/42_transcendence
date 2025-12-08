@@ -39,7 +39,9 @@ async function getAllGames(): Promise<Game[] | undefined> {
 async function getGameById(id: number): Promise<Game | undefined> {
 	return applyQuery(
 		async (db) => await db.get(
-			`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
+			`SELECT *
+			FROM ${TABLE_NAME}
+			WHERE id = ?`,
 			[id]
 		), "get" + TABLE_NAME + "ById"
 	);
@@ -48,7 +50,9 @@ async function getGameById(id: number): Promise<Game | undefined> {
 async function getGamesBySeason(seasonId: number):Promise<Game[] | undefined> {
 	return applyQuery(
 		async (db) => await db.all(
-			`SELECT * FROM ${TABLE_NAME} WHERE seasonId = ?`,
+			`SELECT *
+			FROM ${TABLE_NAME}
+			WHERE seasonId = ?`,
 			[seasonId]
 		), "get" + TABLE_NAME + "BySeason"
 	);

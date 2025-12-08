@@ -33,7 +33,9 @@ async function getAllRule(): Promise<Rule[] | undefined> {
 async function getRuleById(id: number): Promise<Rule | undefined> {
 	return applyQuery(
 		async (db) => await db.get(
-			`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
+			`SELECT *
+			FROM ${TABLE_NAME}
+			WHERE id = ?`,
 			[id]
 		), "get" + TABLE_NAME + "ById"
 	);

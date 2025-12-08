@@ -38,7 +38,10 @@ async function getAllGameRules(): Promise<GameRule[] | undefined> {
 async function getGameRuleById(gameId: number, ruleId: number): Promise<GameRule | undefined> {
 	return applyQuery(
 		async (db) => await db.get(
-			`SELECT * FROM ${TABLE_NAME} WHERE gameId = ? AND ruleId = ?`,
+			`SELECT *
+			FROM ${TABLE_NAME}
+			WHERE gameId = ?
+			AND ruleId = ?`,
 			[gameId, ruleId]
 		), "get" + TABLE_NAME + "ById"
 	);

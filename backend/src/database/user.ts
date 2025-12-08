@@ -43,7 +43,9 @@ async function getAllUser(): Promise<User[] | undefined> {
 async function getUserByUsername(username: string): Promise<User | undefined> {
 	return applyQuery(
 		async (db) => await db.get(
-			`SELECT * FROM ${TABLE_NAME} WHERE username = ?`,
+			`SELECT *
+			FROM ${TABLE_NAME}
+			WHERE username = ?`,
 			[username]
 		), "get" + TABLE_NAME + "ByUsername"
 	);
@@ -56,7 +58,9 @@ async function doesUserExist(name: string) : Promise<boolean> {
 async function getUserPassword(username: string): Promise<string> {
 	const row = await applyQuery(
 		async (db) => await db.get(
-			`SELECT hashedPassword FROM ${TABLE_NAME} WHERE username = ?;`,
+			`SELECT hashedPasswor
+			FROM ${TABLE_NAME}
+			WHERE username = ?;`,
 			[username]
 		), "get" + TABLE_NAME + "Password"
 	);
@@ -77,7 +81,8 @@ async function changeUserPicture(username: string, avatar:string): Promise<void>
 async function getUserPicture(username: string): Promise<string | undefined> {
 	const row = await applyQuery(
 		async (db) => await db.get(
-			`SELECT avatar FROM ${TABLE_NAME}
+			`SELECT avatar
+			FROM ${TABLE_NAME}
 			WHERE username = ?;`,
 			[username]
 		), "get" + TABLE_NAME + "Picture"

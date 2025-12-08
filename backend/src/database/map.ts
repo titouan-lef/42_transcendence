@@ -33,7 +33,9 @@ async function getAllMap(): Promise<Map[] | undefined> {
 async function getMapById(id: number): Promise<Map | undefined> {
 	return applyQuery(
 		async (db) => await db.get(
-			`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
+			`SELECT *
+			FROM ${TABLE_NAME}
+			WHERE id = ?`,
 			[id]
 		), "getMapById"
 	);
