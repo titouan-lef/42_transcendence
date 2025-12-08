@@ -33,7 +33,7 @@ abstract class BallTemplate {
 	private particleCooldown = 0;
 	private buffSpeedTimer = 0;
 	protected effectInterval = 0;
-	private maxSpeed;
+	protected maxSpeed;
 	private minSpeed;
 	private increaseMaxMinSpeedTimer = 0;
 
