@@ -38,7 +38,10 @@ async function getAllElos(): Promise<Elo[] | undefined> {
 async function getElo(username: string, gameId: number): Promise<Elo | undefined> {
 	return applyQuery(
 		async (db) => await db.get(
-			`SELECT * FROM ${TABLE_NAME} WHERE username = ? AND gameId = ?`,
+			`SELECT *
+			FROM ${TABLE_NAME}
+			WHERE username = ?
+			AND gameId = ?`,
 			[username, gameId]
 		), "get" + TABLE_NAME
 	);

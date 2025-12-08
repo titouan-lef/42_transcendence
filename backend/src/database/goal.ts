@@ -37,7 +37,9 @@ async function getAllGoals(): Promise<Goal[] | undefined> {
 async function getGoalById(id: number): Promise<Goal | undefined> {
 	return applyQuery(
 		async (db) => await db.get(
-			`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,
+			`SELECT *
+			FROM ${TABLE_NAME}
+			WHERE id = ?`,
 			[id]
 		), "get" + TABLE_NAME + "ById"
 	);
