@@ -86,7 +86,7 @@ async function updateAvatar(): Promise<void> {
 	
 	const avatar = getSafeElement("avatar-img", HTMLImageElement);
 	if (reply.status === 200) {
-		const path = getMessage(reply);
+		const path = await getMessage(reply);
 		avatar.src = `/pictures/${path}?t=${Date.now()}`;
 	} else
 		avatar.src = "./images/avatar.png";
