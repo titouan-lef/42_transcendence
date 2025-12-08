@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
-import { DataMessage, GameStats, OptionMessage, Status, StopMessage } from "./types_transfert.js";
+import { DataMessage, OptionMessage, Status, StopMessage } from "./types_transfert.js";
 import { GameStatistics } from "./screen/GameStatistics.js";
 
 class Game {
@@ -30,7 +30,6 @@ class Game {
 			const message : DataMessage = JSON.parse(event.data);
 			switch (message.status) {
 				case (Status.STOP):
-					//this.close();
 					this.showStats(message);
 					break;
 				case (Status.RENDER):

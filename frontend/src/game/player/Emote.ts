@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { COLORS3, EMOTE_GROWSPEED, EMOTE_LIFETIME, EMOTE_MAXGROW, MAP_SIZE, PLAYER_DIMENSION } from "../settings/values.js";
+import { EMOTE_GROWSPEED, EMOTE_LIFETIME, EMOTE_MAXGROW, PLAYER_DIMENSION } from "../settings/values.js";
 
 export class Emote {
 	private readonly image: babylon.Mesh;

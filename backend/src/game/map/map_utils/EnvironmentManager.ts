@@ -3,7 +3,7 @@ import { Lightning } from "./Lightning.js";
 import { Meteor } from "./Meteor.js";
 import { Tornado } from "./Tornado.js";
 import { PlanePosition } from "../../web_sockets/types_transfert.js";
-import { BALL_DIAMETER, CANON_BALL_INTERVAL, CANON_MAX_COUNT, LIGHTNING_INTERVAL, MAP_SIZE, METEOR_INTERVAL, TORNADO_INTERVAL, WALL_WIDTH } from "../../settings/values.js";
+import { CANON_BALL_INTERVAL, CANON_MAX_COUNT, LIGHTNING_INTERVAL, METEOR_INTERVAL, TORNADO_INTERVAL } from "../../settings/values.js";
 import { planePosToVec3 } from "../../utils.js";
 import { Object } from "../../web_sockets/types_transfert.js";
 import { GameSettings } from "../../settings/GameSettings.js";

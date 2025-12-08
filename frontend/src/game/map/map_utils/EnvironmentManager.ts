@@ -23,7 +23,7 @@ class EnvironmentManager {
 		if (object.type === Object.TORNADO)
 			this.handleTornado(scene, textures, object);
 		if (object.type === Object.CANON_BALL)
-			this.handleCanonBall(scene, textures, object);
+			this.handleCanonBall(scene, object);
 	}
 
 	handleObjectSpawner(scene: babylon.Scene, object: ObjectSpawnerMessage): void {
@@ -73,9 +73,9 @@ class EnvironmentManager {
 		}
 	}
 
-	private handleCanonBall(scene: babylon.Scene, textures: Record<string, babylon.Texture>, canonBall: ObjectMessage): void {
+	private handleCanonBall(scene: babylon.Scene, canonBall: ObjectMessage): void {
 		if (canonBall.id >= this.objects?.length) {
-			const newBall = new Ball(scene, "default", textures, COLORS3.grey);
+			const newBall = new Ball(scene, "default", COLORS3.grey);
 			newBall.setPosition(canonBall.position);
 			this.objects?.push(newBall);
 		} else {

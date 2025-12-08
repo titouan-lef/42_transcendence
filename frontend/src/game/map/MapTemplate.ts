@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, CAMERA_POS_X, SCORE_POS_Y } from "../settings/values.js";
-import { ObjectMessage, PlanePosition } from "../types_transfert.js";
+import { PlanePosition } from "../types_transfert.js";
 
 abstract class MapTemplate {
 	protected glow: babylon.GlowLayer;
@@ -34,7 +34,7 @@ abstract class MapTemplate {
 		return border;
 	}
 
-	private createGoal(scene: babylon.Scene, playerId: 1 | 2, position: PlanePosition): babylon.Mesh {
+	private createGoal(scene: babylon.Scene, position: PlanePosition): babylon.Mesh {
 		const size = new babylon.Vector3(WALL_WIDTH, WALL_HEIGHT, MAP_SIZE.z - WALL_WIDTH * 2);
 		const border = this.createLimit(scene, size);
 		border.position = new babylon.Vector3(position.x, WALL_HEIGHT/2, position.z);
@@ -47,8 +47,8 @@ abstract class MapTemplate {
 
 		limits.push(this.createCollider(scene, { x: 0, z: WALL_WIDTH/2 - MAP_SIZE.z/2 }));
 		limits.push(this.createCollider(scene, { x: 0, z: MAP_SIZE.z/2 - WALL_WIDTH/2 }));
-		limits.push(this.createGoal(scene, 1, { x: WALL_WIDTH/2 - MAP_SIZE.x/2, z: 0 }));
-		limits.push(this.createGoal(scene, 2, { x: MAP_SIZE.x/2 - WALL_WIDTH/2, z: 0 }));
+		limits.push(this.createGoal(scene, { x: WALL_WIDTH/2 - MAP_SIZE.x/2, z: 0 }));
+		limits.push(this.createGoal(scene, { x: MAP_SIZE.x/2 - WALL_WIDTH/2, z: 0 }));
 		return limits;
 	}
 
@@ -89,8 +89,6 @@ abstract class MapTemplate {
 	abstract createLight(scene: babylon.Scene): babylon.DirectionalLight;
 
 	abstract createSun(scene: babylon.Scene): babylon.Mesh;
-
-	handleObject(scene: babylon.Scene, texture: Record<string, babylon.Texture>, object: ObjectMessage): void {} /** @todo abstract */
 
 	abstract createLimit(scene: babylon.Scene, dimension: babylon.Vector3): babylon.Mesh;
 

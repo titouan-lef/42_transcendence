@@ -295,7 +295,6 @@ abstract class BallTemplate {
 		this.justCollided = true;
 	}
 
-	/** @todo check if better solution that the null everywere */
 	getGoal(): "player1" | "player2" | null {
 		return this.isInGoal;
 	}

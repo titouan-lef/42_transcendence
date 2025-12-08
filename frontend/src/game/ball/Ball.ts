@@ -3,7 +3,6 @@ import { BallOption } from "../settings/GameSettings.js";
 import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_TRAIL_ON } from "../settings/values.js";
 import { BallTrail } from "./BallTrail.js";
 import { Position } from "../types_transfert.js";
-//import { ParticlesType } from "../types_transfert.js";
 
 class Ball {
 	protected readonly color: babylon.Color3;
@@ -13,7 +12,7 @@ class Ball {
 	private sceneObserver: babylon.Observer<babylon.Scene> | null = null;
 	private trailTimer = 0;
 
-	constructor(scene: babylon.Scene, type: BallOption, textures: Record<string, babylon.Texture>, color: babylon.Color3) {
+	constructor(scene: babylon.Scene, type: BallOption, color: babylon.Color3) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.mesh.renderingGroupId = 1;
 		this.color = color;

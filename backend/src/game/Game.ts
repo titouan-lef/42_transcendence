@@ -79,9 +79,9 @@ class Game {
 		this.camera.dispose();
 		if (SHOW_DISPOSE_LOGS)
 			this.sceneManager.showDisposeLogs(this.scene);
-		//this.engine.stopRenderLoop();
 		this.scene.dispose();
 		this.engine.dispose();
+		/**@todo updateEloAfterGame()*/
 	}
 
 	private setScene(): void {
@@ -297,7 +297,6 @@ class Game {
 					this.score.x = POINTS_TO_WIN;
 				stopGame(this.id);
 				if (stayer instanceof Human) {
-					// celui qui reste
 					stayer.closeSocket();
 				}
 			});

@@ -10,7 +10,7 @@ import { Player } from "../player/Player.js";
 import { BallOption, GameSettings, MapOption } from "../settings/GameSettings.js";
 import { COLORS3, MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
-import { DataMessage, EventMessage, GoalMessage, EmoteMessage, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
+import { DataMessage, EventMessage, EmoteMessage, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
 import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
 import { ParticuleManager as ParticleManager } from "./ParticuleManager.js";
 
@@ -42,7 +42,7 @@ class SceneManager {
 					this.setCountDown(message.time);
 					break;
 				case (Status.GOAL):
-					this.setGoalCheck(message, settings);
+					this.destroyEnvironnement(new babylon.Vector2(message.player, message.enemy));
 					break;
 				case (Status.POSITIONS):
 					this.setPositionUpdater(message);
@@ -98,7 +98,7 @@ class SceneManager {
 				color = COLORS3.black;
 				break;
 		}
-		this.ball = new Ball(scene, ballType, this.textures, color);
+		this.ball = new Ball(scene, ballType, color);
 	}
 
 	private createMap(scene: babylon.Scene, map: MapOption, wind: PlanePosition): void {
@@ -130,7 +130,7 @@ class SceneManager {
 		this.players.push(player2);
 	}
 
-	private createTextures(scene: babylon.Scene): void { /** @todo check if one request per texture is best practice. Do we need all textures for all the maps ?? => no but we create textures ONE time per game*/
+	private createTextures(scene: babylon.Scene): void {
 		this.textures.spark = new babylon.Texture("textures/sparks.png", scene, true);
 		this.textures.flare = new babylon.Texture("textures/flare.png", scene, true);
 		this.textures.stars = new babylon.Texture("textures/particle.png", scene, true);
@@ -147,16 +147,11 @@ class SceneManager {
 	}
 
 	private handleParticules(message: EventMessage): void {
-		/** @todo bigger collisison particules if the impact if stronger ? */
 		this.particleManager.showParticles(message.position, this.scene, message);
 	}
 
 	private setCountDown(time: number): void {
 		this.countDown = this.countDown?.udpateCountDown(time) || null;
-	}
-
-	private setGoalCheck(message: GoalMessage, settings: GameSettings): void {
-		this.destroyEnvironnement(new babylon.Vector2(message.player, message.enemy));
 	}
 
 	private setPositionUpdater(message : PositionsMessage): void {
