@@ -98,7 +98,7 @@ async function updateUser(username: string, updates: Partial<Omit<User, "usernam
 			return;
 		const values = Object.values(updates);
 		await db.run(`UPDATE ${TABLE_NAME} SET ${fields} WHERE username = ?`,[...values, username,]);
-	}, "updateUser");
+	}, "update" + TABLE_NAME);
 }
 
 export { User, createUserTable, getUserPassword, doesUserExist, insertUser, updateUser, changeUserPicture, getUserPicture };
