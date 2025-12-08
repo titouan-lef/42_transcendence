@@ -4,8 +4,7 @@ pragma solidity 0.8.30;
 contract EloStorage {
 	address public owner;
 	
-	constructor()
-	{
+	constructor() {
 		owner = msg.sender;
 	}
 
@@ -32,8 +31,7 @@ contract EloStorage {
 		return uint256(keccak256(abi.encodePacked(username)));
 	}
 
-	function setEloData(string memory username, uint256 season, uint256 rating, uint256 ratingRd) public onlyOwner
-	{
+	function setEloData(string memory username, uint256 season, uint256 rating, uint256 ratingRd) public onlyOwner {
 		uint256 IdPlayer = usernameToId(username);
 
 		(playerEloBySeason[IdPlayer][season]).r = rating;
@@ -42,8 +40,7 @@ contract EloStorage {
 		emit EloUpdated(IdPlayer, season, rating, ratingRd);
 	}
 
-	function setRatingRd(string memory username, uint256 season, uint256 ratingRd) public onlyOwner
-	{
+	function setRatingRd(string memory username, uint256 season, uint256 ratingRd) public onlyOwner {
 		uint256 IdPlayer = usernameToId(username);
 		uint256 currentRating = playerEloBySeason[IdPlayer][season].r;
 
@@ -52,8 +49,7 @@ contract EloStorage {
 		emit EloUpdated(IdPlayer, season, currentRating, ratingRd);
 	}
 
-	function setRating(string memory username, uint256 season, uint256 rating) public onlyOwner
-	{
+	function setRating(string memory username, uint256 season, uint256 rating) public onlyOwner {
 		uint256 IdPlayer = usernameToId(username);
 		uint256 currentRatingRd = playerEloBySeason[IdPlayer][season].rd;
 
@@ -62,8 +58,7 @@ contract EloStorage {
 		emit EloUpdated(IdPlayer, season, rating, currentRatingRd);
 	}
 
-	function getEloData(string memory username, uint256 season) public view returns (uint256 rating, uint256 ratingRd)
-	{
+	function getEloData(string memory username, uint256 season) public view returns (uint256 rating, uint256 ratingRd) {
 		uint256 IdPlayer = usernameToId(username);
 		return ((playerEloBySeason[IdPlayer][season]).r, (playerEloBySeason[IdPlayer][season]).rd);
 	}
