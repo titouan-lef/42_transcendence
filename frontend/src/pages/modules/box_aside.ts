@@ -1,5 +1,5 @@
 import { createButtonHtml } from "../../components/button";
-import { sendGetRequestToBack, sendPostRequestToBack, ServerRes } from "../../services/api_request";
+import { getMessage, sendGetRequestToBack, sendPostRequestToBack, ServerRes } from "../../services/api_request";
 import { disconnectUser } from "../../services/user_management/login";
 import { applyColor } from "../../utils/applyColor";
 import { getSafeElement } from "../../utils/getSafeElement";
@@ -79,13 +79,15 @@ const ASIDE_BOX = `
 async function updateAvatar(): Promise<void> {
 
 	const whoami = await sendGetRequestToBack("/api/user/whoami");
-	const result1: ServerRes = await whoami.json();
-	const reply = await sendPostRequestToBack("/api/user/picture", JSON.stringify({ user: result1.message }));
+	if (whoami.status !== 200)
+		return;
+	const user = await getMessage(whoami);
+	const reply = await sendPostRequestToBack("/api/user/picture", JSON.stringify({ user: user }));
 	
 	const avatar = getSafeElement("avatar-img", HTMLImageElement);
 	if (reply.status === 200) {
-		const result2: ServerRes = await reply.json();
-		avatar.src = `/pictures/${result2.message}?t=${Date.now()}`;
+		const path = getMessage(reply);
+		avatar.src = `/pictures/${path}?t=${Date.now()}`;
 	} else
 		avatar.src = "./images/avatar.png";
 }

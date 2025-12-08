@@ -58,6 +58,16 @@ async function sendGetRequestToBack(endpoint: string) : Promise<Response> {
 	return await fetch(`${API_URL}/${endpoint}`, createGetRequest());
 }
 
+async function getMessage(reply: Response): Promise<string> {
+	try {
+		const message: ServerRes = await reply.json();
+		return message.message;
+	} catch (err) {
+		console.error("Invalid message received :", err);
+	}
+	return "";
+}
+
 async function openWebSocketConnection(endpoint?: string): Promise<WebSocket> {
 	if (endpoint)
 		return new WebSocket(`${WS_URL}/${endpoint}`);
@@ -150,4 +160,4 @@ async function newLocalGame(): Promise<void> {
 	};
 }
 
-export { ServerRes, sendPostRequestToBack, sendGetRequestToBack, sendFile, printReplyInDiv, newRankedGame, newLocalGame, newGameVsAI };
+export { ServerRes, getMessage, sendPostRequestToBack, sendGetRequestToBack, sendFile, printReplyInDiv, newRankedGame, newLocalGame, newGameVsAI };
