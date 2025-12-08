@@ -195,13 +195,19 @@ abstract class BallTemplate {
 		this.spinningLeft = false;
 		this.spinningRight = false;
 		if (this.checkSideHit(collisionEvent) === "spinEffect") {
-			const collisionPointZ = collisionEvent.point?.z;
-			if (collisionPointZ === undefined )
+			if (collisionEvent.point === null)
 				return;
-			if (collisionPointZ - collisionEvent.collidedAgainst.transformNode.position.z <= 0) // colliding right or left of the player
-				metadata.playerId === 1 ? this.spinningLeft = true : this.spinningRight = true;
-			else
+			const mesh = collisionEvent.collidedAgainst.transformNode;
+			const localPoint = babylon.Vector3.TransformCoordinates(
+				collisionEvent.point,
+				babylon.Matrix.Invert(mesh.getWorldMatrix())
+			);
+
+			if (localPoint.z <= 0) {
 				metadata.playerId === 1 ? this.spinningRight = true : this.spinningLeft = true;
+			} else {
+				metadata.playerId === 1 ? this.spinningLeft = true : this.spinningRight = true;
+			}
 		}
 	}
 
