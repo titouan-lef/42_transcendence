@@ -18,7 +18,7 @@ class PulseBall extends BallTemplate {
 
 		const velocity = this.physic.body.getLinearVelocity();
 		let randomImpulse: number;
-		if (velocity.length() < MAX_SPEED * 0.85)
+		if (velocity.length() < this.maxSpeed * 0.85)
 			randomImpulse = Math.random() / 2 + 0.5; // 0.5 -- 1
 		else
 			randomImpulse = -Math.random() / 2; // 0 -- -0.5
