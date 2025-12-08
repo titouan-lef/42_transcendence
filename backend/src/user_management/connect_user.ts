@@ -60,12 +60,12 @@ interface UserBody {
 async function getPicture(req: FastifyRequest<{ "Body": UserBody }>, reply: FastifyReply): Promise<void> {
 	const user = req.body?.user;
 	if(!user) {
-		sendReply(reply, 400, true, "No user given");
+		sendReply(reply, 400, false, "No user given");
 		return;
 	}
 	const filename = await getUserPicture(user);
 	if (!filename) {
-		sendReply(reply, 204, true, "./images/avatar.png");
+		sendReply(reply, 204, false, "./images/avatar.png");
 		return;
 	}
 	sendReply(reply, 200, true, filename);
