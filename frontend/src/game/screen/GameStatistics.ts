@@ -1,6 +1,6 @@
 import { stopGame } from "../canvas_creation";
 import { BallOption, MapOption } from "../settings/GameSettings";
-import { GameStats, Point } from "../types_transfert";
+import { GameStats } from "../types_transfert";
 
 export class GameStatistics {
 	private readonly stats: HTMLDivElement;

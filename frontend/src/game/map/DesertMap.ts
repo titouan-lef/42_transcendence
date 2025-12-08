@@ -1,13 +1,11 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { Tornado } from "./map_utils/Tornado.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, W_PARTICLE_NUMBER, W_GLOW_INTENSITY, COLORS4 } from "../settings/values.js";
-import { ObjectMessage, PlanePosition } from "../types_transfert.js";
+import { PlanePosition } from "../types_transfert.js";
 import { planePosToVec3 } from "../utils.js";
 
 class DesertMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
-	private readonly tornados: Tornado[] = [];
 
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>, wind: PlanePosition) {
 		super(scene, "desert", wind);
@@ -89,10 +87,6 @@ class DesertMap extends MapTemplate {
 	}
 
 	destroyRest(): void {
-		while (this.tornados.length) {
-			this.tornados[0].destroy();
-			this.tornados.splice(0, 1);
-		}
 		this.particles?.stop();
 		if (this.particles && this.particles.particleTexture)
 			this.particles.particleTexture = null;

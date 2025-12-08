@@ -91,7 +91,6 @@ export class ParticuleManager {
 		}
 		this.particles.push(particle);
 		particle.start();
-		/**@todo if PAUSE, DO NOT DISPOSE*/
 		setTimeout( () => {
 			particle?.stop();
 			const index = this.particles?.indexOf(particle);

@@ -21,8 +21,6 @@ class CanonBall extends BallTemplate {
 		this.gameStopped = false;
 	}
 
-	activateEffect(): void {}
-
 	private canonObserveScene(): babylon.Observer<babylon.Scene> {
 		const canonBallSceneObserver = this.sceneObservable.add(() => {
 			if (this.checkOutOfFieldBall(this.mesh.position) || this.isInGoal) {
@@ -75,6 +73,8 @@ class CanonBall extends BallTemplate {
 		this.sendObjectInfos();
 		super.destroy();
 	}
+
+	activateEffect(): void {}
 }
 
 export { CanonBall };

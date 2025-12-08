@@ -14,7 +14,7 @@ import { Player } from "../player/Player.js";
 import { GameSettings, MapOption, BallOption } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
-import { PlanePosition, Position, RenderMessage, Status, TimingMessage, EmoteMessage, EmoteChoice, Point } from "../web_sockets/types_transfert.js";
+import { PlanePosition, Position, RenderMessage, Status, TimingMessage, EmoteMessage, EmoteChoice } from "../web_sockets/types_transfert.js";
 import { Human } from "../player/Human.js";
 import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
 import { AI } from "../player/AI.js";
@@ -205,7 +205,6 @@ class SceneManager {
 		this.players.push(player2);
 	}
 
-	/** @todo check if better solution that the null everywere */
 	checkGoal(): "player1" | "player2" | null {
 		const goalInfos = this.ball?.getGoal();
 		if (goalInfos)
@@ -251,8 +250,6 @@ class SceneManager {
 	}
 
 	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
-		// if (this.doesGameEnded()) /**@todo ok ?  */
-		// 	return;
 		const player1 = this.getPlayer(1);
 		const player2 = this.getPlayer(2);
 		if (!player1 || !player2)

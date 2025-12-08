@@ -1,11 +1,9 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { Meteor } from "./map_utils/Meteor.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, V_PARTICLE_NUMBER, V_GLOW_INTENSITY } from "../settings/values.js";
-import { ObjectMessage, PlanePosition } from "../types_transfert.js";
+import { PlanePosition } from "../types_transfert.js";
 
 class VolcanoMap extends MapTemplate {
-	private readonly meteors: Meteor[] = [];
 	private readonly particles: babylon.ParticleSystem;
 
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>, wind: PlanePosition) {
@@ -89,10 +87,6 @@ class VolcanoMap extends MapTemplate {
 	}
 
 	destroyRest(): void {
-		while (this.meteors.length) {
-			this.meteors[0].destroy();
-			this.meteors.splice(0, 1);
-		}
 		this.particles?.stop();
 		if (this.particles && this.particles.particleTexture)
 			this.particles.particleTexture = null;

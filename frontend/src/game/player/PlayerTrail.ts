@@ -17,7 +17,7 @@ class PlayerTrail {
 		this.mesh.renderingGroupId = 1;
 		this.mesh.visibility = 0.20;
 		this.sceneObservable = scene.onBeforeRenderObservable;
-		this.sceneObserver = this.observeScene(scene);
+		this.sceneObserver = this.observeScene();
 	}
 
 	private setMaterial(scene: babylon.Scene): void {
@@ -27,7 +27,7 @@ class PlayerTrail {
 	}
 
 
-	private observeScene(scene: babylon.Scene): babylon.Observer<babylon.Scene> {
+	private observeScene(): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
 			this.mesh.visibility -= 0.04;
 			if (this.mesh.visibility <= 0) {

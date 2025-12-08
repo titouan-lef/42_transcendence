@@ -1,13 +1,11 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
-import { Lightning } from "./map_utils/Lightning.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, R_PARTICLE_NUMBER, R_GLOW_INTENSITY } from "../settings/values.js";
-import { ObjectMessage, PlanePosition } from "../types_transfert.js";
+import { PlanePosition } from "../types_transfert.js";
 import { planePosToVec3 } from "../utils.js";
 
 class SkyMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;
-	private readonly lightnings: Lightning[] = [];
 
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>, wind: PlanePosition) {
 		super(scene, "sky", wind);
@@ -89,10 +87,6 @@ class SkyMap extends MapTemplate {
 	}
 
 	destroyRest(): void {
-		while (this.lightnings.length) {
-			this.lightnings[0].destroy();
-			this.lightnings.splice(0, 1);
-		}
 		this.particles?.stop();
 		if (this.particles && this.particles.particleTexture)
 			this.particles.particleTexture = null;
