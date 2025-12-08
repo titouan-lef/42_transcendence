@@ -12,7 +12,6 @@ import { createGameTable } from "./game.js";
 import { createEloTable } from "./elo.js";
 import { createGoalTable } from "./goal.js";
 import { createGameRuleTable } from "./game_rule.js";
-import { CONTRACT } from "./web3/contract_service.js";
 
 const DB_FILE = "Database.db";
 const DB_PATH_FILE = "./" + DB_FILE;
