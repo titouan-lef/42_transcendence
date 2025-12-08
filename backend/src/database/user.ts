@@ -58,7 +58,7 @@ async function doesUserExist(name: string) : Promise<boolean> {
 async function getUserPassword(username: string): Promise<string> {
 	const row = await applyQuery(
 		async (db) => await db.get(
-			`SELECT hashedPasswor
+			`SELECT hashedPassword
 			FROM ${TABLE_NAME}
 			WHERE username = ?;`,
 			[username]

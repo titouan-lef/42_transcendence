@@ -17,10 +17,11 @@ function loadSettings(): void {
 
 	const avatar = getSafeElement('profile-content', HTMLElement);
 	avatar.addEventListener('change', (event) => {
-	// eslint-disable-next-line
-		const file = (event.target as HTMLInputElement).files?.[0];
-		if (file)
-			uploadProfilePicture(file);
+		if (event.target instanceof HTMLInputElement) {
+			const file = event.target.files?.[0];
+			if (file)
+				uploadProfilePicture(file);
+		}
 	});
 
 	/** @todo events */
