@@ -1,5 +1,5 @@
 import { createButtonHtml } from "../../components/button";
-import { sendGetRequestToBack, sendPostRequestToBack, ServerRes } from "../../services/api_request";
+import { getMessage, sendGetRequestToBack, sendPostRequestToBack, ServerRes } from "../../services/api_request";
 import { applyColor } from "../../utils/applyColor";
 import { getSafeElement } from "../../utils/getSafeElement";
 
@@ -47,10 +47,14 @@ async function getFriendList(): Promise<void> {
 
 	FRIENDLIST.length = 0;
 	const whoami = await sendGetRequestToBack("/api/user/whoami");
-	const result1: ServerRes = await whoami.json();
-	const reply = await sendPostRequestToBack("/api/friends/list", JSON.stringify({ user: result1.message }));
-	const result2: ServerRes = await reply.json();
-	const data: string[] = JSON.parse(result2.message);
+	if (whoami.status !== 200)
+		return;
+	const user = await getMessage(whoami);
+	const reply = await sendPostRequestToBack("/api/friends/list", JSON.stringify({ user: user }));
+	if (reply.status !== 200)
+		return;
+	const list = await getMessage(reply);
+	const data: string[] = JSON.parse(list);
 	data.forEach(element => {
 		FRIENDLIST.push(element);
 	});
