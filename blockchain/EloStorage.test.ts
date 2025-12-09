@@ -19,10 +19,10 @@ describe("EloStorage", function () {
 			expect(ratingRd).to.equal(200);
 		}
 
-	await elo.setRating("ael-atmi", season, 1300);
-	const [ratingA, ratingRdA] = await elo.getEloData("ael-atmi", season);
-	expect(ratingA).to.equal(1300);
-	expect(ratingRdA).to.equal(200);
+		await elo.setRating("ael-atmi", season, 1300);
+		const [ratingA, ratingRdA] = await elo.getEloData("ael-atmi", season);
+		expect(ratingA).to.equal(1300);
+		expect(ratingRdA).to.equal(200);
 
 		await elo.setRatingRd("tilegran", season, 250);
 		const [ratingT, ratingRdT] = await elo.getEloData("tilegran", season);
