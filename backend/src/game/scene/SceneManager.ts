@@ -42,7 +42,7 @@ class SceneManager {
 	private observeScene(scene: babylon.Scene, settings: GameSettings): babylon.Observer<babylon.Scene> {
 		const sceneObserver = this.sceneObservable.add(() => {
 			if (this.checkOutOfFieldBall(this.ball?.getPosition())) {
-				this.gameStopped = true; //ICI
+				this.gameStopped = true;
 				this.ball?.stop();
 				this.ball?.reset();
 				this.map?.stop();
