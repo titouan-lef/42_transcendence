@@ -12,6 +12,8 @@ import { CanonBall } from "./CanonBall.js";
 import { Canon } from "./Canon.js";
 
 type Spawners = EnvironmentManager["lightningSpawner"] | EnvironmentManager["meteorSpawner"] | EnvironmentManager["tornadoSpawner"] | EnvironmentManager["canonBallSpawner"];
+type ObjectType = Lightning | Meteor | Tornado | CanonBall;
+type ObjectSpawnerType = Canon;
 
 interface ObjectParameters {
 	object: Object,
@@ -187,6 +189,4 @@ class EnvironmentManager {
 	}
 }
 
-export { EnvironmentManager };
-export type ObjectType = Lightning | Meteor | Tornado | CanonBall;
-export type ObjectSpawnerType = Canon;
+export { EnvironmentManager, ObjectType, ObjectSpawnerType };

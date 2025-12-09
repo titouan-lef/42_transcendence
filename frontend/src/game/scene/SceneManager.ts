@@ -142,7 +142,6 @@ class SceneManager {
 		this.textures.emoteLol = new babylon.Texture("textures/emotes/lol.png", scene, true);
 		this.textures.emoteAngry = new babylon.Texture("textures/emotes/angry.png", scene, true);
 		this.textures.stun = new babylon.Texture("textures/stun.png", scene, true);
-		this.textures.windDirection = new babylon.Texture("textures/windDirection.png", scene, true);
 		this.texturesCreated = true;
 	}
 

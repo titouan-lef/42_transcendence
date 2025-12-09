@@ -12,7 +12,6 @@ class Human extends Player {
 
 		this.socket = settings.socket;
 
-
 		this.socket.on("message", (message: Buffer) => {
 			let controls: PlayerControls;
 			try {

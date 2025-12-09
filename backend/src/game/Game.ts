@@ -60,6 +60,7 @@ class Game {
 	};
 
 	start(): void {
+		this.startRender();
 		this.startGameCommunication();
 	}
 
@@ -142,7 +143,7 @@ class Game {
 		let ballPosition;
 		let ballVisibility;
 		if (!ball) {
-			ballPosition = { x: 0, y:0, z: 0 };
+			ballPosition = { x: 0, y: 0, z: 0 };
 			ballVisibility = 0;
 		} else{
 			ballPosition = ball.getPosition();
@@ -155,10 +156,10 @@ class Game {
 			ballVisibility: ballVisibility,
 			player: player.getPosition(),
 			playerRotation: player.getRotation(),
-			playerStunned: player.getState(),
+			playerStunned: player.isStunned(),
 			enemy: enemy.getPosition(),
 			enemyRotation: enemy.getRotation(),
-			enemyStunned: enemy.getState(),
+			enemyStunned: enemy.isStunned(),
 		};
 		return positions;
 	}
@@ -304,7 +305,6 @@ class Game {
 	}
 
 	startGameCommunication(): void {
-		this.startRender();
 		const player1 = this.sceneManager.getPlayer(1);
 		const player2 = this.sceneManager.getPlayer(2);
 		if (!player1 || !player2)

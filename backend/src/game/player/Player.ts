@@ -135,7 +135,7 @@ abstract class Player {
 		return { x: q.x, y: q.y, z: q.z, w: q.w };
 	}
 
-	getState(): boolean {
+	isStunned(): boolean {
 		return this.player.metadata.stunDuration > 0;
 	}
 
