@@ -20,6 +20,7 @@ function initTheme(): void {
 }
 
 function setTheme(theme: Themes): void {
+	/** @todo send to database if an user is connected ? */
 	document.body.dataset.theme = theme;
 }
 

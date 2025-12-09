@@ -173,6 +173,38 @@ const TRANSLATOR = {
 		en: "{season} three",
 		fr: "{season} trois"
 	},
+	delete_account: {
+		en: "delete account",
+		fr: "supprimer compte"
+	},
+	save: {
+		en: "save",
+		fr: "enregistrer"
+	},
+	edit: {
+		en: "edit",
+		fr: "modifier"
+	},
+	tfa: {
+		en: "two-factor authentification",
+		fr: "double authentification"
+	},
+	tfa_mail: {
+		en: "{tfa} mail",
+		fr: "{tfa} e-mail"
+	},
+	new_password: {
+		en: "new password",
+		fr: "nouveau mot de passe"
+	},
+	user_informations: {
+		en: "user informations",
+		fr: "informations"
+	},
+	change_avatar: {
+		en: "change avatar",
+		fr: "modifier avatar"
+	},
 } as const satisfies Record<string, Expression>;
 
 export { CodeLang, TRANSLATOR };
