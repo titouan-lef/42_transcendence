@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { EMOTE_GROWSPEED, EMOTE_LIFETIME, EMOTE_MAXGROW, PLAYER_DIMENSION } from "../settings/values.js";
 
-export class Emote {
+class Emote {
 	private readonly image: babylon.Mesh;
 	private timer = 0;
 	private sceneObservable: babylon.Observable<babylon.Scene>;
@@ -49,3 +49,5 @@ export class Emote {
 		this.image.dispose();
 	}
 }
+
+export { Emote };

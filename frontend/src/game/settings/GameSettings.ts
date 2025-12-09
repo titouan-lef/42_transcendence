@@ -61,3 +61,4 @@ class GameSettings {
 }
 
 export { BallOption, PlayerKeys, PlayerSettings, GameSettings, MapOption };
+

@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { EventMessage, Position } from "../types_transfert";
 import { BALL_DIAMETER } from "../settings/values";
 
-export class ParticuleManager {
+class ParticuleManager {
 	private readonly textures: Record<string, babylon.Texture>;
 	private readonly particles: babylon.ParticleSystem[] = [];
 
@@ -110,3 +110,5 @@ export class ParticuleManager {
 			this.particles.splice(0, 1);
 	}
 }
+
+export { ParticuleManager };
