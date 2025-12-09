@@ -31,7 +31,7 @@ flex flex-col justify-start items-start
 /** @todo better select/option with divs ? menu is not personnalisable at this time */
 const DASHBOARD = `
 <div class="px-4 flex flex-col h-full w-full">
-	<div class="pb-4">
+	<div class='pb-2'>
 		<div class="relative w-[200px]">
 			<div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-secondary">
 				<svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -51,7 +51,7 @@ const DASHBOARD = `
 			</select>
 		</div>
 	</div>
-	<div class="flex flex-col h-full w-full pb-10 gap-4 scrollbar-none
+	<div class="flex flex-col h-full w-full pb-10 pt-4 gap-4 scrollbar-none
 	overflow-y-scroll overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_2%,black_90%,transparent)]">
 		<div class="grid grid-cols-3 grid-rows-1 gap-4 h-full w-full">
 			${createDashboardCard('wins', 0)}

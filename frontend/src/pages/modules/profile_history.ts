@@ -126,8 +126,8 @@ bg-white
 `;
 
 const HISTORY = `
-<div class="flex flex-col justify-start items-center gap-4 h-full w-full px-4 pt-4 pb-10 scrollbar-none
-overflow-y-scroll overflow-hidden [mask-image:linear-gradient(to_bottom,black_90%,transparent_100%)]">
+<div class="flex flex-col justify-start items-center gap-4 h-full w-full px-4 py-10 scrollbar-none
+overflow-y-scroll overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_5%,black_90%,transparent)]">
 	${generateHistory(HISTORYLIST.length)}
 </div>
 `;
