@@ -9,7 +9,7 @@ interface PlayerSettings {
 	readonly username: string;
 }
 
-interface GameOptions { /** @toto include GameOptions in GameSettings ? */
+interface GameOptions {
 	map: MapOption[];
 	ball: BallOption[];
 	rotatingPlayer: boolean;
