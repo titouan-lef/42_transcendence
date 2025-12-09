@@ -204,9 +204,9 @@ abstract class BallTemplate {
 			);
 
 			if (localPoint.z <= 0) {
-				metadata.playerId === 1 ? this.spinningRight = true : this.spinningLeft = true;
+				this.spinningRight = true;
 			} else {
-				metadata.playerId === 1 ? this.spinningLeft = true : this.spinningRight = true;
+				this.spinningLeft = true;
 			}
 		}
 	}
