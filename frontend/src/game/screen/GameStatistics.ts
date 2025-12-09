@@ -2,7 +2,7 @@ import { stopGame } from "../canvas_creation";
 import { BallOption, MapOption } from "../settings/GameSettings";
 import { GameStats } from "../types_transfert";
 
-export class GameStatistics {
+class GameStatistics {
 	private readonly stats: HTMLDivElement;
 	private readonly rules: HTMLDivElement;
 	private readonly background: HTMLDivElement;
@@ -185,3 +185,5 @@ export class GameStatistics {
 		return timeString;
 	}
 }
+
+export { GameStatistics };

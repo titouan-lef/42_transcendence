@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { PLAYER_DIMENSION, STUN_STAR_GROWSPEED, STUN_STAR_MAXGROW } from "../settings/values";
 
-export class StunAnimation {
+class StunAnimation {
 	private readonly images: babylon.Mesh[] = [];
 	private sceneObservable: babylon.Observable<babylon.Scene>;
 	private sceneObserver: babylon.Observer<babylon.Scene>;
@@ -58,3 +58,5 @@ export class StunAnimation {
 		});
 	}
 }
+
+export { StunAnimation };

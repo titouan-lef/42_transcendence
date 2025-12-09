@@ -43,3 +43,4 @@ class GameSettings {
 }
 
 export { MapOption, BallOption, PlayerSettings, GameSettings, GameOptions };
+

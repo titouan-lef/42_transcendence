@@ -20,10 +20,6 @@ interface ObjectParameters {
 	spawner?: ObjectSpawnerType
 }
 
-export type ObjectType = Lightning | Meteor | Tornado | CanonBall;
-
-export type ObjectSpawnerType = Canon;
-
 class EnvironmentManager {
 	private objectsParameters: ObjectParameters[] = [];
 	private readonly objects: ObjectType[] = [];
@@ -192,3 +188,5 @@ class EnvironmentManager {
 }
 
 export { EnvironmentManager };
+export type ObjectType = Lightning | Meteor | Tornado | CanonBall;
+export type ObjectSpawnerType = Canon;
