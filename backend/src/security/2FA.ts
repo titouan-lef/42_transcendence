@@ -4,7 +4,7 @@ import { randomInt } from "../utils/math.js";
 import { sendReply } from "../utils/HTTP.js";
 import { disabled2FA, enabled2FA, getUserEmail, is2FAEnabled, isEmailDefined } from "../database/user.js";
 import { addAuthCookies } from "./JWT.js";
-import { wait } from "./utils/time.js";
+import { wait } from "../utils/time.js";
 
 /** https://dev.to/veektor_v/send-emails-using-nodemailer-typescript-4763 */
 

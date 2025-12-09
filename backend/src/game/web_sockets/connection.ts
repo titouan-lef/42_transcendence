@@ -2,6 +2,11 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { WebSocket } from "ws";
 import { doesUserExist } from "../../database/user.js";
 import { identifyUser } from "../../security/JWT.js";
+import { askMatchmakingSystem, isUserWaiting } from "../../tournament/matchmaking.js";
+import { sendReply } from "../../utils/HTTP.js";
+import { wait } from "../../utils/time.js";
+import { GameOptions } from "../settings/GameSettings.js";
+import { GameType, getGameOptions, identifyGame, registerGameOptions } from "../game_manager.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -100,7 +105,7 @@ async function newGame(socket: WebSocket, req: FastifyRequest<{ Params: GamePara
 	if (gameData === undefined) {
 		socket.close(1003, "Not a valid game id");
 		return;
-	}
+	} 
 	if (gameData.type === GameType.RANKED) {
 		const user = await verifyAuthWS(socket, req);
 		if(!user || !gameData.players.includes(user)) {
