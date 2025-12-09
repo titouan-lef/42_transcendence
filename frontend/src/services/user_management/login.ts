@@ -39,6 +39,7 @@ async function connectUser(): Promise<void> {
 	modal.close();
 	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
 	/** @todo add load main */
+	/** @todo load user theme */
 	updateFriendList();
 }
 

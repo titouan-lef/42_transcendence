@@ -169,6 +169,7 @@ function loadDashboard(): void {
 	elem.innerHTML = DASHBOARD;
 	setActiveBtn('btn-dashboard');
 
+	/** @todo database fetch info for these functions calls */
 	createDashboardChart('elo_chart', LABEL_DATE, DATA_ELO);
 	createDashboardChart('win_rate_chart', LABEL_DATE, DATA_ELO);
 	createDashboardChart('diff_goals_chart', LABEL_DATE, DATA_ELO);
