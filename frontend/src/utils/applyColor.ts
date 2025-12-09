@@ -52,4 +52,4 @@ function loadThemeColors(): ThemeColors {
 	return themeColors;
 }
 
-export { ThemeColors, loadThemeColors, applyColor };
+export { loadThemeColors, applyColor };

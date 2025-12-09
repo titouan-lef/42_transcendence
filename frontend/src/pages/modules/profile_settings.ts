@@ -4,9 +4,9 @@ import { createInputHtml } from "../../components/input";
 import { updateUser } from "../../services/user_management/update_user";
 import { getSafeElement } from "../../utils/getSafeElement";
 import { updateAvatar } from "./box_aside";
-import { setActiveBtn } from "./profile";
 import { setTheme, Themes } from "../../assets/themes/theme.js";
 import { createParagraphHtml } from "../../components/paragraph";
+import { setActiveBtn } from "./profile_navbar";
 
 /** @todo get database informations */
 interface UserInfos {
@@ -25,8 +25,6 @@ const CURRENT_USER: UserInfos = {
 
 const BTN_SAVE = createButtonHtml(['save'], 'btn-save', { 'class': `bg-dark text-secondary p-1 rounded-2xl font-bold` });
 const BTN_EDIT = createButtonHtml(['edit'], 'btn-edit', { 'class': `bg-dark text-secondary p-1 rounded-2xl font-bold` });
-
-const SELECT_THEME = generateThemeButtons();
 
 /** @todo use print content to show fail (password error, forbidden nickname, mail not a mail ?) */
 const BOX_SAVE = `
@@ -47,39 +45,56 @@ const BOX_EDIT = `
 </div>
 `;
 
-/** @todo add key bind ? */
 /** @todo real front with selector to enable / disable 2FA */
 /** @todo ask for email only if 2FA is enable */
-const SETTINGS = `
-<div class="grid grid-rows-1 grid-cols-2 justify-start items-center gap-4 h-full w-full p-4">
-	<div class="grow w-full h-full
-	flex flex-col justify-between items-start">
-		<div>
-			<div class="p-8 flex flex-col">
-				${createParagraphHtml(['user_informations'], 'p-uinfo', { 'class': `text-[20px] font-bold` })}
-			</div>
-			<div id='btn-switch-edit-save' class='flex flex-col items-end'>
-					${BTN_EDIT}
-			</div>
-			<div id='switch-edit-save' class='h-[200px] w-full'>
-				${BOX_EDIT}
-			</div>
-			<div class="p-8 flex flex-col">
-				${createParagraphHtml(['change_avatar'], 'p-avatar', { 'class': `text-[20px] font-bold` })}
-			</div>
-			<div>
-				<input type="file" id="change-avatar" accept="image/*">
-				<p id='print-avatar-reply'></p>
-			</div>
-		</div>
+const SETTINGS_MAIN_STYLE = `
+grid grid-rows-1 grid-cols-2 justify-start items-center gap-4 h-full w-full p-4
+`;
 
-	</div>
-	<div class="grow w-full h-full
-	flex flex-col justify-between items-start gap-4">
+const SETTINGS_COL_STYLE = `
+grow w-full h-full flex flex-col justify-between items-start gap-4
+`;
+
+const SETTINGS_USER_INFOS = `
+<div class="p-8 flex flex-col">
+	${createParagraphHtml(['user_informations'], 'p-uinfo', { 'class': `text-[20px] font-bold` })}
+</div>
+<div id='btn-switch-edit-save' class='flex flex-col items-end'>
+		${BTN_EDIT}
+</div>
+<div id='switch-edit-save' class='h-[200px] w-full'>
+	${BOX_EDIT}
+</div>
+`;
+
+const SETTINGS_CHANGE_AVATAR = `
+<div class="p-8 flex flex-col">
+	${createParagraphHtml(['change_avatar'], 'p-avatar', { 'class': `text-[20px] font-bold` })}
+</div>
+<div>
+	<input type="file" id="change-avatar" accept="image/*">
+	<p id='print-avatar-reply'></p>
+</div>
+`;
+
+const SETTINGS_THEME_SELECTOR = `
+<div>
+	<div class="p-8 text-[20px] font-bold">themes selector</div>
+	<div>${generateThemeButtons()}</div>
+</div>
+`;
+
+/** @todo add key bind ? */
+const SETTINGS = `
+<div class="${SETTINGS_MAIN_STYLE}">
+	<div class="${SETTINGS_COL_STYLE}">
 		<div>
-			<div class="p-8 text-[20px] font-bold">themes selector</div>
-			<div>${SELECT_THEME}</div>
+			${SETTINGS_USER_INFOS}
+			${SETTINGS_CHANGE_AVATAR}
 		</div>
+	</div>
+	<div class="${SETTINGS_COL_STYLE}">
+		${SETTINGS_THEME_SELECTOR}
 		<div class="w-full flex flex-col items-end">
 			${createButtonHtml(['delete_account'], 'btn-delete-account', { 'class': `bg-dark text-warning p-1 rounded-2xl font-bold` })}
 		</div>
