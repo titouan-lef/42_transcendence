@@ -15,6 +15,7 @@ async function createGameRuleTable(): Promise<void> {
 			gameId INTEGER,
 			ruleId INTEGER,
 			isEnable INTEGER NOT NULL,
+			value INTEGER,
 			PRIMARY KEY (gameId, ruleId),
 			FOREIGN KEY (gameId) REFERENCES Game(id),
 			FOREIGN KEY (ruleId) REFERENCES Rule(id));`
@@ -22,11 +23,11 @@ async function createGameRuleTable(): Promise<void> {
 	);
 }
 
-async function inserrtGameRule(gameRule: GameRule): Promise<void> {
+async function insertGameRule(gameId: number, ruleId: number, isEnable: boolean, value?: number): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (gameId, ruleId, isActive) VALUES (? ,? , ?)`,
-			[gameRule.gameId, gameRule.ruleId, gameRule.isEnable]
+			`INSERT INTO ${TABLE_NAME} (gameId, ruleId, isEnable, value) VALUES (?, ?, ?, ?)`,
+			[gameId, ruleId, isEnable, value ?? null]
 		), "insert" + TABLE_NAME
 	);
 }
@@ -47,7 +48,7 @@ async function getGameRuleById(gameId: number, ruleId: number): Promise<GameRule
 	);
 }
 
-export { GameRule, createGameRuleTable };
+export { GameRule, createGameRuleTable, insertGameRule };
 /**
  * @todo see if we keep it
 async function updateGameRule(gameId: number, ruleId: number, updates: Partial<Omit<GameRule, "gameId" | "ruleId">>): Promise<void> {

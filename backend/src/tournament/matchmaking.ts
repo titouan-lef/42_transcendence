@@ -32,7 +32,7 @@ function getRandomOptions(): GameOptions {
 		spin: randomBoolean(),
 		windAffectsBall: randomBoolean(),
 		dashingPlayer: randomBoolean(),
-		canonCount: 1 /**@todo remplace with random */
+		canonCount: 0 /**@todo remplace with random */
 	};
 	return options;
 }

@@ -14,6 +14,8 @@ import { insertGame } from "../database/game.js";
 import { insertGoal } from "../database/goal.js";
 import { getBallId } from "../database/ball.js";
 import { getMapId } from "../database/map.js";
+import { insertGameRule } from "../database/game_rule.js";
+import { getRuleId } from "../database/rule.js";
 
 class Game {
 	private readonly id: number;
@@ -63,6 +65,22 @@ class Game {
 		const gameIdDb = await insertGame(currentSeason);
 		if (!gameIdDb)
 			throw new Error("Error while creating new game");
+		
+		const spinRuleId = await getRuleId("spin");
+		const rotateRuleId = await getRuleId("rotate");
+		const windRuleId = await getRuleId("wind");
+		const dashRuleId = await getRuleId("dash");
+		const canonCountRuleId = await getRuleId("canonCount");
+		if (!spinRuleId || !rotateRuleId || !windRuleId || !dashRuleId || !canonCountRuleId)
+			throw new Error("Error while creating rules");
+		await insertGameRule(gameIdDb, spinRuleId, settings.options.spin);
+		await insertGameRule(gameIdDb, rotateRuleId, settings.options.rotatingPlayer);
+		await insertGameRule(gameIdDb, windRuleId, settings.options.windAffectsBall);
+		await insertGameRule(gameIdDb, dashRuleId, settings.options.dashingPlayer);
+		await insertGameRule(gameIdDb, canonCountRuleId,
+			settings.options.canonCount > 0 ? true : false,
+			settings.options.canonCount > 0 ? settings.options.canonCount : undefined);
+
 		return new Game(id, settings, scene, engine, gameIdDb);
 	}
 
@@ -157,10 +175,10 @@ class Game {
 				return;
 			this.changeGameSpeed(1);
 			goalInfos === "player1" ? this.score.x += 1 : this.score.y += 1;
-			this.storePoint(goalInfos === "player1" ? 1 : 2, ball);
-			await this.sendScore();
+			await this.storePoint(goalInfos === "player1" ? 1 : 2, ball);
 			if (this.sceneManager.doesGameEnded()) // if closing game while animation
 				return;
+			this.sendScore();
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
 				stopGame(this.id);
 			} else {
@@ -204,7 +222,7 @@ class Game {
 		return positions;
 	}
 
-	private async sendPositions(player1: Player, player2: Player) : Promise<void> {
+	private sendPositions(player1: Player, player2: Player) : void {
 		const positionP1 = this.getPositions(player1, player2);
 		if (positionP1)
 			player1.send(positionP1);
@@ -213,7 +231,7 @@ class Game {
 			player2.send(positionP2);
 	}
 
-	private async sendStart(player1: Player, player2: Player) : Promise<void> {
+	private sendStart(player1: Player, player2: Player) : void {
 		const startP1: StartMessage = {
 			status: Status.START,
 			playerName: player1.getName(),
@@ -228,7 +246,7 @@ class Game {
 		player2.send(startP2);
 	}
 
-	private async sendStop(player1: Player, player2: Player) : Promise<void> {
+	private sendStop(player1: Player, player2: Player) : void {
 		const stop: StopMessage = {
 			status: Status.STOP,
 			gameStats: this.createStats()
@@ -266,7 +284,7 @@ class Game {
 		return gameStats;
 	}
 
-	private async sendOptions(player1: Player, player2: Player) : Promise<void> {
+	private sendOptions(player1: Player, player2: Player) : void {
 		const options: OptionMessage = {
 			status: Status.OPTIONS,
 			playerId: 1,
@@ -287,7 +305,7 @@ class Game {
 		player2.send(options);
 	}
 
-	private async sendScore() : Promise<void> {
+	private sendScore() : void {
 		const player1 = this.sceneManager.getPlayer(1);
 		const player2 = this.sceneManager.getPlayer(2);
 		if (!player1 || !player2)

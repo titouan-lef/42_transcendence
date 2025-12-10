@@ -59,8 +59,9 @@ async function initThemeTable(): Promise<void> {
 async function initRuleTable(): Promise<void> {
 	await createRuleTable();
 	await insertRule("spin");
-	await insertRule("rotation");
-	await insertRule("canon");
+	await insertRule("rotate");
+	await insertRule("canonCount");
+	await insertRule("dash");
 	await insertRule("wind");
 }
 

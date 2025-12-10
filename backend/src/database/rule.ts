@@ -41,7 +41,18 @@ async function getRuleById(id: number): Promise<Rule | undefined> {
 	);
 }
 
-export { Rule, createRuleTable, insertRule };
+async function getRuleId(name: string): Promise<number | undefined> {
+	const row = await applyQuery(
+		async (db) => await db.get(
+			`SELECT id FROM ${TABLE_NAME} WHERE name = ?`,
+			[name]
+		),
+		"getRuleId"
+	);
+	return row?.id;
+}
+
+export { Rule, createRuleTable, insertRule, getRuleId };
 /**
  * @todo see if we keep it
 async function updateRule(id: number, newName: string): Promise<void> {
