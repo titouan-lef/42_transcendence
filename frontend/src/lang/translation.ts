@@ -186,7 +186,7 @@ const TRANSLATOR = {
 		fr: "modifier"
 	},
 	tfa: {
-		en: "two-factor authentification",
+		en: "2FA",
 		fr: "double authentification"
 	},
 	tfa_mail: {
@@ -204,6 +204,30 @@ const TRANSLATOR = {
 	change_avatar: {
 		en: "change avatar",
 		fr: "modifier avatar"
+	},
+	cancel: {
+		en: "cancel",
+		fr: "annuler"
+	},
+	options: {
+		en: "options",
+		fr: "paramètres"
+	},
+	enable: {
+		en: 'enable',
+		fr: 'activer'
+	},
+	disable: {
+		en: 'disable',
+		fr: 'désactiver'
+	},
+	enable_2fa: {
+		en: '{enable} {tfa}',
+		fr: '{enable} la {tfa}'
+	},
+	disable_2fa: {
+		en: '{disable} {tfa}',
+		fr: '{disable} la {tfa}'
 	},
 } as const satisfies Record<string, Expression>;
 
