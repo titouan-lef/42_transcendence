@@ -1,4 +1,4 @@
-import { printReplyInDiv, sendFile, sendGetRequestToBack, sendPostRequestToBack } from "../../services/api_request";
+import { printReplyInDiv, sendFile, sendGetRequestToBack } from "../../services/api_request";
 import { createButtonHtml } from "../../components/button";
 import { createInputHtml } from "../../components/input";
 import { updateUser } from "../../services/user_management/update_user";
@@ -23,7 +23,13 @@ const CURRENT_USER: UserInfos = {
 	avatar: './images/avatar.png'
 };
 
-const BTN_SAVE = createButtonHtml(['save'], 'btn-save', { 'class': `bg-dark text-secondary p-1 rounded-2xl font-bold` });
+const BTN_SAVE = `
+<div class='flex flex-row gap-4'>
+	${createButtonHtml(['cancel'], 'btn-cancel', { 'class': `bg-dark text-warning p-1 rounded-2xl font-bold` })}
+	${createButtonHtml(['save'], 'btn-save', { 'class': `bg-dark text-secondary p-1 rounded-2xl font-bold` })}
+</div>
+`;
+
 const BTN_EDIT = createButtonHtml(['edit'], 'btn-edit', { 'class': `bg-dark text-secondary p-1 rounded-2xl font-bold` });
 
 /** @todo use print content to show fail (password error, forbidden nickname, mail not a mail ?) */
@@ -40,6 +46,7 @@ const BOX_SAVE = `
 const BOX_EDIT = `
 <div class="flex flex-col gap-4">
 	<div>${CURRENT_USER.nickname}</div>
+	<div>password: ******</div>
 	<div>${CURRENT_USER.twofactor_auth}</div>
 	<div>${CURRENT_USER.tfa_mail}</div>
 </div>
@@ -67,13 +74,19 @@ const SETTINGS_USER_INFOS = `
 </div>
 `;
 
-const SETTINGS_CHANGE_AVATAR = `
+const SETTINGS_TWOFA_ENABLE = createButtonHtml(['enable_2fa'], 'btn-enable-2fa', { 'class': `bg-dark text-secondary p-1 rounded-2xl font-bold` });
+const SETTINGS_TWOFA_DISABLE = createButtonHtml(['disable_2fa'], 'btn-disable-2fa', { 'class': `bg-dark text-secondary p-1 rounded-2xl font-bold` });
+
+const SETTINGS_OPTIONS = `
 <div class="p-8 flex flex-col">
-	${createParagraphHtml(['change_avatar'], 'p-avatar', { 'class': `text-[20px] font-bold` })}
+	${createParagraphHtml(['options'], 'p-option', { 'class': `text-[20px] font-bold` })}
 </div>
 <div>
-	<input type="file" id="change-avatar" accept="image/*">
-	<p id='print-avatar-reply'></p>
+	<div>
+		<input type="file" id="change-avatar" accept="image/*">
+		<p id='print-avatar-reply'></p>
+	</div>
+	<div id='switch-2fa'></div>
 </div>
 `;
 
@@ -90,14 +103,11 @@ const SETTINGS = `
 	<div class="${SETTINGS_COL_STYLE}">
 		<div>
 			${SETTINGS_USER_INFOS}
-			${SETTINGS_CHANGE_AVATAR}
+			${SETTINGS_OPTIONS}
 		</div>
 	</div>
 	<div class="${SETTINGS_COL_STYLE}">
 		${SETTINGS_THEME_SELECTOR}
-		<div class="w-full flex flex-col items-end">
-			${createButtonHtml(['delete_account'], 'btn-delete-account', { 'class': `bg-dark text-warning p-1 rounded-2xl font-bold` })}
-		</div>
 	</div>
 </div>
 `;
@@ -126,6 +136,67 @@ function generateThemeEvents(): void {
 	});
 }
 
+function userInformationsBtnEvents(): void {
+	const btns = getSafeElement('btn-switch-edit-save', HTMLElement);
+
+	btns.querySelectorAll('*[id]').forEach(elem => {
+		switch (elem.id) {
+			case 'btn-edit':
+				elem.addEventListener('click', editProfile);
+				break;
+			case 'btn-cancel':
+				elem.addEventListener('click', showProfile);
+				break;
+			case 'btn-save':
+				elem.addEventListener('click', updateUser);
+				break;
+			default:
+				break;
+		}
+	});
+}
+
+async function enable2FA(): Promise<void> {
+	await sendGetRequestToBack("/api/user/activate-secure");
+	update2FAButton();
+}
+
+async function disable2FA(): Promise<void> {
+	await sendGetRequestToBack("/api/user/desactivate-secure");
+	update2FAButton();
+}
+
+function update2FAButton(): void {
+	const switch2fa = getSafeElement('switch-2fa', HTMLElement);
+
+	/** @todo get 2fa status enable/disable */
+	const isEnable = CURRENT_USER.twofactor_auth;
+
+	if (isEnable)
+		switch2fa.innerHTML = SETTINGS_TWOFA_DISABLE;
+	else
+		switch2fa.innerHTML = SETTINGS_TWOFA_ENABLE;
+
+	twoFactorAuthEvents();
+}
+
+function twoFactorAuthEvents(): void {
+	const s2fa = getSafeElement('switch-2fa', HTMLElement);
+
+	s2fa.querySelectorAll('*[id]').forEach(elem => {
+		switch (elem.id) {
+			case 'btn-enable-2fa':
+				elem.addEventListener('click', enable2FA);
+				break;
+			case 'btn-disable-2fa':
+				elem.addEventListener('click', disable2FA);
+				break;
+			default:
+				break;
+		}
+	});
+}
+
 function showProfile(): void {
 	const elem = getSafeElement('switch-edit-save', HTMLElement);
 	const btn = getSafeElement('btn-switch-edit-save', HTMLElement);
@@ -133,31 +204,22 @@ function showProfile(): void {
 	btn.innerHTML = BTN_EDIT;
 	elem.innerHTML = BOX_EDIT;
 
-	btn.removeEventListener('click', updateUser);
-	btn.addEventListener('click', editProfile);
+	userInformationsBtnEvents();
 }
 
 function editProfile(): void {
 	const elem = getSafeElement('switch-edit-save', HTMLElement);
-	const btn = getSafeElement('btn-switch-edit-save', HTMLElement);
+	const btns = getSafeElement('btn-switch-edit-save', HTMLElement);
 
-	btn.innerHTML = BTN_SAVE;
 	elem.innerHTML = BOX_SAVE;
+	btns.innerHTML = BTN_SAVE;
 
-	btn.removeEventListener('click', editProfile);
-	btn.addEventListener('click', updateUser);
+	userInformationsBtnEvents();
 
 	const nickname = getSafeElement('publicID', HTMLInputElement);
-	nickname.value = CURRENT_USER.nickname;
 	const email = getSafeElement("user-email", HTMLInputElement);
+	nickname.value = CURRENT_USER.nickname;
 	email.value = CURRENT_USER.tfa_mail;
-
-	/** @todo add DESACTIVATE 2fa */
-	if (!email) {
-		// desactivate if no mail entered ?
-	} else {
-		activate2FA(email.value);
-	}
 }
 
 function loadSettings(): void {
@@ -178,8 +240,12 @@ function loadSettings(): void {
 	const btn = getSafeElement('btn-switch-edit-save', HTMLElement);
 
 	btn.innerHTML = BTN_EDIT;
-	btn.addEventListener('click', editProfile);
+
+	userInformationsBtnEvents();
 	generateThemeEvents();
+
+	/** @todo fetch information if 2fa activated or not and put the result in innerHTML */
+	update2FAButton();
 }
 
 async function uploadProfilePicture(file: File): Promise<void> {
@@ -190,15 +256,6 @@ async function uploadProfilePicture(file: File): Promise<void> {
 	printReplyInDiv(reply, "print-avatar-reply");
 	if (reply.status === 200)
 		updateAvatar();
-}
-
-async function activate2FA(email: string): Promise<void> {
-	/** @todo change the email in the update user menu */
-	const reply1 = await sendPostRequestToBack("/api/user/email", JSON.stringify({ email: email }));
-	printReplyInDiv(reply1, "print-content");
-
-	const reply2 = await sendGetRequestToBack("/api/user/activate-secure");
-	printReplyInDiv(reply2, "print-content");
 }
 
 export { SETTINGS, loadSettings, showProfile };
