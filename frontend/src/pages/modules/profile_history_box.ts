@@ -2,7 +2,7 @@ import { applyColor } from "../../utils/applyColor";
 import { GameHistory } from "./profile_history";
 
 const HISTORY_BOX_STYLE = `
-grow max-h-[180px] min-h-[100px]
+grow max-h-[180px] min-h-[50px]
 p-4 w-full rounded-2xl
 flex flex-row gap-4 justify-between
 font-jbm text-3xl text-variant
