@@ -21,11 +21,13 @@ interface GameOptions {
 
 class GameSettings {
 	readonly options: GameOptions;
+	readonly isRanked: boolean;
 
 	readonly player1: PlayerSettings;
 	readonly player2?: PlayerSettings;
 
-	constructor(options: GameOptions, player1: WebSocket, playerName1: string, player2?: WebSocket, playerName2?: string) {
+	constructor(isRanked: boolean, options: GameOptions, player1: WebSocket, playerName1: string, player2?: WebSocket, playerName2?: string) {
+		this.isRanked = isRanked;
 		this.options = options;
 		this.player1 = {
 			playerId: 1,

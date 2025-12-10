@@ -37,4 +37,15 @@ async function getBallById(id: number): Promise<Ball | undefined> {
 	);
 }
 
-export { Ball, createBallTable, insertBall };
+async function getBallId(name: string): Promise<number | undefined> {
+	const row = await applyQuery(
+		async (db) => await db.get(
+			`SELECT id FROM ${TABLE_NAME} WHERE name = ?`,
+			[name]
+		),
+		"getBallId"
+	);
+	return row?.id;
+}
+
+export { Ball, createBallTable, insertBall, getBallId };

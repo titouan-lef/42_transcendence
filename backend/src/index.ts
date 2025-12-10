@@ -12,6 +12,7 @@ import { addPlayerToMatchmakingSystem } from "./tournament/matchmaking.js";
 import { getFriendList, newFriend, removeFriend } from "./user_management/friends.js";
 import { activate2FA, desactivate2FA, verify2FA } from "./security/2FA.js";
 import { verifyAuth } from "./security/JWT.js";
+import { GameOptions } from "./game/settings/GameSettings.js";
 
 const APP = fastify();
 
@@ -60,8 +61,8 @@ APP.post<{ Body: UserBody }>("/api/friends/add", { preHandler: verifyAuth }, new
 APP.post<{ Body: UserBody }>("/api/friends/remove", { preHandler: verifyAuth }, removeFriend);
 
 // --- Games ---
-APP.post("/api/game/local_game", newLocalGame);
-APP.post("/api/game/ai_game", newAIGame);
+APP.post<{ Body: GameOptions }>("/api/game/local_game", { preHandler: verifyAuth }, newLocalGame);
+APP.post<{ Body: GameOptions }>("/api/game/ai_game", { preHandler: verifyAuth }, newAIGame);
 APP.get("/api/game/ranked_game", { preHandler: verifyAuth }, addPlayerToMatchmakingSystem);
 APP.get("/api/game/waiting", { preHandler: verifyAuth }, isGameFound);
 
