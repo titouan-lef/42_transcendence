@@ -12,6 +12,7 @@ import { createGameTable } from "./game.js";
 import { createEloTable } from "./elo.js";
 import { createGoalTable } from "./goal.js";
 import { createGameRuleTable } from "./game_rule.js";
+import { getElo, setElo, Elo, setRatingDeviation, setRating } from "./web3/contract_service.js";
 
 const DB_FILE = "Database.db";
 const DB_PATH_FILE = "./" + DB_FILE;
@@ -90,6 +91,13 @@ async function initDB(): Promise<void> {
 		/** @todo gerer ca ailleurs*/
 		await insertSeason();
 	}
+	await setElo("pchalmin", 1, 1400, 467.8367);
+	const elo: Elo = await getElo("pchalmin", 1);
+	console.log(`test : ${elo.rating}, ${elo.ratingDeviation}`);
+	await setRatingDeviation("pchalmin", 1, 200.254675);
+	await setRating("pchalmin", 1, 1800);
+	const elo2: Elo = await getElo("pchalmin", 1);
+	console.log(`test : ${elo2.rating}, ${elo2.ratingDeviation}`);
 }
 
 export { getDB, initDB };

@@ -30,7 +30,7 @@ async function main() {
 	}
 
 	// Update RatingRd
-	async function setRatingRd(username: string, season: number, ratingRd: number) {
+	async function setRatingDeviation(username: string, season: number, ratingRd: number) {
 		const tx = await contract.setRatingRd(username, season, ratingRd);
 		await tx.wait();
 		console.log(`RatingRd is updated for ${username} à ${ratingRd}`);

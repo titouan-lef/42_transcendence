@@ -22,7 +22,7 @@ contract EloStorage {
 		uint256 indexed playerId,
 		uint256 indexed season,
 		uint256 newRating,
-		uint256 newRatingRd
+		uint256 newRatingDeviation
 	);
 
 	mapping(uint256 => mapping(uint256 => EloData)) private playerEloBySeason;
@@ -31,35 +31,44 @@ contract EloStorage {
 		return uint256(keccak256(abi.encodePacked(username)));
 	}
 
-	function setEloData(string memory username, uint256 season, uint256 rating, uint256 ratingRd) public onlyOwner {
+	function setEloData(string memory username, uint256 season, uint256 rating, uint256 ratingDeviation) public onlyOwner {
+
 		uint256 IdPlayer = usernameToId(username);
 
-		(playerEloBySeason[IdPlayer][season]).r = rating;
-		(playerEloBySeason[IdPlayer][season]).rd = ratingRd;
+		EloData storage eloPlayer = playerEloBySeason[IdPlayer][season];
+		eloPlayer.r = rating;
+		eloPlayer.rd =ratingDeviation;
 
-		emit EloUpdated(IdPlayer, season, rating, ratingRd);
-	}
+		emit EloUpdated(IdPlayer, season, eloPlayer.r, eloPlayer.rd);
+	} 
 
-	function setRatingRd(string memory username, uint256 season, uint256 ratingRd) public onlyOwner {
+	function setRatingDeviation(string memory username, uint256 season, uint256 ratingDeviation) public onlyOwner {
+
 		uint256 IdPlayer = usernameToId(username);
-		uint256 currentRating = playerEloBySeason[IdPlayer][season].r;
 
-		(playerEloBySeason[IdPlayer][season]).rd = ratingRd;
+		(playerEloBySeason[IdPlayer][season]).rd = ratingDeviation;
 
-		emit EloUpdated(IdPlayer, season, currentRating, ratingRd);
+		EloData storage eloPlayer = playerEloBySeason[IdPlayer][season];
+
+		emit EloUpdated(IdPlayer, season, eloPlayer.r, eloPlayer.rd);
 	}
 
 	function setRating(string memory username, uint256 season, uint256 rating) public onlyOwner {
 		uint256 IdPlayer = usernameToId(username);
-		uint256 currentRatingRd = playerEloBySeason[IdPlayer][season].rd;
 
 		(playerEloBySeason[IdPlayer][season]).r = rating;
 
-		emit EloUpdated(IdPlayer, season, rating, currentRatingRd);
+		EloData storage eloPlayer = playerEloBySeason[IdPlayer][season];
+
+		emit EloUpdated(IdPlayer, season, eloPlayer.r, eloPlayer.rd);
 	}
 
 	function getEloData(string memory username, uint256 season) public view returns (uint256 rating, uint256 ratingRd) {
+
 		uint256 IdPlayer = usernameToId(username);
-		return ((playerEloBySeason[IdPlayer][season]).r, (playerEloBySeason[IdPlayer][season]).rd);
+
+		EloData storage eloPlayer = playerEloBySeason[IdPlayer][season];
+
+		return (eloPlayer.r, eloPlayer.rd);
 	}
 }
