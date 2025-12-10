@@ -9,6 +9,11 @@ import { Status, PositionsMessage, StartMessage, StopMessage, OptionMessage, Goa
 import { Player } from "./player/Player.js";
 import { Human } from "./player/Human.js";
 import { stopGame } from "./game_manager.js";
+import { getCurrentSeason } from "../database/season.js";
+import { insertGame } from "../database/game.js";
+import { insertGoal } from "../database/goal.js";
+import { getBallId } from "../database/ball.js";
+import { getMapId } from "../database/map.js";
 
 class Game {
 	private readonly id: number;
@@ -26,9 +31,12 @@ class Game {
 	private gameTimerIntervalId: ReturnType<typeof setInterval>;
 	private gameTimer = 0;
 	private readonly points: Point[] = [];
+	private readonly gameIdDb?;
 
-	constructor (id: number, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
+	constructor (id: number, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine, gameIdDb?: number) {
 		this.id = id;
+		if (gameIdDb)
+			this.gameIdDb = gameIdDb;
 		this.engine = engine;
 		this.settings = settings;
 		this.camera = new babylon.ArcRotateCamera("Camera", 0, 0, 0, babylon.Vector3.Zero(), scene);
@@ -46,7 +54,16 @@ class Game {
 	static async create(id: number, settings: GameSettings): Promise<Game> {
 		const engine =  new babylon.NullEngine();
 		const scene = await Game.initScene(engine);
-		return new Game(id, settings, scene, engine);
+		if (!settings.isRanked)
+			return new Game(id, settings, scene, engine);
+
+		const currentSeason = await getCurrentSeason();
+		if (!currentSeason)
+			throw new Error("No current Season");
+		const gameIdDb = await insertGame(currentSeason);
+		if (!gameIdDb)
+			throw new Error("Error while creating new game");
+		return new Game(id, settings, scene, engine, gameIdDb);
 	}
 
 	private static async initScene(engine: babylon.Engine): Promise<babylon.Scene> {
@@ -58,6 +75,10 @@ class Game {
 		scene.enablePhysics(new babylon.Vector3(0, -9.81, 0), havokPlugin);
 		return scene;
 	};
+
+	getGameIdDb(): number | undefined {
+		return this.gameIdDb;
+	}
 
 	start(): void {
 		this.startRender();
@@ -72,7 +93,7 @@ class Game {
 			clearInterval(this.physicStepsIntervalId);
 	}
 
-	stop(): void {
+	stop(): number {
 		clearInterval(this.gameTimerIntervalId);
 		this.stopSendingPositions();
 		this.sceneManager.destroyScene();
@@ -82,6 +103,7 @@ class Game {
 			this.sceneManager.showDisposeLogs(this.scene);
 		this.scene.dispose();
 		this.engine.dispose();
+		return (this.gameTimer);
 		/**@todo updateEloAfterGame()*/
 	}
 
@@ -94,7 +116,7 @@ class Game {
 		});
 	}
 
-	private storePoint(goalerId: 1 | 2, ball: BallOption): void {
+	async storePoint(goalerId: 1 | 2, ball: BallOption): Promise<void> {
 		const map = this.sceneManager.getMapType();
 		const currentPoint = {
 			ball: ball,
@@ -103,7 +125,23 @@ class Game {
 			goaler: goalerId
 		};
 		this.points.push(currentPoint);
+
+		if (!this.settings.isRanked)
+			return;
+		const timer = this.gameTimer;
+		const mapIdDb = await getMapId(map);
+		const ballIdDb = await getBallId(ball);
+		const goalerName = this.sceneManager.getPlayer(goalerId)?.getName();
+		console.log("ball: " + ballIdDb);
+		console.log("map: " + mapIdDb);
+		console.log("goaler: " + goalerName);
+		console.log("gameid: " + this.gameIdDb);
+		if (!ballIdDb || !mapIdDb || !goalerName || !this.gameIdDb)
+			return;
+		insertGoal(mapIdDb, ballIdDb, goalerName, timer, this.gameIdDb);
 	}
+
+	
 
 	/**check collision for each balls */
 	async checkEndOfPoint(): Promise<void> {
@@ -120,7 +158,9 @@ class Game {
 			this.changeGameSpeed(1);
 			goalInfos === "player1" ? this.score.x += 1 : this.score.y += 1;
 			this.storePoint(goalInfos === "player1" ? 1 : 2, ball);
-			this.sendScore();
+			await this.sendScore();
+			if (this.sceneManager.doesGameEnded()) // if closing game while animation
+				return;
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
 				stopGame(this.id);
 			} else {

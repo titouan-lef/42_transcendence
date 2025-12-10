@@ -24,7 +24,7 @@ abstract class Player {
 	private angularVelocityY = 0;
 	private emote: EmoteChoice | undefined;
 
-	constructor(scene: babylon.Scene, position: babylon.Vector2, options: GameOptions, id: 1 | 2, username :string) {
+	constructor(scene: babylon.Scene, position: babylon.Vector2, options: GameOptions, id: 1 | 2, username: string) {
 		this.applyingSpin = options.spin;
 		this.rotatingPlayer = options.rotatingPlayer;
 		this.dashingPlayer = options.dashingPlayer;

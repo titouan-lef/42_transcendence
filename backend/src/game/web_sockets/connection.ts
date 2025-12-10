@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { WebSocket } from "ws";
 import { doesUserExist } from "../../database/user.js";
-import { identifyUser } from "../../security/JWT.js";
+import { identifyUser, verifyAuth } from "../../security/JWT.js";
 import { askMatchmakingSystem, isUserWaiting } from "../../tournament/matchmaking.js";
 import { sendReply } from "../../utils/HTTP.js";
 import { wait } from "../../utils/time.js";
@@ -47,14 +47,20 @@ async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<vo
 }
 
 async function newLocalGame(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
+	const user = req.user;
+	if (!user)
+		return; /**@todo oblige d etre register pour faire une game ? */
 	const options: GameOptions = req.body;
-	const id = registerGameOptions(options, GameType.LOCAL, []);
+	const id = registerGameOptions(options, GameType.LOCAL, [user, "player2"]);
 	sendReply(reply, 200, id.toString());
 }
 
 async function newAIGame(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
+	const user = req.user;
+	if (!user)
+		return; /**@todo oblige d etre register pour faire une game ? */
 	const options: GameOptions = req.body;
-	const id = registerGameOptions(options, GameType.AI, []);
+	const id = registerGameOptions(options, GameType.AI, [user, "AI"]);
 	sendReply(reply, 200, id.toString());
 }
 

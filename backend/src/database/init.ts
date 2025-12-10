@@ -4,7 +4,7 @@ import { open, Database } from "sqlite";
 import { createThemeTable, insertTheme } from "./theme.js";
 import { createUserTable } from "./user.js";
 import { createFriendshipTable } from "./friendship.js";
-import { createSeasonTable } from "./season.js";
+import { createSeasonTable, insertSeason } from "./season.js";
 import { createMapTable, insertMap } from "./map.js";
 import { createRuleTable, insertRule } from "./rule.js";
 import { createBallTable, insertBall } from "./ball.js";
@@ -85,6 +85,9 @@ async function initDB(): Promise<void> {
 		await createGoalTable();
 		await createGameRuleTable();
 		await createEloTable();
+
+		// @todo gerer ca ailleurs
+		insertSeason();
 	}
 }
 

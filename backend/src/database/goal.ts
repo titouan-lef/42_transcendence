@@ -14,18 +14,20 @@ async function createGoalTable(): Promise<void> {
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			scoredAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+			scoredAt INTEGER NOT NULL,
+			mapId INTEGER REFERENCES Map(id),
+			ballId INTEGER REFERENCES Ball(id),
 			gameId INTEGER REFERENCES Game(id),
 			by TEXT REFERENCES User(pseudo));`
 		), "create" + TABLE_NAME + "Table"
 	);
 }
 
-async function insertGoal(gameId: number, username: string): Promise<void> {
+async function insertGoal(mapId: number, ballId: number, username: string, timer: number, gameId: number): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (gameId, by) VALUES (?, ?)`,
-			[gameId, username]
+			`INSERT INTO ${TABLE_NAME} (mapId, ballId, gameId, scoredAt, by) VALUES (?, ?, ?, ?, ?)`,
+			[mapId, ballId, gameId, timer, username]
 		), "insert" + TABLE_NAME
 	);
 }
@@ -45,7 +47,7 @@ async function getGoalById(id: number): Promise<Goal | undefined> {
 	);
 }
 
-export { Goal, createGoalTable };
+export { Goal, createGoalTable, insertGoal };
 /**
  * 
  * @todo see if we keep it 

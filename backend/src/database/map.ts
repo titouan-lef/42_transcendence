@@ -41,4 +41,15 @@ async function getMapById(id: number): Promise<Map | undefined> {
 	);
 }
 
-export { Map, createMapTable, insertMap };
+async function getMapId(name: string): Promise<number | undefined> {
+	const row = await applyQuery(
+		async (db) => await db.get(
+			`SELECT id FROM ${TABLE_NAME} WHERE name = ?`,
+			[name]
+		),
+		"getMapId"
+	);
+	return row?.id;
+}
+
+export { Map, createMapTable, insertMap, getMapId };

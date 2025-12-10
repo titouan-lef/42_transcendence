@@ -40,7 +40,16 @@ async function getSeasonById(id: number): Promise<Season | undefined> {
 	);
 }
 
-export { Season, createSeasonTable };
+async function getCurrentSeason(): Promise<number | undefined> {
+	const row = await applyQuery(
+		async (db) =>  await db.get(
+			`SELECT id FROM ${TABLE_NAME} ORDER BY id DESC LIMIT 1`,
+		), "getCurrent" + TABLE_NAME
+	);
+	return (row?.id);
+}
+
+export { Season, createSeasonTable, getCurrentSeason, insertSeason };
 /**
  * @todo see if we keep it
 async function updateSeason(id: number, newName: string): Promise<void> {

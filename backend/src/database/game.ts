@@ -16,19 +16,34 @@ async function createGameTable(): Promise<void> {
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			beganAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-			mapId INTEGER REFERENCES Map(id),
-			ballId INTEGER REFERENCES Ball(id),
+			duration INTEGER,
 			seasonId INTEGER REFERENCES Season(id));`
 		), "create" + TABLE_NAME + "Table"
 	);
 }
 
-async function insertGame(mapId: number, ballId: number, seasonId: number | null): Promise<void> {
+async function insertGame(seasonId: number): Promise<number | undefined> {
+	return applyQuery(
+		async (db) => {
+			const result = await db.run(
+				`INSERT INTO ${TABLE_NAME} (seasonId) VALUES (?)`,
+				[seasonId]
+			);
+			return result.lastID;
+		},
+		"insert" + TABLE_NAME
+	);
+}
+
+async function setGameDuration(gameId: number, duration: number): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (mapId, ballId, seasonId) VALUES (?, ?, ?)`,
-			[mapId, ballId, seasonId]
-		), "insert" + TABLE_NAME
+			`UPDATE ${TABLE_NAME}
+			 SET duration = ?
+			 WHERE id = ?`,
+			[duration, gameId]
+		),
+		"set" + TABLE_NAME + "Duration"
 	);
 }
 
@@ -58,7 +73,7 @@ async function getGamesBySeason(seasonId: number):Promise<Game[] | undefined> {
 	);
 }
 
-export { Game, createGameTable };
+export { Game, createGameTable, insertGame, setGameDuration };
 /**
  * 
  * @todo see if we keep it
