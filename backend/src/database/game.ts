@@ -73,7 +73,7 @@ async function getGamesBySeason(seasonId: number):Promise<Game[] | undefined> {
 	);
 }
 
-export { Game, createGameTable, insertGame, setGameDuration };
+export { Game, createGameTable, insertGame, setGameDuration, getGameById };
 /**
  * 
  * @todo see if we keep it
