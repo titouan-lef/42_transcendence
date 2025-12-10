@@ -1,6 +1,6 @@
 /* eslint-disable */
 const ABI = [
-  {
+    {
       "inputs": [],
       "stateMutability": "nonpayable",
       "type": "constructor"
@@ -29,7 +29,7 @@ const ABI = [
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "newRatingRd",
+          "name": "newRatingDeviation",
           "type": "uint256"
         }
       ],
@@ -97,7 +97,7 @@ const ABI = [
         },
         {
           "internalType": "uint256",
-          "name": "ratingRd",
+          "name": "ratingDeviation",
           "type": "uint256"
         }
       ],
@@ -143,11 +143,11 @@ const ABI = [
         },
         {
           "internalType": "uint256",
-          "name": "ratingRd",
+          "name": "ratingDeviation",
           "type": "uint256"
         }
       ],
-      "name": "setRatingRd",
+      "name": "setRatingDeviation",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

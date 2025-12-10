@@ -24,7 +24,7 @@ describe("EloStorage", function () {
 		expect(ratingA).to.equal(1300);
 		expect(ratingRdA).to.equal(200);
 
-		await elo.setRatingRd("tilegran", season, 250);
+		await elo.setRatingDeviation("tilegran", season, 250);
 		const [ratingT, ratingRdT] = await elo.getEloData("tilegran", season);
 		expect(ratingT).to.equal(1200);
 		expect(ratingRdT).to.equal(250);
