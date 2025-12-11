@@ -7,6 +7,7 @@ interface User {
 	hashedPassword: string;
 	avatar: string | null;
 	themeId: number | null; /** @todo null for the random or default theme ?*/
+	email: string | null;
 	/**@todo ADD keybind */
 }
 
@@ -121,17 +122,6 @@ async function disabled2FA(username: string): Promise<void> {
 	await update2FA(username, false);
 }
 
-async function changeUserEmail(username: string, email: string): Promise<void> {
-	await applyQuery(
-		async (db) => await db.get(
-			`UPDATE ${TABLE_NAME}
-			SET email = ?
-			WHERE username = ?;`,
-			[email, username]
-		), "update" + TABLE_NAME + "Email"
-	);
-}
-
 async function changeUserPicture(username: string, avatar: string): Promise<void> {
 	await applyQuery(
 		async (db) => await db.get(
@@ -165,18 +155,40 @@ async function deleteUser(username: string): Promise<void> {
 }
 
 /**
- * 
+ *
  * @todo will be used, but must be modified
- * 
+ *
  */
-async function updateUser(username: string, updates: Partial<Omit<User, "username" | "createdAt">>): Promise<void> {
+async function updatePseudo(username: string, pseudo: string): Promise<void> {
 	await applyQuery(async (db) => {
-		const fields = Object.keys(updates).map((key) => `${key} = ?`).join(", ");
-		if (!fields)
-			return;
-		const values = Object.values(updates);
-		await db.run(`UPDATE ${TABLE_NAME} SET ${fields} WHERE username = ?`,[...values, username,]);
-	}, "update" + TABLE_NAME);
+		await db.run(`
+			UPDATE ${TABLE_NAME}
+			SET pseudo = ?
+			WHERE username = ?
+			`,[pseudo, username]);
+	}, "update" + TABLE_NAME + "Pseudo");
 }
 
-export { User, createUserTable, getUserPassword, doesUserExist, insertUser, updateUser, disabled2FA, enabled2FA, is2FAEnabled, isEmailDefined, changeUserEmail, getUserEmail, changeUserPicture, getUserPicture };
+async function updatePassword(username: string, hashedPassword: string): Promise<void> {
+	await applyQuery(async (db) => {
+		await db.run(`
+			UPDATE ${TABLE_NAME}
+			SET hashedPassword = ?
+			WHERE username = ?
+			`,[hashedPassword, username]);
+	}, "update" + TABLE_NAME + "Password");
+}
+
+async function updateEmail(username: string, email: string): Promise<void> {
+	await applyQuery(async (db) => {
+		await db.run(`
+			UPDATE ${TABLE_NAME}
+			SET email = ?
+			WHERE username = ?
+			`,[email, username]);
+	}, "update" + TABLE_NAME + "Email");
+}
+
+export { User, getUserByUsername, createUserTable, getUserPassword, doesUserExist, insertUser, disabled2FA, enabled2FA, getUserEmail, changeUserPicture, getUserPicture };
+export { updatePseudo, updatePassword, updateEmail };
+export { is2FAEnabled, isEmailDefined };

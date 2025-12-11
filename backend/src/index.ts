@@ -5,12 +5,12 @@ import fastifyWebsocket from "@fastify/websocket";
 import fastifyMultipart from '@fastify/multipart';
 import fastifyStatic from "@fastify/static";
 import { initDB } from "./database/init.js";
-import { addNewUser } from "./user_management/create_account.js";
+import { addNewUser, UpdateUserBody, updateUserInfos } from "./user_management/create_account.js";
 import { connectUser, disconnectUser, whoami, changePicture, getPicture, UserBody, changeEmail, EmailBody } from "./user_management/connect_user.js";
 import { isGameFound, newAIGame, newGame, newLocalGame } from "./game/web_sockets/connection.js";
 import { addPlayerToMatchmakingSystem } from "./tournament/matchmaking.js";
 import { getFriendList, newFriend, removeFriend } from "./user_management/friends.js";
-import { activate2FA, desactivate2FA, verify2FA } from "./security/2FA.js";
+import { disable2FA, enable2FA, isEnabled2FA, verify2FA } from "./security/2FA.js";
 import { verifyAuth } from "./security/JWT.js";
 import { GameOptions } from "./game/settings/GameSettings.js";
 
@@ -18,7 +18,7 @@ const APP = fastify();
 
 /**
 * Cross-Origin Resource Sharing, is a security mechanism implemented by web browsers
-*   to control how resources on a web server can be requested from a domain 
+*   to control how resources on a web server can be requested from a domain
 *   other than the one serving the web page.
 * Without CORS, a browser would block frontend apps from calling the backend.
 */
@@ -41,10 +41,10 @@ APP.register(fastifyStatic, {
 // --- HTTPS route handlers --- //
 //////////////////////////////////
 
-// --- Users --- 
+// --- Users ---
 APP.post("/api/user/new_user", addNewUser);
+APP.post<{ "Body": UpdateUserBody }>("/api/user/update_user", { preHandler: verifyAuth }, updateUserInfos);
 APP.post("/api/user/login", connectUser);
-APP.post<{ Body: EmailBody }>("/api/user/email", { preHandler: verifyAuth }, changeEmail);
 APP.get("/api/user/logout", { preHandler: verifyAuth }, disconnectUser);
 APP.get("/api/user/whoami", { preHandler: verifyAuth }, whoami);
 APP.post("/api/user/picture", getPicture);
@@ -52,8 +52,9 @@ APP.post("/api/user/change_picture", { preHandler: verifyAuth }, changePicture);
 
 // --- 2FA ---
 APP.post("/api/user/secure", verify2FA);
-APP.get("/api/user/activate-secure", { preHandler: verifyAuth }, activate2FA);
-APP.get("/api/user/deactivate-secure", { preHandler: verifyAuth }, desactivate2FA);
+APP.get("/api/user/is-enabled", { preHandler: verifyAuth }, isEnabled2FA);
+APP.get("/api/user/enable-secure", { preHandler: verifyAuth }, enable2FA);
+APP.get("/api/user/disable-secure", { preHandler: verifyAuth }, disable2FA);
 
 // --- Friends ---
 APP.post("/api/friends/list", getFriendList);
