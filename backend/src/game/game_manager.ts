@@ -36,10 +36,7 @@ async function stopGame(id: number): Promise<void> {
 	const game = GAMES.get(id);
 	if (!game)
 		return;
-	const gameDuration = game.stop();
-	const gameIdDb = game.getGameIdDb();
-	if (gameIdDb)
-		await setGameDuration(gameIdDb, gameDuration);
+	await game.stop();
 	GAMES.delete(id);
 }
 
