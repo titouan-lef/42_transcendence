@@ -1,5 +1,5 @@
 import { isOneStringEmtpy } from "../../utils/strings.js";
-import { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv } from "../api_request.js";
+import { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv, isRequestSuccessfull } from "../api_request.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
 import { ASIDE_CONNECTED, asideConnectedEvents, loadAside } from "../../pages/modules/box_aside.js";
 import { updateFriendList } from "../../pages/modules/box_aside_friendlist.js";
@@ -7,6 +7,35 @@ import { loadModularPage } from "../../pages/modular.js";
 import { openDialog2FA } from "../../pages/modules/dialog.js";
 
 let user = "";
+
+interface InfoList {
+	username: string;
+	pseudo: string;
+	email: string | null;
+	enabled2FA: boolean;
+	//theme;
+}
+
+let currentUser: InfoList | null = null;
+
+async function getUserInfos(): Promise<void> {
+	const reply = await sendGetRequestToBack("/api/user/get_user");
+	if (!isRequestSuccessfull(reply))
+		return;
+
+	const data: InfoList = await reply.json();
+
+	currentUser = {
+		username: data.username,
+		pseudo: data.pseudo,
+		email: data.email,
+		enabled2FA: data.enabled2FA
+	};
+}
+
+function clearUserInfos(): void {
+	currentUser = null;
+}
 
 async function connectUser(): Promise<void> {
 	const userId: HTMLInputElement = getSafeElement("userID", HTMLInputElement);
@@ -38,6 +67,8 @@ async function connectUser(): Promise<void> {
 
 	modal.close();
 	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
+
+	await getUserInfos();
 	/** @todo add load main */
 	/** @todo load user theme */
 	updateFriendList();
@@ -59,12 +90,14 @@ async function sendSecureCode(): Promise<void> {
 	/** @todo add load main */
 	modal.close();
 	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
+	await getUserInfos();
 	updateFriendList();
 }
 
 async function disconnectUser(): Promise<void> {
 	await sendGetRequestToBack("/api/user/logout");
+	clearUserInfos();
 	loadModularPage();
 }
 
-export { connectUser, disconnectUser, sendSecureCode };
+export { currentUser, getUserInfos, connectUser, disconnectUser, sendSecureCode };

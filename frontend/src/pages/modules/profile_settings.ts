@@ -7,21 +7,7 @@ import { updateAvatar } from "./box_aside";
 import { setTheme, Themes } from "../../assets/themes/theme.js";
 import { createParagraphHtml } from "../../components/paragraph";
 import { setActiveBtn } from "./profile_navbar";
-
-/** @todo get database informations */
-interface UserInfos {
-	nickname: string,
-	twofactor_auth: boolean,
-	tfa_mail: string,
-	avatar: string,
-}
-
-const CURRENT_USER: UserInfos = {
-	nickname: 'roger_du_12',
-	twofactor_auth: true,
-	tfa_mail: 'roger1212@mail.it',
-	avatar: './images/avatar.png'
-};
+import { currentUser, getUserInfos } from "../../services/user_management/login";
 
 const BTN_SAVE = `
 <div class='flex flex-row gap-4'>
@@ -45,9 +31,9 @@ const BOX_SAVE = `
 
 const BOX_EDIT = `
 <div class="flex flex-col gap-4">
-	<div>${CURRENT_USER.nickname}</div>
+	<div id="show-user-nick"></div>
 	<div>password: ******</div>
-	<div>${CURRENT_USER.tfa_mail}</div>
+	<div id="show-user-email"></div>
 </div>
 `;
 
@@ -188,31 +174,19 @@ async function disable2FA(): Promise<void> {
 		update2FAButton();
 }
 
-interface TFAReply {
-	status: boolean;
-}
-
 async function update2FAButton(): Promise<void> {
-	const switch2fa = getSafeElement('switch-2fa', HTMLElement);
-
-	const reply = await sendGetRequestToBack("/api/user/is-enabled");
-	if (!isRequestSuccessfull(reply))
+	if (!currentUser)
 		return;
 
-	try {
-		const status = await getReplyMessage(reply);
-		const reply2fa: TFAReply = JSON.parse(status);
+	await getUserInfos();
 
-		if (reply2fa.status)
-			switch2fa.innerHTML = SETTINGS_TWOFA_DISABLE;
-		else
-			switch2fa.innerHTML = SETTINGS_TWOFA_ENABLE;
+	const switch2fa = getSafeElement('switch-2fa', HTMLElement);
+	if (currentUser.enabled2FA)
+		switch2fa.innerHTML = SETTINGS_TWOFA_DISABLE;
+	else
+		switch2fa.innerHTML = SETTINGS_TWOFA_ENABLE;
 
-		twoFactorAuthEvents();
-
-	} catch {
-		console.error('status not found');
-	}
+	twoFactorAuthEvents();
 }
 
 function twoFactorAuthEvents(): void {
@@ -233,6 +207,9 @@ function twoFactorAuthEvents(): void {
 }
 
 function showProfile(): void {
+	if (!currentUser)
+		return;
+
 	const elem = getSafeElement('switch-edit-save', HTMLElement);
 	const btn = getSafeElement('btn-switch-edit-save', HTMLElement);
 
@@ -240,9 +217,18 @@ function showProfile(): void {
 	elem.innerHTML = BOX_EDIT;
 
 	userInformationsBtnEvents();
+
+	const nick = getSafeElement('show-user-nick', HTMLElement);
+	const email = getSafeElement('show-user-email', HTMLElement);
+
+	nick.innerHTML = currentUser.pseudo;
+	email.innerHTML = currentUser.email ? currentUser.email : 'no email set';
 }
 
 function editProfile(): void {
+	if (!currentUser)
+		return;
+
 	const elem = getSafeElement('switch-edit-save', HTMLElement);
 	const btns = getSafeElement('btn-switch-edit-save', HTMLElement);
 
@@ -251,13 +237,18 @@ function editProfile(): void {
 
 	userInformationsBtnEvents();
 
-	const nickname = getSafeElement('publicID', HTMLInputElement);
-	const email = getSafeElement("user-email", HTMLInputElement);
-	nickname.value = CURRENT_USER.nickname;
-	email.value = CURRENT_USER.tfa_mail;
+	const nick = getSafeElement('publicID', HTMLInputElement);
+	const email = getSafeElement('user-email', HTMLInputElement);
+
+	nick.value = currentUser.pseudo;
+	if (currentUser.email)
+		email.value = currentUser.email;
 }
 
 function loadSettings(): void {
+	if (!currentUser)
+		return;
+
 	const elem = getSafeElement('profile-content', HTMLElement);
 
 	elem.innerHTML = SETTINGS;
@@ -279,6 +270,11 @@ function loadSettings(): void {
 	userInformationsBtnEvents();
 	generateThemeEvents();
 
+	const nick = getSafeElement('show-user-nick', HTMLElement);
+	const email = getSafeElement('show-user-email', HTMLElement);
+
+	nick.innerHTML = currentUser.pseudo;
+	email.innerHTML = currentUser.email ? currentUser.email : 'no email set';
 	/** @todo fetch information if 2fa activated or not and put the result in innerHTML */
 	update2FAButton();
 }

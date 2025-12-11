@@ -1,15 +1,15 @@
 import { showProfile } from "../../pages/modules/profile_settings.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
-import { isRequestSuccessfull, printReplyInDiv, sendGetRequestToBack, sendPostRequestToBack } from "../api_request.js";
+import { isRequestSuccessfull, printReplyInDiv, sendPostRequestToBack } from "../api_request.js";
+import { getUserInfos } from "./login.js";
 
 interface UserInfos {
-	nick: string,
-	pass: string,
+	pseudo: string,
+	password: string,
 	email: string,
 }
 
 async function updateUser(): Promise<void> {
-
 	const nick = getSafeElement('publicID', HTMLInputElement);
 	const pass = getSafeElement('newPassword', HTMLInputElement);
 	const confirmPass = getSafeElement('confirmPassword', HTMLInputElement);
@@ -25,9 +25,9 @@ async function updateUser(): Promise<void> {
 		return;
 	}
 	const data: UserInfos = {
-		nick: nick.value,
-		pass: pass.value,
-		email: email.value
+		pseudo: nick.value,
+		password: pass.value,
+		email: email.value,
 	};
 
 	const reply = await sendPostRequestToBack('/api/user/update_user', JSON.stringify(data));
@@ -36,6 +36,7 @@ async function updateUser(): Promise<void> {
 		return;
 	}
 
+	await getUserInfos();
 	showProfile();
 }
 

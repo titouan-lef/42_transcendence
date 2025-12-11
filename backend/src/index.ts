@@ -6,13 +6,14 @@ import fastifyMultipart from '@fastify/multipart';
 import fastifyStatic from "@fastify/static";
 import { initDB } from "./database/init.js";
 import { addNewUser, UpdateUserBody, updateUserInfos } from "./user_management/create_account.js";
-import { connectUser, disconnectUser, whoami, changePicture, getPicture, UserBody, changeEmail, EmailBody } from "./user_management/connect_user.js";
+import { connectUser, disconnectUser, changePicture, getPicture, UserBody } from "./user_management/connect_user.js";
 import { isGameFound, newAIGame, newGame, newLocalGame } from "./game/web_sockets/connection.js";
 import { addPlayerToMatchmakingSystem } from "./tournament/matchmaking.js";
 import { getFriendList, newFriend, removeFriend } from "./user_management/friends.js";
-import { disable2FA, enable2FA, isEnabled2FA, verify2FA } from "./security/2FA.js";
+import { disable2FA, enable2FA, verify2FA } from "./security/2FA.js";
 import { verifyAuth } from "./security/JWT.js";
 import { GameOptions } from "./game/settings/GameSettings.js";
+import { getUserInfos } from "./user_management/user_infos.js";
 
 const APP = fastify();
 
@@ -44,15 +45,14 @@ APP.register(fastifyStatic, {
 // --- Users ---
 APP.post("/api/user/new_user", addNewUser);
 APP.post<{ "Body": UpdateUserBody }>("/api/user/update_user", { preHandler: verifyAuth }, updateUserInfos);
+APP.get("/api/user/get_user", { preHandler: verifyAuth }, getUserInfos);
 APP.post("/api/user/login", connectUser);
 APP.get("/api/user/logout", { preHandler: verifyAuth }, disconnectUser);
-APP.get("/api/user/whoami", { preHandler: verifyAuth }, whoami);
 APP.post("/api/user/picture", getPicture);
 APP.post("/api/user/change_picture", { preHandler: verifyAuth }, changePicture);
 
 // --- 2FA ---
 APP.post("/api/user/secure", verify2FA);
-APP.get("/api/user/is-enabled", { preHandler: verifyAuth }, isEnabled2FA);
 APP.get("/api/user/enable-secure", { preHandler: verifyAuth }, enable2FA);
 APP.get("/api/user/disable-secure", { preHandler: verifyAuth }, disable2FA);
 

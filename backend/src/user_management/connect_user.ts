@@ -41,10 +41,6 @@ async function disconnectUser(req: FastifyRequest, reply: FastifyReply): Promise
 	sendReply(reply, 200, "Logged out"); /**@todo use translate tool */
 }
 
-async function whoami(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-	sendReply(reply, 200, req.user);
-}
-
 interface UserBody {
 	user?: string;
 }
@@ -95,4 +91,4 @@ async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<
 	sendReply(reply, 200, "Profile picture updated");
 }
 
-export { UserBody, EmailBody, connectUser, disconnectUser, whoami, getPicture, changePicture, changeEmail };
+export { UserBody, EmailBody, connectUser, disconnectUser, getPicture, changePicture, changeEmail };
