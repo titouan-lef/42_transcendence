@@ -1,9 +1,9 @@
 import { ELEM, loadPage } from "../routes/page";
 import { currentUser, getUserInfos } from "../services/user_management/login";
 import { getSafeElement } from "../utils/getSafeElement";
-import { ASIDE_BOX, ASIDE_CONNECTED, ASIDE_NOT_CONNECTED, asideConnectedEvents, asideDisconnectedEvents, loadAside } from "./modules/box_aside";
-import { MAIN_BOX, mainBoxEvents } from "./modules/box_main";
-import { exitDialog } from "./modules/dialog";
+import { ASIDE_BOX, ASIDE_CONNECTED, ASIDE_NOT_CONNECTED, asideConnectedEvents, asideDisconnectedEvents, loadAside } from "./modules/box/box_aside";
+import { MAIN_BOX, mainBoxEvents } from "./modules/box/box_main";
+import { exitDialog } from "./modules/dialog/dialog";
 
 const ROW_STYLE = `
 flex flex-row gap-[10px]

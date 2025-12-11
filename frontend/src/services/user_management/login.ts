@@ -1,10 +1,10 @@
 import { isOneStringEmtpy } from "../../utils/strings.js";
 import { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv, isRequestSuccessfull } from "../api_request.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
-import { ASIDE_CONNECTED, asideConnectedEvents, loadAside } from "../../pages/modules/box_aside.js";
-import { updateFriendList } from "../../pages/modules/box_aside_friendlist.js";
+import { ASIDE_CONNECTED, asideConnectedEvents, loadAside } from "../../pages/modules/box/box_aside.js";
+import { updateFriendList } from "../../pages/modules/box/box_aside_friendlist.js";
 import { loadModularPage } from "../../pages/modular.js";
-import { openDialog2FA } from "../../pages/modules/dialog.js";
+import { openDialog2FA } from "../../pages/modules/dialog/dialog.js";
 
 let user = "";
 

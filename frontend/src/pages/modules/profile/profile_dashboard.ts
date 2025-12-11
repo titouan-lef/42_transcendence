@@ -1,5 +1,5 @@
-import { createParagraphHtml } from "../../components/paragraph";
-import { getSafeElement } from "../../utils/getSafeElement";
+import { createParagraphHtml } from "../../../components/paragraph";
+import { getSafeElement } from "../../../utils/getSafeElement";
 import { setActiveBtn } from "./profile_navbar";
 import { createDashboardCard } from "./profile_dashboard_card";
 import { configureChart, createDashboardChart, createDashboardChartBox } from "./profile_dashboard_chart";

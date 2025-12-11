@@ -1,4 +1,4 @@
-import { applyColor } from "../../utils/applyColor";
+import { applyColor } from "../../../utils/applyColor";
 import { GameHistory } from "./profile_history";
 
 /** @todo min-h-[xxx] a modifier pcq c'est moche */

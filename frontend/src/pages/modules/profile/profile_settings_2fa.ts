@@ -1,7 +1,7 @@
-import { createButtonHtml } from "../../components/button";
-import { disable2FA, enable2FA } from "../../services/security/2FA";
-import { currentUser, getUserInfos } from "../../services/user_management/login";
-import { getSafeElement } from "../../utils/getSafeElement";
+import { createButtonHtml } from "../../../components/button";
+import { disable2FA, enable2FA } from "../../../services/security/2FA";
+import { currentUser, getUserInfos } from "../../../services/user_management/login";
+import { getSafeElement } from "../../../utils/getSafeElement";
 
 const SETTINGS_TWOFA = `
 <div id='print-2fa-reply'></div>

@@ -1,8 +1,8 @@
-import { createButtonHtml } from "../../components/button.js";
-import { createInputHtml } from "../../components/input.js";
-import { printReplyInDiv, sendPostRequestToBack } from "../../services/api_request.js";
-import { getSafeElement } from "../../utils/getSafeElement.js";
-import { updateFriendList } from "./box_aside_friendlist.js";
+import { createButtonHtml } from "../../../components/button.js";
+import { createInputHtml } from "../../../components/input.js";
+import { printReplyInDiv, sendPostRequestToBack } from "../../../services/api_request.js";
+import { getSafeElement } from "../../../utils/getSafeElement.js";
+import { updateFriendList } from "../box/box_aside_friendlist.js";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_FORM_STYLE } from "./dialog_style.js";
 
 /** @todo better front style for add friend */

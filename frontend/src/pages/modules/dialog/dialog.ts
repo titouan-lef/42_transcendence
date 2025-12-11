@@ -1,9 +1,9 @@
-import { getSafeElement } from "../../utils/getSafeElement.js";
-import { applyColor } from "../../utils/applyColor.js";
 import { SIGN_IN, signInHandler } from "./dialog_sign_in.js";
 import { SIGN_UP, signUpHandler } from "./dialog_sign_up.js";
 import { ADD_FRIEND, addFriendHandler } from "./dialog_add_friend.js";
 import { TWOFA, twoFAHandler } from "./dialog_2FA.js";
+import { applyColor } from "../../../utils/applyColor.js";
+import { getSafeElement } from "../../../utils/getSafeElement.js";
 
 const DIALOG_MAIN_STYLE = `
 	m-auto p-0 rounded-2xl

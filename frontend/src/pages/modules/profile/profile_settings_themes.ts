@@ -1,5 +1,5 @@
-import { setTheme, Themes } from "../../assets/themes/theme";
-import { getSafeElement } from "../../utils/getSafeElement";
+import { setTheme, Themes } from "../../../assets/themes/theme";
+import { getSafeElement } from "../../../utils/getSafeElement";
 
 const SETTINGS_THEME_SELECTOR = `
 <div>

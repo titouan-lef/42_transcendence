@@ -1,6 +1,6 @@
-import { createButtonHtml } from "../../components/button";
-import { createInputHtml } from "../../components/input";
-import { newUser } from "../../services/user_management/create_account";
+import { createButtonHtml } from "../../../components/button";
+import { createInputHtml } from "../../../components/input";
+import { newUser } from "../../../services/user_management/create_account";
 import { openDialogSignIn } from "./dialog";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_SEPARATOR_STYLE, DIALOG_FORM_STYLE } from "./dialog_style";
 

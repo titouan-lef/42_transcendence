@@ -1,4 +1,4 @@
-import { update2FAButton } from "../../pages/modules/profile_settings_2fa";
+import { update2FAButton } from "../../pages/modules/profile/profile_settings_2fa";
 import { isRequestSuccessfull, printReplyInDiv, sendGetRequestToBack } from "../api_request";
 
 async function enable2FA(): Promise<void> {

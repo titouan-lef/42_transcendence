@@ -1,5 +1,5 @@
-import { applyColor } from "../../utils/applyColor";
-import { getSafeElement } from "../../utils/getSafeElement";
+import { applyColor } from "../../../utils/applyColor";
+import { getSafeElement } from "../../../utils/getSafeElement";
 import { loadDashboard } from "./profile_dashboard";
 import { loadSettings } from "./profile_settings";
 import { loadHistory } from "./profile_history";

@@ -1,4 +1,4 @@
-import { createButtonHtml } from "../../components/button";
+import { createButtonHtml } from "../../../components/button";
 
 const DRAWER_NAV_STYLE = `
 h-full py-10

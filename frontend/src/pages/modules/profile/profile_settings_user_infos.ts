@@ -1,9 +1,9 @@
-import { createButtonHtml } from "../../components/button";
-import { createInputHtml } from "../../components/input";
-import { createParagraphHtml } from "../../components/paragraph";
-import { currentUser } from "../../services/user_management/login";
-import { updateUser } from "../../services/user_management/update_user";
-import { getSafeElement } from "../../utils/getSafeElement";
+import { createButtonHtml } from "../../../components/button";
+import { createInputHtml } from "../../../components/input";
+import { createParagraphHtml } from "../../../components/paragraph";
+import { currentUser } from "../../../services/user_management/login";
+import { updateUser } from "../../../services/user_management/update_user";
+import { getSafeElement } from "../../../utils/getSafeElement";
 
 const BTN_SAVE = `
 <div class='flex flex-row gap-4'>

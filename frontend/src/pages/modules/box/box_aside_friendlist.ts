@@ -1,8 +1,8 @@
-import { createButtonHtml } from "../../components/button";
-import { getReplyMessage, sendPostRequestToBack } from "../../services/api_request";
-import { currentUser } from "../../services/user_management/login";
-import { applyColor } from "../../utils/applyColor";
-import { getSafeElement } from "../../utils/getSafeElement";
+import { createButtonHtml } from "../../../components/button";
+import { getReplyMessage, sendPostRequestToBack } from "../../../services/api_request";
+import { currentUser } from "../../../services/user_management/login";
+import { applyColor } from "../../../utils/applyColor";
+import { getSafeElement } from "../../../utils/getSafeElement";
 
 const FRIENDLIST: string[] = [];
 

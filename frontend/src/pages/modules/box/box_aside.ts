@@ -1,11 +1,11 @@
-import { createButtonHtml } from "../../components/button";
-import { getReplyMessage, isRequestSuccessfull, sendPostRequestToBack } from "../../services/api_request";
-import { updateAvatar } from "../../services/user_management/avatar";
-import { currentUser, disconnectUser } from "../../services/user_management/login";
-import { applyColor } from "../../utils/applyColor";
-import { getSafeElement } from "../../utils/getSafeElement";
-import { openDialogAddFriend, openDialogSignIn, openDialogSignUp } from "./dialog";
-import { openProfile } from "./profile";
+import { createButtonHtml } from "../../../components/button";
+import { updateAvatar } from "../../../services/user_management/avatar";
+import { disconnectUser } from "../../../services/user_management/login";
+import { applyColor } from "../../../utils/applyColor";
+import { getSafeElement } from "../../../utils/getSafeElement";
+import { openDialogAddFriend, openDialogSignIn, openDialogSignUp } from "../dialog/dialog";
+import { openProfile } from "../profile/profile";
+
 
 const ASIDE_BOX_STYLE = `
 grow

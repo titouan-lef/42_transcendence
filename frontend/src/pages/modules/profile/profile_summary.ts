@@ -1,6 +1,6 @@
-import { createButtonHtml } from "../../components/button";
-import { createParagraphHtml } from "../../components/paragraph";
-import { getSafeElement } from "../../utils/getSafeElement";
+import { createButtonHtml } from "../../../components/button";
+import { createParagraphHtml } from "../../../components/paragraph";
+import { getSafeElement } from "../../../utils/getSafeElement";
 import { loadDashboard } from "./profile_dashboard";
 import { createDashboardCard } from "./profile_dashboard_card";
 import { generateHistory, loadHistory } from "./profile_history";

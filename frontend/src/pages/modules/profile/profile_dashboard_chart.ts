@@ -1,9 +1,9 @@
 import { Chart, ChartConfiguration } from "chart.js/auto";
-import { createParagraphHtml } from "../../components/paragraph";
-import { TranslationKey } from "../../lang/lang";
-import { getSafeElement } from "../../utils/getSafeElement";
-import { loadThemeColors } from "../../utils/applyColor";
-import { getCSSVariable } from "../../utils/getCSSVariable";
+import { createParagraphHtml } from "../../../components/paragraph";
+import { TranslationKey } from "../../../lang/lang";
+import { getSafeElement } from "../../../utils/getSafeElement";
+import { loadThemeColors } from "../../../utils/applyColor";
+import { getCSSVariable } from "../../../utils/getCSSVariable";
 
 const DASHBOARD_CHART_TITLE_STYLE = `
 text-[20px] text-secondary w-full
