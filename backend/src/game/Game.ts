@@ -10,7 +10,7 @@ import { Player } from "./player/Player.js";
 import { Human } from "./player/Human.js";
 import { stopGame } from "./game_manager.js";
 import { getCurrentSeason } from "../database/season.js";
-import { insertGame } from "../database/game.js";
+import { insertGame, setGameDuration } from "../database/game.js";
 import { insertGoal } from "../database/goal.js";
 import { getBallId } from "../database/ball.js";
 import { getMapId } from "../database/map.js";
@@ -94,10 +94,6 @@ class Game {
 		return scene;
 	};
 
-	getGameIdDb(): number | undefined {
-		return this.gameIdDb;
-	}
-
 	start(): void {
 		this.startRender();
 		this.startGameCommunication();
@@ -111,7 +107,7 @@ class Game {
 			clearInterval(this.physicStepsIntervalId);
 	}
 
-	stop(): number {
+	async stop(): Promise<void> {
 		clearInterval(this.gameTimerIntervalId);
 		this.stopSendingPositions();
 		this.sceneManager.destroyScene();
@@ -121,7 +117,8 @@ class Game {
 			this.sceneManager.showDisposeLogs(this.scene);
 		this.scene.dispose();
 		this.engine.dispose();
-		return (this.gameTimer);
+		if (this.gameIdDb)
+			await setGameDuration(this.gameIdDb, this.gameTimer);
 		/**@todo updateEloAfterGame()*/
 	}
 
