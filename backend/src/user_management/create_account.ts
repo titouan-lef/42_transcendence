@@ -1,5 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { hashString } from "../utils/hash_string.js";
+import { hashString, isValidPassword } from "../utils/hash_string.js";
 import { sendReply } from "../utils/HTTP.js";
 import { doesUserExist, getUserByUsername, insertUser, updateEmail, updatePassword, updatePseudo } from "../database/user.js";
 
@@ -37,11 +37,13 @@ async function updateUserInfos(req: FastifyRequest<{ "Body": UpdateUserBody }>, 
 	let status = '';
 	const { pseudo, password, email } = req.body;
 
+	console.log(pseudo, password, email);
+
 	if (pseudo && (pseudo !== user.pseudo)) {
 		await updatePseudo(username, pseudo);
 		status += 'Pseudo';
 	}
-	if (password && (hashString(password) !== user.hashedPassword)) {
+	if (password && !isValidPassword(password, user.hashedPassword)) {
 		await updatePassword(username, hashString(password));
 		if (status)
 			status += ', ';

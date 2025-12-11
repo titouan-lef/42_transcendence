@@ -1,6 +1,7 @@
 import { applyColor } from "../../utils/applyColor";
 import { GameHistory } from "./profile_history";
 
+/** @todo min-h-[xxx] a modifier pcq c'est moche */
 const HISTORY_BOX_STYLE = `
 grow max-h-[180px] min-h-[50px]
 p-4 w-full rounded-2xl

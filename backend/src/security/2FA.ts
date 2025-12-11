@@ -83,16 +83,4 @@ async function disable2FA(req: FastifyRequest, reply: FastifyReply): Promise<voi
 	sendReply(reply, 200, "Successfuly loged in"); /** @todo use translate tool */
 }
 
-async function isEnabled2FA(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-	const user = req.user;
-	if (!user)
-		return;
-	if (await is2FAEnabled(user)) {
-		sendReply(reply, 200, JSON.stringify({ status: true }));
-		return;
-	}
-	sendReply(reply, 200, JSON.stringify({ status: false }));
-}
-
-
-export { request2FA, verify2FA, enable2FA, disable2FA, isEnabled2FA };
+export { request2FA, verify2FA, enable2FA, disable2FA };
