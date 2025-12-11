@@ -241,4 +241,4 @@ async function newLocalGame(): Promise<void> {
 	};
 }
 
-export { getReplyMessage, sendPostRequestToBack, sendGetRequestToBack, sendFile, printReplyInDiv, newRankedGame, newLocalGame, newGameVsAI };
+export { getReplyMessage, sendPostRequestToBack, sendGetRequestToBack, sendFile, printReplyInDiv, newRankedGame, newLocalGame, newGameVsAI, isRequestSuccessfull };

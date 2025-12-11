@@ -1,4 +1,4 @@
-import { printReplyInDiv, sendFile, sendGetRequestToBack } from "../../services/api_request";
+import { getReplyMessage, isRequestSuccessfull, printReplyInDiv, sendFile, sendGetRequestToBack } from "../../services/api_request";
 import { createButtonHtml } from "../../components/button";
 import { createInputHtml } from "../../components/input";
 import { updateUser } from "../../services/user_management/update_user";
@@ -39,7 +39,7 @@ const BOX_SAVE = `
 	${createInputHtml(["new_password"], "password", "newPassword", { "class": `` })}
 	${createInputHtml(["confirm_password"], "password", "confirmPassword", { "class": `` })}
 	${createInputHtml(["tfa_mail"], "email", "user-email", { "class": `` })}
-	<div id="print-content"></div>
+	<div id="print-uinfo-reply"></div>
 </div>
 `;
 
@@ -47,7 +47,6 @@ const BOX_EDIT = `
 <div class="flex flex-col gap-4">
 	<div>${CURRENT_USER.nickname}</div>
 	<div>password: ******</div>
-	<div>${CURRENT_USER.twofactor_auth}</div>
 	<div>${CURRENT_USER.tfa_mail}</div>
 </div>
 `;
@@ -74,8 +73,25 @@ const SETTINGS_USER_INFOS = `
 </div>
 `;
 
-const SETTINGS_TWOFA_ENABLE = createButtonHtml(['enable_2fa'], 'btn-enable-2fa', { 'class': `bg-dark text-secondary p-1 rounded-2xl font-bold` });
-const SETTINGS_TWOFA_DISABLE = createButtonHtml(['disable_2fa'], 'btn-disable-2fa', { 'class': `bg-dark text-secondary p-1 rounded-2xl font-bold` });
+const SETTINGS_TWOFA = `
+<div id='print-2fa-reply'></div>
+`;
+
+const SETTINGS_TWOFA_ENABLE = `
+<div>
+	your account is not protected
+</div>
+${createButtonHtml(['enable_2fa'], 'btn-enable-2fa', { 'class': `bg-dark text-secondary p-1 rounded-2xl font-bold` })}
+${SETTINGS_TWOFA}
+`;
+
+const SETTINGS_TWOFA_DISABLE = `
+<div>
+	your account is protected
+</div>
+${createButtonHtml(['disable_2fa'], 'btn-disable-2fa', { 'class': `bg-dark text-secondary p-1 rounded-2xl font-bold` })}
+${SETTINGS_TWOFA}
+`;
 
 const SETTINGS_OPTIONS = `
 <div class="p-8 flex flex-col">
@@ -157,27 +173,46 @@ function userInformationsBtnEvents(): void {
 }
 
 async function enable2FA(): Promise<void> {
-	await sendGetRequestToBack("/api/user/activate-secure");
-	update2FAButton();
+	const reply = await sendGetRequestToBack("/api/user/enable-secure");
+	if (!isRequestSuccessfull(reply))
+		printReplyInDiv(reply, "print-2fa-reply");
+	else
+		update2FAButton();
 }
 
 async function disable2FA(): Promise<void> {
-	await sendGetRequestToBack("/api/user/desactivate-secure");
-	update2FAButton();
+	const reply = await sendGetRequestToBack("/api/user/disable-secure");
+	if (!isRequestSuccessfull(reply))
+		printReplyInDiv(reply, "print-2fa-reply");
+	else
+		update2FAButton();
 }
 
-function update2FAButton(): void {
+interface TFAReply {
+	status: boolean;
+}
+
+async function update2FAButton(): Promise<void> {
 	const switch2fa = getSafeElement('switch-2fa', HTMLElement);
 
-	/** @todo get 2fa status enable/disable */
-	const isEnable = CURRENT_USER.twofactor_auth;
+	const reply = await sendGetRequestToBack("/api/user/is-enabled");
+	if (!isRequestSuccessfull(reply))
+		return;
 
-	if (isEnable)
-		switch2fa.innerHTML = SETTINGS_TWOFA_DISABLE;
-	else
-		switch2fa.innerHTML = SETTINGS_TWOFA_ENABLE;
+	try {
+		const status = await getReplyMessage(reply);
+		const reply2fa: TFAReply = JSON.parse(status);
 
-	twoFactorAuthEvents();
+		if (reply2fa.status)
+			switch2fa.innerHTML = SETTINGS_TWOFA_DISABLE;
+		else
+			switch2fa.innerHTML = SETTINGS_TWOFA_ENABLE;
+
+		twoFactorAuthEvents();
+
+	} catch {
+		console.error('status not found');
+	}
 }
 
 function twoFactorAuthEvents(): void {

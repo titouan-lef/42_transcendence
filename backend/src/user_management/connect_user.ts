@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { sendReply } from "../utils/HTTP.js";
 import { isValidPassword } from "../utils/hash_string.js";
-import { changeUserEmail, changeUserPicture, getUserPassword, getUserPicture, is2FAEnabled } from "../database/user.js";
+import { updateEmail, changeUserPicture, getUserPassword, getUserPicture, is2FAEnabled } from "../database/user.js";
 import fs from 'fs';
 import util from 'util';
 import { pipeline } from 'stream';
@@ -76,7 +76,7 @@ async function changeEmail(req: FastifyRequest<{ Body: EmailBody }>, reply: Fast
 		sendReply(reply, 400, "No email given");
 		return;
 	}
-	await changeUserEmail(user, email);
+	await updateEmail(user, email);
 	sendReply(reply, 200, "Email updated");
 }
 
