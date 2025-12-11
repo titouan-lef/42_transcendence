@@ -47,7 +47,20 @@ async function getGoalById(id: number): Promise<Goal | undefined> {
 	);
 }
 
-export { Goal, createGoalTable, insertGoal };
+async function getPlayerGamesBySeason(seasonId: number, username: string): Promise<number | undefined> {
+	const row = await applyQuery(
+		async (db) => await db.get(
+			`SELECT COUNT(GOAL.gameId) AS gamesPlayedCount
+			FROM ${TABLE_NAME} AS GOAL INNER JOIN Game AS GAME ON GOAL.gameId = GAME.id
+			WHERE GAME.seasonId = ? AND GOAL.by = ? 
+			GROUP BY GAME.seasonId, GOAL.by;`,
+			[seasonId, username]
+		), "getGamesPlayedCount"
+	);
+	return row.gamesPlayedCount;
+}
+
+export { Goal, createGoalTable, insertGoal, getPlayerGamesBySeason };
 /**
  * 
  * @todo see if we keep it 

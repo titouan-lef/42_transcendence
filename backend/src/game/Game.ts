@@ -11,11 +11,12 @@ import { Human } from "./player/Human.js";
 import { stopGame } from "./game_manager.js";
 import { getCurrentSeason } from "../database/season.js";
 import { insertGame, setGameDuration } from "../database/game.js";
-import { insertGoal } from "../database/goal.js";
+import { getPlayerGamesBySeason, insertGoal } from "../database/goal.js";
 import { getBallId } from "../database/ball.js";
 import { getMapId } from "../database/map.js";
 import { insertGameRule } from "../database/game_rule.js";
 import { getRuleId } from "../database/rule.js";
+import { defineEloNewPlayer, updateEloAfterGame, updateEloNewSeason } from "../tournament/elo.js";
 
 class Game {
 	private readonly id: number;
@@ -34,6 +35,7 @@ class Game {
 	private gameTimer = 0;
 	private readonly points: Point[] = [];
 	private readonly gameIdDb?;
+	private gameStopped = false;
 
 	constructor (id: number, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine, gameIdDb?: number) {
 		this.id = id;
@@ -108,6 +110,9 @@ class Game {
 	}
 
 	async stop(): Promise<void> {
+		if (this.gameStopped) /**@todo si vous voulez trouver mieux, MAIS C PAS MOI QUI LE FERAIS */
+			return ;
+		this.gameStopped = true;
 		clearInterval(this.gameTimerIntervalId);
 		this.stopSendingPositions();
 		this.sceneManager.destroyScene();
@@ -117,9 +122,33 @@ class Game {
 			this.sceneManager.showDisposeLogs(this.scene);
 		this.scene.dispose();
 		this.engine.dispose();
-		if (this.gameIdDb)
+		if (this.gameIdDb) {
 			await setGameDuration(this.gameIdDb, this.gameTimer);
-		/**@todo updateEloAfterGame()*/
+			await this.updateElos();
+		}
+	}
+
+	private async updateElos(): Promise<void> {
+		console.log("test");
+		for (let i = 1; i <= 2; i++) {
+			const player = this.sceneManager.getPlayer(i)?.getName();
+			const seasonId = await getCurrentSeason();
+			if (!seasonId || !player)
+				return ;
+			const playerGamesBySeason = await getPlayerGamesBySeason(seasonId, player);
+			if (!playerGamesBySeason)
+				return ;
+			console.log(player + " has won " + playerGamesBySeason + " games this season.");
+			// if (playerGamesBySeason == 10) {
+			// 	if (hasElo(player))
+			// 		defineEloNewPlayer();
+			// 	else
+			// 		updateEloNewSeason();
+			// } else if (playerGamesBySeason > 10){
+			// 	updateEloAfterGame()
+			// }
+		}
+		return ;
 	}
 
 	private setScene(): void {
