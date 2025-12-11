@@ -1,4 +1,4 @@
-import { showProfile } from "../../pages/modules/profile_settings.js";
+import { showUserInfos } from "../../pages/modules/profile_settings_user_infos.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
 import { isRequestSuccessfull, printReplyInDiv, sendPostRequestToBack } from "../api_request.js";
 import { getUserInfos } from "./login.js";
@@ -37,7 +37,7 @@ async function updateUser(): Promise<void> {
 	}
 
 	await getUserInfos();
-	showProfile();
+	showUserInfos();
 }
 
 export { updateUser };

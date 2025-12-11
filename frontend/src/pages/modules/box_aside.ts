@@ -1,5 +1,6 @@
 import { createButtonHtml } from "../../components/button";
 import { getReplyMessage, isRequestSuccessfull, sendPostRequestToBack } from "../../services/api_request";
+import { updateAvatar } from "../../services/user_management/avatar";
 import { currentUser, disconnectUser } from "../../services/user_management/login";
 import { applyColor } from "../../utils/applyColor";
 import { getSafeElement } from "../../utils/getSafeElement";
@@ -75,21 +76,6 @@ const ASIDE_BOX = `
 	</div>
 </aside>
 `;
-
-async function updateAvatar(): Promise<void> {
-	const avatar = getSafeElement("avatar-img", HTMLImageElement);
-
-	if (!currentUser) {
-		avatar.src = "./images/avatar.png";
-		return;
-	}
-	const reply = await sendPostRequestToBack("/api/user/picture", JSON.stringify({ user: currentUser.username }));
-
-	if (isRequestSuccessfull(reply)) {
-		const path = await getReplyMessage(reply);
-		avatar.src = `/pictures/${path}?t=${Date.now()}`;
-	}
-}
 
 function asideConnectedEvents(): void {
 	const allElements = getSafeElement('aside', HTMLElement).querySelectorAll('*[id]');
