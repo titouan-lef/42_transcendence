@@ -1,4 +1,4 @@
-import { applyColor } from "../../utils/applyColor";
+import { applyColor } from "../../../utils/applyColor";
 
 const DIALOG_BTN_STYLE = `
 	p-[5px] rounded-xl

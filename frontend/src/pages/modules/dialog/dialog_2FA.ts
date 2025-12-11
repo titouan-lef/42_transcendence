@@ -1,6 +1,6 @@
-import { createButtonHtml } from "../../components/button";
-import { createInputHtml } from "../../components/input";
-import { sendSecureCode } from "../../services/user_management/login";
+import { createButtonHtml } from "../../../components/button";
+import { createInputHtml } from "../../../components/input";
+import { sendSecureCode } from "../../../services/user_management/login";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_SEPARATOR_STYLE, DIALOG_FORM_STYLE } from "./dialog_style";
 
 /** @todo make print-content great. again? */

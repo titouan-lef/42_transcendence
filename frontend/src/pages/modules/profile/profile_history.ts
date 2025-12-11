@@ -1,5 +1,4 @@
-import { applyColor } from "../../utils/applyColor";
-import { getSafeElement } from "../../utils/getSafeElement";
+import { getSafeElement } from "../../../utils/getSafeElement";
 import { createHistoryBox } from "./profile_history_box";
 import { setActiveBtn } from "./profile_navbar";
 

@@ -1,5 +1,5 @@
-import { createParagraphHtml } from "../../components/paragraph";
-import { TranslationKey } from "../../lang/lang";
+import { createParagraphHtml } from "../../../components/paragraph";
+import { TranslationKey } from "../../../lang/lang";
 
 const DASHBOARD_CARD_STYLE =  `
 flex-1

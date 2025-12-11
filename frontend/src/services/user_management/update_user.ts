@@ -1,4 +1,4 @@
-import { showUserInfos } from "../../pages/modules/profile_settings_user_infos.js";
+import { showUserInfos } from "../../pages/modules/profile/profile_settings_user_infos.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
 import { isRequestSuccessfull, printReplyInDiv, sendPostRequestToBack } from "../api_request.js";
 import { getUserInfos } from "./login.js";

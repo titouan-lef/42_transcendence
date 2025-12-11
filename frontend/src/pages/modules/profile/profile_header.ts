@@ -1,5 +1,5 @@
-import { capitalizeElementValueHTML } from "../../components/component_utils";
-import { createParagraph } from "../../components/paragraph";
+import { capitalizeElementValueHTML } from "../../../components/component_utils";
+import { createParagraph } from "../../../components/paragraph";
 
 const TITLE_STYLE = `
 grow font-bold text-[48px]

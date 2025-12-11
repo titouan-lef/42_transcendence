@@ -1,7 +1,7 @@
-import { createButtonHtml } from "../../components/button.js";
-import { createInputHtml } from "../../components/input.js";
-import { guestUser } from "../../services/user_management/guest.js";
-import { connectUser } from "../../services/user_management/login.js";
+import { createButtonHtml } from "../../../components/button.js";
+import { createInputHtml } from "../../../components/input.js";
+import { guestUser } from "../../../services/user_management/guest.js";
+import { connectUser } from "../../../services/user_management/login.js";
 import { openDialogSignUp } from "./dialog.js";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_SEPARATOR_STYLE, DIALOG_FORM_STYLE } from "./dialog_style.js";
 
