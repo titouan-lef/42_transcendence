@@ -13,7 +13,7 @@ interface InfoList {
 	pseudo: string;
 	email: string | null;
 	enabled2FA: boolean;
-	//theme;
+	/** @todo theme;*/
 }
 
 let currentUser: InfoList | null = null;
