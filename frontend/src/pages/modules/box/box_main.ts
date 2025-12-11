@@ -1,8 +1,8 @@
-import { createButtonHtml } from "../../components/button.js";
-import { loadPage } from "../../routes/page.js";
-import { applyColor } from "../../utils/applyColor.js";
-import { getSafeElement } from "../../utils/getSafeElement.js";
-import { GAME_PAGE, gamePageEvents } from "../game_page.js";
+import { createButtonHtml } from "../../../components/button.js";
+import { loadPage } from "../../../routes/page.js";
+import { applyColor } from "../../../utils/applyColor.js";
+import { getSafeElement } from "../../../utils/getSafeElement.js";
+import { GAME_PAGE, gamePageEvents } from "../../game_page.js";
 
 const MAIN_BOX_STYLE = `
 grow
