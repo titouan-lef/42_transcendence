@@ -47,7 +47,7 @@ async function getGoalById(id: number): Promise<Goal | undefined> {
 	);
 }
 
-async function getPlayerGamesBySeason(seasonId: number, username: string): Promise<number | undefined> {
+async function getPlayerGamesBySeason(seasonId: number, username: string): Promise<number> {
 	const row = await applyQuery(
 		async (db) => await db.get(
 			`SELECT COUNT(GOAL.gameId) AS gamesPlayedCount
@@ -57,6 +57,8 @@ async function getPlayerGamesBySeason(seasonId: number, username: string): Promi
 			[seasonId, username]
 		), "getGamesPlayedCount"
 	);
+	if (!row)
+		return 0;
 	return row.gamesPlayedCount;
 }
 

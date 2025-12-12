@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
-import { BallOption, GameSettings } from "./settings/GameSettings.js";
+import { BallOption, GameSettings, MapOption } from "./settings/GameSettings.js";
 import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
 import { GAME_STEP_INTERVAL, PHYSIC_STEP_INTERVAL, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
@@ -10,7 +10,7 @@ import { Player } from "./player/Player.js";
 import { Human } from "./player/Human.js";
 import { stopGame } from "./game_manager.js";
 import { getCurrentSeason } from "../database/season.js";
-import { insertGame, setGameDuration } from "../database/game.js";
+import { insertGame } from "../database/game.js";
 import { getPlayerGamesBySeason, insertGoal } from "../database/goal.js";
 import { getBallId } from "../database/ball.js";
 import { getMapId } from "../database/map.js";
@@ -34,13 +34,11 @@ class Game {
 	private gameTimerIntervalId: ReturnType<typeof setInterval>;
 	private gameTimer = 0;
 	private readonly points: Point[] = [];
-	private readonly gameIdDb?;
+	private gameIdDb?: number;
 	private gameStopped = false;
 
-	constructor (id: number, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine, gameIdDb?: number) {
+	constructor (id: number, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.id = id;
-		if (gameIdDb)
-			this.gameIdDb = gameIdDb;
 		this.engine = engine;
 		this.settings = settings;
 		this.camera = new babylon.ArcRotateCamera("Camera", 0, 0, 0, babylon.Vector3.Zero(), scene);
@@ -58,15 +56,22 @@ class Game {
 	static async create(id: number, settings: GameSettings): Promise<Game> {
 		const engine =  new babylon.NullEngine();
 		const scene = await Game.initScene(engine);
-		if (!settings.isRanked)
-			return new Game(id, settings, scene, engine);
+		
 
+		return new Game(id, settings, scene, engine);
+	}
+
+	private async insertGameInDb(): Promise<void> {
 		const currentSeason = await getCurrentSeason();
-		if (!currentSeason)
-			throw new Error("No current Season");
-		const gameIdDb = await insertGame(currentSeason);
-		if (!gameIdDb)
-			throw new Error("Error while creating new game");
+		if (!currentSeason) {
+			console.log("lol1");
+			return ;
+		}
+		this.gameIdDb = await insertGame(currentSeason, this.gameTimer);
+		if (!this.gameIdDb) {
+			console.log("lol");
+			return ;
+		}
 		
 		const spinRuleId = await getRuleId("spin");
 		const rotateRuleId = await getRuleId("rotate");
@@ -75,15 +80,13 @@ class Game {
 		const canonCountRuleId = await getRuleId("canonCount");
 		if (!spinRuleId || !rotateRuleId || !windRuleId || !dashRuleId || !canonCountRuleId)
 			throw new Error("Error while creating rules");
-		await insertGameRule(gameIdDb, spinRuleId, settings.options.spin);
-		await insertGameRule(gameIdDb, rotateRuleId, settings.options.rotatingPlayer);
-		await insertGameRule(gameIdDb, windRuleId, settings.options.windAffectsBall);
-		await insertGameRule(gameIdDb, dashRuleId, settings.options.dashingPlayer);
-		await insertGameRule(gameIdDb, canonCountRuleId,
-			settings.options.canonCount > 0 ? true : false,
-			settings.options.canonCount > 0 ? settings.options.canonCount : undefined);
-
-		return new Game(id, settings, scene, engine, gameIdDb);
+		await insertGameRule(this.gameIdDb, spinRuleId, this.settings.options.spin);
+		await insertGameRule(this.gameIdDb, rotateRuleId, this.settings.options.rotatingPlayer);
+		await insertGameRule(this.gameIdDb, windRuleId, this.settings.options.windAffectsBall);
+		await insertGameRule(this.gameIdDb, dashRuleId, this.settings.options.dashingPlayer);
+		await insertGameRule(this.gameIdDb, canonCountRuleId,
+			this.settings.options.canonCount > 0 ? true : false,
+			this.settings.options.canonCount > 0 ? this.settings.options.canonCount : undefined);
 	}
 
 	private static async initScene(engine: babylon.Engine): Promise<babylon.Scene> {
@@ -113,6 +116,14 @@ class Game {
 		if (this.gameStopped) /**@todo si vous voulez trouver mieux, MAIS C PAS MOI QUI LE FERAIS */
 			return ;
 		this.gameStopped = true;
+		if (this.settings.isRanked) {
+			await this.insertGameInDb();
+			console.log(this.gameIdDb);
+			for (const point of this.points) {
+				await this.insertPointInDb(point);
+			};
+			await this.updateElos();
+		}
 		clearInterval(this.gameTimerIntervalId);
 		this.stopSendingPositions();
 		this.sceneManager.destroyScene();
@@ -122,10 +133,6 @@ class Game {
 			this.sceneManager.showDisposeLogs(this.scene);
 		this.scene.dispose();
 		this.engine.dispose();
-		if (this.gameIdDb) {
-			await setGameDuration(this.gameIdDb, this.gameTimer);
-			await this.updateElos();
-		}
 	}
 
 	private async updateElos(): Promise<void> {
@@ -136,8 +143,6 @@ class Game {
 			if (!seasonId || !player)
 				return ;
 			const playerGamesBySeason = await getPlayerGamesBySeason(seasonId, player);
-			if (!playerGamesBySeason)
-				return ;
 			console.log(player + " has won " + playerGamesBySeason + " games this season.");
 			// if (playerGamesBySeason == 10) {
 			// 	if (hasElo(player))
@@ -160,8 +165,7 @@ class Game {
 		});
 	}
 
-	async storePoint(goalerId: 1 | 2, ball: BallOption): Promise<void> {
-		const map = this.sceneManager.getMapType();
+	private storePoint(goalerId: 1 | 2, ball: BallOption, map: MapOption): void {
 		const currentPoint = {
 			ball: ball,
 			map: map,
@@ -169,23 +173,20 @@ class Game {
 			goaler: goalerId
 		};
 		this.points.push(currentPoint);
+	}
 
-		if (!this.settings.isRanked)
-			return;
-		const timer = this.gameTimer;
-		const mapIdDb = await getMapId(map);
-		const ballIdDb = await getBallId(ball);
-		const goalerName = this.sceneManager.getPlayer(goalerId)?.getName();
+	private async insertPointInDb(point: Point): Promise<void> {
+		const mapIdDb = await getMapId(point.map);
+		const ballIdDb = await getBallId(point.ball);
+		const goalerName = this.sceneManager.getPlayer(point.goaler)?.getName();
 		console.log("ball: " + ballIdDb);
 		console.log("map: " + mapIdDb);
 		console.log("goaler: " + goalerName);
 		console.log("gameid: " + this.gameIdDb);
 		if (!ballIdDb || !mapIdDb || !goalerName || !this.gameIdDb)
 			return;
-		insertGoal(mapIdDb, ballIdDb, goalerName, timer, this.gameIdDb);
-	}
-
-	
+		insertGoal(mapIdDb, ballIdDb, goalerName, point.timer, this.gameIdDb);
+	}	
 
 	/**check collision for each balls */
 	async checkEndOfPoint(): Promise<void> {
@@ -201,12 +202,11 @@ class Game {
 				return;
 			this.changeGameSpeed(1);
 			goalInfos === "player1" ? this.score.x += 1 : this.score.y += 1;
-			await this.storePoint(goalInfos === "player1" ? 1 : 2, ball);
-			if (this.sceneManager.doesGameEnded()) // if closing game while animation
-				return;
+			const map = this.sceneManager.getMapType();
+			this.storePoint(goalInfos === "player1" ? 1 : 2, ball, map);
 			this.sendScore();
 			if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN) {
-				stopGame(this.id);
+				await stopGame(this.id);
 			} else {
 				this.inAnimation = false;
 				this.sceneManager.destroyEnvironnement();
@@ -372,15 +372,26 @@ class Game {
 		}, this.gameStepsInterval);
 	}
 
+	private incrementPointsToMax(leaverId: 1 | 2): void {
+		if (leaverId === 1) {
+			while(this.score.y < POINTS_TO_WIN) {
+				this.score.y++;
+				this.storePoint(2, "default", "default");
+			}
+		} else {
+			while(this.score.x < POINTS_TO_WIN) {
+				this.score.x++;
+				this.storePoint(1, "default", "default");
+			}
+		}
+	}
+
 	private defineCloseAction(leaver: Player, stayer: Player): void {
 		if (leaver instanceof Human) {
-			leaver.defineCloseAction(() => {
+			leaver.defineCloseAction(async () => {
 				const leaverId = leaver.getId();
-				if (leaverId === 1)
-					this.score.y = POINTS_TO_WIN;
-				else
-					this.score.x = POINTS_TO_WIN;
-				stopGame(this.id);
+				this.incrementPointsToMax(leaverId);
+				await stopGame(this.id);
 				if (stayer instanceof Human) {
 					stayer.closeSocket();
 				}
