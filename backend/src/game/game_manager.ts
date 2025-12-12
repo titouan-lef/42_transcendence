@@ -1,4 +1,3 @@
-import { setGameDuration } from "../database/game.js";
 import { Game } from "./Game.js";
 import { GameOptions, GameSettings } from "./settings/GameSettings.js";
 import { WebSocket } from "ws";
