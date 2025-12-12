@@ -88,7 +88,7 @@ async function changeTheme(req: FastifyRequest<{ Body:ThemeBody }>, reply: Fasti
 		return;
 	}
 	await updateTheme(user, theme);
-	sendReply(reply, 200, "Email updated");
+	sendReply(reply, 200, "Theme updated");
 }
 
 export { UserBody, ThemeBody, connectUser, disconnectUser, getPicture, changePicture, changeTheme };

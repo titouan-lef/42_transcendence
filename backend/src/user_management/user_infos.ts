@@ -21,9 +21,8 @@ async function getUserInfos(req: FastifyRequest, reply: FastifyReply): Promise<v
 		return;
 
 	let theme: string | null = null;
-	if (user.theme)
-		theme = await getTheme(user.theme);
-
+	if (user.themeId !== null)
+		theme = await getTheme(user.themeId);
 	const infoList: InfoList = {
 		username: username,
 		pseudo: user.pseudo,

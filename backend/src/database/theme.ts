@@ -31,7 +31,7 @@ async function getAllTheme(): Promise<Theme[] | undefined> {
 }
 
 async function getTheme(id: number): Promise<string | null> {
-	const row =  await applyQuery(
+	const row = await applyQuery(
 		async (db) => await db.get(
 			`SELECT name
 			FROM ${TABLE_NAME}

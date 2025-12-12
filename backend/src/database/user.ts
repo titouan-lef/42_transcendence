@@ -6,7 +6,7 @@ interface User {
 	createdAt: string;
 	hashedPassword: string;
 	avatar: string | null;
-	theme: number | null;
+	themeId: number | null;
 	email: string | null;
 	/**@todo ADD keybind */
 }
@@ -25,7 +25,7 @@ async function createUserTable(): Promise<void> {
 			avatar TEXT NOT NULL,
 			is2FAEnabled BOOLEAN NOT NULL,
 			email TEXT,
-			theme Id INTEGER REFERENCES Theme(id));`
+			themeId INTEGER REFERENCES Theme(id));`
 		), "create" + TABLE_NAME + "Table"
 	);
 }
@@ -33,7 +33,7 @@ async function createUserTable(): Promise<void> {
 async function insertUser(username: string, pseudo: string, hashedPassword: string): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (username, pseudo, hashedPassword, avatar, is2FAEnabled, theme) VALUES (?, ?, ?, ?, ?, ?)`,
+			`INSERT INTO ${TABLE_NAME} (username, pseudo, hashedPassword, avatar, is2FAEnabled, themeId) VALUES (?, ?, ?, ?, ?, ?)`,
 			[username, pseudo, hashedPassword, DEFAULT_AVATAR, false, null]
 		), "insert" + TABLE_NAME
 	);
@@ -192,9 +192,9 @@ async function updateTheme(username: string, theme: string): Promise<void> {
 	await applyQuery(async (db) => {
 		await db.run(`
 			UPDATE ${TABLE_NAME}
-			SET theme = (
+			SET themeId = (
 				SELECT id
-				FROM Theme 
+				FROM Theme
 				WHERE name = ?)
 			WHERE username = ?
 			`,[theme, username]);
