@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { sendReply } from "../utils/HTTP.js";
 import { isValidPassword } from "../utils/hash_string.js";
-import { updateEmail, changeUserPicture, getUserPassword, getUserPicture, is2FAEnabled } from "../database/user.js";
+import { changeUserPicture, getUserPassword, getUserPicture, is2FAEnabled, updateTheme } from "../database/user.js";
 import fs from 'fs';
 import util from 'util';
 import { pipeline } from 'stream';
@@ -59,23 +59,6 @@ async function getPicture(req: FastifyRequest<{ "Body": UserBody }>, reply: Fast
 	sendReply(reply, 200, filename);
 }
 
-interface EmailBody {
-	email: string;
-}
-
-async function changeEmail(req: FastifyRequest<{ Body: EmailBody }>, reply: FastifyReply): Promise<void> {
-	const user = req.user;
-	if (!user)
-		return;
-	const email = req.body?.email;
-	if (!email) {
-		sendReply(reply, 400, "No email given");
-		return;
-	}
-	await updateEmail(user, email);
-	sendReply(reply, 200, "Email updated");
-}
-
 async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const user = req.user;
 	if (!user)
@@ -91,4 +74,21 @@ async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<
 	sendReply(reply, 200, "Profile picture updated");
 }
 
-export { UserBody, EmailBody, connectUser, disconnectUser, getPicture, changePicture, changeEmail };
+interface ThemeBody {
+	theme: string;
+}
+
+async function changeTheme(req: FastifyRequest<{ Body:ThemeBody }>, reply: FastifyReply): Promise<void> {
+	const user = req.user;
+	if (!user)
+		return;
+	const theme = req.body?.theme;
+	if (theme === undefined) {
+		sendReply(reply, 400, "No theme given");
+		return;
+	}
+	await updateTheme(user, theme);
+	sendReply(reply, 200, "Email updated");
+}
+
+export { UserBody, ThemeBody, connectUser, disconnectUser, getPicture, changePicture, changeTheme };
