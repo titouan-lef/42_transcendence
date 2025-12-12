@@ -6,14 +6,13 @@ interface User {
 	createdAt: string;
 	hashedPassword: string;
 	avatar: string | null;
-	themeId: number | null; /** @todo null for the random or default theme ?*/
+	theme: string | null;
 	email: string | null;
 	/**@todo ADD keybind */
 }
 
 const TABLE_NAME = "User";
 const DEFAULT_AVATAR = "";/**@todo to complete*/
-const DEFAULT_THEME = "";/**@todo to complete*/
 
 async function createUserTable(): Promise<void> {
 	await applyQuery(
@@ -26,7 +25,7 @@ async function createUserTable(): Promise<void> {
 			avatar TEXT NOT NULL,
 			is2FAEnabled BOOLEAN NOT NULL,
 			email TEXT,
-			themeId INTEGER REFERENCES Theme(id));`
+			theme TEXT );`
 		), "create" + TABLE_NAME + "Table"
 	);
 }
@@ -34,8 +33,8 @@ async function createUserTable(): Promise<void> {
 async function insertUser(username: string, pseudo: string, hashedPassword: string): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (username, pseudo, hashedPassword, avatar, is2FAEnabled, themeId) VALUES (?, ?, ?, ?, ?, ?)`,
-			[username, pseudo, hashedPassword, DEFAULT_AVATAR, false, DEFAULT_THEME]
+			`INSERT INTO ${TABLE_NAME} (username, pseudo, hashedPassword, avatar, is2FAEnabled, theme) VALUES (?, ?, ?, ?, ?, ?)`,
+			[username, pseudo, hashedPassword, DEFAULT_AVATAR, false, null]
 		), "insert" + TABLE_NAME
 	);
 }
@@ -189,6 +188,19 @@ async function updateEmail(username: string, email: string): Promise<void> {
 	}, "update" + TABLE_NAME + "Email");
 }
 
+async function updateTheme(username: string, theme: string): Promise<void> {
+	await applyQuery(async (db) => {
+		await db.run(`
+			UPDATE ${TABLE_NAME}
+			SET theme = (
+				SELECT id
+				FROM Theme 
+				WHERE name = ?)
+			WHERE username = ?
+			`,[theme, username]);
+	}, "update" + TABLE_NAME + "Theme");
+}
+
 export { User, getUserByUsername, createUserTable, getUserPassword, doesUserExist, insertUser, disabled2FA, enabled2FA, getUserEmail, changeUserPicture, getUserPicture };
-export { updatePseudo, updatePassword, updateEmail };
+export { updatePseudo, updatePassword, updateEmail, updateTheme };
 export { is2FAEnabled, isEmailDefined };

@@ -6,7 +6,7 @@ import fastifyMultipart from '@fastify/multipart';
 import fastifyStatic from "@fastify/static";
 import { initDB } from "./database/init.js";
 import { addNewUser, UpdateUserBody, updateUserInfos } from "./user_management/create_account.js";
-import { connectUser, disconnectUser, changePicture, getPicture, UserBody } from "./user_management/connect_user.js";
+import { connectUser, disconnectUser, changePicture, getPicture, UserBody, changeTheme, ThemeBody } from "./user_management/connect_user.js";
 import { isGameFound, newAIGame, newGame, newLocalGame } from "./game/web_sockets/connection.js";
 import { addPlayerToMatchmakingSystem } from "./tournament/matchmaking.js";
 import { getFriendList, newFriend, removeFriend } from "./user_management/friends.js";
@@ -50,6 +50,7 @@ APP.post("/api/user/login", connectUser);
 APP.get("/api/user/logout", { preHandler: verifyAuth }, disconnectUser);
 APP.post("/api/user/picture", getPicture);
 APP.post("/api/user/change_picture", { preHandler: verifyAuth }, changePicture);
+APP.post<{ Body:ThemeBody }>("/api/user/change_theme", { preHandler: verifyAuth }, changeTheme);
 
 // --- 2FA ---
 APP.post("/api/user/secure", verify2FA);

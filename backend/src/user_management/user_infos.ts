@@ -7,7 +7,7 @@ interface InfoList {
 	pseudo: string;
 	email: string | null;
 	enabled2FA: boolean;
-	/** @todo add theme: Themes;*/
+	theme: string | null;
 }
 
 async function getUserInfos(req: FastifyRequest, reply: FastifyReply): Promise<void> {
@@ -24,6 +24,7 @@ async function getUserInfos(req: FastifyRequest, reply: FastifyReply): Promise<v
 		pseudo: user.pseudo,
 		email: user.email,
 		enabled2FA: Boolean(await is2FAEnabled(username)),
+		theme: user.theme
 	};
 	sendReply(reply, 200, JSON.stringify(infoList));
 }
