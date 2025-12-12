@@ -1,4 +1,6 @@
+import { setTheme } from "../assets/themes/theme.js";
 import { WELCOME, welcomeEvents } from "../pages/welcome.js";
+import { getUserInfos } from "../services/user_management/login.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 
 const ELEM_ID = 'main-content';
@@ -27,7 +29,9 @@ function loadPage(page: string, eventLoader: () => void): void {
 /**
  * Fills the div with ep id in the html file to prepare all pages.
  */
-function init(): void {
+async function init(): Promise<void> {
+	await getUserInfos();
+	setTheme();
 	loadPage(WELCOME, welcomeEvents);
 	// history.replaceState({ page: ELEM.innerHTML }, ""); // Clears statement to setup back and forward button
 };

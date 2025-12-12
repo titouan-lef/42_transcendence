@@ -1,27 +1,25 @@
-enum Themes {
-	PIZZA_LULU = "pizza_lulu",
-	OVER_TITOUAN = "over_titouan",
-	SUGAR_RUSHTMAN = "sugar_rushtman",
-	POLYBIUS = "polybius",
-	NEON_HEARTS = "neon_hearts",
-	CLAW_MACHINE = "claw_machine",
-	LAZER_TIM = "lazer_tim",
-	ELECTRONIC_ECLYPSE = "electronic_eclypse",
-	PLEASE_INSERT_25C = "please_insert_25c",
-	TICKET_MUNCHER = "ticket_muncher",
-	ELECTRIC_PL = "electric_pl",
-	MONQ = "monq",
+import { Themes, THEMES_LIST } from "./themes";
+import { sendPostRequestToBack } from "../../services/api_request";
+import { currentUser } from "../../services/user_management/login";
+
+function randomTheme(): void {
+	const randomIndex = Math.floor(Math.random() * THEMES_LIST.length);
+	document.body.dataset.theme = THEMES_LIST[randomIndex];
 }
 
-function initTheme(): void {
-	const themeList = Object.values(Themes);
-	const randomIndex = Math.floor(Math.random() * Object.values(Themes).length);
-	document.body.dataset.theme = themeList[randomIndex];
+function setTheme(): void {
+	if (currentUser?.theme)
+		document.body.dataset.theme = currentUser.theme;
+	else
+		randomTheme();
 }
 
-function setTheme(theme: Themes): void {
-	/** @todo send to database if an user is connected ? */
-	document.body.dataset.theme = theme;
+function updateTheme(theme: Themes): void {
+	if (!currentUser)
+		return;
+	sendPostRequestToBack("/api/user/change_theme", JSON.stringify({ theme: theme }));
+	currentUser.theme = theme;
+	setTheme();
 }
 
-export { Themes, setTheme, initTheme };
+export { Themes, setTheme, updateTheme };

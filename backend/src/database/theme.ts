@@ -30,18 +30,21 @@ async function getAllTheme(): Promise<Theme[] | undefined> {
 	return await fetchAll(TABLE_NAME);
 }
 
-async function getThemeById(id: number): Promise<Theme | undefined> {
-	return await applyQuery(
+async function getTheme(id: number): Promise<string | null> {
+	const row =  await applyQuery(
 		async (db) => await db.get(
-			`SELECT *
+			`SELECT name
 			FROM ${TABLE_NAME}
 			WHERE id = ?`,
 			[id]
 		), "get" + TABLE_NAME + "ById"
 	);
+	if (!row)
+		return null;
+	return (row.name);
 }
 
-export { Theme, createThemeTable, insertTheme };
+export { Theme, createThemeTable, insertTheme, getTheme };
 /**
  * @todo see if we keep it
 async function updateTheme(id: number, newName: string): Promise<void> {

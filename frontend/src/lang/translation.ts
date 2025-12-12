@@ -161,18 +161,18 @@ const TRANSLATOR = {
 		en: "season",
 		fr: "saison",
 	},
-	s1: {
+	s1: { /** @todo find better solution */
 		en: "{season} one",
 		fr: "{season} une"
 	},
-	s2: {
+	s2: { /** @todo find better solution */
 		en: "{season} two",
 		fr: "{season} deux"
 	},
-	s3: {
+	s3: { /** @todo find better solution */
 		en: "{season} three",
 		fr: "{season} trois"
-	},
+	}, 
 	delete_account: {
 		en: "delete account",
 		fr: "supprimer compte"

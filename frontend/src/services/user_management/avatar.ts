@@ -1,5 +1,5 @@
 import { getSafeElement } from "../../utils/getSafeElement";
-import { getReplyMessage, isRequestSuccessfull, printReplyInDiv, sendFile, sendPostRequestToBack } from "../api_request";
+import { getReplyMessage, printReplyInDiv, sendFile, sendPostRequestToBack } from "../api_request";
 import { currentUser } from "./login";
 
 async function uploadProfilePicture(file: File): Promise<void> {
@@ -21,7 +21,7 @@ async function updateAvatar(): Promise<void> {
 	}
 	const reply = await sendPostRequestToBack("/api/user/picture", JSON.stringify({ user: currentUser.username }));
 
-	if (isRequestSuccessfull(reply)) {
+	if (reply.status === 200) {
 		const path = await getReplyMessage(reply);
 		avatar.src = `/pictures/${path}?t=${Date.now()}`;
 	}
