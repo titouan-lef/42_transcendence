@@ -3,6 +3,8 @@ import { applyQuery, fetchAll } from "./db_utils.js";
 interface Goal {
 	id: number;
 	scoredAt: string;
+	mapId: number;
+	ballId: number;
 	gameId: number;
 	username: string;
 }

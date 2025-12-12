@@ -63,15 +63,11 @@ class Game {
 
 	private async insertGameInDb(): Promise<void> {
 		const currentSeason = await getCurrentSeason();
-		if (!currentSeason) {
-			console.log("lol1");
+		if (!currentSeason)
 			return ;
-		}
 		this.gameIdDb = await insertGame(currentSeason, this.gameTimer);
-		if (!this.gameIdDb) {
-			console.log("lol");
+		if (!this.gameIdDb)
 			return ;
-		}
 		
 		const spinRuleId = await getRuleId("spin");
 		const rotateRuleId = await getRuleId("rotate");
@@ -118,7 +114,6 @@ class Game {
 		this.gameStopped = true;
 		if (this.settings.isRanked) {
 			await this.insertGameInDb();
-			console.log(this.gameIdDb);
 			for (const point of this.points) {
 				await this.insertPointInDb(point);
 			};
@@ -136,7 +131,6 @@ class Game {
 	}
 
 	private async updateElos(): Promise<void> {
-		console.log("test");
 		for (let i = 1; i <= 2; i++) {
 			const player = this.sceneManager.getPlayer(i)?.getName();
 			const seasonId = await getCurrentSeason();
@@ -179,10 +173,6 @@ class Game {
 		const mapIdDb = await getMapId(point.map);
 		const ballIdDb = await getBallId(point.ball);
 		const goalerName = this.sceneManager.getPlayer(point.goaler)?.getName();
-		console.log("ball: " + ballIdDb);
-		console.log("map: " + mapIdDb);
-		console.log("goaler: " + goalerName);
-		console.log("gameid: " + this.gameIdDb);
 		if (!ballIdDb || !mapIdDb || !goalerName || !this.gameIdDb)
 			return;
 		insertGoal(mapIdDb, ballIdDb, goalerName, point.timer, this.gameIdDb);

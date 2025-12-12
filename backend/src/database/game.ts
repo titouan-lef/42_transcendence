@@ -3,8 +3,7 @@ import { applyQuery, fetchAll } from "./db_utils.js";
 interface Game {
 	id: number;
 	beganAt: string;
-	mapId: number;
-	ballId: number;
+	duration: number;
 	seasonId: number | null;
 }
 

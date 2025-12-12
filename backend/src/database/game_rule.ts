@@ -4,6 +4,7 @@ interface GameRule {
 	gameId: number;
 	ruleId: number;
 	isEnable: number;
+	value: number;
 }
 
 const TABLE_NAME = "Game_rule";
