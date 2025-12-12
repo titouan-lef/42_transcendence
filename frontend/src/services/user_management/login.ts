@@ -1,3 +1,4 @@
+import { Themes } from "../../assets/themes/theme.js";
 import { isOneStringEmtpy } from "../../utils/strings.js";
 import { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv, isRequestSuccessfull } from "../api_request.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
@@ -13,7 +14,7 @@ interface InfoList {
 	pseudo: string;
 	email: string | null;
 	enabled2FA: boolean;
-	/** @todo theme;*/
+	theme: Themes | null
 }
 
 let currentUser: InfoList | null = null;
@@ -29,7 +30,8 @@ async function getUserInfos(): Promise<void> {
 		username: data.username,
 		pseudo: data.pseudo,
 		email: data.email,
-		enabled2FA: data.enabled2FA
+		enabled2FA: data.enabled2FA,
+		theme: data.theme
 	};
 }
 

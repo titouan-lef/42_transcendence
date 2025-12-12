@@ -6,7 +6,7 @@ interface User {
 	createdAt: string;
 	hashedPassword: string;
 	avatar: string | null;
-	theme: string | null;
+	theme: number | null;
 	email: string | null;
 	/**@todo ADD keybind */
 }
@@ -25,7 +25,7 @@ async function createUserTable(): Promise<void> {
 			avatar TEXT NOT NULL,
 			is2FAEnabled BOOLEAN NOT NULL,
 			email TEXT,
-			theme TEXT );`
+			theme Id INTEGER REFERENCES Theme(id));`
 		), "create" + TABLE_NAME + "Table"
 	);
 }
