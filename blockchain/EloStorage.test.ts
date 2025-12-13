@@ -14,26 +14,26 @@ describe("EloStorage", function () {
 	it("should set and get ELO data for multiple users", async function () {
 		for (const u of users) {
 			await elo.setEloData(u, season, 1200, 200);
-			const [rating, ratingRd] = await elo.getEloData(u, season);
+			const [rating, ratingDeviation] = await elo.getEloData(u, season);
 			expect(rating).to.equal(1200);
-			expect(ratingRd).to.equal(200);
+			expect(ratingDeviation).to.equal(200);
 		}
 
 		await elo.setRating("ael-atmi", season, 1300);
-		const [ratingA, ratingRdA] = await elo.getEloData("ael-atmi", season);
+		const [ratingA, ratingDeviationA] = await elo.getEloData("ael-atmi", season);
 		expect(ratingA).to.equal(1300);
-		expect(ratingRdA).to.equal(200);
+		expect(ratingDeviationA).to.equal(200);
 
 		await elo.setRatingDeviation("tilegran", season, 250);
-		const [ratingT, ratingRdT] = await elo.getEloData("tilegran", season);
+		const [ratingT, ratingDeviationT] = await elo.getEloData("tilegran", season);
 		expect(ratingT).to.equal(1200);
-		expect(ratingRdT).to.equal(250);
+		expect(ratingDeviationT).to.equal(250);
 	});
 
 
 	it("should return default 0 for unknown users", async function () {
-		const [rating, ratingRd]= await elo.getEloData("unknown", season);
+		const [rating, ratingDeviation]= await elo.getEloData("unknown", season);
 		expect(rating).to.equal(0);
-		expect(ratingRd).to.equal(0);
+		expect(ratingDeviation).to.equal(0);
 	});
 });

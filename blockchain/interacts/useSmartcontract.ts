@@ -8,16 +8,16 @@ async function main() {
 	const [signer] = await ethers.getSigners();
 	const contract = await ethers.getContractAt("EloStorage", contractAddress, signer);
 
-	// Read rating and rating_rd
+	// Read rating and ratingDeviation
 	async function getElo(username: string, season: number) {
-		const [rating, ratingRd] = await contract.getEloData(username, season);
-		console.log(`Elo of ${username}, saison ${season}: rating = ${rating}, ratingRd = ${ratingRd}`);
-	return { rating, ratingRd };
+		const [rating, ratingDeviation] = await contract.getEloData(username, season);
+		console.log(`Elo of ${username}, saison ${season}: rating = ${rating}, ratingDeviation = ${ratingDeviation}`);
+	return { rating, ratingDeviation };
 	}
 
 	// Update of both
-	async function setEloData(username: string, season: number, rating: number, ratingRd: number) {
-		const tx = await contract.setEloData(username, season, rating, ratingRd);
+	async function setEloData(username: string, season: number, rating: number, ratingDeviation: number) {
+		const tx = await contract.setEloData(username, season, rating, ratingDeviation);
 		await tx.wait();
 		console.log(`EloData is updated for ${username}, saison ${season}`);
 	}
@@ -29,11 +29,11 @@ async function main() {
 		console.log(`Rating is updated for ${username} à ${rating}`);
 	}
 
-	// Update RatingRd
-	async function setRatingDeviation(username: string, season: number, ratingRd: number) {
-		const tx = await contract.setRatingRd(username, season, ratingRd);
+	// Update RatingDeviation
+	async function setRatingDeviation(username: string, season: number, ratingDeviation: number) {
+		const tx = await contract.setRatingDeviation(username, season, ratingDeviation);
 		await tx.wait();
-		console.log(`RatingRd is updated for ${username} à ${ratingRd}`);
+		console.log(`RatingDeviation is updated for ${username} à ${ratingDeviation}`);
 	}
 
 	// Test
@@ -46,11 +46,11 @@ async function main() {
 	await setRating(username, season, 1600);
 	await getElo(username, season);
 
-	await setRatingRd(username, season, 180);
+	await setRatingDeviation(username, season, 180);
 	await getElo(username, season);
 }
 
-// Exec the script
+// Exécuter le script
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
