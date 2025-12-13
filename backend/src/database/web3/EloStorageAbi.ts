@@ -58,7 +58,7 @@ const ABI = [
         },
         {
           "internalType": "uint256",
-          "name": "ratingRd",
+          "name": "ratingDeviation",
           "type": "uint256"
         }
       ],
