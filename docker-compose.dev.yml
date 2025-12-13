@@ -1,0 +1,46 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      target: dev
+    container_name: pong-backend
+    env_file:
+      - .backend_env
+    networks:
+      - transcendence
+    volumes: # mount local source code for dev
+    - ./backend/src:/app/src
+    restart: "no"   # dev: fail fast, do not restart
+
+  frontend:
+    build:
+      context: ./frontend
+      target: dev
+    container_name: pong-frontend
+    env_file:
+      - .frontend_env
+    depends_on:
+      - backend
+    networks:
+      - transcendence
+    volumes: # mount local source code for dev
+    - ./frontend/src:/app/src
+    - ./frontend/public:/app/public
+    restart: "no"   # dev: fail fast, do not restart
+
+  nginx:
+    build: ./nginx
+    container_name: pong-nginx
+    ports:
+      - "8888:443"  # Using 8888 because 42 computer are not allowed to bind 443. But with 443 on another computer or a VM will work
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - transcendence
+    restart: "on-failure"
+
+networks:
+  transcendence:
+    name: transcendence
+    driver: bridge
