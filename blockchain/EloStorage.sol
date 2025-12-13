@@ -37,7 +37,7 @@ contract EloStorage {
 
 		EloData storage eloPlayer = playerEloBySeason[IdPlayer][season];
 		eloPlayer.r = rating;
-		eloPlayer.rd =ratingDeviation;
+		eloPlayer.rd = ratingDeviation;
 
 		emit EloUpdated(IdPlayer, season, eloPlayer.r, eloPlayer.rd);
 	} 
@@ -63,7 +63,7 @@ contract EloStorage {
 		emit EloUpdated(IdPlayer, season, eloPlayer.r, eloPlayer.rd);
 	}
 
-	function getEloData(string memory username, uint256 season) public view returns (uint256 rating, uint256 ratingRd) {
+	function getEloData(string memory username, uint256 season) public view returns (uint256 rating, uint256 ratingDeviation) {
 
 		uint256 IdPlayer = usernameToId(username);
 
