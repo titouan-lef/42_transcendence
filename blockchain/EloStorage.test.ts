@@ -30,7 +30,6 @@ describe("EloStorage", function () {
 		expect(ratingDeviationT).to.equal(250);
 	});
 
-
 	it("should return default 0 for unknown users", async function () {
 		const [rating, ratingDeviation]= await elo.getEloData("unknown", season);
 		expect(rating).to.equal(0);
