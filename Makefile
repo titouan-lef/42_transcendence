@@ -1,8 +1,3 @@
-#==================== PARAM =====================#
-
-UP_TRACKER		:=	.up_done
-COMPOSE_BAKE	=	true
-
 #==================== COLOR =====================#
 
 RESET			:=	\e[0m
@@ -16,38 +11,59 @@ CYAN			:=	\e[36m
 
 #===================== RULE =====================#
 
-all		: up
+all		: prod
 
-$(UP_TRACKER)	: docker-compose.yml
-		sed -i '/^IP=/d' .env
-		echo "IP=$$(hostname -I | awk '{print $$1}')" >> .env
+env		:
+		touch .frontend_env .backend_env
+		echo "Checking required variables in .backend_env..."
+		grep -q "EMAIL=" .backend_env || (echo "❌ Missing EMAIL in .backend_env" && exit 1)
+		grep -q "EMAIL_PASSWORD=" .backend_env || (echo "❌ Missing EMAIL_PASSWORD in .backend_env" && exit 1)
+		grep -q "JWT_SECRET=" .backend_env || (echo "❌ Missing JWT_SECRET in .backend_env" && exit 1)
+		# @todo Add everything necessary
+		echo "✅Env files are valid"
+
+prod		: env
+		@if grep -q "MODE=dev" .backend_env 2>/dev/null; then \
+			echo "⚠️ Switching from DEV → PROD, removing images"; \
+			make clean; \
+		fi
+		sed -i '/^IP=/d' .frontend_env
+		sed -i '/^MODE=/d' .backend_env
+		echo "IP=$$(hostname -I | awk '{print $$1}')" >> .frontend_env
+		echo "MODE=prod" >> .backend_env
+		mkdir -p ./backups/pictures
 		docker compose -f docker-compose.yml up -d
-		echo "You can acces the website trougth:\n https://$$(hostname -I | awk '{print $$1}'):8888"
-		touch $(UP_TRACKER)
+		echo "You can access the website through:\n https://$$(hostname -I | awk '{print $$1}'):8888"
 
-up		: $(UP_TRACKER)
-
-dev		:
-		sed -i '/^IP=/d' .env
-		echo "IP=$$(hostname -I | awk '{print $$1}')" >> .env
-		docker compose -f docker-compose.yml up
+dev		: env
+		@if grep -q "MODE=prod" .backend_env 2>/dev/null; then \
+			echo "⚠️ Switching from PROD → DEV, removing images"; \
+			make clean; \
+		fi
+		sed -i '/^IP=/d' .frontend_env
+		sed -i '/^MODE=/d' .backend_env
+		echo "IP=$$(hostname -I | awk '{print $$1}')" >> .frontend_env
+		echo "MODE=dev" >> .backend_env
+		docker compose -f docker-compose.dev.yml up
 
 down	:
-		printf "\n $(GREEN)Containers down$(RESET) \n"
 		docker compose -f docker-compose.yml down -v
-		sed -i '/^IP=/d' .env
-		rm -f $(UP_TRACKER)
+		printf "\n$(GREEN)Containers down$(RESET) \n"
+		printf "\n$(GREEN)Env files cleared$(RESET) \n"
 
 clean	: down
+		printf "\n$(RED)Deleting containers images$(RESET) \n"
+		sed -i '/^IP=/d' .frontend_env
+		sed -i '/^MODE=/d' .backend_env
+		docker system prune -af --volumes
+		printf "\n$(GREEN)System cleaned$(RESET) \n"
 
 fclean	: clean
-		printf "\n $(GREEN)Delete containers images$(RESET) \n"
-		docker system prune -af --volumes
+		rm -rf ./backups
 
-retry	: down dev
-re		: fclean all
+re		: clean all
 
-.PHONY	=	all up down clean fclean re dev retry
+.PHONY	=	all up down clean fclean re env dev
 
 ifndef VERBOSE
 .SILENT:

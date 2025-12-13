@@ -68,7 +68,7 @@ async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<
 		sendReply(reply, 400, "No file given");
 		return;
 	}
-	const path = `/app/pictures/${part.filename}`;
+	const path = `/app/backups/pictures/${part.filename}`;
 	await PUMP(part.file, fs.createWriteStream(path));
 	await changeUserPicture(user, part.filename);
 	sendReply(reply, 200, "Profile picture updated");

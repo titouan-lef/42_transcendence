@@ -1,5 +1,4 @@
 .vscode
-.env
-.up_done
-database.db
-Database.db
+.backend_env
+.frontend_env
+backups

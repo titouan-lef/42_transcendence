@@ -34,7 +34,7 @@ APP.register(fastifyCookies);
 APP.register(fastifyWebsocket);
 APP.register(fastifyMultipart);
 APP.register(fastifyStatic, {
-	root: "/app/pictures/",
+	root: "/app/backups/pictures/",
 	prefix: "/pictures/"
 });
 

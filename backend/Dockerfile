@@ -1,18 +1,24 @@
-FROM node:24
-
+# ======================
+# Base
+# ======================
+FROM node:24 AS base
 WORKDIR /app
-
 COPY package.json ./
-
 RUN npm install
-
 COPY . .
 
-RUN mkdir -p ./pictures
+# ======================
+# Development
+# ======================
+FROM base AS dev
+RUN mkdir -p ./backups/pictures
+ENTRYPOINT ["/app/check_and_build.sh"]
+CMD ["npm", "start"]
 
+# ======================
+# Production
+# ======================
+FROM base AS prod
 RUN npm run format:check
 RUN npm run build
-
-ENTRYPOINT ["/app/check_and_build.sh"]
-
 CMD ["npm", "start"]

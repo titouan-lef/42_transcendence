@@ -15,11 +15,11 @@ import { createGameRuleTable } from "./game_rule.js";
 import { getElo, setElo, Elo, setRatingDeviation, setRating } from "./web3/contract_service.js";
 
 const DB_FILE = "Database.db";
-const DB_PATH_FILE = "./" + DB_FILE;
+const DB_PATH_FILE = "/app/backups/" + DB_FILE;
 
 async function getDB(): Promise<Database> {
 	return open({
-		filename: DB_FILE,
+		filename: DB_PATH_FILE,
 		driver: sqlite3.Database,
 	});
 }
