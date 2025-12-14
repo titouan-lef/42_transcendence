@@ -11,7 +11,8 @@ interface InfoList {
 	username: string;
 	pseudo: string;
 	email: string | null;
-	enabled2FA: boolean;
+	is2FAenable: boolean;
+	isAvatarSet: boolean;
 	theme: Themes | null
 }
 
@@ -24,12 +25,13 @@ async function getUserInfos(): Promise<void> {
 		return;
 
 	const data: InfoList = await reply.json();
-
+	console.log(data);
 	currentUser = {
 		username: data.username,
 		pseudo: data.pseudo,
 		email: data.email,
-		enabled2FA: data.enabled2FA,
+		is2FAenable: data.is2FAenable,
+		isAvatarSet: data.isAvatarSet,
 		theme: data.theme
 	};
 }

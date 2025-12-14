@@ -2,13 +2,24 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { getUserByUsername, is2FAEnabled } from "../database/user.js";
 import { sendReply } from "../utils/HTTP.js";
 import { getTheme } from "../database/theme.js";
+import { promises as fs } from "fs";
 
 interface InfoList {
 	username: string;
 	pseudo: string;
 	email: string | null;
-	enabled2FA: boolean;
+	is2FAEnabled: boolean;
+	isAvatarSet: boolean;
 	theme: string | null;
+}
+
+async function fileExists(path: string): Promise<boolean> {
+	try {
+		await fs.access(path);
+		return true;
+	} catch {
+		return false;
+	}
 }
 
 async function getUserInfos(req: FastifyRequest, reply: FastifyReply): Promise<void> {
@@ -27,7 +38,8 @@ async function getUserInfos(req: FastifyRequest, reply: FastifyReply): Promise<v
 		username: username,
 		pseudo: user.pseudo,
 		email: user.email,
-		enabled2FA: Boolean(await is2FAEnabled(username)),
+		is2FAEnabled: await is2FAEnabled(username),
+		isAvatarSet: await fileExists(`/app/backups/pictures/${user.username}`),
 		theme: theme
 	};
 	sendReply(reply, 200, JSON.stringify(infoList));
