@@ -5,14 +5,13 @@ interface User {
 	pseudo: string;
 	createdAt: string;
 	hashedPassword: string;
-	avatar: string | null;
+	is2FAEnabled: boolean;
 	themeId: number | null;
 	email: string | null;
 	/**@todo ADD keybind */
 }
 
 const TABLE_NAME = "User";
-const DEFAULT_AVATAR = "";/**@todo to complete*/
 
 async function createUserTable(): Promise<void> {
 	await applyQuery(
@@ -22,7 +21,6 @@ async function createUserTable(): Promise<void> {
 			pseudo TEXT NOT NULL,
 			createdAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 			hashedPassword TEXT NOT NULL,
-			avatar TEXT NOT NULL,
 			is2FAEnabled BOOLEAN NOT NULL,
 			email TEXT,
 			themeId INTEGER REFERENCES Theme(id));`
@@ -33,8 +31,8 @@ async function createUserTable(): Promise<void> {
 async function insertUser(username: string, pseudo: string, hashedPassword: string): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (username, pseudo, hashedPassword, avatar, is2FAEnabled, themeId) VALUES (?, ?, ?, ?, ?, ?)`,
-			[username, pseudo, hashedPassword, DEFAULT_AVATAR, false, null]
+			`INSERT INTO ${TABLE_NAME} (username, pseudo, hashedPassword, is2FAEnabled, themeId) VALUES (?, ?, ?, ?, ?)`,
+			[username, pseudo, hashedPassword, false, null]
 		), "insert" + TABLE_NAME
 	);
 }
@@ -92,14 +90,16 @@ async function isEmailDefined(username: string): Promise<boolean> {
 	return false;
 }
 
-async function is2FAEnabled(username: string): Promise<string> {
+async function is2FAEnabled(username: string): Promise<boolean> {
 	const row = await applyQuery(
 		async (db) => await db.get(
 			`SELECT is2FAEnabled FROM ${TABLE_NAME} WHERE username = ?;`,
 			[username]
 		), "get" + TABLE_NAME + "2FA"
 	);
-	return row?.is2FAEnabled ?? "";
+	if (row?.is2FAEnabled)
+		return Boolean(row.is2FAEnabled);
+	return false;
 }
 
 async function update2FA(username: string, value: boolean): Promise<void> {
@@ -119,29 +119,6 @@ async function enabled2FA(username: string): Promise<void> {
 
 async function disabled2FA(username: string): Promise<void> {
 	await update2FA(username, false);
-}
-
-async function changeUserPicture(username: string, avatar: string): Promise<void> {
-	await applyQuery(
-		async (db) => await db.get(
-			`UPDATE ${TABLE_NAME}
-			SET avatar = ?
-			WHERE username = ?;`,
-			[avatar, username]
-		), "update" + TABLE_NAME + "Picture"
-	);
-}
-
-async function getUserPicture(username: string): Promise<string | undefined> {
-	const row = await applyQuery(
-		async (db) => await db.get(
-			`SELECT avatar
-			FROM ${TABLE_NAME}
-			WHERE username = ?;`,
-			[username]
-		), "get" + TABLE_NAME + "Picture"
-	);
-	return row?.avatar;
 }
 
 async function deleteUser(username: string): Promise<void> {
@@ -197,6 +174,6 @@ async function updateTheme(username: string, theme: string): Promise<void> {
 	}, "update" + TABLE_NAME + "Theme");
 }
 
-export { User, getUserByUsername, createUserTable, getUserPassword, doesUserExist, insertUser, disabled2FA, enabled2FA, getUserEmail, changeUserPicture, getUserPicture };
+export { User, getUserByUsername, createUserTable, getUserPassword, doesUserExist, insertUser, disabled2FA, enabled2FA, getUserEmail };
 export { updatePseudo, updatePassword, updateEmail, updateTheme };
 export { is2FAEnabled, isEmailDefined };

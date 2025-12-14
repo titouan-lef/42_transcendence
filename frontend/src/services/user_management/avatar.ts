@@ -1,6 +1,6 @@
 import { getSafeElement } from "../../utils/getSafeElement";
 import { getReplyMessage, printReplyInDiv, sendFile, sendPostRequestToBack } from "../api_request";
-import { currentUser } from "./login";
+import { currentUser, getUserInfos } from "./login";
 
 async function uploadProfilePicture(file: File): Promise<void> {
 	const formData = new FormData();
@@ -8,23 +8,20 @@ async function uploadProfilePicture(file: File): Promise<void> {
 
 	const reply = await sendFile(formData);
 	printReplyInDiv(reply, "print-avatar-reply");
-	if (reply.status === 200)
-		updateAvatar();
+	if (reply.status !== 200)
+		return;
+	await getUserInfos();
+	updateAvatar();
+
 }
 
 async function updateAvatar(): Promise<void> {
 	const avatar = getSafeElement("avatar-img", HTMLImageElement);
 
-	if (!currentUser) {
+	if (!currentUser?.isAvatarSet)
 		avatar.src = "./images/avatar.png";
-		return;
-	}
-	const reply = await sendPostRequestToBack("/api/user/picture", JSON.stringify({ user: currentUser.username }));
-
-	if (reply.status === 200) {
-		const path = await getReplyMessage(reply);
-		avatar.src = `/pictures/${path}?t=${Date.now()}`;
-	}
+	else
+		avatar.src = `/pictures/${currentUser.username}?t=${Date.now()}`;
 }
 
 export { uploadProfilePicture, updateAvatar };

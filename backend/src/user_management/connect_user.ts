@@ -1,8 +1,8 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { sendReply } from "../utils/HTTP.js";
 import { isValidPassword } from "../utils/hash_string.js";
-import { changeUserPicture, getUserPassword, getUserPicture, is2FAEnabled, updateTheme } from "../database/user.js";
-import fs from 'fs';
+import { getUserPassword, is2FAEnabled, updateTheme } from "../database/user.js";
+import fs from "fs";
 import util from 'util';
 import { pipeline } from 'stream';
 import { request2FA } from "../security/2FA.js";
@@ -45,20 +45,6 @@ interface UserBody {
 	user?: string;
 }
 
-async function getPicture(req: FastifyRequest<{ "Body": UserBody }>, reply: FastifyReply): Promise<void> {
-	const user = req.body?.user;
-	if(!user) {
-		sendReply(reply, 400, "No user given");
-		return;
-	}
-	const filename = await getUserPicture(user);
-	if (!filename) {
-		sendReply(reply, 204, "./images/avatar.png");
-		return;
-	}
-	sendReply(reply, 200, filename);
-}
-
 async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const user = req.user;
 	if (!user)
@@ -68,9 +54,9 @@ async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<
 		sendReply(reply, 400, "No file given");
 		return;
 	}
-	const path = `/app/backups/pictures/${part.filename}`;
+	const path = `/app/backups/pictures/${user}`;
 	await PUMP(part.file, fs.createWriteStream(path));
-	await changeUserPicture(user, part.filename);
+	// await changeUserPicture(user, part.filename);
 	sendReply(reply, 200, "Profile picture updated");
 }
 
@@ -91,4 +77,4 @@ async function changeTheme(req: FastifyRequest<{ Body:ThemeBody }>, reply: Fasti
 	sendReply(reply, 200, "Theme updated");
 }
 
-export { UserBody, ThemeBody, connectUser, disconnectUser, getPicture, changePicture, changeTheme };
+export { UserBody, ThemeBody, connectUser, disconnectUser, changePicture, changeTheme };

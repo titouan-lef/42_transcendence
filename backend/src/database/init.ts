@@ -91,13 +91,13 @@ async function initDB(): Promise<void> {
 		/** @todo gerer ca ailleurs*/
 		await insertSeason();
 	}
-	await setElo("pchalmin", 1, 1400, 467.8367);
-	const elo: Elo = await getElo("pchalmin", 1);
-	console.log(`test : ${elo.rating}, ${elo.ratingDeviation}`);
-	await setRatingDeviation("pchalmin", 1, 200.254675);
-	await setRating("pchalmin", 1, 1800);
-	const elo2: Elo = await getElo("pchalmin", 1);
-	console.log(`test : ${elo2.rating}, ${elo2.ratingDeviation}`);
+	// await setElo("pchalmin", 1, 1400, 467.8367);
+	// const elo: Elo = await getElo("pchalmin", 1);
+	// console.log(`test : ${elo.rating}, ${elo.ratingDeviation}`);
+	// await setRatingDeviation("pchalmin", 1, 200.254675);
+	// await setRating("pchalmin", 1, 1800);
+	// const elo2: Elo = await getElo("pchalmin", 1);
+	// console.log(`test : ${elo2.rating}, ${elo2.ratingDeviation}`);
 }
 
 export { getDB, initDB };
