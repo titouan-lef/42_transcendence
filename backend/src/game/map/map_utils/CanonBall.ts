@@ -16,7 +16,7 @@ class CanonBall extends BallTemplate {
 		this.id = id;
 		this.stunTarget = stun === "spin" ? 1 : 0;
 		this.mesh.metadata.stun = stun;
-		this.particleColor = COLORS3.grey;
+		this.particleColor = stun === "spin" ? COLORS3.red : COLORS3.white;
 		this.canonBallSceneObserver = this.canonObserveScene();
 		this.gameStopped = false;
 	}
