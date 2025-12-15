@@ -56,7 +56,6 @@ class Game {
 	static async create(id: number, settings: GameSettings): Promise<Game> {
 		const engine =  new babylon.NullEngine();
 		const scene = await Game.initScene(engine);
-		
 
 		return new Game(id, settings, scene, engine);
 	}
@@ -80,9 +79,7 @@ class Game {
 		await insertGameRule(this.gameIdDb, rotateRuleId, this.settings.options.rotatingPlayer);
 		await insertGameRule(this.gameIdDb, windRuleId, this.settings.options.windAffectsBall);
 		await insertGameRule(this.gameIdDb, dashRuleId, this.settings.options.dashingPlayer);
-		await insertGameRule(this.gameIdDb, canonCountRuleId,
-			this.settings.options.canonCount > 0 ? true : false,
-			this.settings.options.canonCount > 0 ? this.settings.options.canonCount : undefined);
+		await insertGameRule(this.gameIdDb, canonCountRuleId, this.settings.options.canonCount);
 	}
 
 	private static async initScene(engine: babylon.Engine): Promise<babylon.Scene> {
@@ -147,7 +144,6 @@ class Game {
 			// 	updateEloAfterGame()
 			// }
 		}
-		return ;
 	}
 
 	private setScene(): void {

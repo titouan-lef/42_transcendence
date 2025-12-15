@@ -88,7 +88,7 @@ async function initDB(): Promise<void> {
 		await createEloTable();
 
 		/** @todo gerer ca ailleurs*/
-		insertSeason();
+		await insertSeason();
 	}
 }
 

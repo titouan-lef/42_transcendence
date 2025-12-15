@@ -27,7 +27,7 @@ async function startGame(id: number, settings: GameSettings): Promise<number> {
 		return id;
 	} catch (e) {
 		console.error("Failed to start game:", e);
-		return -1; // ou autre code sentinelle
+		return -1;
 	}
 }
 
