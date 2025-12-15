@@ -43,7 +43,7 @@ abstract class BallTemplate {
 		this.mesh.position.y = BALL_DIAMETER / 2;
 		this.mesh.metadata = { type: "collider", pushable: true, windAffected: settings.options.windAffectsBall };
 		this.originalMaxSpeed = MAX_SPEED * ((!settings.options.rotatingPlayer && !settings.options.spin) ? 1.3 : 1);
-		this.originalMinSpeed = MIN_SPEED * ((!settings.options.rotatingPlayer && !settings.options.spin) ? 1 : -1);
+		this.originalMinSpeed = MIN_SPEED * ((!settings.options.rotatingPlayer && !settings.options.spin) ? 1.3 : 1);
 		this.maxSpeed = this.originalMaxSpeed;
 		this.minSpeed = this.originalMinSpeed;
 		this.sockets = sockets;
@@ -88,7 +88,7 @@ abstract class BallTemplate {
 			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y (only visual but will be sent to front)
 			if (this.gameStopped)
 				return;
-			this.increaseMaxMinSpeedTimer += scene.metadata.gameSpeed;
+			this.increaseMaxMinSpeedTimer += scene.metadata.gameSpeed * 2;
 			if (this.increaseMaxMinSpeedTimer >= INCREASE_GENERAL_SPEED_INTERVAL) {
 				this.increaseMaxMinSpeedTimer -= INCREASE_GENERAL_SPEED_INTERVAL;
 				this.maxSpeed += this.speedIncreaseFactor;

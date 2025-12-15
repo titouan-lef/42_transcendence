@@ -146,6 +146,7 @@ class EnvironmentManager {
 			this.objectSpawners.splice(0, 1);
 		}
 		this.objectsParameters = [];
+		this.canoncurrentCount = 0;
 	}
 
 	startSpawn(): void {

@@ -76,10 +76,14 @@ class Canon {
 			const euler = this.canon.rotationQuaternion.toEulerAngles();
 			const angleY = babylon.Tools.ToDegrees(euler.y);
 			
-			if (angleY > 60 || angleY < -60)
+			if (angleY > 60 && this.currentAngularVelocity.y > 0)
 				this.currentAngularVelocity = this.currentAngularVelocity.scale(-1);
-			if (this.canon.position.x >= MAP_SIZE.x / 4
-			|| this.canon.position.x <= -MAP_SIZE.x / 4)
+			else if (angleY < -60 && this.currentAngularVelocity.y <= 0)
+				this.currentAngularVelocity = this.currentAngularVelocity.scale(-1);
+
+			if (this.canon.position.x >= MAP_SIZE.x / 4 && this.currentLinearVelocity.x > 0)
+				this.currentLinearVelocity = this.currentLinearVelocity.scale(-1);
+			else if (this.canon.position.x <= -MAP_SIZE.x / 4 && this.currentLinearVelocity.x <= 0)
 				this.currentLinearVelocity = this.currentLinearVelocity.scale(-1);
 				
 			this.body.setAngularVelocity(this.currentAngularVelocity);
