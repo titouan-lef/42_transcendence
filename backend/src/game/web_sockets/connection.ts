@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { WebSocket } from "ws";
 import { doesUserExist } from "../../database/user.js";
-import { identifyUser, verifyAuth } from "../../security/JWT.js";
+import { identifyUser } from "../../security/JWT.js";
 import { askMatchmakingSystem, isUserWaiting } from "../../tournament/matchmaking.js";
 import { sendReply } from "../../utils/HTTP.js";
 import { wait } from "../../utils/time.js";

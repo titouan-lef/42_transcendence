@@ -4,7 +4,6 @@ interface GameRule {
 	gameId: number;
 	ruleId: number;
 	isEnable: number;
-	value: number;
 }
 
 const TABLE_NAME = "Game_rule";
@@ -16,7 +15,6 @@ async function createGameRuleTable(): Promise<void> {
 			gameId INTEGER,
 			ruleId INTEGER,
 			isEnable INTEGER NOT NULL,
-			value INTEGER,
 			PRIMARY KEY (gameId, ruleId),
 			FOREIGN KEY (gameId) REFERENCES Game(id),
 			FOREIGN KEY (ruleId) REFERENCES Rule(id));`
@@ -24,11 +22,11 @@ async function createGameRuleTable(): Promise<void> {
 	);
 }
 
-async function insertGameRule(gameId: number, ruleId: number, isEnable: boolean, value?: number): Promise<void> {
+async function insertGameRule(gameId: number, ruleId: number, isEnable: number | boolean): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (gameId, ruleId, isEnable, value) VALUES (?, ?, ?, ?)`,
-			[gameId, ruleId, isEnable, value ?? null]
+			`INSERT INTO ${TABLE_NAME} (gameId, ruleId, isEnable) VALUES (?, ?, ?)`,
+			[gameId, ruleId, isEnable]
 		), "insert" + TABLE_NAME
 	);
 }
