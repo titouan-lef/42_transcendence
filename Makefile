@@ -63,7 +63,7 @@ fclean	: clean
 
 re		: clean all
 
-.PHONY	=	all up down clean fclean re env dev
+.PHONY	=	all prod dev down clean fclean re env 
 
 ifndef VERBOSE
 .SILENT:
