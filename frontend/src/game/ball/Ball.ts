@@ -12,11 +12,13 @@ class Ball {
 	private sceneObserver: babylon.Observer<babylon.Scene> | null = null;
 	private trailTimer = 0;
 
-	constructor(scene: babylon.Scene, type: BallOption, color: babylon.Color3) {
+	constructor(scene: babylon.Scene, type: BallOption, color: babylon.Color3, canonBall?: boolean) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.mesh.renderingGroupId = 1;
 		this.color = color;
 		this.setMaterial(scene);
+		if (canonBall)
+			this.addRing(scene);
 		if (BALL_TRAIL_ON) {
 			this.sceneObservable = scene.onBeforeRenderObservable;
 			this.sceneObserver = this.observeScene(scene);
@@ -45,6 +47,25 @@ class Ball {
 		return sceneObserver;
 	}
 
+	private addRing(scene: babylon.Scene): void {
+		const ring = babylon.MeshBuilder.CreateTorus(
+			"ballRing",
+			{
+				diameter: BALL_DIAMETER * 2,
+				thickness: BALL_DIAMETER * 0.2,
+				tessellation: 32,
+			},
+			scene
+		);
+		ring.renderingGroupId = 1;
+		ring.parent = this.mesh;
+
+		const mat = new babylon.StandardMaterial("ringMat", scene);
+		mat.emissiveColor = this.color.scale(0.6);
+		mat.diffuseColor = this.color;
+		ring.material = mat;
+	}
+
 	setPosition(position: Position): void {
 		this.mesh.position.x = position.x;
 		this.mesh.position.y = position.y;
@@ -61,6 +82,10 @@ class Ball {
 			this.ballTrails[0].destroy();
 			this.ballTrails.splice(0, 1);
 		}
+		this.mesh?.getChildMeshes().forEach(child => {
+			child.material?.dispose();
+			child.dispose();
+		});
 		this.mesh?.material?.dispose();
 		this.mesh?.dispose();
 	}
