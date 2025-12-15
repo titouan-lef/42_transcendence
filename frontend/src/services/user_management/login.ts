@@ -6,12 +6,13 @@ import { ASIDE_CONNECTED, asideConnectedEvents, loadAside } from "../../pages/mo
 import { updateFriendList } from "../../pages/modules/box/box_aside_friendlist.js";
 import { loadModularPage } from "../../pages/modular.js";
 import { openDialog2FA } from "../../pages/modules/dialog/dialog.js";
+import { Errors } from "../status_codes.js";
 
 interface InfoList {
 	username: string;
 	pseudo: string;
 	email: string | null;
-	is2FAenable: boolean;
+	is2FAEnabled: boolean;
 	isAvatarSet: boolean;
 	theme: Themes | null
 }
@@ -24,13 +25,12 @@ async function getUserInfos(): Promise<void> {
 	if (!isRequestSuccessfull(reply))
 		return;
 
-	const data: InfoList = await reply.json();
-	console.log(data);
+	const data: InfoList = JSON.parse(reply.content); /** @todo verify if try/ctach needed */
 	currentUser = {
 		username: data.username,
 		pseudo: data.pseudo,
 		email: data.email,
-		is2FAenable: data.is2FAenable,
+		is2FAEnabled: data.is2FAEnabled,
 		isAvatarSet: data.isAvatarSet,
 		theme: data.theme
 	};
@@ -49,7 +49,7 @@ async function connectUser(): Promise<void> {
 		container.innerHTML = `<p>Form is incomplete.</p>`; /**@todo use translate tool */
 		return;
 	}
-
+ 
 	const data = {
 		user: userId.value,
 		password: userPassword.value,
@@ -59,15 +59,14 @@ async function connectUser(): Promise<void> {
 	printReplyInDiv(reply, "print-content");
 
 	user = userId.value;
-	if (reply.status === 401) {
+	if (reply.code === Errors.TWOFA_REQUIRED ) {
 		openDialog2FA();
 		return;
 	}
-	if (reply.status !== 200)
+	if (!isRequestSuccessfull(reply))
 		return;
 
 	const modal = getSafeElement('modal', HTMLDialogElement);
-
 	modal.close();
 	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
 
@@ -85,9 +84,10 @@ async function sendSecureCode(): Promise<void> {
 		return;
 	}
 	const reply = await sendPostRequestToBack("/api/user/secure", JSON.stringify({ user: user, code: code }));
-	printReplyInDiv(reply, "print-content");
-	if (reply.status !== 200)
+	if (!isRequestSuccessfull(reply)) {
+		printReplyInDiv(reply, "print-content");
 		return;
+	}
 
 	const modal = getSafeElement('modal', HTMLDialogElement);
 	/** @todo add load main */

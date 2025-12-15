@@ -3,6 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { CookieSerializeOptions } from '@fastify/cookie';
 import { sendReply } from "../utils/HTTP.js";
 import { doesUserExist } from "../database/user.js";
+import { Errors } from "../utils/status_codes.js";
 
 const SECRET = String(process.env.JWT_SECRET);
 if (!SECRET)
@@ -43,18 +44,18 @@ function identifyUser(token: string): string {
 async function verifyAuth(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const token = req.cookies?.token;
 	if (!token)
-		return sendReply(reply, 401, "Not logged in");
+		return sendReply(reply, Errors.AUTH_REQUIRED);
 	try {
 		const user = identifyUser(token);
 		const exists = await doesUserExist(user);
 		if (!exists) {
 			removeAuthCookies(reply);
-			return sendReply(reply, 401, "User does not exist");
+			return sendReply(reply, Errors.NO_SUCH_USER);
 		}
 		req.user = user;
 	} catch {
 		removeAuthCookies(reply);
-		return sendReply(reply, 201, "Invalid token");
+		return sendReply(reply, Errors.INVALID_TOKEN);
 	}
 }
 

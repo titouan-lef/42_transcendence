@@ -3,6 +3,7 @@ import { getUserByUsername, is2FAEnabled } from "../database/user.js";
 import { sendReply } from "../utils/HTTP.js";
 import { getTheme } from "../database/theme.js";
 import { promises as fs } from "fs";
+import { Success } from "../utils/status_codes.js";
 
 interface InfoList {
 	username: string;
@@ -42,7 +43,7 @@ async function getUserInfos(req: FastifyRequest, reply: FastifyReply): Promise<v
 		isAvatarSet: await fileExists(`/app/backups/pictures/${user.username}`),
 		theme: theme
 	};
-	sendReply(reply, 200, JSON.stringify(infoList));
+	sendReply(reply, Success.USER_INFOS, JSON.stringify(infoList));
 }
 
 export { getUserInfos };

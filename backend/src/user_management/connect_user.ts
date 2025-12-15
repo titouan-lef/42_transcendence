@@ -8,6 +8,7 @@ import { pipeline } from 'stream';
 import { request2FA } from "../security/2FA.js";
 import { addAuthCookies, removeAuthCookies } from "../security/JWT.js";
 import { wait } from "../utils/time.js";
+import { Errors, Success } from "../utils/status_codes.js";
 
 const PUMP = util.promisify(pipeline);
 
@@ -24,25 +25,29 @@ async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: 
 
 	if (!isValidPassword(password, hashPassword)) {
 		await wait(1000); // wait 1 sec against brutforce
-		sendReply(reply, 400, "Wrong id or password"); /**@todo use translate tool */
+		sendReply(reply, Errors.WRONG_CREDENTIALS);
 		return;
 	}
 	if (await is2FAEnabled(user)) {
 		request2FA(user);
-		sendReply(reply, 401, "2FA required");
+		sendReply(reply, Errors.TWOFA_REQUIRED);
 		return;
 	}
 	addAuthCookies(reply, user);
-	sendReply(reply, 200, "Successfuly loged in"); /**@todo use translate tool */
+	sendReply(reply, Success.LOOGED_IN);
 }
 
 async function disconnectUser(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	removeAuthCookies(reply);
-	sendReply(reply, 200, "Logged out"); /**@todo use translate tool */
+	sendReply(reply, Success.LOOGED_OUT);
 }
 
 interface UserBody {
 	user?: string;
+}
+
+interface EmailBody {
+	email: string;
 }
 
 async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<void> {
@@ -51,13 +56,12 @@ async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<
 		return;
 	const part = await req.file();
 	if (!part) {
-		sendReply(reply, 400, "No file given");
+		sendReply(reply, Errors.NO_FILE_GIVEN);
 		return;
 	}
 	const path = `/app/backups/pictures/${user}`;
 	await PUMP(part.file, fs.createWriteStream(path));
-	// await changeUserPicture(user, part.filename);
-	sendReply(reply, 200, "Profile picture updated");
+	sendReply(reply, Success.AVATAR_UPDATED);
 }
 
 interface ThemeBody {
@@ -70,11 +74,11 @@ async function changeTheme(req: FastifyRequest<{ Body:ThemeBody }>, reply: Fasti
 		return;
 	const theme = req.body?.theme;
 	if (theme === undefined) {
-		sendReply(reply, 400, "No theme given");
+		sendReply(reply, Errors.NO_THEME_GIVEN);
 		return;
 	}
 	await updateTheme(user, theme);
-	sendReply(reply, 200, "Theme updated");
+	sendReply(reply, Success.USER_UPDATED);
 }
 
 export { UserBody, ThemeBody, connectUser, disconnectUser, changePicture, changeTheme };

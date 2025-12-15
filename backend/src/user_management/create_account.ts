@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { hashString, isValidPassword } from "../utils/hash_string.js";
 import { sendReply } from "../utils/HTTP.js";
 import { doesUserExist, getUserByUsername, insertUser, updateEmail, updatePassword, updatePseudo } from "../database/user.js";
+import { Errors, Success } from "../utils/status_codes.js";
 
 interface NewUserBody {
 	username: string;
@@ -18,11 +19,11 @@ interface UpdateUserBody {
 async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
 	const { username, pseudo, password } = req.body;
 	if (await doesUserExist(username)) {
-		sendReply(reply, 400, "username already taken");  /**@todo use translate tool */
+		sendReply(reply, Errors.USERNAME_TAKEN); /**@todo use translate tool */
 		return;
 	}
 	await insertUser(username, pseudo, hashString(password));  /**@todo use translate tool */
-	sendReply(reply, 201, "User created");
+	sendReply(reply, Success.USER_CREATED);
 }
 
 async function updateUserInfos(req: FastifyRequest<{ "Body": UpdateUserBody }>, reply: FastifyReply): Promise<void> {
@@ -34,32 +35,27 @@ async function updateUserInfos(req: FastifyRequest<{ "Body": UpdateUserBody }>, 
 	if (!user)
 		return;
 
-	let status = '';
+	let userModified = false;
 	const { pseudo, password, email } = req.body;
 
 	if (pseudo && (pseudo !== user.pseudo)) {
 		await updatePseudo(username, pseudo);
-		status += 'Pseudo';
+		userModified = true;
 	}
 	if (password && !isValidPassword(password, user.hashedPassword)) {
 		await updatePassword(username, hashString(password));
-		if (status)
-			status += ', ';
-		status += 'Password';
+		userModified = true;
 	}
 	if (email && (email !== user.email)) {
 		await updateEmail(username, email);
-		if (status)
-			status += ', ';
-		status += 'Email';
+		userModified = true;
 	}
-	if (!status) {
-		sendReply(reply, 400, "No data to update");
+	if (!userModified) {
+		sendReply(reply, Errors.NO_DATA_TO_UPDATE);
 		return;
 	}
 
-	sendReply(reply, 201, status + " updated");
-	/** @todo translation ;) */
+	sendReply(reply, Success.USER_UPDATED);
 }
 
 export { UpdateUserBody, addNewUser, updateUserInfos };

@@ -1,4 +1,4 @@
-import { newGameVsAI, newLocalGame, newRankedGame } from "../services/api_request";
+import { newGameVsAI, newLocalGame, newRankedGame } from "../services/lauching_game";
 import { getSafeElement } from "../utils/getSafeElement";
 
 const GAME_PAGE =`

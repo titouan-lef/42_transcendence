@@ -2,6 +2,7 @@ import { isOneStringEmtpy } from "../../utils/strings.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
 import { printReplyInDiv, sendPostRequestToBack } from "../api_request.js";
 import { connectUser } from "./login.js";
+import { Success } from "../status_codes.js";
 
 async function newUser(): Promise<void> {
 
@@ -32,10 +33,11 @@ async function newUser(): Promise<void> {
 	};
 
 	const reply = await sendPostRequestToBack("api/user/new_user", JSON.stringify(data));
-	printReplyInDiv(reply, "print-content");
-
-	if (reply.status !== 201)
+	
+	if (reply.code !== Success.USER_CREATED) {
+		printReplyInDiv(reply, "print-content");
 		return;
+	}
 
 	connectUser();
 
