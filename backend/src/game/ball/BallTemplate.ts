@@ -22,7 +22,7 @@ abstract class BallTemplate {
 	private readonly yObservable: babylon.Observable<babylon.Scene>;
 	private readonly yObserver: babylon.Observer<babylon.Scene>;
 	protected gameStopped = true;
-	private readonly originalMaxSpeed;
+	protected readonly originalMaxSpeed;
 	private readonly originalMinSpeed;
 	protected speedIncreaseFactor = 1;
 	
@@ -109,22 +109,23 @@ abstract class BallTemplate {
 	}
 
 	protected applyMovementChanges(scene: babylon.Scene): void {
+		const maxForce = BALL_ANGULAR_FORCE * this.maxSpeed / this.originalMaxSpeed;
 		if (this.justCollided) {
 			this.realDirection = this.physic.body.getLinearVelocity(); // remember original velocity, to apply movement changes on it
 			this.justCollided = false;
 			this.forceDirection = -1; // reset forceDirection
-			this.force = BALL_ANGULAR_FORCE; // reset angularForce
+			this.force = maxForce; // reset angularForce
 		}
 		if (this.force <= 0)
 			this.forceDirection *= -1;
-		this.applySpin();
+		this.applySpin(maxForce);
 		this.adjustSpeed(scene);
 	}
 
 	/** applies two contradictory forces on either side of the ball */
-	private applySpin(): void {
-		this.force -= (BALL_ANGULAR_FORCE / BALL_ANGULAR_INTERVAL) * this.forceDirection; // Angular interval is the number of step it will take to reach maximum value
-		this.force = Math.max(this.force, BALL_ANGULAR_FORCE); // to deny force to go higher than BALL_ANGULAR_FORCE
+	private applySpin(maxForce: number): void {
+		this.force -= (maxForce / BALL_ANGULAR_INTERVAL) * this.forceDirection; // Angular interval is the number of step it will take to reach maximum value
+		this.force = Math.max(this.force, maxForce); // to deny force to go higher than BALL_ANGULAR_FORCE
 		if (this.spinningRight) {
 			this.physic.body.applyForce(
 				new babylon.Vector3(this.realDirection.z * this.force, 0, -this.realDirection.x * this.force),
