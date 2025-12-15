@@ -11,7 +11,7 @@ async function main() {
 	// Read rating and ratingDeviation
 	async function getElo(username: string, season: number) {
 		const [rating, ratingDeviation] = await contract.getEloData(username, season);
-		console.log(`Elo of ${username}, saison ${season}: rating = ${rating}, ratingDeviation = ${ratingDeviation}`);
+		console.log(`Elo of ${username}, season ${season}: rating = ${rating}, ratingDeviation = ${ratingDeviation}`);
 	return { rating, ratingDeviation };
 	}
 

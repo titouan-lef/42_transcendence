@@ -16,7 +16,7 @@ async function main() {
 
   const contractAddress = await eloStorage.getAddress();
 
-  console.log(`Contrat EloStorage déployé à l'adresse: ${contractAddress}`);
+  console.log(`EloStorage contract deployed at the address: ${contractAddress}`);
 }
 
 main().catch((error) => {
