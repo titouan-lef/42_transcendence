@@ -75,7 +75,8 @@ class EnvironmentManager {
 
 	private handleCanonBall(scene: babylon.Scene, canonBall: ObjectMessage): void {
 		if (canonBall.id >= this.objects?.length) {
-			const newBall = new Ball(scene, "default", COLORS3.grey);
+			const color = canonBall.size ? COLORS3.red : COLORS3.white;
+			const newBall = new Ball(scene, "default", color, true);
 			newBall.setPosition(canonBall.position);
 			this.objects?.push(newBall);
 		} else {
