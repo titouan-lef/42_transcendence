@@ -15,22 +15,23 @@ class SnakeBall extends BallTemplate {
 
 	/** Redefine MovementChanges since spin doesn t apply to snake ball */
 	applyMovementChanges(scene: babylon.Scene): void {
+		const maxForce = SNAKE_BALL_ANGULAR_FORCE * this.maxSpeed / this.originalMaxSpeed;
 		if (this.justCollided) {
 			this.realDirection = this.physic.body.getLinearVelocity();
 			this.justCollided = false;
-			this.force = SNAKE_BALL_ANGULAR_FORCE;
+			this.force = maxForce;
 		}
-		if (this.force >= SNAKE_BALL_ANGULAR_FORCE || this.force <= 0)
+		if (this.force >= maxForce || this.force <= 0)
 			this.forceDirection *= -1;
-		this.force -= (SNAKE_BALL_ANGULAR_FORCE / SNAKE_BALL_ANGULAR_INTERVAL) * this.forceDirection;
-		this.force = Math.max(0, Math.min(this.force, SNAKE_BALL_ANGULAR_FORCE));
+		this.force -= (maxForce / SNAKE_BALL_ANGULAR_INTERVAL) * this.forceDirection;
+		this.force = Math.max(0, Math.min(this.force, maxForce));
 
 		this.physic.body.applyForce(
 			new babylon.Vector3(this.realDirection.z * this.force, 0, -this.realDirection.x * this.force),
 			this.mesh.position
 		);
 		this.physic.body.applyForce(
-			new babylon.Vector3(-this.realDirection.z * (SNAKE_BALL_ANGULAR_FORCE - this.force), 0, this.realDirection.x * (SNAKE_BALL_ANGULAR_FORCE - this.force)),
+			new babylon.Vector3(-this.realDirection.z * (maxForce - this.force), 0, this.realDirection.x * (maxForce - this.force)),
 			this.mesh.position
 		);
 		this.adjustSpeed(scene);
