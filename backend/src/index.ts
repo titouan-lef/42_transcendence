@@ -63,7 +63,7 @@ APP.post<{ Body: UserBody }>("/api/friends/remove", { preHandler: verifyAuth }, 
 // --- Games ---
 APP.post<{ Body: GameOptions }>("/api/game/local_game", { preHandler: verifyAuth }, newLocalGame);
 APP.post<{ Body: GameOptions }>("/api/game/ai_game", { preHandler: verifyAuth }, newAIGame);
-APP.get("/api/game/ranked_game", { preHandler: verifyAuth }, addPlayerToMatchmakingSystem);
+APP.post<{ Body: GameOptions }>("/api/game/ranked_game", { preHandler: verifyAuth }, addPlayerToMatchmakingSystem);
 APP.get("/api/game/waiting", { preHandler: verifyAuth }, isGameFound);
 
 /**

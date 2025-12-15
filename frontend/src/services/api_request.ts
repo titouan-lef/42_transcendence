@@ -81,9 +81,22 @@ interface GameOptions { /** @toto include GameOptions in GameSettings ? */
 }
 
 async function askForGame(): Promise<boolean> {
-	const reply = await sendGetRequestToBack("/api/game/ranked_game");
+	/** @todo get options from front interface */
+	const canonCount = Math.random() > 0.5 ? 0 : 2;
+	const options : GameOptions = {
+		map: ["default", "sky", "volcano", "desert"],
+		ball: ["default", "snake", "tricky", "invisible", "pulse"],
+		rotatingPlayer: true,
+		spin: true,
+		windAffectsBall: true,
+		dashingPlayer: true,
+		canonCount: canonCount
+	};
+	console.log("canon count: " + canonCount); /**@todo remove */
+	const reply = await sendPostRequestToBack("/api/game/ranked_game", JSON.stringify(options));
+	const message = await getReplyMessage(reply);
 	if (!isRequestSuccessfull(reply)) {
-		console.log("Error:", getReplyMessage(reply));
+		console.log("Error:", message);
 		return false;
 	}
 	return true;
