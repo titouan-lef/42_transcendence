@@ -60,11 +60,12 @@ function loadSettings(): void {
 
 	const avatar = getSafeElement('change-avatar', HTMLElement);
 	avatar.addEventListener('change', (event) => {
-		if (event.target instanceof HTMLInputElement) {
-			const file = event.target.files?.[0];
-			if (file)
-				uploadProfilePicture(file);
-		}
+		if (!(event.target instanceof HTMLInputElement))
+			return;
+		const file = event.target.files?.[0];
+		if (!file)
+			return;
+		uploadProfilePicture(file);
 	});
 
 	showUserInfos();

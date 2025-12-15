@@ -7,8 +7,6 @@ import { updateFriendList } from "../../pages/modules/box/box_aside_friendlist.j
 import { loadModularPage } from "../../pages/modular.js";
 import { openDialog2FA } from "../../pages/modules/dialog/dialog.js";
 
-let user = "";
-
 interface InfoList {
 	username: string;
 	pseudo: string;
@@ -17,6 +15,7 @@ interface InfoList {
 	theme: Themes | null
 }
 
+let user = "";
 let currentUser: InfoList | null = null;
 
 async function getUserInfos(): Promise<void> {
