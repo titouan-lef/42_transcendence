@@ -7,6 +7,7 @@ import { sendReply } from "../../utils/HTTP.js";
 import { wait } from "../../utils/time.js";
 import { GameOptions } from "../settings/GameSettings.js";
 import { GameType, getGameOptions, identifyGame, registerGameOptions } from "../game_manager.js";
+import { Errors, Success } from "../../utils/status_codes.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -26,7 +27,7 @@ async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<vo
 	if (!user)
 		return;
 	if (!isUserWaiting(user)) {
-		sendReply(reply, 404, "stop");
+		sendReply(reply, Errors.GAME_NOT_FOUND);
 		return;
 	}
 
@@ -34,7 +35,7 @@ async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<vo
 	let id = -1;
 	while (id < 0) {
 		if (waited >= TIMEOUT) {
-			sendReply(reply, 408, "No game found yet"); /**@todo use translate tool */
+			sendReply(reply, Errors.GAME_NOT_FOUND_YET);
 			return;
 		}
 		id = await askMatchmakingSystem(user);
@@ -43,7 +44,7 @@ async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<vo
 			waited += SCAN_DELAY;
 		}
 	}
-	sendReply(reply, 200, id.toString());
+	sendReply(reply, Success.GAME_FOUND, id.toString());
 }
 
 async function newLocalGame(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
@@ -52,7 +53,7 @@ async function newLocalGame(req: FastifyRequest<{ Body: GameOptions }>, reply: F
 		return; /**@todo oblige d etre register pour faire une game ? */
 	const options: GameOptions = req.body;
 	const id = registerGameOptions(options, GameType.LOCAL, [user, "player2"]);
-	sendReply(reply, 200, id.toString());
+	sendReply(reply, Success.GAME_FOUND, id.toString());
 }
 
 async function newAIGame(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
@@ -61,7 +62,7 @@ async function newAIGame(req: FastifyRequest<{ Body: GameOptions }>, reply: Fast
 		return; /**@todo oblige d etre register pour faire une game ? */
 	const options: GameOptions = req.body;
 	const id = registerGameOptions(options, GameType.AI, [user, "AI"]);
-	sendReply(reply, 200, id.toString());
+	sendReply(reply, Success.GAME_FOUND, id.toString());
 }
 
 //////////////////////////////////////////

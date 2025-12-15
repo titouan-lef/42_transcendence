@@ -1,6 +1,7 @@
 import { createButtonHtml } from "../../../components/button.js";
 import { createInputHtml } from "../../../components/input.js";
-import { printReplyInDiv, sendPostRequestToBack } from "../../../services/api_request.js";
+import { isRequestSuccessfull, printReplyInDiv, sendPostRequestToBack } from "../../../services/api_request.js";
+import { Errors } from "../../../services/status_codes.js";
 import { getSafeElement } from "../../../utils/getSafeElement.js";
 import { updateFriendList } from "../box/box_aside_friendlist.js";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_FORM_STYLE } from "./dialog_style.js";
@@ -20,10 +21,10 @@ function addFriendHandler(modal: HTMLDialogElement): void {
 
 	addFriendElem.addEventListener('click', async () => {
 		const reply = await sendPostRequestToBack('/api/friends/add', JSON.stringify({ user: newFriendElem.value }));
-		if (reply.status === 401) {
+		if (reply.code === Errors.AUTH_REQUIRED) {
 			/** @todo go to login page */
 			return;
-		} else if (reply.status !== 200) {
+		} else if (!isRequestSuccessfull(reply)) {
 			printReplyInDiv(reply, "print-content");
 			return;
 		}

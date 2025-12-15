@@ -5,6 +5,7 @@ import { sendReply } from "../utils/HTTP.js";
 import { disabled2FA, enabled2FA, getUserEmail, is2FAEnabled, isEmailDefined } from "../database/user.js";
 import { addAuthCookies } from "./JWT.js";
 import { wait } from "../utils/time.js";
+import { Errors, Success } from "../utils/status_codes.js";
 
 /** https://dev.to/veektor_v/send-emails-using-nodemailer-typescript-4763 */
 
@@ -47,40 +48,40 @@ async function verify2FA(req: FastifyRequest<{ "Body": Content2FA }>, reply: Fas
 	const { user, code } = req.body;
 	if (Number(code) !== CODES.get(user)) {
 		wait(1000);  // wait 1 sec against brutforce
-		sendReply(reply, 400, "Invalid code"); /** @todo use translate tool */
+		sendReply(reply, Errors.INVALID_2FA_CODE);
 		return;
 	}
 	CODES.delete(user);
 	addAuthCookies(reply, user);
-	sendReply(reply, 200, "Successfuly loged in"); /** @todo use translate tool */
+	sendReply(reply, Success.LOOGED_IN);
 }
 
 async function enable2FA(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const user = req.user;
 	if (!user)
-		return; /** @todo sendReply ?? */
+		return;
 	if (await is2FAEnabled(user)) {
-		sendReply(reply, 400, "Already activated"); /** @todo use translate tool */
+		sendReply(reply, Errors.ALREADY_ENABLED);
 		return;
 	}
 	if (!await isEmailDefined(user)) {
-		sendReply(reply, 400, "Please define you email first"); /** @todo use translate tool */
+		sendReply(reply, Errors.EMAIL_REQUIRED);
 		return;
 	}
-	enabled2FA(user);
-	sendReply(reply, 200, "2FA activated successfuly"); /** @todo use translate tool */
+	await enabled2FA(user);
+	sendReply(reply, Success.TWOWFA_ENABLED);
 }
 
 async function disable2FA(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const user = req.user;
 	if (!user)
-		return; /** @todo sendReply ?? */
+		return;
 	if (!await is2FAEnabled(user)) {
-		sendReply(reply, 400, "Already disabled"); /** @todo use translate tool */
+		sendReply(reply, Errors.ALREADY_DISABLED);
 		return;
 	}
-	disabled2FA(user);
-	sendReply(reply, 200, "Successfuly loged in"); /** @todo use translate tool */
+	await disabled2FA(user);
+	sendReply(reply, Success.TWOWFA_DISABLED);
 }
 
 export { request2FA, verify2FA, enable2FA, disable2FA };

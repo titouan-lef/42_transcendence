@@ -1,5 +1,5 @@
 import { createButtonHtml } from "../../../components/button";
-import { getReplyMessage, sendPostRequestToBack } from "../../../services/api_request";
+import { getReplyMessage, isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
 import { currentUser } from "../../../services/user_management/login";
 import { applyColor } from "../../../utils/applyColor";
 import { getSafeElement } from "../../../utils/getSafeElement";
@@ -47,14 +47,12 @@ const SEPARATOR_STYLE = `
 async function getFriendList(): Promise<void> {
 	if (!currentUser)
 		return;
-
 	FRIENDLIST.length = 0;
 	const reply = await sendPostRequestToBack("/api/friends/list", JSON.stringify({ user: currentUser.username }));
-	if (reply.status !== 200)
+	if (!isRequestSuccessfull(reply))
 		return;
-	const list = await getReplyMessage(reply);
-	const data: string[] = JSON.parse(list);
-	data.forEach(element => {
+	const friendList: string[] = JSON.parse(reply.content);
+	friendList.forEach(element => {
 		FRIENDLIST.push(element);
 	});
 }

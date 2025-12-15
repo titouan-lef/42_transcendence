@@ -1,5 +1,5 @@
 import { getSafeElement } from "../../utils/getSafeElement";
-import { getReplyMessage, printReplyInDiv, sendFile, sendPostRequestToBack } from "../api_request";
+import { isRequestSuccessfull, printReplyInDiv, sendFile } from "../api_request";
 import { currentUser, getUserInfos } from "./login";
 
 async function uploadProfilePicture(file: File): Promise<void> {
@@ -8,7 +8,7 @@ async function uploadProfilePicture(file: File): Promise<void> {
 
 	const reply = await sendFile(formData);
 	printReplyInDiv(reply, "print-avatar-reply");
-	if (reply.status !== 200)
+	if (!isRequestSuccessfull(reply))
 		return;
 	await getUserInfos();
 	updateAvatar();

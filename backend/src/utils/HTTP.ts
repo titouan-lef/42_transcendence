@@ -1,7 +1,17 @@
 import { FastifyReply } from "fastify";
+import { ReplyStatus } from "./status_codes";
 
-async function sendReply(reply: FastifyReply, code: number, messageContent?: string): Promise<void> {
-	return reply.code(code).send(messageContent);
+interface ReplyFromBack {
+	code: ReplyStatus
+	content: string
+}
+
+async function sendReply(reply: FastifyReply, statusCode: ReplyStatus, content?: string ): Promise<void> {
+	const data: ReplyFromBack = {
+		code: statusCode,
+		content: content? content : ''
+	};
+	return reply.code(200).send(data);
 }
 
 export { sendReply };

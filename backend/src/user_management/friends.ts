@@ -3,69 +3,66 @@ import { addFriendship, getFriendships, isFriendWith, removeFriendship } from ".
 import { sendReply } from "../utils/HTTP.js";
 import { doesUserExist, User } from "../database/user.js";
 import { UserBody } from "./connect_user.js";
+import { Errors, Success } from "../utils/status_codes.js";
 
 async function getFriendList(req: FastifyRequest<{ "Body": UserBody }>, reply: FastifyReply): Promise<void> {
 	const user = req.body?.user;
 	if(!user) {
-		sendReply(reply, 400, "No friend given");
+		sendReply(reply, Errors.NO_FRIEND_GIVEN);
 		return;
 	}
 	if (!await doesUserExist(user)) {
-		sendReply(reply, 400, "No such user");
+		sendReply(reply, Errors.NO_SUCH_USER);
 		return;
 	}
 	const list = await getFriendships(user);
-	sendReply(reply, 200, JSON.stringify(list));
+	sendReply(reply, Success.FRIEND_LIST, JSON.stringify(list));
 }
 
 async function newFriend(req: FastifyRequest<{ "Body": UserBody }>, reply: FastifyReply): Promise<void> {
 	const user = req.user;
-	if (!user) {
-		sendReply(reply, 401, "You are not connected");
+	if (!user)
 		return;
-	}
 	const friend = req.body?.user;
 	if(!friend) {
-		sendReply(reply, 400, "No friend given");
+		sendReply(reply, Errors.NO_FRIEND_GIVEN);
 		return;
 	}
 	if (user === friend) {
-		sendReply(reply, 400, `You cannot add yourself as a friend`);
+		sendReply(reply, Errors.FRIEND_HIMSELF);
 		return;
 	}
 	if (!await doesUserExist(friend)) {
-		sendReply(reply, 404, "No such user");
+		sendReply(reply, Errors.NO_SUCH_USER);
 		return;
 	}
 	if (await isFriendWith(user, friend)) {
-		sendReply(reply, 400, `${friend} is already in your you friend list`);
+		sendReply(reply, Errors.ALREADY_FRIEND_WITH );
 		return;
 	}
 	addFriendship(user, friend);
-	sendReply(reply, 200, `${friend} added to you friend list`);
+	sendReply(reply, Success.FRIEND_ADDED);
 }
 
 async function removeFriend(req: FastifyRequest<{ "Body": UserBody }>, reply: FastifyReply): Promise<void> {
 	const user = req.user;
-	if (!user) {
-		sendReply(reply, 401, "You are not connected");
+	if (!user)
 		return;
-	}
 	const friend = req.body?.user;
 	if(!friend) {
-		sendReply(reply, 400, "No friend given");
+		sendReply(reply, Errors.NO_FRIEND_GIVEN);
 		return;
 	}
 	if (!await doesUserExist(friend)) {
-		sendReply(reply, 404, "No such user");
+		sendReply(reply, Errors.NO_SUCH_USER);
 		return;
 	}
 	if (!await isFriendWith(user, friend)) {
-		sendReply(reply, 400, `${friend} is not your friend`);
+		sendReply(reply, Errors.NOT_FRIEND_WITH);
 		return;
 	}
 	removeFriendship(user, friend);
-	sendReply(reply, 200, `${friend} removed to you friend list`);
+	sendReply(reply, Success.FRIEND_REMOVED);
 }
 
 export { getFriendList, newFriend, removeFriend };

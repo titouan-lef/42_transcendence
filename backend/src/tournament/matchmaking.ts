@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { GameType } from "../game/web_sockets/connection.js";
 import { sendReply } from "../utils/HTTP.js";
-import { randomBoolean } from "../game/utils.js";
 import { GameOptions } from "../game/settings/GameSettings.js";
 import { registerGameOptions } from "../game/game_manager.js";
+import { Errors, Success } from "../utils/status_codes.js";
 
 interface WaitingPlayer {
 	username: string;
@@ -22,7 +22,7 @@ async function addPlayerToMatchmakingSystem(req: FastifyRequest<{ Body: GameOpti
 	if (!user || !options)
 		return;
 	if (isUserWaiting(user)) {
-		sendReply(reply, 400, "Already looking for a game"); /**@todo use translate tool */
+		sendReply(reply, Errors.ALREADY_IN_QUEUE);
 		return;
 	}
 	const newWaitingPlayer = {
@@ -30,7 +30,7 @@ async function addPlayerToMatchmakingSystem(req: FastifyRequest<{ Body: GameOpti
 		options: options
 	};
 	WAITING_PLAYERS.push(newWaitingPlayer);
-	sendReply(reply, 200, "Looking for a game"); /**@todo use translate tool */
+	sendReply(reply, Success.ADDED_TO_QUEUE);
 }
 
 function getRandomOptions(player1Options: GameOptions, player2Options: GameOptions): GameOptions {

@@ -1,7 +1,7 @@
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { createParagraphHtml } from "../../../components/paragraph";
 import { setActiveBtn } from "./profile_navbar";
-import { currentUser, getUserInfos } from "../../../services/user_management/login";
+import { currentUser } from "../../../services/user_management/login";
 import { SETTINGS_USER_INFOS, showUserInfos } from "./profile_settings_user_infos";
 import { generateThemeEvents, SETTINGS_THEME_SELECTOR } from "./profile_settings_themes";
 import { update2FAButton } from "./profile_settings_2fa";

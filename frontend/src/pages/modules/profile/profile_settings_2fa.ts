@@ -30,7 +30,7 @@ async function update2FAButton(): Promise<void> {
 	await getUserInfos();
 
 	const switch2fa = getSafeElement('switch-2fa', HTMLElement);
-	switch2fa.innerHTML = (currentUser.is2FAenable) ? SETTINGS_2FA_DISABLE : SETTINGS_2FA_ENABLE;
+	switch2fa.innerHTML = (currentUser.is2FAEnabled) ? SETTINGS_2FA_DISABLE : SETTINGS_2FA_ENABLE;
 
 	twoFactorAuthEvents();
 }

@@ -6,166 +6,148 @@ type Expression = Record<CodeLang, string>;
 // 'satisfies ...' allows you to detect errors if a field doesn't exist (or is badly written).
 /** @todo revoir toutes les traduction lors d'une future PR langues car plein d'erreurs */
 const TRANSLATOR = {
-	play: {
-		en: "play",
-		fr: "jouer",
+	// VERBS
+	play: { en: "play", fr: "jouer" },
+	change: { en: "change", fr: "changer" },
+	confirm: { en: "confirm", fr: "confirmer" },
+	add: { en: "add", fr: "ajouter" },
+	remove: { en: "remove", fr: "supprimer" },
+	invite: { en: "invite", fr: "inviter" },
+	delete: { en: "delete", fr: "supprimer" },
+	continue: { en: "continue", fr: "continuer" },
+	go_back: { en: "go back", fr: "revenir" },
+	log_in: { en: "log in", fr: "se connecter" },
+	log_out: { en: "log out", fr: "se déconnecter" },
+	enable: { en: "enable", fr: "activer" },
+	disable: { en: 'disable', fr: 'désactiver' },
+	save: { en: "save", fr: "enregistrer" },
+	edit: { en: "edit", fr: "modifier" },
+	cancel: { en: "cancel", fr: "annuler" },
+	update: { en: "update", fr: "mettre à jour" },
+
+	// NOUNS
+	user: { en: "user", fr: "utilisateur" },
+	user_name: { en: "username", fr: "nom d'utilisateur" },
+	nickname: { en: "nickname", fr: "pseudo" },
+	elo: { en: "elo", fr: "elo" },
+	password: { en: "password", fr: "mot de passe" },
+	email: { en: "email", fr: "email" },
+	friend: { en: "friend", fr: "ami" },
+	game: { en: "game", fr: "jeu" },
+	code: { en: "code", fr: "code" },
+	twofa: { en: "2FA", fr: "2FA" },
+	map: { en: "map", fr: "map" },
+	ball: { en: "ball", fr: "balle" },
+	nothing: { en: "nothing", fr: "rien" },
+
+	// STATES | ADJECTIVES
+	logged_in: { en: "logged in", fr: "connecté" },
+	logged_out: { en: "logged out", fr: "déconnecté" },
+	wrong: { en: "wrong", fr: "incorrect" },
+	invalid: { en: "invalid", fr: "invalide" },
+	already: { en: "already", fr: "déjà" },
+	taken: { en: "taken", fr: "utilisé" },
+	enabled: { en: "enabled", fr: "activé" },
+	disabled: { en: "disabled", fr: "désactivé" },
+	required: { en: "required", fr: "requis" },
+	not: { en: "not", fr: "non" },
+	found: { en: "found", fr: "trouvé" },
+	added: { en: "added", fr: "ajouté" },
+	removed: { en: "removed", fr: "supprimé" },
+	updated: { en: "updated", fr: "mis à jour" },
+	created: { en: "created", fr: "créé" },
+	prefered: { en: "prefered", fr: "favorite" },
+
+	// USERS | CONNECTION
+	wrong_creadentials: {
+		en: "{wrong} {user_name} or {password}",
+		fr: "{user_name} ou {password} {wrong}",
 	},
-	game: {
-		en: "game",
-		fr: "jeu",
+	twofa_required: {
+		en: "{twofa} {required}",
+		fr: "{twofa} {required}",
 	},
-	change: {
-		en: "change",
-		fr: "changer",
+	not_connected: {
+		en: "You are {not} {logged_in}",
+		fr: "Vous n'êtes {not} {logged_in}"
 	},
-	password: {
-		en: "password",
-		fr: "mot de passe",
+	no_such_user: {
+		en: "No such {user}",
+		fr: "Aucun {user} de ce nom",
+	},
+	username_taken: {
+		en: "{user_name} {already} {taken}",
+		fr: "{user_name} {already} {taken}",
+	},
+	friend_added: {
+		en: "{friend} {added}",
+		fr: "{friend} {added}",
+	},
+	friend_removed: {
+		en: "{friend} {removed}",
+		fr: "{friend} {removed}",
+	},
+	invalid_2fa_code: {
+		en: "{invalid} {twofa} {code}",
+		fr: "{code} de {twofa} {invalid}",
+	},
+	email_required: {
+		en: "{email} {required} to {enable} {twofa}",
+		fr: "{email} {required} pour {enable} la {twofa}",
+	},
+	friend_himself: {
+		en: "You cannot {add} yousefl as a {friend}",
+		fr: "Vous ne pouvez pas vous {add} en {friend}",
+	},
+	already_friend_with: {
+		en: "This {user} is {already} your {friend}",
+		fr: "Cet {user}, est {already} votre {friend}",
+	},
+
+	// FRONT | NAVIGATION
+	settings: { en: "settings", fr: "paramètres" },
+	profile: { en: "profile", fr: "profil" },
+	history: { en: "history", fr: "historique" },
+	summary: { en: "summary", fr: "résumé" },
+	dashboard: { en: "dashboard", fr: "tableau de bord" },
+	see_more: { en: "see more", fr: "voir plus" },
+	sign_in: { en: "sign in", fr: "se connecter" },
+	sign_up: { en: "sign up", fr: "s'inscrire" },
+	continue_as_guest: {
+		en: "{continue} as guest",
+		fr: "{continue} en tant qu'invité",
 	},
 	change_password: {
 		en: "{change} {password}",
 		fr: "{change} de {password}",
 	},
-	profile: {
-		en: "profile",
-		fr: "profil",
-	},
-	user_name: {
-		en: "username",
-		fr: "nom d'utilisateur",
-	},
-	sign_in: {
-		en: "sign in",
-		fr: "se connecter"
-	},
-	continue_as_guest: {
-		en: "continue as guest",
-		fr: "continuer en tant qu'invité"
-	},
-	sign_up: {
-		en: "sign up",
-		fr: "s'inscrire"
-	},
-	nickname: {
-		en: "nickname",
-		fr: "pseudo"
-	},
-	confirm: {
-		en: "confirm",
-		fr: "confirmer"
-	},
 	confirm_password: {
 		en: "{confirm} {password}",
-		fr: "{confirm} le {password}"
-	},
-	go_back: {
-		en: "go back",
-		fr: "revenir"
-	},
-	log_out: {
-		en: "log out",
-		fr: "se déconnecter"
+		fr: "{confirm} le {password}",
 	},
 	add_friend: {
-		en: "add friend",
-		fr: "ajouter un ami"
+		en: "{add} {friend}",
+		fr: "{add} un {friend}",
 	},
-	invite: {
-		en: "invite",
-		fr: "inviter"
-	},
-	delete: {
-		en: "delete",
-		fr: "supprimer"
-	},
-	settings: {
-		en: "settings",
-		fr: "paramètres"
-	},
-	history: {
-		en: "history",
-		fr: "historique"
-	},
-	summary: {
-		en: "summary",
-		fr: "résumé"
-	},
-	dashboard: {
-		en: "dashboard",
-		fr: "tableau de bord"
-	},
-	see_more: {
-		en: "see more",
-		fr: "voir plus"
-	},
-	elo: {
-		en: "elo",
-		fr: "elo"
-	},
-	prefered_map: {
-		en: "prefered map",
-		fr: "map favorite"
-	},
-	prefered_ball: {
-		en: "prefered ball",
-		fr: "balle favorite"
-	},
-	last_games: {
-		en: "last games",
-		fr: "dernières parties"
-	},
-	wins: {
-		en: "wins",
-		fr: "victoires"
-	},
-	loses: {
-		en: "loses",
-		fr: "défaites"
-	},
-	win_rate: {
-		en: "win rate",
-		fr: "ratio de victoires"
-	},
-	chart: {
-		en: "chart",
-		fr: "tableau"
-	},
-	graph: {
-		en: "graph",
-		fr: "graphique"
-	},
-	win_rate_chart: {
-		en: "{win_rate} {graph}",
-		fr: "{graph} du {win_rate}"
-	},
-	games_played: {
-		en: "games played",
-		fr: "parties jouées"
-	},
-	goals_avg: {
-		en: "goals average",
-		fr: "moyenne des buts"
-	},
-	games_time: {
-		en: "games time",
-		fr: "temps des parties"
-	},
-	elo_chart: {
-		en: "{elo} {graph}",
-		fr: "{graph} du {elo}"
-	},
+	prefered_map: { en: "{prefered} {map}", fr: "{prefered} {map}" },
+	prefered_ball: { en: "{prefered} {ball}", fr: "{prefered} {ball}" },
+	last_games: { en: "last games", fr: "dernières parties" },
+	wins: { en: "wins", fr: "victoires" },
+	loses: { en: "loses", fr: "défaites" },
+	win_rate: { en: "win rate", fr: "ratio de victoires" },
+	chart: { en: "chart", fr: "tableau" },
+	graph: { en: "graph", fr: "graphique" },
+	win_rate_chart: { en: "{win_rate} {graph}", fr: "{graph} du {win_rate}" },
+	games_played: { en: "games played", fr: "parties jouées" },
+	goals_avg: { en: "goals average", fr: "moyenne des buts" },
+	games_time: { en: "games time", fr: "temps des parties" },
+	elo_chart: { en: "{elo} {graph}", fr: "{graph} du {elo}" },
 	diff_goals_chart: {
 		en: "goals difference {graph}",
 		fr: "{graph} de la différence des buts"
 	},
-	all: {
-		en: "all",
-		fr: "tout"
-	},
-	season: {
-		en: "season",
-		fr: "saison",
-	},
+	all: { en: "all", fr: "tout" },
+	season: { en: "season", fr: "saison" },
 	s1: { /** @todo find better solution */
 		en: "{season} one",
 		fr: "{season} une"
@@ -178,58 +160,18 @@ const TRANSLATOR = {
 		en: "{season} three",
 		fr: "{season} trois"
 	},
-	save: {
-		en: "save",
-		fr: "enregistrer"
-	},
-	edit: {
-		en: "edit",
-		fr: "modifier"
-	},
-	tfa: {
-		en: "2FA",
-		fr: "double authentification"
-	},
-	tfa_mail: {
-		en: "{tfa} e-mail",
-		fr: "courriel de la {tfa}"
-	},
-	new_password: {
-		en: "new password",
-		fr: "nouveau mot de passe"
-	},
-	user_informations: {
-		en: "user informations",
-		fr: "informations"
-	},
-	change_avatar: {
-		en: "change avatar",
-		fr: "modifier avatar"
-	},
-	cancel: {
-		en: "cancel",
-		fr: "annuler"
-	},
-	options: {
-		en: "options",
-		fr: "paramètres"
-	},
-	enable: {
-		en: 'enable',
-		fr: 'activer'
-	},
-	disable: {
-		en: 'disable',
-		fr: 'désactiver'
-	},
-	enable_2fa: {
-		en: '{enable} {tfa}',
-		fr: '{enable} la {tfa}'
-	},
-	disable_2fa: {
-		en: '{disable} {tfa}',
-		fr: '{disable} la {tfa}'
-	},
+	tfa_mail: { en: "{twofa} e-mail", fr: "courriel de la {twofa}" },
+	new_password: { en: "new password", fr: "nouveau mot de passe" },
+	user_informations: { en: "user informations", fr: "informations" },
+	change_avatar: { en: "change avatar", fr: "modifier avatar" },
+	options: { en: "options", fr: "paramètres" },
+	enable_2fa: { en: '{enable} {twofa}', fr: '{enable} la {twofa}' },
+	disable_2fa: { en: '{disable} {twofa}', fr: '{disable} la {twofa}' },
+	nothing_updated: {
+		en: "{nothing} to {update}",
+		fr: "{nothing} a {update}"
+	}
+
 } as const satisfies Record<string, Expression>;
 
 export { CodeLang, TRANSLATOR };
