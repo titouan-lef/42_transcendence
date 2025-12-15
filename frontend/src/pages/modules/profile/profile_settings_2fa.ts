@@ -3,24 +3,24 @@ import { disable2FA, enable2FA } from "../../../services/security/2FA";
 import { currentUser, getUserInfos } from "../../../services/user_management/login";
 import { getSafeElement } from "../../../utils/getSafeElement";
 
-const SETTINGS_TWOFA = `
+const SETTINGS_2FA = `
 <div id='print-2fa-reply'></div>
 `;
 
-const SETTINGS_TWOFA_ENABLE = `
+const SETTINGS_2FA_ENABLE = `
 <div>
 	your account is not protected
 </div>
 ${createButtonHtml(['enable_2fa'], 'btn-enable-2fa', { 'class': `bg-dark text-secondary p-1 rounded-2xl font-bold` })}
-${SETTINGS_TWOFA}
+${SETTINGS_2FA}
 `;
 
-const SETTINGS_TWOFA_DISABLE = `
+const SETTINGS_2FA_DISABLE = `
 <div>
 	your account is protected
 </div>
 ${createButtonHtml(['disable_2fa'], 'btn-disable-2fa', { 'class': `bg-dark text-secondary p-1 rounded-2xl font-bold` })}
-${SETTINGS_TWOFA}
+${SETTINGS_2FA}
 `;
 
 async function update2FAButton(): Promise<void> {
@@ -30,10 +30,7 @@ async function update2FAButton(): Promise<void> {
 	await getUserInfos();
 
 	const switch2fa = getSafeElement('switch-2fa', HTMLElement);
-	if (currentUser.enabled2FA)
-		switch2fa.innerHTML = SETTINGS_TWOFA_DISABLE;
-	else
-		switch2fa.innerHTML = SETTINGS_TWOFA_ENABLE;
+	switch2fa.innerHTML = (currentUser.enabled2FA) ? SETTINGS_2FA_DISABLE : SETTINGS_2FA_ENABLE;
 
 	twoFactorAuthEvents();
 }

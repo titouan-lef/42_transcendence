@@ -4,6 +4,7 @@ type Expression = Record<CodeLang, string>;
 
 // 'as const' allows you to make fields read-only and avoid adding/removing fields.
 // 'satisfies ...' allows you to detect errors if a field doesn't exist (or is badly written).
+/** @todo revoir toutes les traduction lors d'une future PR langues car plein d'erreurs */
 const TRANSLATOR = {
 	play: {
 		en: "play",
@@ -127,11 +128,15 @@ const TRANSLATOR = {
 	},
 	chart: {
 		en: "chart",
-		fr: "évolution"
+		fr: "tableau"
+	},
+	graph: {
+		en: "graph",
+		fr: "graphique"
 	},
 	win_rate_chart: {
-		en: "{win_rate} {chart}",
-		fr: "{chart} du {win_rate}"
+		en: "{win_rate} {graph}",
+		fr: "{graph} du {win_rate}"
 	},
 	games_played: {
 		en: "games played",
@@ -146,12 +151,12 @@ const TRANSLATOR = {
 		fr: "temps des parties"
 	},
 	elo_chart: {
-		en: "{elo} {chart}",
-		fr: "{chart} du {elo}"
+		en: "{elo} {graph}",
+		fr: "{graph} du {elo}"
 	},
 	diff_goals_chart: {
-		en: "goals difference chart",
-		fr: "{chart} de la différence des buts"
+		en: "goals difference {graph}",
+		fr: "{graph} de la différence des buts"
 	},
 	all: {
 		en: "all",
@@ -172,10 +177,6 @@ const TRANSLATOR = {
 	s3: { /** @todo find better solution */
 		en: "{season} three",
 		fr: "{season} trois"
-	}, 
-	delete_account: {
-		en: "delete account",
-		fr: "supprimer compte"
 	},
 	save: {
 		en: "save",
@@ -190,8 +191,8 @@ const TRANSLATOR = {
 		fr: "double authentification"
 	},
 	tfa_mail: {
-		en: "{tfa} mail",
-		fr: "{tfa} e-mail"
+		en: "{tfa} e-mail",
+		fr: "courriel de la {tfa}"
 	},
 	new_password: {
 		en: "new password",
