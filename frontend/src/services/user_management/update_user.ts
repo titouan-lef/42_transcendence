@@ -13,6 +13,7 @@ async function updateUser(): Promise<void> {
 	const nick = getSafeElement('publicID', HTMLInputElement);
 	const pass = getSafeElement('newPassword', HTMLInputElement);
 	const confirmPass = getSafeElement('confirmPassword', HTMLInputElement);
+	/** @todo make email empty possible! we can't erase our mail right now */
 	const email = getSafeElement('user-email', HTMLInputElement);
 
 	const container = getSafeElement('print-uinfo-reply', HTMLElement);
