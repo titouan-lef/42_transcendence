@@ -19,21 +19,21 @@ async function main() {
 	async function setEloData(username: string, season: number, rating: number, ratingDeviation: number) {
 		const tx = await contract.setEloData(username, season, rating, ratingDeviation);
 		await tx.wait();
-		console.log(`EloData is updated for ${username}, saison ${season}`);
+		console.log(`EloData is updated for ${username}, season ${season}`);
 	}
 
 	// Update Rating
 	async function setRating(username: string, season: number, rating: number) {
 		const tx = await contract.setRating(username, season, rating);
 		await tx.wait();
-		console.log(`Rating is updated for ${username} à ${rating}`);
+		console.log(`Rating is updated for ${username} to ${rating}`);
 	}
 
 	// Update RatingDeviation
 	async function setRatingDeviation(username: string, season: number, ratingDeviation: number) {
 		const tx = await contract.setRatingDeviation(username, season, ratingDeviation);
 		await tx.wait();
-		console.log(`RatingDeviation is updated for ${username} à ${ratingDeviation}`);
+		console.log(`RatingDeviation is updated for ${username} to ${ratingDeviation}`);
 	}
 
 	// Test
@@ -51,6 +51,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
+	console.error(error);
+	process.exitCode = 1;
 });
