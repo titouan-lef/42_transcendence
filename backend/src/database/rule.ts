@@ -17,11 +17,14 @@ async function createRuleTable(): Promise<void> {
 	);
 }
 
-async function insertRule(name: string): Promise<void> {
+async function insertRules(): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES (?)`,
-			[name]
+			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES ('spin'),
+			('rotate'),
+			('canonCount'),
+			('dash'),
+			('wind');`
 		), "insert" + TABLE_NAME
 	);
 }
@@ -52,7 +55,7 @@ async function getRuleId(name: string): Promise<number | undefined> {
 	return row?.id;
 }
 
-export { Rule, createRuleTable, insertRule, getRuleId };
+export { Rule, createRuleTable, insertRules, getRuleId };
 /**
  * @todo see if we keep it
 async function updateRule(id: number, newName: string): Promise<void> {

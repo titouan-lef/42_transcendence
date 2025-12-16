@@ -17,10 +17,14 @@ async function createBallTable(): Promise<void> {
 	);
 }
 
-async function insertBall(name: string): Promise<void> {
+async function insertBalls(): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES (?)`, [name]
+			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES ('default'),
+			('invisible'),
+			('pulse'),
+			('snake'),
+			('tricky');`
 		), "insert" + TABLE_NAME
 	);
 }
@@ -48,4 +52,4 @@ async function getBallId(name: string): Promise<number | undefined> {
 	return row?.id;
 }
 
-export { Ball, createBallTable, insertBall, getBallId };
+export { Ball, createBallTable, insertBalls, getBallId };

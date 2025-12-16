@@ -17,11 +17,21 @@ async function createThemeTable(): Promise<void> {
 	);
 }
 
-async function insertTheme(name: string): Promise<void> {
+async function insertThemes(): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES (?)`,
-			[name]
+			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES ('pizza_lulu'),
+			('over_titouan'),
+			('sugar_rushtman'),
+			('polybius'),
+			('neon_hearts'),
+			('claw_machine'),
+			('lazer_tim'),
+			('electronic_eclypse'),
+			('please_insert_25c'),
+			('ticket_muncher'),
+			('electric_pl'),
+			('monq');`
 		), "insert" + TABLE_NAME
 	);
 }
@@ -44,7 +54,7 @@ async function getTheme(id: number): Promise<string | null> {
 	return (row.name);
 }
 
-export { Theme, createThemeTable, insertTheme, getTheme };
+export { Theme, createThemeTable, insertThemes, getTheme };
 /**
  * @todo see if we keep it
 async function updateTheme(id: number, newName: string): Promise<void> {
