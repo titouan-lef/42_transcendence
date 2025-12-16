@@ -68,11 +68,9 @@ async function connectUser(): Promise<void> {
 
 	const modal = getSafeElement('modal', HTMLDialogElement);
 	modal.close();
-	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
-
 	await getUserInfos();
+	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
 	/** @todo add load main */
-	/** @todo load user theme */
 	updateFriendList();
 }
 
@@ -90,10 +88,10 @@ async function sendSecureCode(): Promise<void> {
 	}
 
 	const modal = getSafeElement('modal', HTMLDialogElement);
-	/** @todo add load main */
 	modal.close();
-	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
 	await getUserInfos();
+	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
+	/** @todo add load main */
 	updateFriendList();
 }
 
