@@ -7,8 +7,8 @@ let game: Game | null = null;
 const LOCAL_PLAYER1_KEYS: PlayerKeys = {
 	mov_right: "KeyA",
 	mov_left: "KeyD",
-	rot_right: "KeyJ",
-	rot_left: "KeyL",
+	rot_right: "KeyL",
+	rot_left: "KeyJ",
 	normalMode: "KeyI",
 	spinMode: "KeyK",
 	emoteStrong: "KeyT",
@@ -35,8 +35,8 @@ const LOCAL_PLAYER2_KEYS: PlayerKeys = {
 const AI_RANKED_PLAYER_KEYS: PlayerKeys = {
 	mov_right: "KeyA",
 	mov_left: "KeyD",
-	rot_right: "ArrowLeft",
-	rot_left: "ArrowRight",
+	rot_right: "ArrowRight",
+	rot_left: "ArrowLeft",
 	normalMode: "ArrowUp",
 	spinMode: "ArrowDown",
 	emoteStrong: "Numpad8",
@@ -61,7 +61,7 @@ async function newGame(options: OptionMessage, player1: WebSocket, player2?: Web
 	} else {
 		settings = new GameSettings(
 			options.playerId, options.map, options.wind, options.ball, options.rotatingPlayer, options.spin, options.dashingPlayer,
-			player1, 
+			player1,
 			AI_RANKED_PLAYER_KEYS
 		);
 	}
