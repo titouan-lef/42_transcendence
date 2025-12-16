@@ -24,6 +24,7 @@ const TRANSLATOR = {
 	edit: { en: "edit", fr: "modifier" },
 	cancel: { en: "cancel", fr: "annuler" },
 	update: { en: "update", fr: "mettre à jour" },
+	verify: { en: "verify", fr: "verifier" },
 
 	// NOUNS
 	user: { en: "user", fr: "utilisateur" },
@@ -170,8 +171,11 @@ const TRANSLATOR = {
 	nothing_updated: {
 		en: "{nothing} to {update}",
 		fr: "{nothing} a {update}"
+	},
+	refify_email: {
+		en: "{verify} your {email}",
+		fr: "{verify} votre {email}"
 	}
-
 } as const satisfies Record<string, Expression>;
 
 export { CodeLang, TRANSLATOR };

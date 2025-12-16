@@ -1,7 +1,8 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { hashString, isValidPassword } from "../utils/hash_string.js";
 import { sendReply } from "../utils/HTTP.js";
-import { doesUserExist, getUserByUsername, insertUser, updateEmail, updatePassword, updatePseudo } from "../database/user.js";
+import { doesUserExist, getUserByUsername, insertUser, is2FAEnabled, updateEmail, updatePassword, updatePseudo } from "../database/user.js";
+import { request2FA } from "../security/2FA.js";
 import { Errors, Success } from "../utils/status_codes.js";
 
 interface NewUserBody {
@@ -46,9 +47,13 @@ async function updateUserInfos(req: FastifyRequest<{ "Body": UpdateUserBody }>, 
 		await updatePassword(username, hashString(password));
 		userModified = true;
 	}
-	if (email && (email !== user.email)) {
+	if (!email && user.email && !await is2FAEnabled(username)) {
 		await updateEmail(username, email);
 		userModified = true;
+	} else if (email && (email !== user.email)) {
+		request2FA(username, email);
+		sendReply(reply, Errors.TWOFA_REQUIRED);
+		return;
 	}
 	if (!userModified) {
 		sendReply(reply, Errors.NO_DATA_TO_UPDATE);

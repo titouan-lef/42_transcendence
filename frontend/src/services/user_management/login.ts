@@ -1,11 +1,13 @@
 import { Themes } from "../../assets/themes/theme.js";
 import { isOneStringEmtpy } from "../../utils/strings.js";
-import { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv, isRequestSuccessfull } from "../api_request.js";
+import { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv, isRequestSuccessfull, ReplyFromBack } from "../api_request.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
 import { ASIDE_CONNECTED, asideConnectedEvents, loadAside } from "../../pages/modules/box/box_aside.js";
 import { updateFriendList } from "../../pages/modules/box/box_aside_friendlist.js";
 import { loadModularPage } from "../../pages/modular.js";
 import { openDialog2FA } from "../../pages/modules/dialog/dialog.js";
+import { loadSettings } from "../../pages/modules/profile/profile_settings.js";
+import { openProfile } from "../../pages/modules/profile/profile.js";
 import { Errors } from "../status_codes.js";
 
 interface InfoList {
@@ -74,25 +76,43 @@ async function connectUser(): Promise<void> {
 	updateFriendList();
 }
 
-async function sendSecureCode(): Promise<void> {
+async function sendSecureCode(): Promise<boolean> {
 	const code = getSafeElement('password', HTMLInputElement).value;
 	const container: HTMLElement = getSafeElement("print-content", HTMLElement);
 	if (!code) {
 		container.innerHTML = `<p>Please enter a 4 digit code.</p>`; /**@todo use translate tool */
-		return;
+		return false;
 	}
-	const reply = await sendPostRequestToBack("/api/user/secure", JSON.stringify({ user: user, code: code }));
+	let reply: ReplyFromBack;
+	if (currentUser)
+		reply = await sendPostRequestToBack("/api/user/secure", JSON.stringify({ user: currentUser.username, code: code }));
+	else
+		reply = await sendPostRequestToBack("/api/user/secure", JSON.stringify({ user: user, code: code }));
+
 	if (!isRequestSuccessfull(reply)) {
 		printReplyInDiv(reply, "print-content");
-		return;
+		return false;
 	}
-
 	const modal = getSafeElement('modal', HTMLDialogElement);
 	modal.close();
+	return true;
+}
+
+async function verify2FAConnection(): Promise<void> {
+	if(!await sendSecureCode())
+		return;
 	await getUserInfos();
 	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
 	/** @todo add load main */
 	updateFriendList();
+}
+
+async function verify2FAConfirmation(): Promise<void> {
+	if(!await sendSecureCode())
+		return;
+	await getUserInfos();
+	openProfile(); // go back to settings
+	loadSettings();
 }
 
 async function disconnectUser(): Promise<void> {
@@ -101,4 +121,4 @@ async function disconnectUser(): Promise<void> {
 	loadModularPage();
 }
 
-export { currentUser, getUserInfos, connectUser, disconnectUser, sendSecureCode };
+export { currentUser, getUserInfos, connectUser, disconnectUser, verify2FAConnection, verify2FAConfirmation };
