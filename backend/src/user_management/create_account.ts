@@ -47,7 +47,11 @@ async function updateUserInfos(req: FastifyRequest<{ "Body": UpdateUserBody }>, 
 		await updatePassword(username, hashString(password));
 		userModified = true;
 	}
-	if (!email && user.email && !await is2FAEnabled(username)) {
+	if (!email && user.email) {
+		if (await is2FAEnabled(username)) {
+			sendReply(reply, 400, "Please desactivate 2FA before clearing your email");
+			return;
+		}
 		await updateEmail(username, email);
 		userModified = true;
 	} else if (email && (email !== user.email)) {
