@@ -58,15 +58,16 @@ async function connectUser(): Promise<void> {
 	};
 
 	const reply = await sendPostRequestToBack("api/user/login", JSON.stringify(data));
-	printReplyInDiv(reply, "print-content");
 
 	user = userId.value;
 	if (reply.code === Errors.TWOFA_REQUIRED ) {
 		openDialog2FA();
 		return;
 	}
-	if (!isRequestSuccessfull(reply))
+	if (!isRequestSuccessfull(reply)) {
+		printReplyInDiv(reply, "print-content");
 		return;
+	}
 
 	const modal = getSafeElement('modal', HTMLDialogElement);
 	modal.close();
