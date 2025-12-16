@@ -19,6 +19,9 @@ env		:
 		grep -q "EMAIL=" .backend_env || (echo "❌ Missing EMAIL in .backend_env" && exit 1)
 		grep -q "EMAIL_PASSWORD=" .backend_env || (echo "❌ Missing EMAIL_PASSWORD in .backend_env" && exit 1)
 		grep -q "JWT_SECRET=" .backend_env || (echo "❌ Missing JWT_SECRET in .backend_env" && exit 1)
+		grep -q "CONTRACT_ADDRESS=" .backend_env || (echo "❌ Missing CONTRACT_ADDRESS in .backend_env" && exit 1)
+		grep -q "PRIVATE_KEY=" .backend_env || (echo "❌ Missing PRIVATE_KEY in .backend_env" && exit 1)
+		grep -q "RPC_URL=" .backend_env || (echo "❌ Missing RPC_URL in .backend_env" && exit 1)
 		# @todo Add everything necessary
 		echo "✅Env files are valid"
 
