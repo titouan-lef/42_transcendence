@@ -36,9 +36,9 @@ const SETTINGS_OPTIONS = `
 </div>
 `;
 
-/** @todo add key bind ? */
 const SETTINGS = `
 <div class="${SETTINGS_MAIN_STYLE}">
+	<dialog id='modal-settings'></dialog>
 	<div class="${SETTINGS_COL_STYLE}">
 		<div>
 			${SETTINGS_USER_INFOS}
