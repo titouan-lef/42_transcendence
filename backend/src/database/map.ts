@@ -17,11 +17,13 @@ async function createMapTable(): Promise<void> {
 	);
 }
 
-async function insertMap(name: string): Promise<void> {
+async function insertMaps(): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES (?)`,
-			[name]
+			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES ('default'),
+			('desert'),
+			('sky'),
+			('volcano');`
 		), "insert" + TABLE_NAME
 	);
 }
@@ -52,4 +54,4 @@ async function getMapId(name: string): Promise<number | undefined> {
 	return row?.id;
 }
 
-export { Map, createMapTable, insertMap, getMapId };
+export { Map, createMapTable, insertMaps, getMapId };

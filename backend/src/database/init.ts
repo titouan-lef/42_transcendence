@@ -1,13 +1,13 @@
 import sqlite3 from "sqlite3";
 import { existsSync } from "fs";
 import { open, Database } from "sqlite";
-import { createThemeTable, insertTheme } from "./theme.js";
+import { createThemeTable, insertThemes } from "./theme.js";
 import { createUserTable } from "./user.js";
 import { createFriendshipTable } from "./friendship.js";
 import { createSeasonTable, insertSeason } from "./season.js";
-import { createMapTable, insertMap } from "./map.js";
-import { createRuleTable, insertRule } from "./rule.js";
-import { createBallTable, insertBall } from "./ball.js";
+import { createMapTable, insertMaps } from "./map.js";
+import { createRuleTable, insertRules } from "./rule.js";
+import { createBallTable, insertBalls } from "./ball.js";
 import { createGameTable } from "./game.js";
 import { createEloTable } from "./elo.js";
 import { createGoalTable } from "./goal.js";
@@ -26,44 +26,22 @@ async function getDB(): Promise<Database> {
 
 async function initBallTable(): Promise<void> {
 	await createBallTable();
-	await insertBall("default");
-	await insertBall("invisible");
-	await insertBall("pulse");
-	await insertBall("snake");
-	await insertBall("tricky");
+	await insertBalls();
 }
 
 async function initMapTable(): Promise<void> {
 	await createMapTable();
-	await insertMap("default");
-	await insertMap("desert");
-	await insertMap("sky");
-	await insertMap("volcano");
+	await insertMaps();
 }
 
 async function initThemeTable(): Promise<void> {
 	await createThemeTable();
-	await insertTheme("pizza_lulu");
-	await insertTheme("over_titouan");
-	await insertTheme("sugar_rushtman");
-	await insertTheme("polybius");
-	await insertTheme("neon_hearts");
-	await insertTheme("claw_machine");
-	await insertTheme("lazer_tim");
-	await insertTheme("electronic_eclypse");
-	await insertTheme("please_insert_25c");
-	await insertTheme("ticket_muncher");
-	await insertTheme("electric_pl");
-	await insertTheme("monq");
+	await insertThemes();
 }
 
 async function initRuleTable(): Promise<void> {
 	await createRuleTable();
-	await insertRule("spin");
-	await insertRule("rotate");
-	await insertRule("canonCount");
-	await insertRule("dash");
-	await insertRule("wind");
+	await insertRules();
 }
 
 function databaseExist(): boolean {
