@@ -1,7 +1,7 @@
 import { SIGN_IN, signInHandler } from "./dialog_sign_in.js";
 import { SIGN_UP, signUpHandler } from "./dialog_sign_up.js";
 import { ADD_FRIEND, addFriendHandler } from "./dialog_add_friend.js";
-import { TWOFA, twoFAHandler } from "./dialog_2FA.js";
+import { EMAIL_CONFIRMATION, TWOFA, twoFAHandler } from "./dialog_2FA.js";
 import { applyColor } from "../../../utils/applyColor.js";
 import { getSafeElement } from "../../../utils/getSafeElement.js";
 
@@ -47,6 +47,10 @@ function exitDialog(modal: HTMLDialogElement, event: Event): void {
 	}
 }
 
+function openDialogEmail(): void {
+	loadDialog(EMAIL_CONFIRMATION, twoFAHandler);
+}
+
 function openDialog2FA(): void {
 	loadDialog(TWOFA, twoFAHandler);
 }
@@ -63,4 +67,4 @@ function openDialogAddFriend(): void {
 	loadDialog(ADD_FRIEND, addFriendHandler);
 }
 
-export { exitDialog, loadDialog, openDialogSignIn, openDialogSignUp, openDialogAddFriend, openDialog2FA };
+export { exitDialog, loadDialog, openDialogSignIn, openDialogSignUp, openDialogAddFriend, openDialog2FA, openDialogEmail };

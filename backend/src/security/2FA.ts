@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { randomInt } from "../utils/math.js";
 import { sendReply } from "../utils/HTTP.js";
-import { disabled2FA, enabled2FA, getUserEmail, is2FAEnabled, isEmailDefined } from "../database/user.js";
+import { disabled2FA, enabled2FA, getUserEmail, is2FAEnabled, isEmailDefined, updateEmail } from "../database/user.js";
 import { addAuthCookies } from "./JWT.js";
 import { wait } from "../utils/time.js";
 import { Errors, Success } from "../utils/status_codes.js";
@@ -19,7 +19,8 @@ const EMAIL = nodemailer.createTransport({
 	},
 });
 
-const CODES = new Map<string, number>();
+const CODES_EMAIL = new Map<string, string>();
+const CODES_2FA = new Map<string, number>();
 
 function sendEmailCode(email: string, code: number): void {
 	EMAIL.sendMail({
@@ -30,13 +31,21 @@ function sendEmailCode(email: string, code: number): void {
 	});
 }
 
-async function request2FA(user: string): Promise<void> {
+async function request2FA(user: string, email?: string): Promise<void> {
 	const code = randomInt(1000, 9999);
-	const email = await getUserEmail(user);
+	if (email)
+		CODES_EMAIL.set(user, email);
+	else
+		email = await getUserEmail(user);
 	sendEmailCode(email, code);
-	if (CODES.has(user))
-		CODES.delete(user);
-	CODES.set(user, code);
+	if (CODES_2FA.has(user))
+		CODES_2FA.delete(user);
+	CODES_2FA.set(user, code);
+	await wait(100000); // self deleting codes after 10 minutes 
+	if (CODES_2FA.has(user)) /** @todo resend button */
+		CODES_2FA.delete(user);
+	if (CODES_EMAIL.has(user))
+		CODES_EMAIL.delete(user);
 }
 
 interface Content2FA {
@@ -46,14 +55,24 @@ interface Content2FA {
 
 async function verify2FA(req: FastifyRequest<{ "Body": Content2FA }>, reply: FastifyReply): Promise<void> {
 	const { user, code } = req.body;
-	if (Number(code) !== CODES.get(user)) {
-		wait(1000);  // wait 1 sec against brutforce
+	if (Number(code) !== CODES_2FA.get(user)) {
+		wait(1000); // wait 1 sec against brutforce
 		sendReply(reply, Errors.INVALID_2FA_CODE);
 		return;
 	}
-	CODES.delete(user);
-	addAuthCookies(reply, user);
-	sendReply(reply, Success.LOOGED_IN);
+	CODES_2FA.delete(user);
+	if (await is2FAEnabled(user)) {
+		addAuthCookies(reply, user);
+		sendReply(reply, Success.LOOGED_IN);
+	} else {
+		const email = CODES_EMAIL.get(user);
+		if (!email) {
+			sendReply(reply, Errors.INVALID_EMAIL);
+			return;
+		}
+		await updateEmail(user, email);
+		sendReply(reply, Success.USER_UPDATED);
+	}
 }
 
 async function enable2FA(req: FastifyRequest, reply: FastifyReply): Promise<void> {
