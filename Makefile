@@ -30,9 +30,7 @@ prod		: env
 			echo "⚠️ Switching from DEV → PROD, removing images"; \
 			make clean; \
 		fi
-		sed -i '/^IP=/d' .frontend_env
 		sed -i '/^MODE=/d' .backend_env
-		echo "IP=$$(hostname -I | awk '{print $$1}')" >> .frontend_env
 		echo "MODE=prod" >> .backend_env
 		mkdir -p ./backups/pictures
 		docker compose -f docker-compose.yml up -d
@@ -43,9 +41,7 @@ dev		: env
 			echo "⚠️ Switching from PROD → DEV, removing images"; \
 			make clean; \
 		fi
-		sed -i '/^IP=/d' .frontend_env
 		sed -i '/^MODE=/d' .backend_env
-		echo "IP=$$(hostname -I | awk '{print $$1}')" >> .frontend_env
 		echo "MODE=dev" >> .backend_env
 		docker compose -f docker-compose.dev.yml up
 
@@ -56,7 +52,6 @@ down	:
 
 clean	: down
 		printf "\n$(RED)Deleting containers images$(RESET) \n"
-		sed -i '/^IP=/d' .frontend_env
 		sed -i '/^MODE=/d' .backend_env
 		docker system prune -af --volumes
 		printf "\n$(GREEN)System cleaned$(RESET) \n"
