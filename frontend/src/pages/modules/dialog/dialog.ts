@@ -48,7 +48,21 @@ function exitDialog(modal: HTMLDialogElement, event: Event): void {
 }
 
 function openDialogEmail(): void {
-	loadDialog(EMAIL_CONFIRMATION, twoFAHandler);
+	const modal = getSafeElement("modal-settings", HTMLDialogElement);
+	modal.close();
+
+	modal.className = DIALOG_MAIN_STYLE;
+	modal.showModal();
+	modal.innerHTML = `
+		<div class='${DIALOG_BOX_STYLE}'>
+			<div class='${DIALOG_INNER_STYLE}'>
+				${EMAIL_CONFIRMATION}
+			</div>
+		</div>
+	`;
+
+	modal.addEventListener('click', (e) => exitDialog(modal, e));
+	twoFAHandler(modal);
 }
 
 function openDialog2FA(): void {
