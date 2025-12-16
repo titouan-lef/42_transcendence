@@ -51,7 +51,11 @@ async function updateUserInfos(req: FastifyRequest<{ "Body": UpdateUserBody }>, 
 		await updateEmail(username, email);
 		userModified = true;
 	} else if (email && (email !== user.email)) {
-		request2FA(username, email);
+		const emailSent = await request2FA(username, email);
+		if (!emailSent) {
+			sendReply(reply, Errors.INVALID_EMAIL);
+			return;
+		}
 		sendReply(reply, Errors.TWOFA_REQUIRED);
 		return;
 	}
