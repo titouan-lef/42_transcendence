@@ -55,17 +55,17 @@ async function structureReply(reply: Response): Promise<ReplyFromBack> {
 }
 
 async function sendPostRequestToBack(endpoint: string, content: string) : Promise<ReplyFromBack> {
-	const reply = await fetch(`${API_URL}/${endpoint}`, createPostRequest(content));
+	const reply = await fetch(endpoint, createPostRequest(content));
 	return structureReply(reply);
 }
 
 async function sendFile(file: FormData) : Promise<ReplyFromBack> {
-	const reply = await fetch(`${API_URL}/api/user/change_picture`, createFileRequest(file));
+	const reply = await fetch(`/api/user/change_picture`, createFileRequest(file));
 	return structureReply(reply);
 }
 
 async function sendGetRequestToBack(endpoint: string) : Promise<ReplyFromBack> {
-	const reply = await fetch(`${API_URL}/${endpoint}`, createGetRequest());
+	const reply = await fetch(endpoint, createGetRequest());
 	return structureReply(reply);
 }
 
