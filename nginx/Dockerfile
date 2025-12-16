@@ -11,6 +11,9 @@ RUN		openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/privat
 RUN		mkdir -p /var/run/nginx
 COPY	./config/default.conf /etc/nginx/conf.d
 
+#	Copy html contents
+COPY	./pages /usr/share/nginx/html
+
 #	Set port 443 for internet
 EXPOSE	443
 
