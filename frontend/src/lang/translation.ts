@@ -175,6 +175,10 @@ const TRANSLATOR = {
 	refify_email: {
 		en: "{verify} your {email}",
 		fr: "{verify} votre {email}"
+	},
+	invalid_email: {
+		en: "{invalid} {email}",
+		fr: "{email} {invalid}"
 	}
 } as const satisfies Record<string, Expression>;
 

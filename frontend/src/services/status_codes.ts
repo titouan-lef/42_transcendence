@@ -65,6 +65,7 @@ const REPLY_MESSAGES: Partial<Record<ReplyStatus, TranslationKey>> = {
 	[Errors.NO_SUCH_USER]: "no_such_user",
 	[Errors.USERNAME_TAKEN]: "username_taken",
 	[Errors.NO_DATA_TO_UPDATE]: "nothing_updated",
+	[Errors.INVALID_EMAIL]: "invalid_email",
 
 	// 2FA
 	[Errors.INVALID_2FA_CODE]: "invalid_2fa_code",

@@ -22,30 +22,54 @@ const EMAIL = nodemailer.createTransport({
 const CODES_EMAIL = new Map<string, string>();
 const CODES_2FA = new Map<string, number>();
 
-function sendEmailCode(email: string, code: number): void {
-	EMAIL.sendMail({
-		from: process.env.EMAIL,
-		to: email,
-		subject: "Your 2FA Code",
-		text: `Your verification code is: ${code}`,
-	});
+/**************************************************************************
+ *		REGEX Explanations
+ * ^ 				— Start of string
+ * [...]			— Character class
+ * ^ inside [...]	— Negation -> match any character EXCEPT those listed
+ * \s 				— Whitespace
+ * $				— End of string anchor
+ **************************************************************************/
+function isValidEmail(email: string): boolean {
+	return (
+		!/[\r\n]/.test(email) &&					// Protection again sevral emails injection
+		/^[^\s@+]+@[^\s@]+\.[^\s@]+$/.test(email)	// Format validation
+	);
 }
 
-async function request2FA(user: string, email?: string): Promise<void> {
+function sendEmailCode(email: string, code: number): boolean {
+	if (!isValidEmail(email))
+		return false;
+	try {
+		EMAIL.sendMail({
+			from: process.env.EMAIL,
+			to: email,
+			subject: "Your 2FA Code",
+			text: `Your verification code is: ${code}`,
+		});
+		return true;
+	} catch (err) {
+		console.log(`invalid email`, email); /** @todo remove */
+		return false;
+	}
+}
+
+async function request2FA(user: string, email?: string): Promise<boolean> {
 	const code = randomInt(1000, 9999);
 	if (email)
 		CODES_EMAIL.set(user, email);
 	else
 		email = await getUserEmail(user);
-	sendEmailCode(email, code);
+	if (!sendEmailCode(email, code))
+		return false;
 	if (CODES_2FA.has(user))
 		CODES_2FA.delete(user);
 	CODES_2FA.set(user, code);
-	await wait(100000); // self deleting codes after 10 minutes 
-	if (CODES_2FA.has(user)) /** @todo resend button */
+	setTimeout(() => { // self deleting codes after 10 minutes 
 		CODES_2FA.delete(user);
-	if (CODES_EMAIL.has(user))
 		CODES_EMAIL.delete(user);
+	}, 10 * 60 * 1000);
+	return true;
 }
 
 interface Content2FA {
