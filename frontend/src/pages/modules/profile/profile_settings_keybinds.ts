@@ -117,5 +117,3 @@ function changeKey(action: string, key: string, keySet: PlayerKeys): void {
 }
 
 export { SETTINGS_KEYBINDS_SELECTOR, generateKeybindsButtons, keybindsNavbarEvents };
-
-
