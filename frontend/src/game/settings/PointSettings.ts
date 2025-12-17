@@ -1,7 +1,6 @@
 import { PlanePosition } from "../types_transfert";
+import { BallOption, MapOption } from "./GameRules.js";
 
-type MapOption = "default" | "volcano" | "sky" | "desert";
-type BallOption = "default" | "invisible" | "tricky" | "pulse" | "snake";
 type PlayerKey = KeyboardEvent["code"] | undefined;
 
 interface PlayerKeys {
@@ -60,4 +59,4 @@ class PointSettings {
 	}
 }
 
-export { BallOption, PlayerKeys, PlayerSettings, PointSettings, MapOption };
+export { PlayerKeys, PlayerSettings, PointSettings };

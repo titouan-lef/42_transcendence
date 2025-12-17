@@ -7,7 +7,8 @@ import { SkyMap } from "../map/SkyMap.js";
 import { DesertMap } from "../map/DesertMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
-import { BallOption, PointSettings, MapOption } from "../settings/PointSettings.js";
+import { BallOption, MapOption } from "../settings/GameRules.js";
+import { PointSettings } from "../settings/PointSettings.js";
 import { COLORS3, MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
 import { DataMessage, EventMessage, EmoteMessage, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
@@ -115,7 +116,7 @@ class SceneManager {
 			case "desert":
 				this.map = new DesertMap(scene, this.textures, wind);
 				break;
-			default: 
+			default:
 				throw new Error("switch map fail");
 		}
 	}
@@ -176,8 +177,8 @@ class SceneManager {
 			}
 		});
 	}
- 
-	setEnvironnement(scene: babylon.Scene, settings: PointSettings): void {
+
+	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
 		this.particleManager.clear();
 		this.createBall(scene, settings.ball);
 		this.createMap(scene, settings.map, settings.wind);

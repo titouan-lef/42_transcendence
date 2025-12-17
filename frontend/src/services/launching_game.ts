@@ -2,9 +2,8 @@ import { newPoint } from "../game/canvas_creation.js";
 import { DataMessage, Status } from "../game/types_transfert.js";
 import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "./api_request.js";
 import { Errors } from "./status_codes.js";
-
 import { closeDialogID } from "../pages/modules/dialog/dialog.js";
-import { getGameOptions } from "../pages/modules/dialog/dialog_game_options.js";
+import { AI_RULES, LOCAL_RULES, RANKED_RULES, setGameOptions } from "../game/settings/GameRules.js";
 
 declare const WS_URL: string; // just telling the compiler that API_URL and WS_URL will exists during execution
 
@@ -13,7 +12,8 @@ declare const WS_URL: string; // just telling the compiler that API_URL and WS_U
 //////////////////////////////////////////
 
 async function askForGame(): Promise<boolean> {
-	const options = getGameOptions();
+	setGameOptions(RANKED_RULES);
+	const options = RANKED_RULES;
 
 	const reply = await sendPostRequestToBack("/api/game/ranked_game", JSON.stringify(options));
 	const message = await getReplyMessage(reply);
@@ -48,7 +48,8 @@ async function newRankedGame(): Promise<void> {
 }
 
 async function newGameVsAI(): Promise<void> {
-	const options = getGameOptions();
+	setGameOptions(AI_RULES);
+	const options = AI_RULES;
 
 	const reply = await sendPostRequestToBack("/api/game/ai_game", JSON.stringify(options));
 	if (!isRequestSuccessfull(reply)) {
@@ -95,7 +96,8 @@ async function newGameSolo(id: number): Promise<void> {
 }
 
 async function newLocalGame(): Promise<void> {
-	const options = getGameOptions();
+	setGameOptions(LOCAL_RULES);
+	const options = LOCAL_RULES;
 
 	const reply = await sendPostRequestToBack("/api/game/local_game", JSON.stringify(options));
 	if (!isRequestSuccessfull(reply)) {
