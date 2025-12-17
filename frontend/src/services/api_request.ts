@@ -13,7 +13,7 @@ interface ReplyFromBack {
 }
 
 async function printReplyInDiv(reply: ReplyFromBack, targetDivId: string): Promise<void> {
-	const message = await getReplyMessage(reply);
+	const message = getReplyMessage(reply);
 	const container = getSafeElement(targetDivId, HTMLElement);
 	container.innerHTML = `<p>${message}</p>`;
 }

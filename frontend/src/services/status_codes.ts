@@ -75,7 +75,7 @@ const REPLY_MESSAGES: Partial<Record<ReplyStatus, TranslationKey>> = {
 	// FRIENDS
 	[Errors.FRIEND_HIMSELF]: "friend_himself",
 	[Errors.ALREADY_FRIEND_WITH]: "already_friend_with",
-	[Errors.DISABLE_2FA]: "disable_2FA",
+	[Errors.DISABLE_2FA]: "please_disable_2FA",
 };
 
 export { Success, Errors, ReplyStatus, REPLY_MESSAGES };
