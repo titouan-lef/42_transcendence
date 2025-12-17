@@ -1,13 +1,9 @@
-import { parseUnits, formatUnits, Contract, JsonRpcProvider, Wallet, TransactionResponse } from 'ethers';
+import { parseUnits, Contract, JsonRpcProvider, Wallet, TransactionResponse } from 'ethers';
 import { ABI } from "./EloStorageAbi.js";
 import * as dotenv from 'dotenv';
+import { Elo } from '../../tournament/elo/elo.js';
 
 dotenv.config();
-
-interface Elo {
-	rating: number;
-	ratingDeviation: number;
-}
 
 const DECIMALS = 10**6;
 const DECIMALS_COUNT = 6;
@@ -37,7 +33,7 @@ if (!CONTRACT_ADDRESS)
  * @function setRatingDeviation(string memory username, uint256 season, uint256 ratingDeviation)
  * @function setRating(string memory username, uint256 season, uint256 rating)
  * @function getEloData(string memory username, uint256 season) returns (uint256 rating, uint256 ratingDeviation)
- *  */
+ */
 const CONTRACT = new Contract(CONTRACT_ADDRESS, ABI, signer);
 
 let transactionLock = Promise.resolve();
@@ -56,11 +52,11 @@ async function sendTransactionSafe(contractCall: (...args: unknown[]) => Promise
 	await transactionLock; 
 }
 
-async function setElo(username: string, season: number, rating: number, ratingDeviation: number): Promise<void> {
-	const scaledRatingDeviation = parseUnits(ratingDeviation.toString(), DECIMALS_COUNT);
+async function setElo(username: string, season: number, elo: Elo): Promise<void> {
+	const scaledRatingDeviation = parseUnits(elo.rd.toString(), DECIMALS_COUNT);
 	await sendTransactionSafe(
 		CONTRACT.setEloData.bind(CONTRACT),
-		[username, season, rating, scaledRatingDeviation]
+		[username, season, elo.r, scaledRatingDeviation]
 	);
 }
 
@@ -84,10 +80,14 @@ async function getElo(username: string, season:number): Promise<Elo> {
 	const unscaledRating = Number(scaleRating);
 	const unscaledRatingDeviation = Number(scaledRatingDeviation) / DECIMALS;
 	const elo: Elo = {
-		rating : unscaledRating,
-		ratingDeviation : unscaledRatingDeviation,
+		r : unscaledRating,
+		rd : unscaledRatingDeviation,
 	};
 	return elo;
 }
 
-export { setElo, setRating, setRatingDeviation, getElo, Elo };
+function eloIsDefine(elo: Elo): boolean {
+	return (elo.r >= 1);
+}
+
+export { setElo, setRating, setRatingDeviation, getElo, eloIsDefine };

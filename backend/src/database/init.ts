@@ -12,7 +12,8 @@ import { createGameTable } from "./game.js";
 import { createEloTable } from "./elo.js";
 import { createGoalTable } from "./goal.js";
 import { createGameRuleTable } from "./game_rule.js";
-import { getElo, setElo, Elo, setRatingDeviation, setRating } from "./web3/contract_service.js";
+import { getElo, setElo, setRatingDeviation, setRating } from "./web3/contract_service.js";
+import { Elo } from "../tournament/elo/elo.js";
 
 const DB_FILE = "Database.db";
 const DB_PATH_FILE = "/app/backups/" + DB_FILE;

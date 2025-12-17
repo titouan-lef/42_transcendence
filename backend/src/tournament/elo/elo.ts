@@ -6,7 +6,7 @@
  * Abbreviation : sq for squared value.
  */
 
-import { clamp } from "../utils/math.js";
+import { clamp } from "../../utils/math.js";
 
 /**
  * @param r - Ratings (public value of the Elo).
@@ -21,6 +21,8 @@ interface DataResult {
 	deviation: number;
 	accuracy: number;
 }
+
+const DEFAULT_RATINGS = 1500;
 
 // Elo data limits.
 const MIN_RATINGS = 1;
@@ -44,18 +46,25 @@ const Q = Math.LN10 / MULT_FACTOR; // Scaling constant convention.
 const Q_SQ = Q * Q;
 const PI_SQ = Math.PI * Math.PI;
 
+function calculateOutcome(scoreP1: number, scoreP2: number): number {
+	return (scoreP1 - scoreP2 + 11) / (2 * 11);/** @todo replace 11 by variable with score to win */
+}
+
+function applyTimeOnRd(rd: number, t: number = SEASON_DURATION): number {
+	const rdUpdated = Math.sqrt(rd * rd + C_SQ * t);
+	return Math.min(rdUpdated, MAX_RD);
+}
+
 /**
  * Update the elo of the player after a game that is not a placement game.
  * @param elo Elo of the player.
  * @param eloOpp Elo of the opponent.
- * @param outcome outcome of the match (defined on [0, 1]).
- * @param t Time elapsed since the last game (in day).
+ * @param outcome Outcome of the match (defined on [0, 1]).
  */
-function updateEloAfterGame(elo: Elo, eloOpp: Elo, outcome: number, t: number): void {
-	elo.rd = applyTimeOnRd(elo.rd, t); /** @todo apply a date before placement game */
+function updateEloAfterGame(elo: Elo, eloOpp: Elo, outcome: number): void {
 	const rdDistance = Math.sqrt(elo.rd * elo.rd + eloOpp.rd * eloOpp.rd);
 	const resultData = getResultData(elo.r, eloOpp.r, rdDistance, outcome);
-	updateElo(elo, resultData.accuracy, resultData.deviation);
+	updateEloData(elo, resultData.accuracy, resultData.deviation);
 }
 
 /**
@@ -64,29 +73,7 @@ function updateEloAfterGame(elo: Elo, eloOpp: Elo, outcome: number, t: number): 
  * @param tabEloOpp Array of elo of opponents.
  * @param tabOutcome Array of outcomes of placement games (an outcome is defined on [0, 1]).
  */
-function updateEloNewSeason(elo: Elo, tabEloOpp: Elo[], tabOutcome: number[]): void {
-	elo.rd = applyTimeOnRd(elo.rd, SEASON_DURATION);
-	updateEloGamePlacement(elo, tabEloOpp, tabOutcome);
-}
-
-function applyTimeOnRd(rd: number, t: number): number {
-	const rdUpdated = Math.sqrt(rd * rd + C_SQ * t);
-	return Math.min(rdUpdated, MAX_RD);
-}
-
-/**
- * Create the player's Elo after completing all placement games.
- * The player must not already have an Elo.
- * @param tabEloOpp Array of elo of opponents.
- * @param tabOutcome Array of outcomes (an outcome is defined on [0, 1]).
- */
-function defineEloNewPlayer(tabEloOpp: Elo[], tabOutcome: number[]): Elo {
-	const elo: Elo = { r: 1500, rd: MAX_RD };
-	updateEloGamePlacement(elo, tabEloOpp, tabOutcome);
-	return elo;
-}
-
-function updateEloGamePlacement(elo: Elo, tabEloOpp: Elo[], tabOutcome: number[]): void {
+function updateEloAfterGamePlacement(elo: Elo, tabEloOpp: Elo[], tabOutcome: number[]): void {
 	const sumResultData: DataResult = { deviation: 0, accuracy: 0 };
 	for (let j = 1; j <= NB_PLACEMENT_GAME; ++j) {
 		const eloOpp = tabEloOpp[j-1];
@@ -94,7 +81,7 @@ function updateEloGamePlacement(elo: Elo, tabEloOpp: Elo[], tabOutcome: number[]
 		sumResultData.deviation += resultData.deviation;
 		sumResultData.accuracy += resultData.accuracy;
 	}
-	updateElo(elo, sumResultData.accuracy, sumResultData.deviation);
+	updateEloData(elo, sumResultData.accuracy, sumResultData.deviation);
 }
 
 function getResultData(r: number, rOpponent: number, rdDistance: number, outcome: number): DataResult {
@@ -142,7 +129,7 @@ function accuracy(weight: number, e: number): number {
 	return (weight * weight * e * (1 - e));
 }
 
-function updateElo(elo: Elo, accuracyTotal: number, deviationTotal: number): void {
+function updateEloData(elo: Elo, accuracyTotal: number, deviationTotal: number): void {
 	const newRdSq = rdSquared(elo.rd, accuracyTotal);
 	elo.r = rCalculation(elo.r, deviationTotal, newRdSq);
 	elo.rd = rdCalculation(newRdSq);
@@ -171,7 +158,9 @@ function rCalculation(r: number, sumDeviation: number, newRdSq: number): number 
 
 function rdCalculation(newRdSq: number): number {
 	const newRd = Math.sqrt(newRdSq);
+	/** @todo round 6 decimal --> function define branch ai not curently rebase */
 	return clamp(newRd, MIN_RD, MAX_RD);
 }
 
-export { updateEloAfterGame, updateEloNewSeason, defineEloNewPlayer };
+export { Elo, DEFAULT_RATINGS, MAX_RD, NB_PLACEMENT_GAME };
+export { calculateOutcome, applyTimeOnRd, updateEloAfterGame, updateEloAfterGamePlacement };

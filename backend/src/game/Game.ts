@@ -16,7 +16,6 @@ import { getBallId } from "../database/ball.js";
 import { getMapId } from "../database/map.js";
 import { insertGameRule } from "../database/game_rule.js";
 import { getRuleId } from "../database/rule.js";
-import { defineEloNewPlayer, updateEloAfterGame, updateEloNewSeason } from "../tournament/elo.js";
 
 class Game {
 	private readonly id: number;
