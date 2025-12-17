@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { MapOption } from "../settings/GameSettings.js";
+import { MapOption } from "../settings/PointSettings.js";
 import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, CAMERA_POS_X, SCORE_POS_Y } from "../settings/values.js";
 import { PlanePosition } from "../types_transfert.js";
 

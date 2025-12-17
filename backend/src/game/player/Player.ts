@@ -204,7 +204,7 @@ abstract class Player {
 				this.body.setAngularVelocity(new babylon.Vector3(0, 0, 0));
 				return ;
 			}
-			this.linearVelocityZ = (Number(this.keyPressed.mov_right) - Number(this.keyPressed.mov_left)) * PLAYER_MOVEMENT_VELOCITY * (2 * (this.id - 1) - 1);
+			this.linearVelocityZ = (Number(this.keyPressed.mov_left) - Number(this.keyPressed.mov_right)) * PLAYER_MOVEMENT_VELOCITY * (2 * (this.id - 1) - 1);
 			if (this.rotatingPlayer)
 				this.angularVelocityY = (Number(this.keyPressed.rot_right) - Number(this.keyPressed.rot_left)) * PLAYER_ROTATION_VELOCITY;
 			if (this.dashCooldown > 0)

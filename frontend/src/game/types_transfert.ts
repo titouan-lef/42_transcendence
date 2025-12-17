@@ -1,4 +1,4 @@
-import { BallOption, MapOption } from "../game/settings/GameSettings.js";
+import { BallOption, MapOption } from "./settings/PointSettings.js";
 import * as babylon from "@babylonjs/core";
 
 interface Position {

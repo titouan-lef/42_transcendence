@@ -1,5 +1,5 @@
 import { stopGame } from "../canvas_creation";
-import { BallOption, MapOption } from "../settings/GameSettings";
+import { BallOption, MapOption } from "../settings/PointSettings";
 import { GameStats } from "../types_transfert";
 
 class GameStatistics {

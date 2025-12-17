@@ -118,9 +118,9 @@ class AI extends Player {
 			return ;
 
 		if (this.ballPosPredict.z < this.player.position.z - PLAYER_DIMENSION.z / 2)
-			this.controls.mov_left = true; 
+			this.controls.mov_right = true; 
 		else if (this.ballPosPredict.z > this.player.position.z + PLAYER_DIMENSION.z / 2)
-			this.controls.mov_right = true;
+			this.controls.mov_left = true;
 		else {
 			this.ballPosPredict.z < this.player.position.z ? this.wantToShootLeft = true : this.wantToShootRight = true;
 		}

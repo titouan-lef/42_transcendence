@@ -7,7 +7,7 @@ import { SkyMap } from "../map/SkyMap.js";
 import { DesertMap } from "../map/DesertMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
-import { BallOption, GameSettings, MapOption } from "../settings/GameSettings.js";
+import { BallOption, PointSettings, MapOption } from "../settings/PointSettings.js";
 import { COLORS3, MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
 import { DataMessage, EventMessage, EmoteMessage, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
@@ -26,7 +26,7 @@ class SceneManager {
 	private readonly particleManager: ParticleManager;
 	private texturesCreated = false;
 
-	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera, settings: GameSettings) {
+	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera, settings: PointSettings) {
 		this.scene = scene;
 		this.score = new Score(scene, camera);
 		this.environnementManager = new EnvironmentManager();
@@ -120,7 +120,7 @@ class SceneManager {
 		}
 	}
 
-	createPlayers(scene: babylon.Scene, settings: GameSettings): void {
+	createPlayers(scene: babylon.Scene, settings: PointSettings): void {
 		const player1PosX = MAP_SIZE.x / 2 - (PLAYER_DIMENSION.z + WALL_WIDTH);
 		const player2PosX = (PLAYER_DIMENSION.z + WALL_WIDTH) -(MAP_SIZE.x / 2);
 		const playersPoxY = PLAYER_DIMENSION.y / 2;
@@ -165,7 +165,7 @@ class SceneManager {
 	}
 
 	/**@todo Clarify Id in the front VS playerId back */
-	private sendEmote(settings: GameSettings, scene: babylon.Scene, message: EmoteMessage): void {
+	private sendEmote(settings: PointSettings, scene: babylon.Scene, message: EmoteMessage): void {
 		this.players.forEach(player => {
 			if (settings.player1.playerId === 1) {
 				if (this.texturesCreated && message.playerid === player.getId())
@@ -177,7 +177,7 @@ class SceneManager {
 		});
 	}
  
-	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
+	setEnvironnement(scene: babylon.Scene, settings: PointSettings): void {
 		this.particleManager.clear();
 		this.createBall(scene, settings.ball);
 		this.createMap(scene, settings.map, settings.wind);

@@ -1,5 +1,5 @@
-import { newGame } from "../game/canvas_creation.js";
-import { BallOption, MapOption } from "../game/settings/GameSettings.js";
+import { newPoint } from "../game/canvas_creation.js";
+import { BallOption, MapOption } from "../game/settings/PointSettings.js";
 import { DataMessage, Status } from "../game/types_transfert.js";
 import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "./api_request.js";
 import { Errors } from "./status_codes.js";
@@ -103,7 +103,7 @@ async function newGameSolo(id: number): Promise<void> {
 		const message : DataMessage = JSON.parse(event.data);
 		switch (message.status) {
 			case (Status.OPTIONS):
-				newGame(message, ws);
+				newPoint(message, ws);
 				break;
 			default:
 				return;
@@ -158,7 +158,7 @@ async function newLocalGame(): Promise<void> {
 		const message : DataMessage = JSON.parse(event.data);
 		switch (message.status) {
 			case (Status.OPTIONS):
-				newGame(message, player1, player2);
+				newPoint(message, player1, player2);
 				break;
 			default:
 				return;

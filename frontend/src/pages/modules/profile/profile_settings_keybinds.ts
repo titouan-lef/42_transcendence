@@ -1,6 +1,6 @@
 import { getSafeElement } from "../../../utils/getSafeElement.js";
-import { LOCAL_PLAYER1_KEYS, LOCAL_PLAYER2_KEYS, AI_RANKED_PLAYER_KEYS } from "../../../game/canvas_creation.js";
-import { PlayerKeys } from "../../../game/settings/GameSettings.js";
+import { PlayerKeys } from "../../../game/settings/PointSettings.js";
+import { AI_RANKED_PLAYER_KEYS, changeKey, LOCAL_PLAYER1_KEYS, LOCAL_PLAYER2_KEYS } from "../../../game/settings/KeySets.js";
 
 /** @todo translation :) */
 const SETTINGS_KEYBINDS_SELECTOR = `
@@ -42,12 +42,41 @@ function generateKeybindsButtons(keys: PlayerKeys): void {
 
 	for (const [keyName, keyCode] of Object.entries(keys)) {
 		keybindButtons.innerHTML += `
-				${keyName} :
+				${changeName(keyName)} :
 				<button id='btn-${keyName}'>${keyCode}</button>
 			`;
 	}
 
 	generateKeybindsEvents(keys);
+}
+
+function changeName(name: string): string {
+	switch (name) {
+		case "mov_right":
+			return "Movement Right";
+		case "mov_left":
+			return "Movement Left";
+		case "rot_right":
+			return "Rotate ClockWise";
+		case "rot_left":
+			return "Rotate CounterClockWise";
+		case "normalMode":
+			return "Switch to NormalMode";
+		case "spinMode":
+			return "Switch to SpinMode";
+		case "emoteStrong":
+			return "Emote Strong";
+		case "emoteSad":
+			return "Emote Sad";
+		case "emoteLol":
+			return "Emote Lol";
+		case "emoteAngry":
+			return "Emote Angry";
+		case "dash":
+			return "Dash";
+		default:
+			throw new Error("Error: unknown KeyName.");
+	}
 }
 
 function generateKeybindsEvents(keys: PlayerKeys): void {
@@ -69,52 +98,13 @@ document.addEventListener("keydown", (event) => {
 		return;
 	try {
 		getSafeElement('keybind-buttons', HTMLElement);
+
 		changeKey(pendingKeyAction.action, event.code, pendingKeyAction.keySet);
+		generateKeybindsButtons(pendingKeyAction.keySet);
 		pendingKeyAction = null;
 	} catch {
 		return ;
 	}
 });
-
-function changeKey(action: string, key: string, keySet: PlayerKeys): void {
-	switch (action) {
-		case "mov_right":
-			keySet.mov_right = key;
-			break;
-		case "mov_left":
-			keySet.mov_left = key;
-			break;
-		case "rot_right":
-			keySet.rot_right = key;
-			break;
-		case "rot_left":
-			keySet.rot_left = key;
-			break;
-		case "normalMode":
-			keySet.normalMode = key;
-			break;
-		case "spinMode":
-			keySet.spinMode = key;
-			break;
-		case "emoteStrong":
-			keySet.emoteStrong = key;
-			break;
-		case "emoteSad":
-			keySet.emoteSad = key;
-			break;
-		case "emoteLol":
-			keySet.emoteLol = key;
-			break;
-		case "emoteAngry":
-			keySet.emoteAngry = key;
-			break;
-		case "dash":
-			keySet.dash = key;
-			break;
-		default:
-			throw new Error("Error: unknown KeyAction.");
-	}
-	generateKeybindsButtons(keySet);
-}
 
 export { SETTINGS_KEYBINDS_SELECTOR, generateKeybindsButtons, keybindsNavbarEvents };
