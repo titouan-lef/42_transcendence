@@ -12,7 +12,7 @@ async function createSeasonTable(): Promise<void> {
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			beganAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL);`
+			startedAT DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL);`
 		), "create" + TABLE_NAME + "Table"
 	);
 }
@@ -42,8 +42,8 @@ async function getSeasonById(id: number): Promise<Season | undefined> {
 
 async function getCurrentSeason(): Promise<number | undefined> {
 	const row = await applyQuery(
-		async (db) =>  await db.get(
-			`SELECT id FROM ${TABLE_NAME} ORDER BY id DESC LIMIT 1`,
+		async (db) => await db.get(
+			`SELECT id FROM ${TABLE_NAME} ORDER BY startedAT DESC LIMIT 1`,
 		), "getCurrent" + TABLE_NAME
 	);
 	return (row?.id);
