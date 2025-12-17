@@ -83,7 +83,7 @@ function getReplyMessage(reply: ReplyFromBack): string {
 	if (!message)
 		return "";
 	const traductions = translateTab([message]);
-	return traductions.join(" ");;
+	return traductions.join(" ");
 }
 
 export { ReplyFromBack, getReplyMessage, sendPostRequestToBack, sendGetRequestToBack, sendFile, printReplyInDiv, isRequestSuccessfull };

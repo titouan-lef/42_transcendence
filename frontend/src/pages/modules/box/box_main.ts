@@ -1,10 +1,8 @@
 import { createButtonHtml } from "../../../components/button.js";
-import { loadPage } from "../../../routes/page.js";
 import { currentUser } from "../../../services/user_management/login.js";
 import { applyColor } from "../../../utils/applyColor.js";
 import { getSafeElement } from "../../../utils/getSafeElement.js";
-import { GAME_PAGE, gamePageEvents } from "../../game_page.js";
-import { openDialogSignIn } from "../dialog/dialog.js";
+import { openDialogGameSelector, openDialogSignIn } from "../dialog/dialog.js";
 
 const MAIN_BOX_STYLE = `
 grow
@@ -42,9 +40,9 @@ const MAIN_BOX = `
 </main>
 `;
 
-function openDialogGameOptions(): void {
+function openGameOption(): void {
 	if (currentUser)
-		loadPage(GAME_PAGE, gamePageEvents);
+		openDialogGameSelector();
 	else
 		openDialogSignIn(); /** @todo (optionnal) QOL: when sign in or continue as guest -> open play directly */
 }
@@ -52,7 +50,7 @@ function openDialogGameOptions(): void {
 function mainBoxEvents(): void {
 	const play = getSafeElement('btn-play', HTMLElement);
 
-	play.addEventListener('click', openDialogGameOptions);
+	play.addEventListener('click', openGameOption);
 }
 
 export { MAIN_BOX, mainBoxEvents };
