@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { BallOption } from "../settings/PointSettings.js";
+import { BallOption } from "../settings/GameRules.js";
 import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_TRAIL_ON } from "../settings/values.js";
 import { BallTrail } from "./BallTrail.js";
 import { Position } from "../types_transfert.js";
