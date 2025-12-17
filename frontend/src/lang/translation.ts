@@ -179,6 +179,10 @@ const TRANSLATOR = {
 	invalid_email: {
 		en: "{invalid} {email}",
 		fr: "{email} {invalid}"
+	},
+	disable_2FA: {
+		en : "Please desactivate {twoFA} before clearing your {email}", 
+		fr : "Desactivatez la {twoFA} avant d'effacer votre {email}"
 	}
 } as const satisfies Record<string, Expression>;
 
