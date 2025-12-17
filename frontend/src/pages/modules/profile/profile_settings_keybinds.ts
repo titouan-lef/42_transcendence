@@ -54,14 +54,26 @@ function generateKeybindsEvents(keys: PlayerKeys): void {
 	for (const [keyName, keyCode] of Object.entries(keys)) {
 		const elem = getSafeElement(`btn-${keyName}`, HTMLElement);
 		elem.addEventListener('click', () => keyboardHandler(keyName, keys));
-		//elem.innerHTML = keyName;
 	}
 }
 
+let pendingKeyAction: { action: string; keySet: PlayerKeys } | null = null;
+
 function keyboardHandler(keyName: string, keys: PlayerKeys): void {
-	/**@todo blocker la page*/
-	document.addEventListener('keydown', (event) => changeKey(keyName, event.code, keys), { once: true });
+	pendingKeyAction = { action: keyName, keySet: keys };
 }
+
+document.addEventListener("keydown", (event) => {
+	if (!pendingKeyAction)
+		return;
+	try {
+		getSafeElement('keybind-buttons', HTMLElement);
+		changeKey(pendingKeyAction.action, event.code, pendingKeyAction.keySet);
+		pendingKeyAction = null;
+	} catch {
+		return ;
+	}
+});
 
 function changeKey(action: string, key: string, keySet: PlayerKeys): void {
 	switch (action) {
