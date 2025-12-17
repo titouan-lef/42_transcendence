@@ -28,7 +28,7 @@ function swapPlayer(id: 1 | 2): 1 | 2 {
 	return id === 1 ? 2 : 1;
 }
 
-class GameSettings {
+class PointSettings {
 	map: MapOption;
 	wind: PlanePosition;
 	ball: BallOption;
@@ -60,5 +60,4 @@ class GameSettings {
 	}
 }
 
-export { BallOption, PlayerKeys, PlayerSettings, GameSettings, MapOption };
-
+export { BallOption, PlayerKeys, PlayerSettings, PointSettings, MapOption };

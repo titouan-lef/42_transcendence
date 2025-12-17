@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { GameSettings, PlayerKeys, PlayerSettings } from "../settings/GameSettings.js";
+import { PointSettings, PlayerKeys, PlayerSettings } from "../settings/PointSettings.js";
 import { PLAYER_DIMENSION, COLORS3, PLAYER_TRAIL_INTERVAL, PLAYER_TRAIL_ON } from "../settings/values.js";
 import { PlayerTrail } from "./PlayerTrail.js";
 import { EmoteMessage, EmoteChoice, PlanePosition, PlayerControls, Rotation } from "../types_transfert.js";
@@ -20,8 +20,8 @@ class Player {
 	private emote: Emote | null = null;
 	private stunAnimation: StunAnimation | null = null;
 
-	constructor(scene: babylon.Scene, position: babylon.Vector2, gameSettings: GameSettings, settings: PlayerSettings) {
-		this.applyingSpin = gameSettings.spin;
+	constructor(scene: babylon.Scene, position: babylon.Vector2, pointSettings: PointSettings, settings: PlayerSettings) {
+		this.applyingSpin = pointSettings.spin;
 		this.id = settings.playerId;
 		this.player = this.setPlayer(scene, position);
 

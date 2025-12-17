@@ -7,7 +7,7 @@ import { generateThemeEvents, SETTINGS_THEME_SELECTOR } from "./profile_settings
 import { update2FAButton } from "./profile_settings_2fa";
 import { uploadProfilePicture } from "../../../services/user_management/avatar";
 import { generateKeybindsButtons, keybindsNavbarEvents, SETTINGS_KEYBINDS_SELECTOR } from "./profile_settings_keybinds";
-import { AI_RANKED_PLAYER_KEYS } from "../../../game/canvas_creation";
+import { AI_RANKED_PLAYER_KEYS } from "../../../game/settings/KeySets";
 
 /** @todo real front with selector to enable / disable 2FA */
 /** @todo ask for email only if 2FA is enable */

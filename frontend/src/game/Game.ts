@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
-import { GameSettings } from "./settings/GameSettings.js";
+import { PointSettings } from "./settings/PointSettings.js";
 import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import { DataMessage, OptionMessage, Status, StopMessage } from "./types_transfert.js";
 import { GameStatistics } from "./screen/GameStatistics.js";
@@ -11,12 +11,12 @@ class Game {
 	private readonly sceneManager: SceneManager;
 	private readonly camera: babylon.ArcRotateCamera;
 	private readonly canvas: HTMLCanvasElement;
-	private settings: GameSettings;
+	private settings: PointSettings;
 	private originalGetDelta: (() => number) | null = null;
 	private firstFrame = true;
 	private stats: GameStatistics | null = null;
 
-	constructor (canvas: HTMLCanvasElement, settings: GameSettings, scene: babylon.Scene, engine: babylon.Engine) {
+	constructor (canvas: HTMLCanvasElement, settings: PointSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.engine = engine;
 		this.canvas = canvas;
 		this.settings = settings;
@@ -42,7 +42,7 @@ class Game {
 	}
 
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
-	static async create(settings: GameSettings): Promise<Game> {
+	static async create(settings: PointSettings): Promise<Game> {
 		const canvas = Game.createCanvas();
 		const engine = new babylon.Engine(canvas);
 		const scene = await Game.initScene(engine);
