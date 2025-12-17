@@ -63,6 +63,7 @@ function keyboardHandler(keyName: string, keys: PlayerKeys): void {
 	pendingKeyAction = { action: keyName, keySet: keys };
 }
 
+/**@todo voir si y a pas une meilleure solution qu'écouter tout le temps sur tout le document' */
 document.addEventListener("keydown", (event) => {
 	if (!pendingKeyAction)
 		return;
