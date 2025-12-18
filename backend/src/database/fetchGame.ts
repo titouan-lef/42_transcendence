@@ -5,8 +5,8 @@ async function getGamesPlayedCount(seasonId: number, username: string): Promise<
 		async (db) => await db.get(
 			`SELECT COUNT(*)
 			FROM Elo AS E Inner JOIN Game As G ON E.gameId = G.id
-			WHERE E.username = ? AND G.seasonId = ?`,
-			[seasonId, username]
+			WHERE E.username = ? AND G.seasonId = ?;`,
+			[username, seasonId]
 		), "getGamesPlayedCount"
 	);
 	return row?.gamesPlayedCount;
@@ -24,7 +24,7 @@ async function getGamesWinsBySeason(seasonId: number, username: string): Promise
 			SELECT COUNT(gameId) AS gamesWinCount
 			FROM GamesScores
 			WHERE GoalCount = 11;`,
-			[seasonId, username]
+			[username, seasonId]
 		), "getGamesPlayedCount"
 	);
 	return row?.gamesWinCount;
