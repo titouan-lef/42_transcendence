@@ -49,8 +49,9 @@ function setGameOptions(rules: GameOptions): void {
 
 	getSafeElement('chk-map', HTMLElement).querySelectorAll('*[id]').forEach(map => {
 		if (map instanceof HTMLInputElement && map.checked) {
-			if (map.value === 'default' || map.value === 'sky' || map.value === 'volcano' || map.value === 'desert')
+			if (map.value === 'default' || map.value === 'sky' || map.value === 'volcano' || map.value === 'desert') {
 				maps.push(map.value); // ce serait plus joli avec un as ;);)
+			}
 		}
 	});
 	getSafeElement('chk-ball', HTMLElement).querySelectorAll('*[id]').forEach(ball => {
@@ -59,10 +60,11 @@ function setGameOptions(rules: GameOptions): void {
 				balls.push(ball.value); // vraiment, juste balls.push(ball.value as BallOption)...
 		}
 	});
-	if (maps.length = 0)
+	if (maps.length === 0)
 		maps.push('default');
-	if (balls.length = 0)
+	if (balls.length === 0)
 		balls.push('default');
+	console.log(maps);
 	rules.map = maps;
 	rules.ball = balls;
 	rules.spin = getSafeElement(`chk-rule-spin`, HTMLInputElement).checked;
