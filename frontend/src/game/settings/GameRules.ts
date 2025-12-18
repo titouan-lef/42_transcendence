@@ -64,7 +64,6 @@ function setGameOptions(rules: GameOptions): void {
 		maps.push('default');
 	if (balls.length === 0)
 		balls.push('default');
-	console.log(maps);
 	rules.map = maps;
 	rules.ball = balls;
 	rules.spin = getSafeElement(`chk-rule-spin`, HTMLInputElement).checked;
