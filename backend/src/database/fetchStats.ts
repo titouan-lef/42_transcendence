@@ -150,7 +150,12 @@ async function getPreferedMaBySeason(seasonId: number, username: string): Promis
 	return (row?.name);
 }
 
-async function getAllEloVariaton(username: string): Promise<string | undefined> {
+interface EloHistory {
+	date: string;
+	variation: number;
+}
+
+async function getAllEloVariaton(username: string): Promise<EloHistory[] | undefined> {
 	const tab = await applyQuery(
 		async (db) => await db.get(
 			`SELECT G.beganAt AS date_partie, E.variation
@@ -159,11 +164,11 @@ async function getAllEloVariaton(username: string): Promise<string | undefined> 
 			WHERE E.username = ?
 			ORDER BY G.beganAt DESC;`, [username]
 		), "getAllEloVariaton"
-	);
+	) as EloHistory[];
 	return tab;
 }
 
-async function getAllEloVariatonBySeason(seasonId: number, username: string): Promise<string | undefined> {
+async function getAllEloVariatonBySeason(seasonId: number, username: string): Promise<EloHistory[] | undefined> {
 	const tab = await applyQuery(
 		async (db) => await db.get(
 			`SELECT G.beganAt AS date_partie, E.variation
@@ -172,7 +177,7 @@ async function getAllEloVariatonBySeason(seasonId: number, username: string): Pr
 			WHERE E.username = ? AND G.seasonId = ?
 			ORDER BY G.beganAt DESC;`,[username, seasonId]
 		), "getAllEloVariatonBySeason"
-	);
+	) as EloHistory[];
 	return tab;
 }
 
