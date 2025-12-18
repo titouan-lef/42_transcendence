@@ -111,7 +111,7 @@ async function getPreferedBallBySeason(seasonId: number, username: string): Prom
 			ORDER BY total_goals DESC
 			LIMIT 1;`,
 			[username, seasonId]
-		), "getPreferedBall"
+		), "getPreferedBallBySeason"
 	);
 	return (row?.name);
 }
@@ -128,7 +128,7 @@ async function getPreferedMap(username: string): Promise<string | undefined> {
 			ORDER BY total_goals DESC
 			LIMIT 1;`,
 			[username]
-		), "getPreferedBall"
+		), "getPreferedMap"
 	);
 	return (row?.name);
 }
@@ -145,9 +145,39 @@ async function getPreferedMaBySeason(seasonId: number, username: string): Promis
 			ORDER BY total_goals DESC
 			LIMIT 1;`,
 			[username, seasonId]
-		), "getPreferedBall"
+		), "getPreferedMaBySeason"
 	);
 	return (row?.name);
 }
 
-export { getGoalAverage, getGoalAverageBySeason, getGameTimeAverage, getGameTimeAverageBySeason, getPreferedBall, getPreferedBallBySeason, getPreferedMap, getPreferedMaBySeason };
+async function getAllEloVariaton(username: string): Promise<string | undefined> {
+	const tab = await applyQuery(
+		async (db) => await db.get(
+			`SELECT G.beganAt AS date_partie, E.variation
+			FROM Elo E
+			JOIN Game G ON E.gameId = G.id
+			WHERE E.username = ?
+			ORDER BY G.beganAt DESC;`, [username]
+		), "getAllEloVariaton"
+	);
+	return tab;
+}
+
+async function getAllEloVariatonBySeason(seasonId: number, username: string): Promise<string | undefined> {
+	const tab = await applyQuery(
+		async (db) => await db.get(
+			`SELECT G.beganAt AS date_partie, E.variation
+			FROM Elo E
+			JOIN Game G ON E.gameId = G.id
+			WHERE E.username = ? AND G.seasonId = ?
+			ORDER BY G.beganAt DESC;`,[username, seasonId]
+		), "getAllEloVariatonBySeason"
+	);
+	return tab;
+}
+
+export { getGoalAverage, getGoalAverageBySeason,
+	getGameTimeAverage, getGameTimeAverageBySeason,
+	getPreferedBall, getPreferedBallBySeason,
+	getPreferedMap, getPreferedMaBySeason,
+	getAllEloVariaton, getAllEloVariatonBySeason };
