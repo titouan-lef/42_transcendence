@@ -14,9 +14,9 @@ const SVG_SELECTED = `
 
 const SVG_BOX_STYLE = `
 w-full h-full rounded-2xl
-bg-dark border-2 border-gray-600 text-gray-400
+bg-dark border-2 border-darker text-darker
 flex items-center justify-center
-group-hover:border-gray-400
+group-hover:border-darker
 peer-checked:border-variant
 peer-checked:text-variant
 peer-checked:bg-variant/10
