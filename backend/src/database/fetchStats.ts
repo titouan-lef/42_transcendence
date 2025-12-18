@@ -156,28 +156,28 @@ interface EloHistory {
 }
 
 async function getAllEloVariaton(username: string): Promise<EloHistory[] | undefined> {
-	const tab = await applyQuery(
-		async (db) => await db.get(
+	const tab: EloHistory[] | undefined = await applyQuery(
+		async (db) => await db.all(
 			`SELECT G.beganAt AS date_partie, E.variation
 			FROM Elo E
 			JOIN Game G ON E.gameId = G.id
 			WHERE E.username = ?
 			ORDER BY G.beganAt DESC;`, [username]
 		), "getAllEloVariaton"
-	) as EloHistory[];
+	);
 	return tab;
 }
 
 async function getAllEloVariatonBySeason(seasonId: number, username: string): Promise<EloHistory[] | undefined> {
-	const tab = await applyQuery(
-		async (db) => await db.get(
+	const tab: EloHistory[] | undefined = await applyQuery(
+		async (db) => await db.all(
 			`SELECT G.beganAt AS date_partie, E.variation
 			FROM Elo E
 			JOIN Game G ON E.gameId = G.id
 			WHERE E.username = ? AND G.seasonId = ?
 			ORDER BY G.beganAt DESC;`,[username, seasonId]
 		), "getAllEloVariatonBySeason"
-	) as EloHistory[];
+	);
 	return tab;
 }
 
