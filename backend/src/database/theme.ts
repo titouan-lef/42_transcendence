@@ -20,7 +20,8 @@ async function createThemeTable(): Promise<void> {
 async function insertThemes(): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES ('pizza_lulu'),
+			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES
+			('pizza_lulu'),
 			('over_titouan'),
 			('sugar_rushtman'),
 			('polybius'),

@@ -20,7 +20,8 @@ async function createMapTable(): Promise<void> {
 async function insertMaps(): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES ('default'),
+			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES
+			('default'),
 			('desert'),
 			('sky'),
 			('volcano');`

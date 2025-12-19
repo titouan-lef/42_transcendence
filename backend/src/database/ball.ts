@@ -20,7 +20,8 @@ async function createBallTable(): Promise<void> {
 async function insertBalls(): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES ('default'),
+			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES
+			('default'),
 			('invisible'),
 			('pulse'),
 			('snake'),
