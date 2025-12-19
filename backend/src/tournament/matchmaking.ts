@@ -5,15 +5,11 @@ import { GameOptions } from "../game/settings/GameSettings.js";
 import { registerGameOptions } from "../game/game_manager.js";
 import { Errors, Success } from "../utils/status_codes.js";
 
-interface WaitingPlayer {
-	username: string;
-	options: GameOptions;
-}
-const WAITING_PLAYERS: WaitingPlayer[] = [];
+const WAITING_PLAYERS = new Map<string, GameOptions>(); // username | options
 const MATCHS = new Map<string, number>();
 
 function isUserWaiting(user: string) : boolean {
-	return (WAITING_PLAYERS.find(p => p.username === user) !== undefined) || MATCHS.has(user);
+	return WAITING_PLAYERS.has(user) || MATCHS.has(user);
 }
 
 async function addPlayerToMatchmakingSystem(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
@@ -25,11 +21,10 @@ async function addPlayerToMatchmakingSystem(req: FastifyRequest<{ Body: GameOpti
 		sendReply(reply, Errors.ALREADY_IN_QUEUE);
 		return;
 	}
-	const newWaitingPlayer = {
-		username: user,
-		options: options
-	};
-	WAITING_PLAYERS.push(newWaitingPlayer);
+	WAITING_PLAYERS.set(user, options);
+	setTimeout(() => { // removed player from waiting list if waited more than 1 minutes
+		WAITING_PLAYERS.delete(user);
+	}, 60 * 1000);
 	sendReply(reply, Success.ADDED_TO_QUEUE);
 }
 
@@ -47,12 +42,25 @@ async function askMatchmakingSystem(username: string): Promise<number> {
 		MATCHS.delete(username);
 		return id;
 	}
-	if (WAITING_PLAYERS.length >= 2) {
+	if (WAITING_PLAYERS.size >= 2) {
 		console.log("New game found", MATCHS);
-		const [player1, player2] = WAITING_PLAYERS.splice(0, 2);
-		const id = registerGameOptions(getRandomOptions(player1.options, player2.options), GameType.RANKED, [player1.username, player2.username]);
-		const enemy = player1.username === username ? player2 : player1;
-		MATCHS.set(enemy.username, id);
+		const iterator = WAITING_PLAYERS.entries();
+		const first = iterator.next();
+		const second = iterator.next();
+
+		if (first.done || second.done) {
+			return -1; // safety guard, should not happen
+		}
+
+		const [username1, options1] = first.value;
+		const [username2, options2] = second.value;
+
+		// Remove them from waiting list
+		WAITING_PLAYERS.delete(username1);
+		WAITING_PLAYERS.delete(username2);
+		const id = registerGameOptions(getRandomOptions(options1, options2), GameType.RANKED, [username1, username2]);
+		const enemy = username1 === username ? username2 : username1;
+		MATCHS.set(enemy, id);
 		return id;
 	}
 	console.log("No game found", MATCHS);
