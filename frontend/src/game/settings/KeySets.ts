@@ -2,8 +2,8 @@ import { PlayerKeys } from "./PointSettings";
 
 /** @todo spinMode switching not working */
 const LOCAL_PLAYER1_KEYS: PlayerKeys = {
-	mov_right: "KeyD",
-	mov_left: "KeyA",
+	mov_right: "KeyS",
+	mov_left: "KeyW",
 	rot_right: "KeyL",
 	rot_left: "KeyJ",
 	normalMode: "KeyI",
@@ -17,8 +17,8 @@ const LOCAL_PLAYER1_KEYS: PlayerKeys = {
 
 /** @todo spinMode switching not working */
 const LOCAL_PLAYER2_KEYS: PlayerKeys = {
-	mov_right: "ArrowRight",
-	mov_left: "ArrowLeft",
+	mov_right: "ArrowUp",
+	mov_left: "ArrowDown",
 	rot_right: "Numpad6",
 	rot_left: "Numpad4",
 	normalMode: "Numpad8",
