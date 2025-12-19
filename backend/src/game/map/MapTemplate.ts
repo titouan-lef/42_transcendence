@@ -20,8 +20,7 @@ abstract class MapTemplate {
 		this.limits = this.createLimits(scene);
 		this.limits.forEach(limit => this.setLimitPhysic(scene, limit));
 		for (let i = 0; i < canonCount; i++) {
-			if (Math.random() > 0.5)
-				this.availableObjects.push(Object.CANON_BALL);
+			this.availableObjects.push(Object.CANON_BALL);
 		};
 	}
 
