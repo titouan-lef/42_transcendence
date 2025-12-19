@@ -5,8 +5,6 @@ import { Errors } from "./status_codes.js";
 import { closeDialogID } from "../pages/modules/dialog/dialog.js";
 import { AI_RULES, LOCAL_RULES, RANKED_RULES, setGameOptions } from "../game/settings/GameRules.js";
 
-declare const WS_URL: string; // just telling the compiler that API_URL and WS_URL will exists during execution
-
 //////////////////////////////////////////
 //			Game management				//
 //////////////////////////////////////////
@@ -23,7 +21,6 @@ async function askForGame(): Promise<boolean> {
 	}
 	return true;
 }
-
 
 async function waitForGame(): Promise<number | null> {
 	let id = -1;
@@ -68,7 +65,7 @@ async function newGameVsAI(): Promise<void> {
 async function newGameSolo(id: number): Promise<void> {
 	closeDialogID('modal');
 
-	const ws = new WebSocket(`${WS_URL}/${id}`);
+	const ws = new WebSocket(`ws/${id}`);
 
 	ws.onopen = (): void => {
 		console.log("Connected");
@@ -110,8 +107,8 @@ async function newLocalGame(): Promise<void> {
 		return;
 	}
 
-	const player1 = new WebSocket(`${WS_URL}/${id}`);
-	const player2 = new WebSocket(`${WS_URL}/${id}`);
+	const player1 = new WebSocket(`ws/${id}`);
+	const player2 = new WebSocket(`ws/${id}`);
 
 	player1.onopen = (): void => {
 		console.log("Player 1 connected"); /** @todo remove */

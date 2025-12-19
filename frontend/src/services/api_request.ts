@@ -1,6 +1,3 @@
-import { newPoint } from "../game/canvas_creation.js";
-import { BallOption, MapOption } from "../game/settings/PointSettings.js";
-import { DataMessage, Status } from "../game/types_transfert.js";
 import { translateTab } from "../lang/lang.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 import { Errors, REPLY_MESSAGES, ReplyStatus } from "./status_codes.js";
