@@ -14,6 +14,7 @@ import { createGoalTable } from "./goal.js";
 import { createGameRuleTable } from "./game_rule.js";
 import { createPlacementTable } from "./placement.js";
 
+
 const DB_FILE = "Database.db";
 const DB_PATH_FILE = "/app/backups/" + DB_FILE;
 

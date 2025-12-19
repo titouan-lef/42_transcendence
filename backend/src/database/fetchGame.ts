@@ -1,5 +1,7 @@
 import { applyQuery } from "./db_utils.js";
 
+const NB_GOALS_TO_WIN = 11;
+
 async function getGamesPlayedCount(seasonId: number, username: string): Promise<number | undefined> {
 	const row = await applyQuery(
 		async (db) => await db.get(
@@ -23,7 +25,7 @@ async function getGamesWinsBySeason(seasonId: number, username: string): Promise
 			)
 			SELECT COUNT(gameId) AS gamesWinCount
 			FROM GamesScores
-			WHERE GoalCount = 11;`,
+			WHERE GoalCount = ${NB_GOALS_TO_WIN};`,
 			[username, seasonId]
 		), "getGamesPlayedCount"
 	);
