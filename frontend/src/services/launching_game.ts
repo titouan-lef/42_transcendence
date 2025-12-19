@@ -38,9 +38,13 @@ async function waitForGame(): Promise<number | null> {
 async function newRankedGame(): Promise<void> {
 	if (!await askForGame())
 		return;
+	/** @todo launch waiting screen */
 	const id = await waitForGame();
-	if (id === null)
+	if (id === null) {
+		/** @todo no game found, retry later */
 		return;
+	}
+	/** @todo loadGamePage here */
 	newGameSolo(id);
 }
 
