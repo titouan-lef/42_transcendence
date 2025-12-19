@@ -41,7 +41,7 @@ async function getGoalAverageBySeason(seasonId: number, username: string): Promi
 async function getGameTimeAverage(username: string): Promise<number | undefined> {
 	const nbTime = await applyQuery(
 		async (db) => await db.get(
-			`WITH gamePlayed As (SELECT * FROM Game AS G
+			`WITH gamePlayed AS (SELECT * FROM Game AS G
 			INNER JOIN Elo AS E ON E.gameId = G.id
 			WHERE E.username = ?)
 			SELECT SUM(duration) AS sumTime FROM gamePlayed;`,
@@ -63,7 +63,7 @@ async function getGameTimeAverage(username: string): Promise<number | undefined>
 async function getGameTimeAverageBySeason(seasonId: number, username: string): Promise<number | undefined> {
 	const nbTime = await applyQuery(
 		async (db) => await db.get(
-			`WITH gamePlayed As (SELECT * FROM Game AS G
+			`WITH gamePlayed AS (SELECT * FROM Game AS G
 			INNER JOIN Elo AS E ON E.gameId = G.id
 			WHERE E.username = ? AND G.seasonId = ?)
 			SELECT SUM(duration) AS sumTime FROM gamePlayed;`,
