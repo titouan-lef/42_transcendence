@@ -24,6 +24,9 @@ abstract class BallTemplate {
 	protected gameStopped = true;
 	protected readonly originalMaxSpeed;
 	private readonly originalMinSpeed;
+	protected speedIncreaseFactor = 1;
+	private readonly rotatingPlayer;
+	private readonly canSpin;
 	
 	private spinningRight = false;
 	private spinningLeft = false;
@@ -35,15 +38,16 @@ abstract class BallTemplate {
 	protected maxSpeed;
 	private minSpeed;
 	private increaseMaxMinSpeedTimer = 0;
-	protected speedIncreaseFactor = 1;
 
 	constructor(scene: babylon.Scene, type: BallOption, sockets: WebSocket[], settings: GameSettings) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
 		this.type = type;
 		this.mesh.position.y = BALL_DIAMETER / 2;
 		this.mesh.metadata = { type: "collider", pushable: true, windAffected: settings.options.windAffectsBall };
-		this.originalMaxSpeed = MAX_SPEED * ((!settings.options.rotatingPlayer && !settings.options.spin) ? 1.3 : 1);
-		this.originalMinSpeed = MIN_SPEED * ((!settings.options.rotatingPlayer && !settings.options.spin) ? 1.3 : 1);
+		this.rotatingPlayer = settings.options.rotatingPlayer;
+		this.canSpin = settings.options.spin;
+		this.originalMaxSpeed = MAX_SPEED * ((!this.rotatingPlayer && !this.canSpin) ? 1.3 : 1);
+		this.originalMinSpeed = MIN_SPEED * ((!this.rotatingPlayer && !this.canSpin) ? 1.3 : 1);
 		this.maxSpeed = this.originalMaxSpeed;
 		this.minSpeed = this.originalMinSpeed;
 		this.sockets = sockets;
@@ -101,7 +105,13 @@ abstract class BallTemplate {
 			this.effectInterval += scene.metadata.gameSpeed;
 			this.activateEffect();
 			if (this.unstuckTimer >= UNSTUCK_TIMER) {
-				this.launchBall(this.mesh.position.x >= 0 ? -1 : 1);
+				let launchDirection: babylon.Vector3 | undefined;
+				let side: 1 | -1 | undefined;
+				if ((!this.rotatingPlayer && !this.canSpin))
+					launchDirection = new babylon.Vector3(this.mesh.position.x >= 0 ? -1 : 1, 0, Math.random() - 0.5 * 2);
+				else 
+					side = this.mesh.position.x >= 0 ? -1 : 1;
+				this.launchBall(side, launchDirection);
 				this.unstuckTimer = 0;
 			}
 		});
