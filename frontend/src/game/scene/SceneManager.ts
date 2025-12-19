@@ -178,7 +178,7 @@ class SceneManager {
 		});
 	}
 
-	setEnvironnement(scene: babylon.Scene, settings: GameSettings): void {
+	setEnvironnement(scene: babylon.Scene, settings: PointSettings): void {
 		this.particleManager.clear();
 		this.createBall(scene, settings.ball);
 		this.createMap(scene, settings.map, settings.wind);
