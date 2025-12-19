@@ -93,6 +93,8 @@ async function newGameSolo(id: number): Promise<void> {
 }
 
 async function newLocalGame(): Promise<void> {
+	closeDialogID('modal');
+
 	setGameOptions(LOCAL_RULES);
 	const options = LOCAL_RULES;
 
