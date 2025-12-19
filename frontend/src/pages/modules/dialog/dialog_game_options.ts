@@ -107,5 +107,4 @@ function playRanked(): void {
 	go.addEventListener('click', newRankedGame);
 }
 
-export { GAME_OPTIONS };
-export { playLocal, playVSAI, playRanked };
+export { GAME_OPTIONS, playLocal, playVSAI, playRanked };
