@@ -7,7 +7,7 @@ import { sendReply } from "../../utils/HTTP.js";
 import { wait } from "../../utils/time.js";
 import { GameOptions } from "../settings/GameSettings.js";
 import { GameType, getGameOptions, identifyGame, registerGameOptions } from "../game_manager.js";
-import { Errors, Success } from "../../utils/status_codes.js";
+import { Errors, Success } from "../../../shared/status_codes.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {

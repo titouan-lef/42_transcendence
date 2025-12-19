@@ -9,6 +9,7 @@ services:
     networks:
       - transcendence
     volumes: # mount local source code for dev
+    - ./shared:/app/shared
     - ./backend/src:/app/src
     restart: "no"   # dev: fail fast, do not restart
 
@@ -24,6 +25,7 @@ services:
     networks:
       - transcendence
     volumes: # mount local source code for dev
+    - ./shared:/app/shared
     - ./frontend/src:/app/src
     - ./frontend/public:/app/public
     restart: "no"   # dev: fail fast, do not restart

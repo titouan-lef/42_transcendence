@@ -3,7 +3,7 @@ import { GameType } from "../game/web_sockets/connection.js";
 import { sendReply } from "../utils/HTTP.js";
 import { GameOptions } from "../game/settings/GameSettings.js";
 import { registerGameOptions } from "../game/game_manager.js";
-import { Errors, Success } from "../utils/status_codes.js";
+import { Errors, Success } from "../../shared/status_codes.js";
 
 const WAITING_PLAYERS = new Map<string, GameOptions>(); // username | options
 const MATCHS = new Map<string, number>();

@@ -1,5 +1,5 @@
 import { FastifyReply } from "fastify";
-import { ReplyStatus } from "./status_codes";
+import { ReplyStatus } from "../../shared/status_codes.js";
 
 interface ReplyFromBack {
 	code: ReplyStatus
