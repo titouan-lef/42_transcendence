@@ -3,13 +3,13 @@ import { applyQuery } from "./db_utils.js";
 async function getGamesPlayedCount(seasonId: number, username: string): Promise<number | undefined> {
 	const row = await applyQuery(
 		async (db) => await db.get(
-			`SELECT COUNT(*)
+			`SELECT COUNT(*) AS nbGame
 			FROM Elo AS E Inner JOIN Game As G ON E.gameId = G.id
 			WHERE E.username = ? AND G.seasonId = ?;`,
 			[username, seasonId]
 		), "getGamesPlayedCount"
 	);
-	return row?.gamesPlayedCount;
+	return row?.nbGame;
 }
 
 async function getGamesWinsBySeason(seasonId: number, username: string): Promise<number | undefined> {
