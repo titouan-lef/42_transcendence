@@ -50,14 +50,14 @@ function setGameOptions(rules: GameOptions): void {
 	getSafeElement('chk-map', HTMLElement).querySelectorAll('*[id]').forEach(map => {
 		if (map instanceof HTMLInputElement && map.checked) {
 			if (map.value === 'default' || map.value === 'sky' || map.value === 'volcano' || map.value === 'desert') {
-				maps.push(map.value); // ce serait plus joli avec un as ;);)
+				maps.push(map.value);
 			}
 		}
 	});
 	getSafeElement('chk-ball', HTMLElement).querySelectorAll('*[id]').forEach(ball => {
 		if (ball instanceof HTMLInputElement && ball.checked) {
 			if (ball.value === 'default' || ball.value === 'snake' || ball.value === 'invisible' || ball.value === 'tricky' || ball.value === 'pulse')
-				balls.push(ball.value); // vraiment, juste balls.push(ball.value as BallOption)...
+				balls.push(ball.value);
 		}
 	});
 	if (maps.length === 0)
@@ -75,12 +75,10 @@ function setGameOptions(rules: GameOptions): void {
 
 function loadCheckboxes(rules: GameOptions): void {
 	rules.map.forEach(map => {
-		const elem = getSafeElement(`chk-map-${map}`, HTMLInputElement);
-		elem.checked = true;
+		getSafeElement(`chk-map-${map}`, HTMLInputElement).checked = true;
 	});
 	rules.ball.forEach(ball => {
-		const elem = getSafeElement(`chk-ball-${ball}`, HTMLInputElement);
-		elem.checked = true;
+		getSafeElement(`chk-ball-${ball}`, HTMLInputElement).checked = true;
 	});
 	getSafeElement(`chk-rule-spin`, HTMLInputElement).checked = rules.spin;
 	getSafeElement(`chk-rule-wind`, HTMLInputElement).checked = rules.windAffectsBall;

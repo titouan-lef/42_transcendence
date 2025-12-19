@@ -1,3 +1,15 @@
+/**
+ * @file GAME OPTION SVG FILE
+ * @description what is a svg file ? it's an image, directly drawed with html code!
+ * some things to know :
+ *   you draw in a viewport called viewBox (in coord x = 0 y = 0, sized 124x124 px in this file)
+ *   inside <svg>, the core of the drawing
+ *   <g> if for groups multiple shape
+ *   <path> is a path shape, you can also draw circles with <circle> or rectangles with <rect>...
+ *     /!\ <path> is for more complex (or not) shapes, shapes are described in the 'd' attribute (for data)
+ * see all details here : > https://www.w3schools.com/graphics/svg_intro.asp <
+ */
+
 const SVG_MAP_DEFAULT = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="fill-current w-8 h-8">
 	<g transform="matrix(0.933601,0,0,0.856452,4.85492,3.74975)">

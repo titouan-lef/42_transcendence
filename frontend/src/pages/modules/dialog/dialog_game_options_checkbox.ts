@@ -26,7 +26,7 @@ peer-checked:shadow-lg peer-checked:shadow-variant/20
 function createCheckbox(id: string, svg: string, value?: string): string {
 	return `
 	<label class="relative group w-[50px] h-[50px] select-none">
-		<input id='${id}' type="checkbox" value='${value ? value : ''}' class="peer sr-only"/>
+		<input id='${id}' type="checkbox" value='${value ?? ''}' class="peer sr-only"/>
 		<div class="${SVG_BOX_STYLE}">
 			${svg}
 		</div>
