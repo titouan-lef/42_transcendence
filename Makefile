@@ -45,7 +45,7 @@ dev		: env
 		echo "MODE=dev" >> .backend_env
 		docker compose -f docker-compose.dev.yml up
 
-down	:
+down	: env
 		docker compose -f docker-compose.yml down -v
 		printf "\n$(GREEN)Containers down$(RESET) \n"
 		printf "\n$(GREEN)Env files cleared$(RESET) \n"
