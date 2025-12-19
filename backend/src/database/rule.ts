@@ -20,7 +20,8 @@ async function createRuleTable(): Promise<void> {
 async function insertRules(): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES ('spin'),
+			`INSERT OR IGNORE INTO ${TABLE_NAME} (name) VALUES
+			('spin'),
 			('rotate'),
 			('canonCount'),
 			('dash'),
