@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MAP_SIZE, WALL_WIDTH, LIGHTNING_COLLISION_RADIUS, LIGHTNING_COLLISION_STRENGTH, LIGHTNING_LIFETIME } from "../../settings/values.js";
 import { BallTemplate } from "../../ball/BallTemplate.js";
-import { Object, ObjectMessage, Status } from "../../web_sockets/types_transfert.js";
+import { Object, ObjectMessage, Status } from "../../../../shared/types_transfert.js";
 import { WebSocket } from "ws";
 
 class Lightning {

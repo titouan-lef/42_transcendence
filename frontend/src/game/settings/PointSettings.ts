@@ -1,5 +1,4 @@
-import { PlanePosition } from "../types_transfert";
-import { BallOption, MapOption } from "./GameRules.js";
+import { BallOption, MapOption, PlanePosition } from "../../../shared/types_transfert.js";
 
 type PlayerKey = KeyboardEvent["code"] | undefined;
 

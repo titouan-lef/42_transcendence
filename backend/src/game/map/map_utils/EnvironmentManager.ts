@@ -2,10 +2,9 @@ import * as babylon from "@babylonjs/core";
 import { Lightning } from "./Lightning.js";
 import { Meteor } from "./Meteor.js";
 import { Tornado } from "./Tornado.js";
-import { PlanePosition } from "../../web_sockets/types_transfert.js";
 import { CANON_BALL_INTERVAL, CANON_MAX_COUNT, LIGHTNING_INTERVAL, METEOR_INTERVAL, TORNADO_INTERVAL } from "../../settings/values.js";
 import { planePosToVec3 } from "../../utils.js";
-import { Object } from "../../web_sockets/types_transfert.js";
+import { PlanePosition, Object } from "../../../../shared/types_transfert.js";
 import { GameSettings } from "../../settings/GameSettings.js";
 import { WebSocket } from "ws";
 import { CanonBall } from "./CanonBall.js";
@@ -190,4 +189,4 @@ class EnvironmentManager {
 	}
 }
 
-export { EnvironmentManager, ObjectType, ObjectSpawnerType };
+export { EnvironmentManager, ObjectSpawnerType };

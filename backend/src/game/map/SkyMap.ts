@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { MAP_SIZE, WIND_FORCE } from "../settings/values.js";
-import { Object } from "../web_sockets/types_transfert.js";
+import { Object } from "../../../shared/types_transfert.js";
 
 class SkyMap extends MapTemplate {
 	constructor(scene: babylon.Scene, canonCount: number) {

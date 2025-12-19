@@ -7,11 +7,10 @@ import { SkyMap } from "../map/SkyMap.js";
 import { DesertMap } from "../map/DesertMap.js";
 import { VolcanoMap } from "../map/VolcanoMap.js";
 import { Player } from "../player/Player.js";
-import { BallOption, MapOption } from "../settings/GameRules.js";
 import { PointSettings } from "../settings/PointSettings.js";
 import { COLORS3, MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
-import { DataMessage, EventMessage, EmoteMessage, PlanePosition, PositionsMessage, Status } from "../types_transfert.js";
+import { BallOption, MapOption, DataMessage, EventMessage, EmoteMessage, PlanePosition, PositionsMessage, Status } from "../../../shared/types_transfert";
 import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
 import { ParticuleManager as ParticleManager } from "./ParticuleManager.js";
 

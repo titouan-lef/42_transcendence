@@ -1,5 +1,7 @@
 import * as babylon from "@babylonjs/core";
-import { BallOption, MapOption } from "../settings/GameSettings.js";
+
+type MapOption = "default" | "volcano" | "sky" | "desert";
+type BallOption = "default" | "invisible" | "tricky" | "pulse" | "snake" | "canon";
 
 interface Position {
 	x: number;
@@ -29,7 +31,7 @@ enum Status {
 	POSITIONS,		// positions of ball and players
 	OBJECT,			// tornados / meteors / thunders
 	EVENT,			// particules launcher
-	EMOTE,			// emote launche
+	EMOTE,			// emote launcher
 	OBJECTSPAWNER	// canon
 }
 
@@ -98,6 +100,7 @@ interface OptionMessage {
 	ball: BallOption;
 	rotatingPlayer: boolean;
 	spin: boolean;
+	dashingPlayer: boolean;
 	canonCount: number;
 }
 
@@ -171,4 +174,4 @@ interface PlayerControls {
 
 export { Position, PlanePosition, Rotation, DataMessage, PlayerControls, ParticlesType, Status, Object, EmoteChoice, ObjectSpawner };
 export { StartMessage, StopMessage, TimingMessage, RenderMessage, GoalMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage, EmoteMessage, ObjectSpawnerMessage };
-export { GameStats, PlayerInfo, Rules, Point };
+export { BallOption, MapOption, GameStats, Point };

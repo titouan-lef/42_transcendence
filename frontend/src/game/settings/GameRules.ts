@@ -1,7 +1,5 @@
 import { getSafeElement } from "../../utils/getSafeElement";
-
-type MapOption = "default" | "volcano" | "sky" | "desert";
-type BallOption = "default" | "invisible" | "tricky" | "pulse" | "snake";
+import { BallOption, MapOption } from "../../../shared/types_transfert.js";
 
 interface GameOptions {
 	map: MapOption[];
@@ -87,5 +85,5 @@ function loadCheckboxes(rules: GameOptions): void {
 	getSafeElement(`canon-nbr`, HTMLInputElement).value = rules.canonCount.toString();
 }
 
-export { BallOption, MapOption, setGameOptions, loadCheckboxes };
+export { setGameOptions, loadCheckboxes };
 export { LOCAL_RULES, AI_RULES, RANKED_RULES };

@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { PointSettings, PlayerKeys, PlayerSettings } from "../settings/PointSettings.js";
 import { PLAYER_DIMENSION, COLORS3, PLAYER_TRAIL_INTERVAL, PLAYER_TRAIL_ON } from "../settings/values.js";
 import { PlayerTrail } from "./PlayerTrail.js";
-import { EmoteMessage, EmoteChoice, PlanePosition, PlayerControls, Rotation } from "../types_transfert.js";
+import { EmoteMessage, EmoteChoice, PlanePosition, PlayerControls, Rotation } from "../../../shared/types_transfert.js";
 import { Emote } from "./Emote.js";
 import { StunAnimation } from "./StunAnimation.js";
 
