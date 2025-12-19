@@ -181,7 +181,7 @@ abstract class Player {
 	}
 
 	private handleAction(): void {
-		if (this.keyPressed.normalMode && this.rotatingPlayer)
+		if (this.keyPressed.normalMode)
 			this.normalMode();
 		if (this.keyPressed.spinMode)
 			this.spinMode();
