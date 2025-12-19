@@ -16,7 +16,11 @@ async function getGoalAverage(username: string): Promise<number | undefined> {
 			[username]
 		), "getGoalAverage"
 	);
-	return ( nbGoal?.goals / nbGame?.nbGame);
+	if (!nbGame || !nbGoal)
+		return 0;
+	if (nbGame.nbGame === 0)
+		return 0;
+	return (nbGoal.goals / nbGame.nbGame);
 }
 
 async function getGoalAverageBySeason(seasonId: number, username: string): Promise<number | undefined> {
@@ -35,7 +39,11 @@ async function getGoalAverageBySeason(seasonId: number, username: string): Promi
 			[username, seasonId]
 		), "getGoalAverageBySeason"
 	);
-	return (nbGoal?.goals / nbGame?.nbGame);
+	if (!nbGame || !nbGoal)
+		return 0;
+	if (nbGame.nbGame === 0)
+		return 0;
+	return (nbGoal.goals / nbGame.nbGame);
 }
 
 async function getGameTimeAverage(username: string): Promise<number | undefined> {
@@ -57,7 +65,12 @@ async function getGameTimeAverage(username: string): Promise<number | undefined>
 			[username]
 		), "getGameTimeAverage"
 	);
-	return (nbTime?.sumTime / nbGame?.nbGame);
+
+	if (!nbGame || !nbTime)
+		return 0;
+	if (nbGame.nbGame === 0)
+		return 0;
+	return (nbTime.sumTime / nbGame.nbGame);
 }
 
 async function getGameTimeAverageBySeason(seasonId: number, username: string): Promise<number | undefined> {
@@ -79,7 +92,11 @@ async function getGameTimeAverageBySeason(seasonId: number, username: string): P
 			[username, seasonId]
 		), "getGameTimeAverageBySeason"
 	);
-	return (nbTime?.row / nbGame?.nbGame);
+	if (!nbGame || !nbTime)
+		return 0;
+	if (nbGame.nbGame === 0)
+		return 0;
+	return (nbTime.sumTime / nbGame.nbGame);
 }
 
 async function getPreferedBall(username: string): Promise<string | undefined> {
