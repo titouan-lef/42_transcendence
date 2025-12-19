@@ -2,7 +2,7 @@ import { isOneStringEmtpy } from "../../utils/strings.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
 import { printReplyInDiv, sendPostRequestToBack } from "../api_request.js";
 import { connectUser } from "./login.js";
-import { Success } from "../status_codes.js";
+import { Success } from '/app/shared/status_codes';
 
 async function newUser(): Promise<void> {
 

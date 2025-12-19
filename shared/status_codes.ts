@@ -3,7 +3,6 @@ enum Success {
 	USER_INFOS,
 	LOOGED_IN,
 	LOOGED_OUT,
-	AVATAR_SET, /** @todo remove */
 	AVATAR_UPDATED,
 	EMAIL_UPDATED,
 	USER_CREATED,
@@ -23,7 +22,7 @@ enum Success {
 
 enum Errors {
 	// USERS - CONNECTION
-	REQUEST_FAILED = 200, // Offset of 200 to identyfy easely Success or Error
+	REQUEST_FAILED = 200, // Offset of 200 to identify easely Success or Error
 	WRONG_CREDENTIALS,
 	TWOFA_REQUIRED,
 	AUTH_REQUIRED,
@@ -51,7 +50,7 @@ enum Errors {
 	// GAMES
 	ALREADY_IN_QUEUE,
 	GAME_NOT_FOUND,
-	GAME_NOT_FOUND_YET,
+	GAME_NOT_FOUND_YET
 }
 
 type ReplyStatus = Success | Errors;

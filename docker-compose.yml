@@ -9,6 +9,7 @@ services:
     networks:
       - transcendence
     volumes:
+    - ./shared:/app/shared
     - ./backups:/app/backups
     restart: "on-failure"
 
@@ -23,6 +24,8 @@ services:
       - backend
     networks:
       - transcendence
+    volumes:
+    - ./shared:/app/shared
     restart: "on-failure"
 
   nginx:

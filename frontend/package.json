@@ -2,13 +2,13 @@
   "name": "frontend",
   "version": "1.0.0",
   "type": "module",
-  "main": "./dist/index.ts",
+  "main": "./dist/index.js",
   "scripts": {
     "lint:ts": "eslint . --ext .ts --max-warnings=0",
     "lint:html": "htmlhint '**/*.html'",
     "format:check": "npm run lint:html && npm run lint:ts",
     "build:css": "npx @tailwindcss/cli -i ./src/assets/style.css -o ./dist/assets/style.css --minify",
-    "build:ts_server": "tsc",
+    "build:ts_server": "tsc -p tsconfig.build.json",
     "build:ts_client": "npx esbuild src/main.ts --bundle --minify --sourcemap --outfile=dist/public/bundle.js --platform=browser --target=es2022",
     "build": "npm run build:css && npm run build:ts_server && npm run build:ts_client",
     "start": "node dist/index.js"

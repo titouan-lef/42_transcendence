@@ -1,7 +1,7 @@
 import { newPoint } from "../game/canvas_creation.js";
 import { DataMessage, Status } from "../game/types_transfert.js";
 import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "./api_request.js";
-import { Errors } from "./status_codes.js";
+import { Errors } from '/app/shared/status_codes';
 import { closeDialogID } from "../pages/modules/dialog/dialog.js";
 import { AI_RULES, LOCAL_RULES, RANKED_RULES, setGameOptions } from "../game/settings/GameRules.js";
 

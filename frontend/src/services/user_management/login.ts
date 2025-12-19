@@ -8,7 +8,7 @@ import { loadModularPage } from "../../pages/modular.js";
 import { openDialog2FA } from "../../pages/modules/dialog/dialog.js";
 import { loadSettings } from "../../pages/modules/profile/profile_settings.js";
 import { openProfile } from "../../pages/modules/profile/profile.js";
-import { Errors } from "../status_codes.js";
+import { Errors } from '/app/shared/status_codes';
 
 interface InfoList {
 	username: string;

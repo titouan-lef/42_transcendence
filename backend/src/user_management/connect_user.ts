@@ -8,7 +8,7 @@ import { pipeline } from 'stream';
 import { request2FA } from "../security/2FA.js";
 import { addAuthCookies, removeAuthCookies } from "../security/JWT.js";
 import { wait } from "../utils/time.js";
-import { Errors, Success } from "../utils/status_codes.js";
+import { Errors, Success } from "../../shared/status_codes.js";
 
 const PUMP = util.promisify(pipeline);
 

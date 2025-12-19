@@ -3,7 +3,7 @@ import { hashString, isValidPassword } from "../utils/hash_string.js";
 import { sendReply } from "../utils/HTTP.js";
 import { doesUserExist, getUserByUsername, insertUser, is2FAEnabled, updateEmail, updatePassword, updatePseudo } from "../database/user.js";
 import { request2FA } from "../security/2FA.js";
-import { Errors, Success } from "../utils/status_codes.js";
+import { Errors, Success } from "../../shared/status_codes.js";
 
 interface NewUserBody {
 	username: string;
