@@ -3,7 +3,7 @@ import { BallTemplate } from "../../ball/BallTemplate.js";
 import { WebSocket } from "ws";
 import { GameSettings } from "../../settings/GameSettings.js";
 import { COLORS3, MAP_SIZE, WALL_WIDTH } from "../../settings/values.js";
-import { ObjectMessage, Status, Object } from "../../web_sockets/types_transfert.js";
+import { ObjectMessage, Status, Object } from "../../../../shared/types_transfert.js";
 
 class CanonBall extends BallTemplate {
 	private readonly canonBallSceneObserver: babylon.Observer<babylon.Scene>;

@@ -1,7 +1,5 @@
 import { WebSocket } from "ws";
-
-type MapOption = "default" | "volcano" | "sky" | "desert";
-type BallOption = "default" | "invisible" | "tricky" | "pulse" | "snake" | "canon";
+import { BallOption, MapOption } from "../../../shared/types_transfert.js";
 
 interface PlayerSettings {
 	readonly playerId: 1 | 2 ;
@@ -44,5 +42,5 @@ class GameSettings {
 	}
 }
 
-export { MapOption, BallOption, PlayerSettings, GameSettings, GameOptions };
+export { PlayerSettings, GameSettings, GameOptions };
 

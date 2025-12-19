@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
-import { GameOptions, GameSettings, PlayerSettings } from "../settings/GameSettings.js";
-import { PlayerControls, DataMessage } from "../web_sockets/types_transfert.js";
+import { GameOptions, PlayerSettings } from "../settings/GameSettings.js";
+import { PlayerControls, DataMessage } from "../../../shared/types_transfert.js";
 import { Player } from "./Player.js";
 import { WebSocket } from "ws";
 
