@@ -10,7 +10,7 @@ import { Player } from "../player/Player.js";
 import { PointSettings } from "../settings/PointSettings.js";
 import { COLORS3, MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../settings/values.js";
 import { CountDown } from "./CountDown.js";
-import { BallOption, MapOption, DataMessage, EventMessage, EmoteMessage, PlanePosition, PositionsMessage, Status } from "../../../shared/types_transfert";
+import { BallOption, MapOption, DataMessage, EventMessage, EmoteMessage, PlanePosition, PositionsMessage, Status } from "#shared/types_transfert";
 import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
 import { ParticuleManager as ParticleManager } from "./ParticuleManager.js";
 

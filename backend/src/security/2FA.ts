@@ -5,7 +5,7 @@ import { sendReply } from "../utils/HTTP.js";
 import { disabled2FA, enabled2FA, getUserEmail, is2FAEnabled, isEmailDefined, updateEmail } from "../database/user.js";
 import { addAuthCookies } from "./JWT.js";
 import { wait } from "../utils/time.js";
-import { Errors, Success } from "../../shared/status_codes.js";
+import { Errors, Success } from "#shared/status_codes.js";
 
 /** https://dev.to/veektor_v/send-emails-using-nodemailer-typescript-4763 */
 

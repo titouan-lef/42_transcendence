@@ -1,6 +1,6 @@
 import { translateTab } from "../lang/lang.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
-import { Errors, ReplyStatus } from '/app/shared/status_codes';
+import { Errors, ReplyStatus } from '#shared/status_codes';
 import { REPLY_MESSAGES } from "./reply_messages.js";
 
 declare const API_URL: string; // just telling the compiler that API_URL and WS_URL will exists during execution

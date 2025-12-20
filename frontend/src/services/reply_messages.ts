@@ -1,5 +1,5 @@
 import { TranslationKey } from "../lang/lang";
-import { Errors, ReplyStatus } from '/app/shared/status_codes';
+import { Errors, ReplyStatus } from '#shared/status_codes';
 
 const REPLY_MESSAGES: Partial<Record<ReplyStatus, TranslationKey>> = {
 	// USERS | CONNECTION

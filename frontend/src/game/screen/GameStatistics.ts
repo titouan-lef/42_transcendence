@@ -1,5 +1,5 @@
 import { stopGame } from "../canvas_creation";
-import { BallOption, MapOption, GameStats } from "../../../shared/types_transfert";
+import { BallOption, MapOption, GameStats } from "#shared/types_transfert";
 
 class GameStatistics {
 	private readonly stats: HTMLDivElement;

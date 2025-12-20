@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { GameOptions } from "../settings/GameSettings.js";
 import { PLAYER_DIMENSION, MAP_SIZE, WALL_WIDTH, PLAYER_MASS, PLAYER_RESTITUTION, PLAYER_MOVEMENT_VELOCITY, PLAYER_ROTATION_VELOCITY, PLAYER_DASH_MULT, PLAYER_DASH_CD, PLAYER_DASH_DURATION } from "../settings/values.js";
-import { PlayerControls, Position, DataMessage, Rotation, EmoteChoice } from "../../../shared/types_transfert.js";
+import { PlayerControls, Position, DataMessage, Rotation, EmoteChoice } from "#shared/types_transfert.js";
 
 abstract class Player {
 	private readonly id: 1 | 2;

@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { Lightning } from "./Lightning.js";
 import { Meteor } from "./Meteor.js";
 import { Tornado } from "./Tornado.js";
-import { ObjectMessage, Object, ObjectSpawnerMessage, ObjectSpawner } from "../../../../shared/types_transfert.js";
+import { ObjectMessage, Object, ObjectSpawnerMessage, ObjectSpawner } from "#shared/types_transfert.js";
 import { Ball } from "../../ball/Ball.js";
 import { COLORS3 } from "../../settings/values.js";
 import { Canon } from "./Canon.js";
