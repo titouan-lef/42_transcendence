@@ -2,7 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
 import { PointSettings } from "./settings/PointSettings.js";
 import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
-import { DataMessage, OptionMessage, Status, StopMessage } from "../../shared/types_transfert.js";
+import { DataMessage, OptionMessage, Status, StopMessage } from "#shared/types_transfert.js";
 import { GameStatistics } from "./screen/GameStatistics.js";
 
 class Game {

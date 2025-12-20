@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MAP_SIZE, WALL_WIDTH, METEOR_SPEED, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, METEOR_COLLISION_STRENGTH, METEOR_LIFETIME, BALL_DIAMETER } from "../../settings/values.js";
 import { BallTemplate } from "../../ball/BallTemplate.js";
-import { Object, ObjectMessage, Status } from "../../../../shared/types_transfert.js";
+import { Object, ObjectMessage, Status } from "#shared/types_transfert.js";
 import { WebSocket } from "ws";
 
 class Meteor {

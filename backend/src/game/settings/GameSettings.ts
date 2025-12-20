@@ -1,5 +1,5 @@
 import { WebSocket } from "ws";
-import { BallOption, MapOption } from "../../../shared/types_transfert.js";
+import { BallOption, MapOption } from "#shared/types_transfert.js";
 
 interface PlayerSettings {
 	readonly playerId: 1 | 2 ;

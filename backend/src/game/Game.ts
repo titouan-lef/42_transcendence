@@ -5,7 +5,7 @@ import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
 import { GAME_STEP_INTERVAL, PHYSIC_STEP_INTERVAL, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import fs from "fs";
-import { BallOption, MapOption, Status, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage, GameStats, Point } from "../../shared/types_transfert.js";
+import { BallOption, MapOption, Status, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage, GameStats, Point } from "#shared/types_transfert.js";
 import { Player } from "./player/Player.js";
 import { Human } from "./player/Human.js";
 import { stopGame } from "./game_manager.js";

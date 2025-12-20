@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { WebSocket } from "ws";
 import { BALL_DIAMETER, CANON_ANGULAR_VELOCITY_Y, CANON_CHANGE_STUN_INTERVAL, CANON_LINEAR_VELOCITY_X, MAP_SIZE, WALL_WIDTH, CANON_DIMENSION } from "../../settings/values.js";
-import { Status, ObjectSpawnerMessage, ObjectSpawner } from "../../../../shared/types_transfert.js";
+import { Status, ObjectSpawnerMessage, ObjectSpawner } from "#shared/types_transfert.js";
 
 class Canon {
 	private readonly canon: babylon.Mesh;

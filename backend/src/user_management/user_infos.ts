@@ -3,7 +3,7 @@ import { getUserByUsername, is2FAEnabled } from "../database/user.js";
 import { sendReply } from "../utils/HTTP.js";
 import { getTheme } from "../database/theme.js";
 import { promises as fs } from "fs";
-import { Success } from "../../shared/status_codes.js";
+import { Success } from "#shared/status_codes.js";
 
 interface InfoList {
 	username: string;

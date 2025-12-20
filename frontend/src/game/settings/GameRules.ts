@@ -1,5 +1,5 @@
 import { getSafeElement } from "../../utils/getSafeElement";
-import { BallOption, MapOption } from "../../../shared/types_transfert.js";
+import { BallOption, MapOption } from "#shared/types_transfert.js";
 
 interface GameOptions {
 	map: MapOption[];

@@ -14,7 +14,7 @@ import { Player } from "../player/Player.js";
 import { GameSettings } from "../settings/GameSettings.js";
 import { MAP_SIZE, PLAYER_DIMENSION, START_TIMEOUT, WALL_WIDTH } from "../settings/values.js";
 import { WebSocket } from "ws";
-import { BallOption, MapOption, PlanePosition, Position, RenderMessage, Status, TimingMessage, EmoteMessage, EmoteChoice } from "../../../shared/types_transfert.js";
+import { BallOption, MapOption, PlanePosition, Position, RenderMessage, Status, TimingMessage, EmoteMessage, EmoteChoice } from "#shared/types_transfert.js";
 import { Human } from "../player/Human.js";
 import { EnvironmentManager } from "../map/map_utils/EnvironmentManager.js";
 import { AI } from "../player/AI.js";

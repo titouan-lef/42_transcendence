@@ -3,7 +3,7 @@ import { addFriendship, getFriendships, isFriendWith, removeFriendship } from ".
 import { sendReply } from "../utils/HTTP.js";
 import { doesUserExist, User } from "../database/user.js";
 import { UserBody } from "./connect_user.js";
-import { Errors, Success } from "../../shared/status_codes.js";
+import { Errors, Success } from "#shared/status_codes.js";
 
 async function getFriendList(req: FastifyRequest<{ "Body": UserBody }>, reply: FastifyReply): Promise<void> {
 	const user = req.body?.user;
