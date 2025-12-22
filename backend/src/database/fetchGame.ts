@@ -1,7 +1,9 @@
 import { applyQuery } from "./db_utils.js";
 
+/** @todo utiliser le vrai nombre */
 const NB_GOALS_TO_WIN = 11;
 
+/** @todo warning both with titouan branch*/
 async function getGamesPlayedCount(seasonId: number, username: string): Promise<number | undefined> {
 	const row = await applyQuery(
 		async (db) => await db.get(

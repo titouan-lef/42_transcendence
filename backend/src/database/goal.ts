@@ -54,8 +54,7 @@ async function getPlayerGamesBySeason(seasonId: number, username: string): Promi
 		async (db) => await db.get(
 			`SELECT COUNT(GOAL.gameId) AS gamesPlayedCount
 			FROM ${TABLE_NAME} AS GOAL INNER JOIN Game AS GAME ON GOAL.gameId = GAME.id
-			WHERE GAME.seasonId = ? AND GOAL.by = ? 
-			GROUP BY GAME.seasonId, GOAL.by;`,
+			WHERE GAME.seasonId = ? AND GOAL.by = ?;`,
 			[seasonId, username]
 		), "getGamesPlayedCount"
 	);
