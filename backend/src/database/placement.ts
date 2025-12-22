@@ -37,7 +37,7 @@ async function getPlacementGames(username: string, seasonId: number): Promise<Pl
 	const rows = await applyQuery(
 		async (db) => await db.all<Placement[]>(
 			`SELECT rOpp, rdOpp, outcome
-			FROM Placement
+			FROM ${TABLE_NAME}
 			WHERE username = ? AND gameId IN (
 				SELECT Gm.id
 				FROM Game AS Gm
