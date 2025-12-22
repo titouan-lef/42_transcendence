@@ -16,6 +16,7 @@ enum Success {
 	FRIEND_REMOVED,
 	// GAMES 
 	ADDED_TO_QUEUE,
+	REMOVED_FROM_QUEUE,
 	GAME_FOUND, // object needed
 
 }
@@ -49,7 +50,7 @@ enum Errors {
 	NOT_FRIEND_WITH,
 	// GAMES
 	ALREADY_IN_QUEUE,
-	GAME_NOT_FOUND,
+	NOT_IN_QUEUE,
 	GAME_NOT_FOUND_YET
 }
 

@@ -2,7 +2,7 @@ import { newPoint } from "../game/canvas_creation.js";
 import { DataMessage, Status } from "#shared/types_transfert.js";
 import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "./api_request.js";
 import { Errors } from '#shared/status_codes';
-import { openDialogNoGameFound, openDialogWaiting } from "../pages/modules/dialog/dialog.js";
+import { openDialogGameSelector, openDialogWaiting } from "../pages/modules/dialog/dialog.js";
 import { AI_RULES, LOCAL_RULES, RANKED_RULES, setGameOptions } from "../game/settings/GameRules.js";
 import { loadGamePage } from "src/pages/game_page.js";
 
@@ -23,15 +23,23 @@ async function askForGame(): Promise<boolean> {
 	return true;
 }
 
+async function sendCancelQueue(): Promise<void> {
+	const reply = await sendGetRequestToBack("/api/game/cancel_queue");
+	if (!isRequestSuccessfull(reply)) {
+		console.log("Error:", reply.content);
+		return;
+	}
+	return;
+}
+
 async function waitForGame(): Promise<number | null> {
 	let id = -1;
 	let reply: ReplyFromBack;
 	do {
-		/** @todo (cancel) isGameCanceled ?? return 'cancel' */
 		reply = await sendGetRequestToBack("/api/game/waiting");
 		if (isRequestSuccessfull(reply))
 			id = Number(reply.content);
-	} while (id < 0 && reply.code !== Errors.GAME_NOT_FOUND);
+	} while (id < 0 && reply.code !== Errors.NOT_IN_QUEUE);
 	if (id >= 0)
 		return id;
 	return null;
@@ -42,15 +50,11 @@ async function newRankedGame(): Promise<void> {
 		return;
 	openDialogWaiting();
 	const id = await waitForGame();
-	if (id === null) {
-		openDialogNoGameFound();
-		return;
+	if (id === null) { // => queue got canceled
+		/**@todo will pop even if we click outside of the modal, but its fine tbh*/
+		openDialogGameSelector();
+		return ;
 	}
-	/** @todo (cancel) find a solution */
-	// if (id === 'cancel') {
-	// 	openDialogGameSelector();
-	// 	return ;
-	// }
 	loadGamePage('ranked');
 	newGameSolo(id);
 }
@@ -157,4 +161,4 @@ async function newLocalGame(): Promise<void> {
 	};
 }
 
-export { newRankedGame, newLocalGame, newGameVsAI };
+export { newRankedGame, newLocalGame, newGameVsAI, sendCancelQueue };

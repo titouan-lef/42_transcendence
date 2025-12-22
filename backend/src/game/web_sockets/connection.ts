@@ -26,10 +26,6 @@ async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<vo
 	const user = req.user;
 	if (!user)
 		return;
-	if (!isUserWaiting(user)) {
-		sendReply(reply, Errors.GAME_NOT_FOUND);
-		return;
-	}
 
 	let waited = 0;
 	let id = -1;
@@ -38,8 +34,8 @@ async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<vo
 			sendReply(reply, Errors.GAME_NOT_FOUND_YET);
 			return;
 		}
-		if (waited >= 3 * TIMEOUT) { /** @todo remove ? added this to proc no game found in 30 seconds, testing purposes, but cool feature tbh */
-			sendReply(reply, Errors.GAME_NOT_FOUND);
+		if (!isUserWaiting(user)) {
+			sendReply(reply, Errors.NOT_IN_QUEUE);
 			return;
 		}
 		id = await askMatchmakingSystem(user);

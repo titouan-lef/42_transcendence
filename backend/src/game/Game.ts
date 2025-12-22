@@ -134,6 +134,7 @@ class Game {
 				return ;
 			const playerGamesBySeason = await getPlayerGamesBySeason(seasonId, player);
 			console.log(player + " has won " + playerGamesBySeason + " games this season.");
+			/**@todo Elo */
 			// if (playerGamesBySeason == 10) {
 			// 	if (hasElo(player))
 			// 		defineEloNewPlayer();
