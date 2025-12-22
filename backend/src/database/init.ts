@@ -14,6 +14,7 @@ import { createGoalTable } from "./goal.js";
 import { createGameRuleTable } from "./game_rule.js";
 import { getElo, setElo, setRatingDeviation, setRating } from "./web3/contract_service.js";
 import { Elo } from "../tournament/elo/elo.js";
+import { createPlacementTable } from "./placement.js";
 
 const DB_FILE = "Database.db";
 const DB_PATH_FILE = "/app/backups/" + DB_FILE;
@@ -88,6 +89,7 @@ async function initDB(): Promise<void> {
 		await createGoalTable();
 		await createGameRuleTable();
 		await createEloTable();
+		await createPlacementTable();
 
 		/** @todo gerer ca ailleurs*/
 		await insertSeason();
