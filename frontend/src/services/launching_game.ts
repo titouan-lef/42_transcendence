@@ -4,6 +4,9 @@ import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToB
 import { Errors } from '#shared/status_codes';
 import { closeDialogID, openDialogNoGameFound, openDialogWaiting } from "../pages/modules/dialog/dialog.js";
 import { AI_RULES, LOCAL_RULES, RANKED_RULES, setGameOptions } from "../game/settings/GameRules.js";
+import { loadPage } from "src/routes/page.js";
+import { loadGamePage } from "src/pages/game_page.js";
+import { getSafeElement } from "src/utils/getSafeElement.js";
 
 //////////////////////////////////////////
 //			Game management				//
@@ -50,6 +53,7 @@ async function newRankedGame(): Promise<void> {
 	// 	openDialogGameSelector();
 	// 	return ;
 	// }
+	loadGamePage('ranked');
 	newGameSolo(id);
 }
 
@@ -64,6 +68,7 @@ async function newGameVsAI(): Promise<void> {
 	}
 	const id = Number(reply.content);
 	if (id >= 0) {
+		loadGamePage('solo');
 		newGameSolo(id);
 	}
 }
@@ -73,9 +78,6 @@ async function newGameVsAI(): Promise<void> {
 //////////////////////////////////////////
 
 async function newGameSolo(id: number): Promise<void> {
-	closeDialogID('modal');
-	/** @todo loadGamePage here */
-
 	const ws = new WebSocket(`ws/${id}`);
 
 	ws.onopen = (): void => {
@@ -104,11 +106,9 @@ async function newGameSolo(id: number): Promise<void> {
 }
 
 async function newLocalGame(): Promise<void> {
-	closeDialogID('modal');
-	/** @todo loadGamePage here */
-
 	setGameOptions(LOCAL_RULES);
 	const options = LOCAL_RULES;
+	loadGamePage('local');
 
 	const reply = await sendPostRequestToBack("/api/game/local_game", JSON.stringify(options));
 	if (!isRequestSuccessfull(reply)) {
