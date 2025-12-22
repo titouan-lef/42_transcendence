@@ -2,7 +2,7 @@ import { newPoint } from "../game/canvas_creation.js";
 import { DataMessage, Status } from "#shared/types_transfert.js";
 import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "./api_request.js";
 import { Errors } from '#shared/status_codes';
-import { closeDialogID } from "../pages/modules/dialog/dialog.js";
+import { closeDialogID, openDialogNoGameFound, openDialogWaiting } from "../pages/modules/dialog/dialog.js";
 import { AI_RULES, LOCAL_RULES, RANKED_RULES, setGameOptions } from "../game/settings/GameRules.js";
 
 //////////////////////////////////////////
@@ -26,6 +26,7 @@ async function waitForGame(): Promise<number | null> {
 	let id = -1;
 	let reply: ReplyFromBack;
 	do {
+		/** @todo (cancel) isGameCanceled ?? return 'cancel' */
 		reply = await sendGetRequestToBack("/api/game/waiting");
 		if (isRequestSuccessfull(reply))
 			id = Number(reply.content);
@@ -38,13 +39,17 @@ async function waitForGame(): Promise<number | null> {
 async function newRankedGame(): Promise<void> {
 	if (!await askForGame())
 		return;
-	/** @todo launch waiting screen */
+	openDialogWaiting();
 	const id = await waitForGame();
 	if (id === null) {
-		/** @todo no game found, retry later */
+		openDialogNoGameFound();
 		return;
 	}
-	/** @todo loadGamePage here */
+	/** @todo (cancel) find a solution */
+	// if (id === 'cancel') {
+	// 	openDialogGameSelector();
+	// 	return ;
+	// }
 	newGameSolo(id);
 }
 
@@ -58,8 +63,9 @@ async function newGameVsAI(): Promise<void> {
 		return;
 	}
 	const id = Number(reply.content);
-	if (id >= 0)
+	if (id >= 0) {
 		newGameSolo(id);
+	}
 }
 
 //////////////////////////////////////////
@@ -68,6 +74,7 @@ async function newGameVsAI(): Promise<void> {
 
 async function newGameSolo(id: number): Promise<void> {
 	closeDialogID('modal');
+	/** @todo loadGamePage here */
 
 	const ws = new WebSocket(`ws/${id}`);
 
@@ -98,6 +105,7 @@ async function newGameSolo(id: number): Promise<void> {
 
 async function newLocalGame(): Promise<void> {
 	closeDialogID('modal');
+	/** @todo loadGamePage here */
 
 	setGameOptions(LOCAL_RULES);
 	const options = LOCAL_RULES;

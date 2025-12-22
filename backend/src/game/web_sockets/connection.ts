@@ -38,6 +38,10 @@ async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<vo
 			sendReply(reply, Errors.GAME_NOT_FOUND_YET);
 			return;
 		}
+		if (waited >= 3 * TIMEOUT) { /** @todo remove ? added this to proc no game found in 30 seconds, testing purposes, but cool feature tbh */
+			sendReply(reply, Errors.GAME_NOT_FOUND);
+			return;
+		}
 		id = await askMatchmakingSystem(user);
 		if (id < 0) {
 			await wait(SCAN_DELAY);
@@ -112,7 +116,7 @@ async function newGame(socket: WebSocket, req: FastifyRequest<{ Params: GamePara
 	if (gameData === undefined) {
 		socket.close(1003, "Not a valid game id");
 		return;
-	} 
+	}
 	if (gameData.type === GameType.RANKED) {
 		const user = await verifyAuthWS(socket, req);
 		if(!user || !gameData.players.includes(user)) {
