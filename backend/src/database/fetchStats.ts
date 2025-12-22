@@ -1,6 +1,6 @@
 import { applyQuery } from "./db_utils.js";
 
-async function getGoalAverage(username: string): Promise<number | undefined> {
+async function getGoalAverage(username: string): Promise<number> {
 	const nbGame = await applyQuery(
 		async (db) => await db.get(
 			`SELECT COUNT(*) AS nbGame
@@ -23,7 +23,7 @@ async function getGoalAverage(username: string): Promise<number | undefined> {
 	return (nbGoal.goals / nbGame.nbGame);
 }
 
-async function getGoalAverageBySeason(seasonId: number, username: string): Promise<number | undefined> {
+async function getGoalAverageBySeason(seasonId: number, username: string): Promise<number> {
 	const nbGame = await applyQuery(
 		async (db) => await db.get(
 			`SELECT COUNT(*) AS nbGame
@@ -46,7 +46,7 @@ async function getGoalAverageBySeason(seasonId: number, username: string): Promi
 	return (nbGoal.goals / nbGame.nbGame);
 }
 
-async function getGameTimeAverage(username: string): Promise<number | undefined> {
+async function getGameTimeAverage(username: string): Promise<number> {
 	const nbTime = await applyQuery(
 		async (db) => await db.get(
 			`WITH gamePlayed AS (SELECT * FROM Game AS G
@@ -73,7 +73,7 @@ async function getGameTimeAverage(username: string): Promise<number | undefined>
 	return (nbTime.sumTime / nbGame.nbGame);
 }
 
-async function getGameTimeAverageBySeason(seasonId: number, username: string): Promise<number | undefined> {
+async function getGameTimeAverageBySeason(seasonId: number, username: string): Promise<number> {
 	const nbTime = await applyQuery(
 		async (db) => await db.get(
 			`WITH gamePlayed AS (SELECT * FROM Game AS G
@@ -99,7 +99,7 @@ async function getGameTimeAverageBySeason(seasonId: number, username: string): P
 	return (nbTime.sumTime / nbGame.nbGame);
 }
 
-async function getPreferedBall(username: string): Promise<string | undefined> {
+async function getPreferedBall(username: string): Promise<string> {
 	const row = await applyQuery(
 		async (db) => await db.get(
 			`SELECT B.name, COUNT(G.id) AS total_goals
@@ -113,10 +113,12 @@ async function getPreferedBall(username: string): Promise<string | undefined> {
 			[username]
 		), "getPreferedBall"
 	);
-	return (row?.name);
+	if(!row)
+		return ("default");
+	return (row.name);
 }
 
-async function getPreferedBallBySeason(seasonId: number, username: string): Promise<string | undefined> {
+async function getPreferedBallBySeason(seasonId: number, username: string): Promise<string> {
 	const row = await applyQuery(
 		async (db) => await db.get(
 			`SELECT B.name, COUNT(G.id) AS total_goals
@@ -130,10 +132,12 @@ async function getPreferedBallBySeason(seasonId: number, username: string): Prom
 			[username, seasonId]
 		), "getPreferedBallBySeason"
 	);
-	return (row?.name);
+	if(!row)
+		return ("default");
+	return (row.name);
 }
 
-async function getPreferedMap(username: string): Promise<string | undefined> {
+async function getPreferedMap(username: string): Promise<string> {
 	const row = await applyQuery(
 		async (db) => await db.get(
 			`SELECT M.name, COUNT(G.id) AS total_goals
@@ -147,10 +151,12 @@ async function getPreferedMap(username: string): Promise<string | undefined> {
 			[username]
 		), "getPreferedMap"
 	);
-	return (row?.name);
+	if(!row)
+		return ("default");
+	return (row.name);
 }
 
-async function getPreferedMaBySeason(seasonId: number, username: string): Promise<string | undefined> {
+async function getPreferedMaBySeason(seasonId: number, username: string): Promise<string> {
 	const row = await applyQuery(
 		async (db) => await db.get(
 			`SELECT M.name, COUNT(G.id) AS total_goals
@@ -164,7 +170,9 @@ async function getPreferedMaBySeason(seasonId: number, username: string): Promis
 			[username, seasonId]
 		), "getPreferedMaBySeason"
 	);
-	return (row?.name);
+	if(!row)
+		return ("default");
+	return (row.name);
 }
 
 interface EloHistory {
