@@ -53,7 +53,7 @@ const GAME_PAGE = `
 			${GAME_QUIT_BTN_SVG}
 		</div>
 	</div>
-	<canvas id='game-canvas' class='h-9/10 w-9/10 rounded-md border-8 border-dark'></canvas>
+	<canvas id='game-canvas' class='h-4/5 w-4/5 rounded-md border-8 border-dark'></canvas>
 </div>
 `;
 
