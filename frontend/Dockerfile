@@ -12,13 +12,13 @@ COPY . .
 # ======================
 FROM base AS dev
 RUN mkdir -p ./backups/pictures
-ENTRYPOINT ["/app/check_and_build.sh"]
+ENTRYPOINT ["/app/check_and_build.dev.sh"]
 CMD ["npm", "start"]
 
 # ======================
 # Production
 # ======================
 FROM base AS prod
-RUN npm run format:check
-RUN npm run build
+# Build need the files in the `sahred` volume, so We cannot build the TS durint the contianer building time, but only during running time.
+ENTRYPOINT ["/app/check_and_build.sh"]
 CMD ["npm", "start"]

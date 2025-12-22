@@ -1,10 +1,9 @@
 #!/bin/sh
 set -e
 
-rm -rf dist
-
-npm run format:check
-
-npm run build
+if [ ! -d dist ]; then
+	npm run format:check
+	npm run build
+fi
 
 exec "$@"
