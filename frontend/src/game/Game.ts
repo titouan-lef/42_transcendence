@@ -4,6 +4,7 @@ import { PointSettings } from "./settings/PointSettings.js";
 import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import { DataMessage, OptionMessage, Status, StopMessage } from "#shared/types_transfert.js";
 import { GameStatistics } from "./screen/GameStatistics.js";
+import { getSafeElement } from "src/utils/getSafeElement.js";
 
 class Game {
 	private readonly engine: babylon.Engine;
@@ -43,22 +44,10 @@ class Game {
 
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
 	static async create(settings: PointSettings): Promise<Game> {
-		const canvas = Game.createCanvas();
+		const canvas = getSafeElement('game-canvas', HTMLCanvasElement);
 		const engine = new babylon.Engine(canvas);
 		const scene = await Game.initScene(engine);
 		return new Game(canvas, settings, scene, engine);
-	}
-
-	/** creating the canvas here because each time a game is created, a new canvas should also be created */
-	private static createCanvas(): HTMLCanvasElement {
-		const canvas: HTMLCanvasElement = document.createElement("canvas");
-		canvas.style.position = "Absolute";
-		canvas.style.top = "10%";
-		canvas.style.left = "10%";
-		canvas.style.width = "80%";
-		canvas.style.height = "80%";
-		document.body.appendChild(canvas);
-		return canvas;
 	}
 
 	private static async initScene(engine: babylon.Engine): Promise<babylon.Scene> {
@@ -108,7 +97,7 @@ class Game {
 	private setScene(): void {
 		this.sceneManager.createPlayers(this.scene, this.settings);
 		this.sceneManager.setEnvironnement(this.scene, this.settings);
-		
+
 		const player = this.sceneManager.getPlayer(this.settings.player1.playerId);
 		if (!player) {
 			console.error(`Player ${this.settings.player1.playerId} not found`);
