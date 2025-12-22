@@ -2,11 +2,9 @@ import { newPoint } from "../game/canvas_creation.js";
 import { DataMessage, Status } from "#shared/types_transfert.js";
 import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "./api_request.js";
 import { Errors } from '#shared/status_codes';
-import { closeDialogID, openDialogNoGameFound, openDialogWaiting } from "../pages/modules/dialog/dialog.js";
+import { openDialogNoGameFound, openDialogWaiting } from "../pages/modules/dialog/dialog.js";
 import { AI_RULES, LOCAL_RULES, RANKED_RULES, setGameOptions } from "../game/settings/GameRules.js";
-import { loadPage } from "src/routes/page.js";
 import { loadGamePage } from "src/pages/game_page.js";
-import { getSafeElement } from "src/utils/getSafeElement.js";
 
 //////////////////////////////////////////
 //			Game management				//
