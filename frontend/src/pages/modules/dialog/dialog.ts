@@ -5,6 +5,8 @@ import { EMAIL_CONFIRMATION, TWOFA, twoFAHandler } from "./dialog_2FA.js";
 import { applyColor } from "../../../utils/applyColor.js";
 import { getSafeElement } from "../../../utils/getSafeElement.js";
 import { GAME_SELECTOR, gameSelectorHandler } from "./dialog_game_selector.js";
+import { GAME_WAITING, gameWaitingHandler } from "./dialog_game_waiting.js";
+import { GAME_WAITING_FAILURE, gameWaitingFailureHandler } from "./dialog_game_waiting_failure.js";
 
 const DIALOG_MAIN_STYLE = `
 	m-auto p-0 rounded-2xl
@@ -43,6 +45,9 @@ function loadDialog(content: string, handler: (modal: HTMLDialogElement) => void
 }
 
 function exitDialog(modal: HTMLDialogElement, event: Event): void {
+	/** @todo (cancel) do smth to cancel */
+	//	if (isWaitingForGame)
+	//		sendCancelToBack();
 	if (event.target === modal) {
 		modal.close();
 	}
@@ -70,6 +75,14 @@ function openDialogGameSelector(): void {
 	loadDialog(GAME_SELECTOR, gameSelectorHandler);
 }
 
+function openDialogWaiting(): void {
+	loadDialog(GAME_WAITING, gameWaitingHandler);
+}
+
+function openDialogNoGameFound(): void {
+	loadDialog(GAME_WAITING_FAILURE, gameWaitingFailureHandler);
+}
+
 function openDialog2FA(): void {
 	loadDialog(TWOFA, twoFAHandler);
 }
@@ -91,4 +104,4 @@ function closeDialogID(id: string): void {
 	dialog.close();
 }
 
-export { openDialogEmail, closeDialogID, exitDialog, loadDialog, openDialogSignIn, openDialogSignUp, openDialogAddFriend, openDialog2FA, openDialogGameSelector };
+export { openDialogNoGameFound, openDialogWaiting, openDialogEmail, closeDialogID, exitDialog, loadDialog, openDialogSignIn, openDialogSignUp, openDialogAddFriend, openDialog2FA, openDialogGameSelector };
