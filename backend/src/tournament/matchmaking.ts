@@ -22,10 +22,19 @@ async function addPlayerToMatchmakingSystem(req: FastifyRequest<{ Body: GameOpti
 		return;
 	}
 	WAITING_PLAYERS.set(user, options);
-	setTimeout(() => { // removed player from waiting list if waited more than 1 minutes
-		WAITING_PLAYERS.delete(user);
-	}, 60 * 1000);
 	sendReply(reply, Success.ADDED_TO_QUEUE);
+}
+
+async function removePlayerFromMatchmakingSystem(req: FastifyRequest, reply: FastifyReply): Promise<void> {
+	const user = req.user;
+	if (!user)
+		return;
+	if (!isUserWaiting(user)) {
+		sendReply(reply, Errors.NOT_IN_QUEUE);
+		return;
+	}
+	WAITING_PLAYERS.delete(user);
+	sendReply(reply, Success.REMOVED_FROM_QUEUE);
 }
 
 function getRandomOptions(player1Options: GameOptions, player2Options: GameOptions): GameOptions {
@@ -67,4 +76,4 @@ async function askMatchmakingSystem(username: string): Promise<number> {
 	return (-1);
 }
 
-export { addPlayerToMatchmakingSystem, isUserWaiting, askMatchmakingSystem };
+export { addPlayerToMatchmakingSystem, isUserWaiting, askMatchmakingSystem, removePlayerFromMatchmakingSystem };

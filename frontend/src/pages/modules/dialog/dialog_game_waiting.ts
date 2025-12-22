@@ -1,5 +1,5 @@
+import { sendCancelQueue } from "src/services/launching_game";
 import { getSafeElement } from "../../../utils/getSafeElement";
-import { openDialogGameSelector } from "./dialog";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
 
 const GIF_STYLE = `
@@ -31,17 +31,10 @@ function getRandomGifPath(): string {
 	return path;
 }
 
-function cancelGame(): void {
-	/** @todo (cancel) do smth to cancel */
-	//	if (isWaitingForGame)
-	//		sendCancelToBack();
-	openDialogGameSelector();
-}
-
 function gameWaitingHandler(): void {
 	const elem = getSafeElement('btn-cancel', HTMLElement);
 
-	elem.addEventListener('click', cancelGame);
+	elem.addEventListener('click', sendCancelQueue);
 }
 
 export { GAME_WAITING, gameWaitingHandler };
