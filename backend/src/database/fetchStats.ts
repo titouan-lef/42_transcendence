@@ -175,7 +175,7 @@ interface EloHistory {
 async function getAllEloVariaton(username: string): Promise<EloHistory[] | undefined> {
 	const tab: EloHistory[] | undefined = await applyQuery(
 		async (db) => await db.all(
-			`SELECT G.beganAt AS date_partie, E.variation
+			`SELECT G.beganAt AS dateGame, E.variation
 			FROM Elo E
 			JOIN Game G ON E.gameId = G.id
 			WHERE E.username = ?
@@ -188,7 +188,7 @@ async function getAllEloVariaton(username: string): Promise<EloHistory[] | undef
 async function getAllEloVariatonBySeason(seasonId: number, username: string): Promise<EloHistory[] | undefined> {
 	const tab: EloHistory[] | undefined = await applyQuery(
 		async (db) => await db.all(
-			`SELECT G.beganAt AS date_partie, E.variation
+			`SELECT G.beganAt AS dateGame, E.variation
 			FROM Elo E
 			JOIN Game G ON E.gameId = G.id
 			WHERE E.username = ? AND G.seasonId = ?
