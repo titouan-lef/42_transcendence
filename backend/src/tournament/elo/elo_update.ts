@@ -1,5 +1,5 @@
 import { insertEloVariation } from "../../database/elo.js";
-import { getDateLastGame, getPlayerNumberGameInCurrentSeason } from "../../database/game.js";
+import { getDateLastGame, getPlayerGameCountBySeason } from "../../database/game.js";
 import { getPlacementGames, insertPlacementGame, Placement } from "../../database/placement.js";
 import { getCurrentSeason } from "../../database/season.js";
 import { eloIsDefine, getElo, setElo, setRatingDeviation } from "../../database/web3/contract_service.js";
@@ -17,14 +17,14 @@ interface EloData {
 async function updateElo(usernameP1: string, usernameP2: string, outcome: number, gameId: number): Promise<void> {
 	const currentSeasonId = await getCurrentSeason();
 	if (!currentSeasonId)
-		return;
+		throw new Error("Error to get current season");
 
 	const eloDataP1 = await createEloData(usernameP1, currentSeasonId, outcome);
 	if (!eloDataP1)
-		return;
+		throw new Error("Error to create elo data of player 1");
 	const eloDataP2 = await createEloData(usernameP2, currentSeasonId, 1 - outcome);
 	if (!eloDataP2)
-		return;
+		throw new Error("Error to create elo data of player 2");
 
 	await addPlacementGame(eloDataP1, eloDataP2.elo, gameId);
 	await addPlacementGame(eloDataP2, eloDataP1.elo, gameId);
@@ -34,7 +34,7 @@ async function updateElo(usernameP1: string, usernameP2: string, outcome: number
 }
 
 async function createEloData(username: string, seasonId: number, outcome: number): Promise<EloData | null> {
-	const nbGame = await getPlayerNumberGameInCurrentSeason(username);
+	const nbGame = await getPlayerGameCountBySeason(username, seasonId);
 	if (nbGame === undefined)
 		return null;
 	const eloBeforeInactivity = await getElo(username, seasonId);
@@ -50,16 +50,16 @@ async function createEloData(username: string, seasonId: number, outcome: number
 	};
 }
 
-async function getEloAfterInactivity(username: string, nbPlacementGame: number, elo: Elo, seasonId: number): Promise<Elo | null> {
+async function getEloAfterInactivity(username: string, nbGame: number, elo: Elo, seasonId: number): Promise<Elo | null> {
 	if (eloIsDefine(elo))
-		return await updateRdPlayer(username, nbPlacementGame, elo, seasonId);
+		return await updateRdPlayer(username, nbGame, elo, seasonId);
 	elo.r = DEFAULT_RATINGS;
 	elo.rd = MAX_RD;
 	return elo;
 }
 
-async function updateRdPlayer(username: string, nbPlacementGame: number, elo: Elo, seasonId: number): Promise<Elo | null> {
-	if (nbPlacementGame === 0)
+async function updateRdPlayer(username: string, nbGame: number, elo: Elo, seasonId: number): Promise<Elo | null> {
+	if (nbGame === 1) // If the current game is the first game of the season.
 		elo.rd = applyTimeOnRd(elo.rd);
 	else {
 		const strDateLastGame = await getDateLastGame(username);
@@ -74,14 +74,14 @@ async function updateRdPlayer(username: string, nbPlacementGame: number, elo: El
 }
 
 async function addPlacementGame(eloData: EloData, eloOpp: Elo, gameId: number): Promise<void> {
-	if (eloData.nbGame >= NB_PLACEMENT_GAME)
+	if (eloData.nbGame > NB_PLACEMENT_GAME)
 		return;
 	const placementGame: Placement = { rOpp: eloOpp.r, rdOpp: eloOpp.rd, outcome: eloData.outcome };
 	await insertPlacementGame(eloData.username, gameId, placementGame);
 }
 
 async function saveElo(eloData: EloData, eloOpp: Elo, gameId: number, seasonId: number): Promise<void> {
-	if (eloData.nbGame + 1 < NB_PLACEMENT_GAME) // nb game + this new game < nb placement game.
+	if (eloData.nbGame < NB_PLACEMENT_GAME) // Elo is updated if (nbGame === NB_PLACEMENT_GAME).
 		return;
 	await manageUpdateElo(eloData, eloOpp, seasonId);
 	await setElo(eloData.username, seasonId, eloData.elo);
@@ -89,15 +89,19 @@ async function saveElo(eloData: EloData, eloOpp: Elo, gameId: number, seasonId: 
 }
 
 async function manageUpdateElo(eloData: EloData, eloOpp: Elo, seasonId: number): Promise<void> {
-	if (eloData.nbGame + 1 === NB_PLACEMENT_GAME) {
-		const tabPlacement = await getPlacementGames(eloData.username, seasonId);
-		if (tabPlacement.length !== NB_PLACEMENT_GAME)
-			return;
-		const tabEloOpp = getTabElo(tabPlacement);
-		const tabOutcome = getTabOutcome(tabPlacement);
-		updateEloAfterGamePlacement(eloData.elo, tabEloOpp, tabOutcome);
-	} else
+	if (eloData.nbGame === NB_PLACEMENT_GAME)
+		await defineEloWithPlacementGames(eloData, seasonId);
+	else
 		updateEloAfterGame(eloData.elo, eloOpp, eloData.outcome);
+}
+
+async function defineEloWithPlacementGames(eloData: EloData, seasonId: number): Promise<void> {
+	const tabPlacement = await getPlacementGames(eloData.username, seasonId);
+	if (tabPlacement.length !== NB_PLACEMENT_GAME)
+		throw new Error("Invalid number of placement games");
+	const tabEloOpp = getTabElo(tabPlacement);
+	const tabOutcome = getTabOutcome(tabPlacement);
+	updateEloAfterGamePlacement(eloData.elo, tabEloOpp, tabOutcome);
 }
 
 /**
@@ -113,9 +117,9 @@ function getTabElo(tabPlacement: Placement[]): Elo[] {
  * @warning Length not tested.
  */
 function getTabOutcome(tabPlacement: Placement[]): number[] {
-	const tabElo: number[] = [];
-	tabPlacement.forEach(placement => tabElo.push(placement.outcome));
-	return tabElo;
+	const tabOutcome: number[] = [];
+	tabPlacement.forEach(placement => tabOutcome.push(placement.outcome));
+	return tabOutcome;
 }
 
 export { updateElo };

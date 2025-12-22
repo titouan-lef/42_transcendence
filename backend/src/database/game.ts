@@ -74,24 +74,19 @@ async function getDateLastGame(username: string):Promise<string | undefined> {
 	return (row?.beganAt);
 }
 
-async function getPlayerNumberGameInCurrentSeason(username: string):Promise<number | undefined> {
+async function getPlayerGameCountBySeason(username: string, seasonId: number):Promise<number | undefined> {
 	const row = await applyQuery(
 		async (db) => await db.get(
 			`SELECT COUNT(*) AS nb_game
-			FROM Game AS G INNER JOIN Elo AS E ON G.id = E.gameId
-			WHERE E.username = ? AND G.seasonId = (
-				SELECT id
-				FROM Season
-				ORDER BY beganAt
-				DESC LIMIT 1
-			)`,
-			[username]
-		), "getPlayerNumber" + TABLE_NAME + "InCurrentSeason"
+			FROM Game AS Gm INNER JOIN Elo AS E ON Gm.id = E.gameId
+			WHERE E.username = ? AND Gm.seasonId = ?`,
+			[username, seasonId]
+		), "getPlayer" + TABLE_NAME + "CountBySeason"
 	);
 	return (row?.nb_game);
 }
 
-export { Game, createGameTable, insertGame, getGameById, getDateLastGame, getPlayerNumberGameInCurrentSeason };
+export { Game, createGameTable, insertGame, getGameById, getDateLastGame, getPlayerGameCountBySeason };
 /**
  * 
  * @todo see if we keep it
