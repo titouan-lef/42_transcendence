@@ -48,21 +48,3 @@ async function getGameRuleById(gameId: number, ruleId: number): Promise<GameRule
 }
 
 export { GameRule, createGameRuleTable, insertGameRule };
-/**
- * @todo see if we keep it
-async function updateGameRule(gameId: number, ruleId: number, updates: Partial<Omit<GameRule, "gameId" | "ruleId">>): Promise<void> {
-	applyQuery(async (db) => {
-		const fields = Object.keys(updates).map((key) => `${key} = ?`).join(", ");
-		if (!fields)
-		return;
-		const values = Object.values(updates);
-		await db.run(`UPDATE ${TABLE_NAME} SET ${fields} WHERE gameId = ? AND ruleId = ?`,
-		[...values, gameId, ruleId]);
-	}, "updateGameRule");
-}
-
-async function deleteGameRule(gameId: number, ruleId: number): Promise<void> {
-	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE gameId = ? AND ruleId = ?`,
-	[gameId, ruleId]), "deleteGameRule");
-}
-*/

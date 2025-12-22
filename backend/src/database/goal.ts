@@ -65,20 +65,3 @@ async function getPlayerGamesBySeason(seasonId: number, username: string): Promi
 }
 
 export { Goal, createGoalTable, insertGoal, getPlayerGamesBySeason };
-/**
- * 
- * @todo see if we keep it 
-async function updateGoal(id: number, updates: Partial<Omit<Goal, "id" | "scoredAt">>): Promise<void> {
-	applyQuery(async (db) => {
-		const fields = Object.keys(updates).map((key) => `${key} = ?`).join(", ");
-		if (!fields)
-		return;
-		const values = Object.values(updates);
-		await db.run(`UPDATE ${TABLE_NAME} SET ${fields} WHERE id = ?`, [...values, id]);
-	}, "updateGoal");
-}
-
-async function deleteGoal(id: number): Promise<void> {
-	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id]), "deleteGoal");
-}
-*/

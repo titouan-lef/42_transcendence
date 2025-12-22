@@ -87,21 +87,3 @@ async function getPlayerGameCountBySeason(username: string, seasonId: number):Pr
 }
 
 export { Game, createGameTable, insertGame, getGameById, getDateLastGame, getPlayerGameCountBySeason };
-/**
- * 
- * @todo see if we keep it
-async function updateGame(id: number, updates: Partial<Omit<Game, "id" | "beganAt">>): Promise<void> {
-	applyQuery(async (db) => {
-		const fields = Object.keys(updates).map((key) => `${key} = ?`).join(", ");
-		if (!fields)
-		return ;
-		const values =Object.values(updates);
-		await db.run(`UPDATE ${TABLE_NAME} SET ${fields} WHERE id = ?`, [...values, id]);
-	}, "updateGame");
-}
-
-async function deleteGame(id: number): Promise<void> {
-	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id]), "deleteGame");
-	
-}
-*/
