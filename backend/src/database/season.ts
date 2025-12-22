@@ -50,14 +50,3 @@ async function getCurrentSeason(): Promise<number | undefined> {
 }
 
 export { Season, createSeasonTable, getCurrentSeason, insertSeason };
-/**
- * @todo see if we keep it
-async function updateSeason(id: number, newName: string): Promise<void> {
-	applyQuery(async (db) => await db.run(
-		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,
-		[newName, id]), "updateSeason");
-}
-
-async function deleteSeason(id: number): Promise<void> {
-	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id]), "deleteSeason");
-}*/

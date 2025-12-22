@@ -57,14 +57,3 @@ async function getRuleId(name: string): Promise<number | undefined> {
 }
 
 export { Rule, createRuleTable, insertRules, getRuleId };
-/**
- * @todo see if we keep it
-async function updateRule(id: number, newName: string): Promise<void> {
-	applyQuery(async (db) => await db.run(
-		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,
-		[newName, id]), "updateRule");
-}
-
-async function deleteRule(id: number): Promise<void> {
-	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id]), "deleteRule");
-}*/

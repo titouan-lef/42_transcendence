@@ -56,14 +56,3 @@ async function getTheme(id: number): Promise<string | null> {
 }
 
 export { Theme, createThemeTable, insertThemes, getTheme };
-/**
- * @todo see if we keep it
-async function updateTheme(id: number, newName: string): Promise<void> {
-	applyQuery(async (db) => await db.run(
-		`UPDATE ${TABLE_NAME} SET name = ? WHERE id = ?`,
-		[newName, id]), "updateTheme");
-}
-
-async function deleteTheme(id: number): Promise<void> {
-	applyQuery(async (db) => await db.run(`DELETE FROM ${TABLE_NAME} WHERE id = ?`, [id]), "deleteTheme");
-}*/
