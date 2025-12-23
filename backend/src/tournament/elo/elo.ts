@@ -6,6 +6,7 @@
  * Abbreviation : sq for squared value.
  */
 
+import { POINTS_TO_WIN } from "../../game/settings/values.js";
 import { clamp } from "../../utils/math.js";
 
 /**
@@ -47,7 +48,7 @@ const Q_SQ = Q * Q;
 const PI_SQ = Math.PI * Math.PI;
 
 function calculateOutcome(scoreP1: number, scoreP2: number): number {
-	return (scoreP1 - scoreP2 + 11) / (2 * 11);/** @todo replace 11 by variable with score to win */
+	return (scoreP1 - scoreP2 + POINTS_TO_WIN) / (2 * POINTS_TO_WIN);
 }
 
 function applyTimeOnRd(rd: number, t: number = SEASON_DURATION): number {

@@ -11,11 +11,13 @@ import { Human } from "./player/Human.js";
 import { stopGame } from "./game_manager.js";
 import { getCurrentSeason } from "../database/season.js";
 import { insertGame } from "../database/game.js";
-import { getPlayerGamesBySeason, insertGoal } from "../database/goal.js";
+import { insertGoal } from "../database/goal.js";
 import { getBallId } from "../database/ball.js";
 import { getMapId } from "../database/map.js";
 import { insertGameRule } from "../database/game_rule.js";
 import { getRuleId } from "../database/rule.js";
+import { calculateOutcome } from "../tournament/elo/elo.js";
+import { updateElo } from "../tournament/elo/elo_update.js";
 
 class Game {
 	private readonly id: number;
@@ -96,14 +98,6 @@ class Game {
 		this.startGameCommunication();
 	}
 
-	/**@todo usefull ? */
-	pause(): void {
-		if (this.gameStepsIntervalId)
-			clearInterval(this.gameStepsIntervalId);
-		if (this.physicStepsIntervalId)
-			clearInterval(this.physicStepsIntervalId);
-	}
-
 	async stop(): Promise<void> {
 		if (this.gameStopped) /**@todo si vous voulez trouver mieux, MAIS C PAS MOI QUI LE FERAIS */
 			return ;
@@ -127,23 +121,12 @@ class Game {
 	}
 
 	private async updateElos(): Promise<void> {
-		for (let i = 1; i <= 2; i++) {
-			const player = this.sceneManager.getPlayer(i)?.getName();
-			const seasonId = await getCurrentSeason();
-			if (!seasonId || !player)
-				return ;
-			const playerGamesBySeason = await getPlayerGamesBySeason(seasonId, player);
-			console.log(player + " has won " + playerGamesBySeason + " games this season.");
-			/**@todo Elo */
-			// if (playerGamesBySeason == 10) {
-			// 	if (hasElo(player))
-			// 		defineEloNewPlayer();
-			// 	else
-			// 		updateEloNewSeason();
-			// } else if (playerGamesBySeason > 10){
-			// 	updateEloAfterGame()
-			// }
-		}
+		const player1 = this.sceneManager.getPlayer(1)?.getName();
+		const player2 = this.sceneManager.getPlayer(2)?.getName();
+		const outcome = calculateOutcome(this.score.x, this.score.y);
+		if (!player1 || !player2 || !this.gameIdDb)
+			return;
+		updateElo(player1, player2, outcome, this.gameIdDb);
 	}
 
 	private setScene(): void {
