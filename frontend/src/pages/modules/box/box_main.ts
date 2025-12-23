@@ -2,7 +2,8 @@ import { getCurrentUserInfos } from "src/services/user_management/user_state.js"
 import { createButtonHtml } from "../../../components/button.js";
 import { applyColor } from "../../../utils/applyColor.js";
 import { getSafeElement } from "../../../utils/getSafeElement.js";
-import { openDialogGameSelector, openDialogSignIn } from "../dialog/dialog.js";
+import { openDialogGameSelector } from "../dialog/dialog_game_selector.js";
+import { openDialogSignIn } from "../dialog/dialog_login.js";
 
 const MAIN_BOX_STYLE = `
 grow

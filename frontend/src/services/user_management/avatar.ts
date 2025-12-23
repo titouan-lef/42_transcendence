@@ -1,7 +1,6 @@
 import { getSafeElement } from "../../utils/getSafeElement";
 import { isRequestSuccessfull, printReplyInDiv, sendFile } from "../api_request";
-import { getUserInfos } from "./login";
-import { getCurrentUserInfos } from "./user_state";
+import { getCurrentUserInfos, getUserInfos } from "./user_state";
 
 async function uploadProfilePicture(file: File): Promise<void> {
 	const formData = new FormData();
@@ -13,7 +12,6 @@ async function uploadProfilePicture(file: File): Promise<void> {
 		return;
 	await getUserInfos();
 	updateAvatar();
-
 }
 
 async function updateAvatar(): Promise<void> {

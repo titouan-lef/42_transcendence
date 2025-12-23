@@ -1,11 +1,12 @@
+import { updateAvatar } from "src/services/user_management/avatar";
 import { createButtonHtml } from "../../../components/button";
-import { updateAvatar } from "../../../services/user_management/avatar";
-import { disconnectUser } from "../../../services/user_management/login";
 import { applyColor } from "../../../utils/applyColor";
 import { getSafeElement } from "../../../utils/getSafeElement";
-import { openDialogAddFriend, openDialogSignIn, openDialogSignUp } from "../dialog/dialog";
+import { openDialogAddFriend } from "../dialog/dialog_add_friend";
+import { openDialogSignIn, openDialogSignUp } from "../dialog/dialog_login";
 import { openProfile } from "../profile/profile";
-
+import { clearUserInfos, getCurrentUserInfos } from "src/services/user_management/user_state";
+import { loadModularPage } from "src/pages/modular";
 
 const ASIDE_BOX_STYLE = `
 grow
@@ -77,6 +78,11 @@ const ASIDE_BOX = `
 </aside>
 `;
 
+function onDisconnectEvent(): void {
+	clearUserInfos();
+	loadModularPage();
+}
+
 function asideConnectedEvents(): void {
 	const allElements = getSafeElement('aside', HTMLElement).querySelectorAll('*[id]');
 
@@ -89,7 +95,7 @@ function asideConnectedEvents(): void {
 				elem.addEventListener('click', openDialogAddFriend);
 				break;
 			case 'btn-log-out':
-				elem.addEventListener('click', disconnectUser);
+				elem.addEventListener('click', onDisconnectEvent);
 				break;
 			default:
 				break;
@@ -114,12 +120,18 @@ function asideDisconnectedEvents(): void {
 	});
 }
 
-function loadAside(asideContent: string, handler: () => void): void {
+function loadAside(): void {
 	const aside = getSafeElement('aside-status', HTMLElement);
 
-	aside.innerHTML = asideContent;
+	if (getCurrentUserInfos()) {
+		aside.innerHTML = ASIDE_CONNECTED;
+		asideConnectedEvents();
+	} else {
+		aside.innerHTML = ASIDE_NOT_CONNECTED;
+		asideDisconnectedEvents();
+	}
+
 	updateAvatar();
-	handler();
 }
 
-export { ASIDE_BOX, ASIDE_CONNECTED, ASIDE_NOT_CONNECTED, updateAvatar, loadAside, asideConnectedEvents, asideDisconnectedEvents };
+export { ASIDE_BOX, loadAside };

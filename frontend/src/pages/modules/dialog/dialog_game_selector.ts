@@ -1,5 +1,9 @@
-import { playLocal, playRanked, playVSAI } from "./dialog_game_options";
+import { AI_RULES, loadCheckboxes, LOCAL_RULES, RANKED_RULES } from "src/game/settings/GameRules";
+import { loadDialog } from "./dialog";
+import { GAME_OPTIONS } from "./dialog_game_options";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
+import { getSafeElement } from "src/utils/getSafeElement";
+import { newGameVsAI, newLocalGame, newRankedGame } from "src/services/launching_game";
 
 /** @todo front */
 const GAME_SELECTOR = `
@@ -23,10 +27,44 @@ function gameSelectorHandler(modal: HTMLDialogElement): void {
 			case 'btn-ranked':
 				elem.addEventListener('click', playRanked);
 				break;
+			case 'btn-back':
+				elem.addEventListener('click', openDialogGameSelector);
+				break;
 			default:
 				break;
 		}
 	});
 }
 
-export { GAME_SELECTOR, gameSelectorHandler };
+function playLocal(): void {
+	loadDialog(GAME_OPTIONS, gameSelectorHandler);
+	loadCheckboxes(LOCAL_RULES);
+
+	const go = getSafeElement('btn-go', HTMLElement);
+
+	go.addEventListener('click', newLocalGame);
+}
+
+function playVSAI(): void {
+	loadDialog(GAME_OPTIONS, gameSelectorHandler);
+	loadCheckboxes(AI_RULES);
+
+	const go = getSafeElement('btn-go', HTMLElement);
+
+	go.addEventListener('click', newGameVsAI);
+}
+
+function playRanked(): void {
+	loadDialog(GAME_OPTIONS, gameSelectorHandler);
+	loadCheckboxes(RANKED_RULES);
+
+	const go = getSafeElement('btn-go', HTMLElement);
+
+	go.addEventListener('click', newRankedGame);
+}
+
+function openDialogGameSelector(): void {
+	loadDialog(GAME_SELECTOR, gameSelectorHandler);
+}
+
+export { openDialogGameSelector, playRanked };

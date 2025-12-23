@@ -1,13 +1,14 @@
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { createParagraphHtml } from "../../../components/paragraph";
 import { setActiveBtn } from "./profile_navbar";
-import { SETTINGS_USER_INFOS, showUserInfos } from "./profile_settings_user_infos";
+import { SETTINGS_USER_INFOS } from "./profile_settings_user_infos";
 import { generateThemeEvents, SETTINGS_THEME_SELECTOR } from "./profile_settings_themes";
-import { update2FAButton } from "./profile_settings_2fa";
 import { uploadProfilePicture } from "../../../services/user_management/avatar";
 import { generateKeybindsButtons, keybindsNavbarEvents, SETTINGS_KEYBINDS_SELECTOR } from "./profile_settings_keybinds";
 import { AI_RANKED_PLAYER_KEYS } from "../../../game/settings/KeySets";
 import { getCurrentUserInfos } from "src/services/user_management/user_state";
+import { showUserInfos } from "src/services/user_management/update_user";
+import { update2FAButton } from "src/services/security/2FA";
 
 /** @todo real front with selector to enable / disable 2FA */
 /** @todo ask for email only if 2FA is enable */

@@ -1,6 +1,7 @@
 import { createButtonHtml } from "../../../components/button";
 import { createInputHtml } from "../../../components/input";
 import { verify2FAConfirmation, verify2FAConnection } from "../../../services/user_management/login";
+import { loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_SEPARATOR_STYLE, DIALOG_FORM_STYLE } from "./dialog_style";
 
 /** @todo make print-content great. again? */
@@ -45,4 +46,12 @@ function twoFAHandler(modal: HTMLDialogElement): void {
 	});
 }
 
-export { TWOFA, EMAIL_CONFIRMATION, twoFAHandler };
+function openDialog2FA(): void {
+	loadDialog(TWOFA, twoFAHandler);
+}
+
+function openDialogEmail(): void {
+	loadDialog(EMAIL_CONFIRMATION, twoFAHandler);
+}
+
+export { openDialog2FA, openDialogEmail };

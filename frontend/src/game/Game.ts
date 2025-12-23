@@ -2,8 +2,7 @@ import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
 import { PointSettings } from "./settings/PointSettings.js";
 import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
-import { DataMessage, OptionMessage, Status, StopMessage } from "#shared/types_transfert.js";
-import { GameStatistics } from "./screen/GameStatistics.js";
+import { DataMessage, OptionMessage, Status } from "#shared/types_transfert.js";
 import { getSafeElement } from "src/utils/getSafeElement.js";
 
 class Game {
@@ -15,7 +14,6 @@ class Game {
 	private settings: PointSettings;
 	private originalGetDelta: (() => number) | null = null;
 	private firstFrame = true;
-	private stats: GameStatistics | null = null;
 
 	constructor (canvas: HTMLCanvasElement, settings: PointSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.engine = engine;
@@ -31,7 +29,7 @@ class Game {
 			const message : DataMessage = JSON.parse(event.data);
 			switch (message.status) {
 				case (Status.STOP):
-					this.showStats(message);
+					this.closeGame();
 					break;
 				case (Status.RENDER):
 					this.setDeltaTime(message.deltaMultiplicator);
@@ -75,13 +73,6 @@ class Game {
 				this.firstFrame = false;
 			}
 		});
-	}
-
-	private showStats(message: StopMessage): void {
-		this.engine.stopRenderLoop();
-		this.sceneManager.getPlayer(1)?.clearListeners();
-		this.sceneManager.getPlayer(2)?.clearListeners();
-		this.stats = new GameStatistics(message.gameStats);
 	}
 
 	closeGame(): void {

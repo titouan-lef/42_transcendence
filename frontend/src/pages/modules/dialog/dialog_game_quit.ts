@@ -1,4 +1,4 @@
-import { closeDialogID } from "./dialog";
+import { closeDialogID, loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
 
 /** @todo front */
@@ -33,4 +33,8 @@ function gameQuitHandler(modal: HTMLDialogElement): void {
 	});
 }
 
-export { GAME_QUIT, gameQuitHandler };
+function openDialogGameQuit(): void {
+	loadDialog(GAME_QUIT, gameQuitHandler);
+}
+
+export { openDialogGameQuit };

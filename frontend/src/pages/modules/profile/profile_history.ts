@@ -1,16 +1,6 @@
 import { getSafeElement } from "../../../utils/getSafeElement";
-import { createHistoryBox } from "./profile_history_box";
+import { createHistoryBox, GameHistory } from "./profile_history_box";
 import { setActiveBtn } from "./profile_navbar";
-
-interface GameHistory {
-	date: string,
-	time: number,
-	opponent_avatar: string,
-	opponent_name: string,
-	elo: number,
-	player_score: number,
-	opponent_score: number,
-}
 
 /** @todo replace by fetching to back */
 const HISTORYLIST: GameHistory[] = [
@@ -149,4 +139,4 @@ function loadHistory(): void {
 	/** @todo events: clicking on history boxes to get more infos ? */
 }
 
-export { GameHistory, HISTORY, loadHistory, generateHistory };
+export { HISTORY, loadHistory, generateHistory };

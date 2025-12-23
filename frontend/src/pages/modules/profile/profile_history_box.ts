@@ -1,5 +1,14 @@
 import { applyColor } from "../../../utils/applyColor";
-import { GameHistory } from "./profile_history";
+
+interface GameHistory {
+	date: string,
+	time: number,
+	opponent_avatar: string,
+	opponent_name: string,
+	elo: number,
+	player_score: number,
+	opponent_score: number,
+}
 
 /** @todo min-h-[xxx] a modifier pcq c'est moche */
 const HISTORY_BOX_STYLE = `
@@ -69,4 +78,4 @@ function createHistoryBox(game: GameHistory): string {
 	return htmlContent;
 }
 
-export { createHistoryBox };
+export { createHistoryBox, GameHistory };

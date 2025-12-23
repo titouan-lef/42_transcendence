@@ -1,7 +1,5 @@
 import { createButtonHtml } from "../../../components/button";
 import { createInputHtml } from "../../../components/input";
-import { newUser } from "../../../services/user_management/create_account";
-import { openDialogSignIn } from "./dialog";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_SEPARATOR_STYLE, DIALOG_FORM_STYLE } from "./dialog_style";
 
 /** @todo make print-content great. again? */
@@ -19,20 +17,4 @@ const SIGN_UP = `
 	<p id="print-content"></p>
 `;
 
-function signUpHandler(modal: HTMLDialogElement): void {
-	const allElements = modal.querySelectorAll('*[id]');
-	allElements.forEach(elem => {
-		switch (elem.id) {
-			case 'btn-sign-in':
-				elem.addEventListener('click', openDialogSignIn);
-				break;
-			case 'btn-sign-up':
-				elem.addEventListener('click', newUser);
-				break;
-			default:
-				break;
-		}
-	});
-}
-
-export { SIGN_UP, signUpHandler };
+export { SIGN_UP };

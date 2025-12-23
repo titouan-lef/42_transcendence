@@ -5,6 +5,7 @@ import { Errors } from '#shared/status_codes';
 import { getSafeElement } from "../../../utils/getSafeElement.js";
 import { updateFriendList } from "../box/box_aside_friendlist.js";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_FORM_STYLE } from "./dialog_style.js";
+import { loadDialog } from "./dialog.js";
 
 /** @todo better front style for add friend */
 const ADD_FRIEND = `
@@ -33,4 +34,8 @@ function addFriendHandler(modal: HTMLDialogElement): void {
 	});
 }
 
-export { ADD_FRIEND, addFriendHandler };
+function openDialogAddFriend(): void {
+	loadDialog(ADD_FRIEND, addFriendHandler);
+}
+
+export { openDialogAddFriend };

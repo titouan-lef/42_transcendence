@@ -1,7 +1,6 @@
-import { getCurrentUserInfos } from "src/services/user_management/user_state";
 import { ELEM, loadPage } from "../routes/page";
 import { getSafeElement } from "../utils/getSafeElement";
-import { ASIDE_BOX, ASIDE_CONNECTED, ASIDE_NOT_CONNECTED, asideConnectedEvents, asideDisconnectedEvents, loadAside } from "./modules/box/box_aside";
+import { ASIDE_BOX, loadAside } from "./modules/box/box_aside";
 import { MAIN_BOX, mainBoxEvents } from "./modules/box/box_main";
 import { exitDialog } from "./modules/dialog/dialog";
 
@@ -21,14 +20,9 @@ const MODULAR = `
 `;
 
 function loadModularPage(): void {
-
 	ELEM.removeEventListener('click', loadModularPage);
 	loadPage(MODULAR, modularEvents);
-
-	if (getCurrentUserInfos())
-		loadAside(ASIDE_CONNECTED, asideConnectedEvents);
-	else
-		loadAside(ASIDE_NOT_CONNECTED, asideDisconnectedEvents);
+	loadAside();
 }
 
 function modularEvents(): void {
@@ -38,4 +32,4 @@ function modularEvents(): void {
 	mainBoxEvents();
 }
 
-export { MODULAR, modularEvents, loadModularPage };
+export { loadModularPage };

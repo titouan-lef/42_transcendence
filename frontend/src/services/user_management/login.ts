@@ -1,14 +1,13 @@
 import { isOneStringEmtpy } from "../../utils/strings.js";
-import { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv, isRequestSuccessfull, ReplyFromBack } from "../api_request.js";
+import { sendPostRequestToBack, printReplyInDiv, isRequestSuccessfull, ReplyFromBack } from "../api_request.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
-import { ASIDE_CONNECTED, asideConnectedEvents, loadAside } from "../../pages/modules/box/box_aside.js";
 import { updateFriendList } from "../../pages/modules/box/box_aside_friendlist.js";
 import { loadModularPage } from "../../pages/modular.js";
-import { openDialog2FA } from "../../pages/modules/dialog/dialog.js";
-import { loadSettings } from "../../pages/modules/profile/profile_settings.js";
 import { openProfile } from "../../pages/modules/profile/profile.js";
 import { Errors } from '#shared/status_codes';
-import { clearUserInfos, getCurrentUserInfos, getUserInfos } from "./user_state.js";
+import { getCurrentUserInfos, getUserInfos } from "./user_state.js";
+import { openDialog2FA } from "src/pages/modules/dialog/dialog_2FA.js";
+import { loadSettings } from "src/pages/modules/profile/profile_settings.js";
 
 let user = "";
 
@@ -21,7 +20,7 @@ async function connectUser(): Promise<void> {
 		container.innerHTML = `<p>Form is incomplete.</p>`; /**@todo use translate tool */
 		return;
 	}
- 
+
 	const data = {
 		user: userId.value,
 		password: userPassword.value,
@@ -42,8 +41,7 @@ async function connectUser(): Promise<void> {
 	const modal = getSafeElement('modal', HTMLDialogElement);
 	modal.close();
 	await getUserInfos();
-	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
-	/** @todo add load main */
+	loadModularPage();
 	updateFriendList();
 }
 
@@ -74,8 +72,7 @@ async function verify2FAConnection(): Promise<void> {
 	if(!await sendSecureCode())
 		return;
 	await getUserInfos();
-	loadAside(ASIDE_CONNECTED, asideConnectedEvents);
-	/** @todo add load main */
+	loadModularPage();
 	updateFriendList();
 }
 
@@ -87,10 +84,4 @@ async function verify2FAConfirmation(): Promise<void> {
 	loadSettings();
 }
 
-async function disconnectUser(): Promise<void> {
-	await sendGetRequestToBack("/api/user/logout");
-	clearUserInfos();
-	loadModularPage();
-}
-
-export { getUserInfos, connectUser, disconnectUser, verify2FAConnection, verify2FAConfirmation };
+export { getUserInfos, connectUser, verify2FAConnection, verify2FAConfirmation };
