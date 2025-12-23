@@ -19,6 +19,6 @@ CMD ["npm", "start"]
 # Production
 # ======================
 FROM base AS prod
-# Build need the files in the `sahred` volume, so We cannot build the TS durint the contianer building time, but only during running time.
+# Build needs the files in the `shared` volume, so we cannot build the TS during the container building time, but only during running time.
 ENTRYPOINT ["/app/check_and_build.sh"]
 CMD ["npm", "start"]
