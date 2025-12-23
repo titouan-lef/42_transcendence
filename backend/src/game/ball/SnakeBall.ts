@@ -35,6 +35,7 @@ class SnakeBall extends BallTemplate {
 			this.mesh.position
 		);
 		this.adjustSpeed(scene);
+		/** @todo fix snakeball */
 	}
 }
 
