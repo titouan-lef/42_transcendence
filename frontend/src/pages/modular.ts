@@ -1,5 +1,5 @@
+import { getCurrentUserInfos } from "src/services/user_management/user_state";
 import { ELEM, loadPage } from "../routes/page";
-import { currentUser } from "../services/user_management/login";
 import { getSafeElement } from "../utils/getSafeElement";
 import { ASIDE_BOX, ASIDE_CONNECTED, ASIDE_NOT_CONNECTED, asideConnectedEvents, asideDisconnectedEvents, loadAside } from "./modules/box/box_aside";
 import { MAIN_BOX, mainBoxEvents } from "./modules/box/box_main";
@@ -25,7 +25,7 @@ function loadModularPage(): void {
 	ELEM.removeEventListener('click', loadModularPage);
 	loadPage(MODULAR, modularEvents);
 
-	if (currentUser)
+	if (getCurrentUserInfos())
 		loadAside(ASIDE_CONNECTED, asideConnectedEvents);
 	else
 		loadAside(ASIDE_NOT_CONNECTED, asideDisconnectedEvents);

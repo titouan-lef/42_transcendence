@@ -1,9 +1,9 @@
 import { createButtonHtml } from "../../../components/button";
 import { createInputHtml } from "../../../components/input";
 import { createParagraphHtml } from "../../../components/paragraph";
-import { currentUser } from "../../../services/user_management/login";
 import { updateUser } from "../../../services/user_management/update_user";
 import { getSafeElement } from "../../../utils/getSafeElement";
+import { getCurrentUserInfos } from "src/services/user_management/user_state";
 
 const BTN_SAVE = `
 <div class='flex flex-row gap-4'>
@@ -66,6 +66,7 @@ function userInformationsBtnEvents(): void {
 }
 
 function editUserInfos(): void {
+	const currentUser = getCurrentUserInfos();
 	if (!currentUser)
 		return;
 
@@ -86,6 +87,7 @@ function editUserInfos(): void {
 }
 
 function showUserInfos(): void {
+	const currentUser = getCurrentUserInfos();
 	if (!currentUser)
 		return;
 
