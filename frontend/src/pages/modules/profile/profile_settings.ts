@@ -1,13 +1,13 @@
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { createParagraphHtml } from "../../../components/paragraph";
 import { setActiveBtn } from "./profile_navbar";
-import { currentUser } from "../../../services/user_management/login";
 import { SETTINGS_USER_INFOS, showUserInfos } from "./profile_settings_user_infos";
 import { generateThemeEvents, SETTINGS_THEME_SELECTOR } from "./profile_settings_themes";
 import { update2FAButton } from "./profile_settings_2fa";
 import { uploadProfilePicture } from "../../../services/user_management/avatar";
 import { generateKeybindsButtons, keybindsNavbarEvents, SETTINGS_KEYBINDS_SELECTOR } from "./profile_settings_keybinds";
 import { AI_RANKED_PLAYER_KEYS } from "../../../game/settings/KeySets";
+import { getCurrentUserInfos } from "src/services/user_management/user_state";
 
 /** @todo real front with selector to enable / disable 2FA */
 /** @todo ask for email only if 2FA is enable */
@@ -53,7 +53,7 @@ const SETTINGS = `
 `;
 
 function loadSettings(): void {
-	if (!currentUser)
+	if (!getCurrentUserInfos())
 		return;
 
 	const elem = getSafeElement('profile-content', HTMLElement);

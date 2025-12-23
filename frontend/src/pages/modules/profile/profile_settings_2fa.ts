@@ -1,6 +1,7 @@
+import { getCurrentUserInfos } from "src/services/user_management/user_state";
 import { createButtonHtml } from "../../../components/button";
 import { disable2FA, enable2FA } from "../../../services/security/2FA";
-import { currentUser, getUserInfos } from "../../../services/user_management/login";
+import { getUserInfos } from "../../../services/user_management/login";
 import { getSafeElement } from "../../../utils/getSafeElement";
 
 const SETTINGS_2FA = `
@@ -24,6 +25,7 @@ ${SETTINGS_2FA}
 `;
 
 async function update2FAButton(): Promise<void> {
+	const currentUser = getCurrentUserInfos();
 	if (!currentUser)
 		return;
 

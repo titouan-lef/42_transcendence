@@ -1,6 +1,6 @@
+import { getCurrentUserInfos } from "src/services/user_management/user_state";
 import { createButtonHtml } from "../../../components/button";
-import { getReplyMessage, isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
-import { currentUser } from "../../../services/user_management/login";
+import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
 import { applyColor } from "../../../utils/applyColor";
 import { getSafeElement } from "../../../utils/getSafeElement";
 
@@ -45,6 +45,7 @@ const SEPARATOR_STYLE = `
 `;
 
 async function getFriendList(): Promise<void> {
+	const currentUser = getCurrentUserInfos();
 	if (!currentUser)
 		return;
 	FRIENDLIST.length = 0;

@@ -1,5 +1,5 @@
+import { getCurrentUserInfos } from "src/services/user_management/user_state.js";
 import { createButtonHtml } from "../../../components/button.js";
-import { currentUser } from "../../../services/user_management/login.js";
 import { applyColor } from "../../../utils/applyColor.js";
 import { getSafeElement } from "../../../utils/getSafeElement.js";
 import { openDialogGameSelector, openDialogSignIn } from "../dialog/dialog.js";
@@ -41,7 +41,7 @@ const MAIN_BOX = `
 `;
 
 function openGameOption(): void {
-	if (currentUser)
+	if (getCurrentUserInfos())
 		openDialogGameSelector();
 	else
 		openDialogSignIn(); /** @todo (optionnal) QOL: when sign in or continue as guest -> open play directly */

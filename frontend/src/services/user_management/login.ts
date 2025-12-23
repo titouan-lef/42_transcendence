@@ -1,4 +1,3 @@
-import { Themes } from "../../assets/themes/theme.js";
 import { isOneStringEmtpy } from "../../utils/strings.js";
 import { sendPostRequestToBack, sendGetRequestToBack, printReplyInDiv, isRequestSuccessfull, ReplyFromBack } from "../api_request.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
@@ -9,38 +8,9 @@ import { openDialog2FA } from "../../pages/modules/dialog/dialog.js";
 import { loadSettings } from "../../pages/modules/profile/profile_settings.js";
 import { openProfile } from "../../pages/modules/profile/profile.js";
 import { Errors } from '#shared/status_codes';
-
-interface InfoList {
-	username: string;
-	pseudo: string;
-	email: string | null;
-	is2FAEnabled: boolean;
-	isAvatarSet: boolean;
-	theme: Themes | null
-}
+import { clearUserInfos, getCurrentUserInfos, getUserInfos } from "./user_state.js";
 
 let user = "";
-let currentUser: InfoList | null = null;
-
-async function getUserInfos(): Promise<void> {
-	const reply = await sendGetRequestToBack("/api/user/get_user");
-	if (!isRequestSuccessfull(reply))
-		return;
-
-	const data: InfoList = JSON.parse(reply.content); /** @todo verify if try/ctach needed */
-	currentUser = {
-		username: data.username,
-		pseudo: data.pseudo,
-		email: data.email,
-		is2FAEnabled: data.is2FAEnabled,
-		isAvatarSet: data.isAvatarSet,
-		theme: data.theme
-	};
-}
-
-function clearUserInfos(): void {
-	currentUser = null;
-}
 
 async function connectUser(): Promise<void> {
 	const userId: HTMLInputElement = getSafeElement("userID", HTMLInputElement);
@@ -85,6 +55,7 @@ async function sendSecureCode(): Promise<boolean> {
 		return false;
 	}
 	let reply: ReplyFromBack;
+	const currentUser = getCurrentUserInfos();
 	if (currentUser)
 		reply = await sendPostRequestToBack("/api/user/secure", JSON.stringify({ user: currentUser.username, code: code }));
 	else
@@ -122,4 +93,4 @@ async function disconnectUser(): Promise<void> {
 	loadModularPage();
 }
 
-export { currentUser, getUserInfos, connectUser, disconnectUser, verify2FAConnection, verify2FAConfirmation };
+export { getUserInfos, connectUser, disconnectUser, verify2FAConnection, verify2FAConfirmation };
