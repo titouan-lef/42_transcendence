@@ -16,8 +16,8 @@ enum Success {
 	FRIEND_REMOVED,
 	// GAMES 
 	ADDED_TO_QUEUE,
-	REMOVED_FROM_QUEUE,
 	GAME_FOUND, // object needed
+	REMOVED_FROM_QUEUE
 
 }
 
@@ -50,8 +50,8 @@ enum Errors {
 	NOT_FRIEND_WITH,
 	// GAMES
 	ALREADY_IN_QUEUE,
-	NOT_IN_QUEUE,
-	GAME_NOT_FOUND_YET
+	GAME_NOT_FOUND_YET,
+	NOT_IN_QUEUE
 }
 
 type ReplyStatus = Success | Errors;
