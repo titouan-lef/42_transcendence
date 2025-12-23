@@ -1,9 +1,10 @@
-import { openDialogEmail } from "../../pages/modules/dialog/dialog.js";
-import { showUserInfos } from "../../pages/modules/profile/profile_settings_user_infos.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
 import { isRequestSuccessfull, printReplyInDiv, sendPostRequestToBack } from "../api_request.js";
 import { Errors } from '#shared/status_codes';
 import { getUserInfos } from "./login.js";
+import { openDialogEmail } from "src/pages/modules/dialog/dialog_2FA.js";
+import { BOX_EDITPROFILE, BOX_SHOWPROFILE, BTN_EDIT, BTN_SAVE } from "src/pages/modules/profile/profile_settings_user_infos.js";
+import { getCurrentUserInfos } from "./user_state.js";
 
 interface UserInfos {
 	pseudo: string,
@@ -47,4 +48,65 @@ async function updateUser(): Promise<void> {
 	showUserInfos();
 }
 
-export { updateUser };
+function userInformationsBtnEvents(): void {
+	const btns = getSafeElement('btn-switch-edit-save', HTMLElement);
+
+	btns.querySelectorAll('*[id]').forEach(elem => {
+		switch (elem.id) {
+			case 'btn-edit':
+				elem.addEventListener('click', editUserInfos);
+				break;
+			case 'btn-cancel':
+				elem.addEventListener('click', showUserInfos);
+				break;
+			case 'btn-save':
+				elem.addEventListener('click', updateUser);
+				break;
+			default:
+				break;
+		}
+	});
+}
+
+function editUserInfos(): void {
+	const currentUser = getCurrentUserInfos();
+	if (!currentUser)
+		return;
+
+	const elem = getSafeElement('switch-edit-save', HTMLElement);
+	const btn = getSafeElement('btn-switch-edit-save', HTMLElement);
+
+	elem.innerHTML = BOX_EDITPROFILE;
+	btn.innerHTML = BTN_SAVE;
+
+	userInformationsBtnEvents();
+
+	const nick = getSafeElement('publicID', HTMLInputElement);
+	const email = getSafeElement('user-email', HTMLInputElement);
+
+	nick.value = currentUser.pseudo;
+	if (currentUser.email)
+		email.value = currentUser.email;
+}
+
+function showUserInfos(): void {
+	const currentUser = getCurrentUserInfos();
+	if (!currentUser)
+		return;
+
+	const elem = getSafeElement('switch-edit-save', HTMLElement);
+	const btn = getSafeElement('btn-switch-edit-save', HTMLElement);
+
+	btn.innerHTML = BTN_EDIT;
+	elem.innerHTML = BOX_SHOWPROFILE;
+
+	userInformationsBtnEvents();
+
+	const nick = getSafeElement('show-user-nick', HTMLElement);
+	const email = getSafeElement('show-user-email', HTMLElement);
+
+	nick.innerHTML = currentUser.pseudo;
+	email.innerHTML = currentUser.email ? currentUser.email : 'no email set';
+}
+
+export { updateUser, showUserInfos };

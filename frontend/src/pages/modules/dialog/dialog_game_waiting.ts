@@ -1,5 +1,6 @@
 import { sendCancelQueue } from "src/services/launching_game";
 import { getSafeElement } from "../../../utils/getSafeElement";
+import { loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
 
 const GIF_STYLE = `
@@ -37,4 +38,8 @@ function gameWaitingHandler(): void {
 	elem.addEventListener('click', sendCancelQueue);
 }
 
-export { GAME_WAITING, gameWaitingHandler };
+function openDialogWaiting(): void {
+	loadDialog(GAME_WAITING, gameWaitingHandler);
+}
+
+export { openDialogWaiting };

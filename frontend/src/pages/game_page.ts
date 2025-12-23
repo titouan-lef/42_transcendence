@@ -1,7 +1,8 @@
 import { getSafeElement } from "src/utils/getSafeElement";
-import { closeDialogID, exitDialog, openDialogGameQuit } from "./modules/dialog/dialog";
+import { closeDialogID, exitDialog } from "./modules/dialog/dialog";
 import { loadPage } from "src/routes/page";
 import { applyColor } from "src/utils/applyColor";
+import { openDialogGameQuit } from "./modules/dialog/dialog_game_quit";
 
 const GAME_PAGE_STYLE = `
 flex flex-col gap-[10px]

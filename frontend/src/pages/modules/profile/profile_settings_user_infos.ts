@@ -1,9 +1,6 @@
 import { createButtonHtml } from "../../../components/button";
 import { createInputHtml } from "../../../components/input";
 import { createParagraphHtml } from "../../../components/paragraph";
-import { updateUser } from "../../../services/user_management/update_user";
-import { getSafeElement } from "../../../utils/getSafeElement";
-import { getCurrentUserInfos } from "src/services/user_management/user_state";
 
 const BTN_SAVE = `
 <div class='flex flex-row gap-4'>
@@ -45,65 +42,4 @@ const SETTINGS_USER_INFOS = `
 </div>
 `;
 
-function userInformationsBtnEvents(): void {
-	const btns = getSafeElement('btn-switch-edit-save', HTMLElement);
-
-	btns.querySelectorAll('*[id]').forEach(elem => {
-		switch (elem.id) {
-			case 'btn-edit':
-				elem.addEventListener('click', editUserInfos);
-				break;
-			case 'btn-cancel':
-				elem.addEventListener('click', showUserInfos);
-				break;
-			case 'btn-save':
-				elem.addEventListener('click', updateUser);
-				break;
-			default:
-				break;
-		}
-	});
-}
-
-function editUserInfos(): void {
-	const currentUser = getCurrentUserInfos();
-	if (!currentUser)
-		return;
-
-	const elem = getSafeElement('switch-edit-save', HTMLElement);
-	const btn = getSafeElement('btn-switch-edit-save', HTMLElement);
-
-	elem.innerHTML = BOX_EDITPROFILE;
-	btn.innerHTML = BTN_SAVE;
-
-	userInformationsBtnEvents();
-
-	const nick = getSafeElement('publicID', HTMLInputElement);
-	const email = getSafeElement('user-email', HTMLInputElement);
-
-	nick.value = currentUser.pseudo;
-	if (currentUser.email)
-		email.value = currentUser.email;
-}
-
-function showUserInfos(): void {
-	const currentUser = getCurrentUserInfos();
-	if (!currentUser)
-		return;
-
-	const elem = getSafeElement('switch-edit-save', HTMLElement);
-	const btn = getSafeElement('btn-switch-edit-save', HTMLElement);
-
-	btn.innerHTML = BTN_EDIT;
-	elem.innerHTML = BOX_SHOWPROFILE;
-
-	userInformationsBtnEvents();
-
-	const nick = getSafeElement('show-user-nick', HTMLElement);
-	const email = getSafeElement('show-user-email', HTMLElement);
-
-	nick.innerHTML = currentUser.pseudo;
-	email.innerHTML = currentUser.email ? currentUser.email : 'no email set';
-}
-
-export { SETTINGS_USER_INFOS, showUserInfos };
+export { SETTINGS_USER_INFOS, BTN_EDIT, BTN_SAVE, BOX_EDITPROFILE, BOX_SHOWPROFILE };

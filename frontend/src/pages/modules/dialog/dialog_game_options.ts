@@ -1,10 +1,6 @@
-import { newGameVsAI, newLocalGame, newRankedGame } from "../../../services/launching_game";
-import { AI_RULES, loadCheckboxes, LOCAL_RULES, RANKED_RULES } from "../../../game/settings/GameRules";
-import { getSafeElement } from "../../../utils/getSafeElement";
 import { createCheckbox } from "./dialog_game_options_checkbox";
 import { SVG_BALL_DEFAULT, SVG_BALL_INVISIBLE, SVG_BALL_PULSE, SVG_BALL_SNAKE, SVG_BALL_TRICKY, SVG_CANON, SVG_MAP_DEFAULT, SVG_MAP_DESERT, SVG_MAP_SKY, SVG_MAP_VOLCANO, SVG_RULE_DASH, SVG_RULE_PROT, SVG_RULE_SPIN, SVG_RULE_WIND } from "./dialog_game_options_svgs";
 import { DIALOG_BTN_STYLE, DIALOG_SEPARATOR_STYLE } from "./dialog_style";
-import { loadDialog, openDialogGameSelector } from "./dialog";
 
 /** @todo front */
 const GAME_OPTIONS_MAPS = `
@@ -74,37 +70,5 @@ const GAME_OPTIONS = `
 	<button id='btn-go' class='${DIALOG_BTN_STYLE}'>GO</button>
 `;
 
-function backButtonEvent(): void {
-	const back = getSafeElement('btn-back', HTMLElement);
 
-	back.addEventListener('click', openDialogGameSelector);
-}
-
-function playLocal(): void {
-	loadDialog(GAME_OPTIONS, backButtonEvent);
-	loadCheckboxes(LOCAL_RULES);
-
-	const go = getSafeElement('btn-go', HTMLElement);
-
-	go.addEventListener('click', newLocalGame);
-}
-
-function playVSAI(): void {
-	loadDialog(GAME_OPTIONS, backButtonEvent);
-	loadCheckboxes(AI_RULES);
-
-	const go = getSafeElement('btn-go', HTMLElement);
-
-	go.addEventListener('click', newGameVsAI);
-}
-
-function playRanked(): void {
-	loadDialog(GAME_OPTIONS, backButtonEvent);
-	loadCheckboxes(RANKED_RULES);
-
-	const go = getSafeElement('btn-go', HTMLElement);
-
-	go.addEventListener('click', newRankedGame);
-}
-
-export { GAME_OPTIONS, playLocal, playVSAI, playRanked };
+export { GAME_OPTIONS };

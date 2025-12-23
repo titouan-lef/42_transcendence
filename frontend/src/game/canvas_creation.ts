@@ -1,7 +1,7 @@
 import { Game } from "./Game.js";
 import { PointSettings } from "./settings/PointSettings.js";
 import { AI_RANKED_PLAYER_KEYS, LOCAL_PLAYER1_KEYS, LOCAL_PLAYER2_KEYS } from "./settings/KeySets.js";
-import { OptionMessage } from "./types_transfert.js";
+import { OptionMessage } from "#shared/types_transfert.js";
 
 /**@todo gameManager to handle several games and reconect a user tha has been disconected for a few seconds */
 let game: Game | null = null;
@@ -34,9 +34,10 @@ async function newPoint(options: OptionMessage, player1: WebSocket, player2?: We
 	}
 }
 
-async function stopGame(): Promise<void> {
-	game?.closeGame();
-	game = null;
-}
+/** @todo keep it for front later */
+// async function stopGame(): Promise<void> {
+// 	game?.closeGame();
+// 	game = null;
+// }
 
-export { newPoint, stopGame };
+export { newPoint };
