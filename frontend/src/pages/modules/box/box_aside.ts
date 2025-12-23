@@ -7,6 +7,7 @@ import { openDialogSignIn, openDialogSignUp } from "../dialog/dialog_login";
 import { openProfile } from "../profile/profile";
 import { clearUserInfos, getCurrentUserInfos } from "src/services/user_management/user_state";
 import { loadModularPage } from "src/pages/modular";
+import { disconnectUser } from "src/services/user_management/disconnect";
 
 const ASIDE_BOX_STYLE = `
 grow
@@ -79,6 +80,7 @@ const ASIDE_BOX = `
 `;
 
 function onDisconnectEvent(): void {
+	disconnectUser();
 	clearUserInfos();
 	loadModularPage();
 }
