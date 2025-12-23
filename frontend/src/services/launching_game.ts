@@ -15,7 +15,7 @@ async function askForGame(): Promise<boolean> {
 	const options = RANKED_RULES;
 
 	const reply = await sendPostRequestToBack("/api/game/ranked_game", JSON.stringify(options));
-	const message = await getReplyMessage(reply);
+	const message = getReplyMessage(reply);
 	if (!isRequestSuccessfull(reply)) {
 		console.log("Error:", message);
 		return false;
