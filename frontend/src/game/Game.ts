@@ -14,6 +14,7 @@ class Game {
 	private settings: PointSettings;
 	private originalGetDelta: (() => number) | null = null;
 	private firstFrame = true;
+	private gameEnded = false;
 
 	constructor (canvas: HTMLCanvasElement, settings: PointSettings, scene: babylon.Scene, engine: babylon.Engine) {
 		this.engine = engine;
@@ -83,6 +84,12 @@ class Game {
 		this.scene.dispose();
 		this.engine.dispose();
 		this.canvas.remove();
+		this.gameEnded = true;
+		/** @todo manage game stats */
+	}
+
+	isGameFinished(): boolean {
+		return this.gameEnded;
 	}
 
 	private setScene(): void {

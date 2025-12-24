@@ -8,10 +8,10 @@ let game: Game | null = null;
 
 /**@todo will see how we pop the game */
 /**@todo get the player keys from the player settings in DB*/
-async function newPoint(options: OptionMessage, player1: WebSocket, player2?: WebSocket): Promise<void> {
+async function startOrUpdateGame(options: OptionMessage, player1: WebSocket, player2?: WebSocket): Promise<void> {
 	let settings;
 	if (player2) {
-		settings = new PointSettings(
+		settings = new PointSettings( /** @todo rename RoundSettings ?? */
 			options.playerId, options.map, options.wind, options.ball, options.rotatingPlayer, options.spin, options.dashingPlayer,
 			player1,
 			LOCAL_PLAYER1_KEYS,
@@ -26,7 +26,7 @@ async function newPoint(options: OptionMessage, player1: WebSocket, player2?: We
 		);
 	}
 
-	if (game) {
+	if (game && !game.isGameFinished()) {
 		game.updateOptions(options);
 	} else {
 		game = await Game.create(settings);
@@ -34,10 +34,4 @@ async function newPoint(options: OptionMessage, player1: WebSocket, player2?: We
 	}
 }
 
-/** @todo keep it for front later */
-// async function stopGame(): Promise<void> {
-// 	game?.closeGame();
-// 	game = null;
-// }
-
-export { newPoint };
+export { startOrUpdateGame };
