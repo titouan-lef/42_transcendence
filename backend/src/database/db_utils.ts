@@ -21,4 +21,13 @@ async function fetchAll<T>(tableName: string): Promise<T | undefined> {
 	);
 }
 
-export { applyQuery, fetchAll };
+async function getActualDate(): Promise<Date> {
+	return await applyQuery(
+		async (db) => await db.all(
+			`SELECT 
+			CURRENT_TIMESTAMP;`
+		), "getActualDate"
+	);
+}
+
+export { applyQuery, fetchAll, getActualDate };

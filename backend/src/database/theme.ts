@@ -37,10 +37,6 @@ async function insertThemes(): Promise<void> {
 	);
 }
 
-async function getAllTheme(): Promise<Theme[] | undefined> {
-	return await fetchAll(TABLE_NAME);
-}
-
 async function getTheme(id: number): Promise<string | null> {
 	const row = await applyQuery(
 		async (db) => await db.get(

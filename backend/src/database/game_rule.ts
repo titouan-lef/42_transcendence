@@ -31,20 +31,4 @@ async function insertGameRule(gameId: number, ruleId: number, isEnable: number |
 	);
 }
 
-async function getAllGameRules(): Promise<GameRule[] | undefined> {
-	return await fetchAll(TABLE_NAME);
-}
-
-async function getGameRuleById(gameId: number, ruleId: number): Promise<GameRule | undefined> {
-	return await applyQuery(
-		async (db) => await db.get(
-			`SELECT *
-			FROM ${TABLE_NAME}
-			WHERE gameId = ?
-			AND ruleId = ?`,
-			[gameId, ruleId]
-		), "get" + TABLE_NAME + "ById"
-	);
-}
-
 export { GameRule, createGameRuleTable, insertGameRule };

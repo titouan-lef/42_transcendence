@@ -34,21 +34,6 @@ async function insertGoal(mapId: number, ballId: number, username: string, timer
 	);
 }
 
-async function getAllGoals(): Promise<Goal[] | undefined> {
-	return await fetchAll(TABLE_NAME);
-}
-
-async function getGoalById(id: number): Promise<Goal | undefined> {
-	return await applyQuery(
-		async (db) => await db.get(
-			`SELECT *
-			FROM ${TABLE_NAME}
-			WHERE id = ?`,
-			[id]
-		), "get" + TABLE_NAME + "ById"
-	);
-}
-
 async function getPlayerGamesBySeason(seasonId: number, username: string): Promise<number> {
 	const row = await applyQuery(
 		async (db) => await db.get(

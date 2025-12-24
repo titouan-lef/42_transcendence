@@ -29,21 +29,6 @@ async function insertMaps(): Promise<void> {
 	);
 }
 
-async function getAllMap(): Promise<Map[] | undefined> {
-	return await fetchAll(TABLE_NAME);
-}
-
-async function getMapById(id: number): Promise<Map | undefined> {
-	return await applyQuery(
-		async (db) => await db.get(
-			`SELECT *
-			FROM ${TABLE_NAME}
-			WHERE id = ?`,
-			[id]
-		), "getMapById"
-	);
-}
-
 async function getMapId(name: string): Promise<number | undefined> {
 	const row = await applyQuery(
 		async (db) => await db.get(

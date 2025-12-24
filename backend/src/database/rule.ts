@@ -30,21 +30,6 @@ async function insertRules(): Promise<void> {
 	);
 }
 
-async function getAllRule(): Promise<Rule[] | undefined> {
-	return await fetchAll(TABLE_NAME);
-}
-
-async function getRuleById(id: number): Promise<Rule | undefined> {
-	return await applyQuery(
-		async (db) => await db.get(
-			`SELECT *
-			FROM ${TABLE_NAME}
-			WHERE id = ?`,
-			[id]
-		), "get" + TABLE_NAME + "ById"
-	);
-}
-
 async function getRuleId(name: string): Promise<number | undefined> {
 	const row = await applyQuery(
 		async (db) => await db.get(
