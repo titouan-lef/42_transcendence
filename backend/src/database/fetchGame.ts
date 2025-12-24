@@ -1,4 +1,4 @@
-import { POINTS_TO_WIN } from "src/game/settings/values.js";
+import { POINTS_TO_WIN } from "../game/settings/values.js";
 import { applyQuery } from "./db_utils.js";
 
 /** @todo warning both with titouan branch*/

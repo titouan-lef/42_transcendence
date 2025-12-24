@@ -1,14 +1,14 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { sendReply } from "../utils/HTTP.js";
 import { Errors, Success } from "#shared/status_codes.js";
-import { getGamesLoosesBySeason, getGamesPlayedCount, getGamesWinsBySeason } from "../database/fetchGame";
+import { getGamesLoosesBySeason, getGamesPlayedCount, getGamesWinsBySeason } from "../database/fetchGame.js";
 import { BallOption, MapOption } from "#shared/types_transfert.js";
-import { getEloVariatonBySeason, getGameTimeAverageBySeason, getGoalAverageBySeason, getGoalAveragebySeasonAndDate, getPreferedBallBySeason, getPreferedMapBySeason, getWinrateBySeasonAndDate } from "src/database/fetchStats";
-import { getElo } from "src/database/web3/contract_service";
+import { getEloVariatonBySeason, getGameTimeAverageBySeason, getGoalAverageBySeason, getGoalAveragebySeasonAndDate, getPreferedBallBySeason, getPreferedMapBySeason, getWinrateBySeasonAndDate } from "../database/fetchStats.js";
+import { getElo } from "../database/web3/contract_service.js";
 import { Elo } from '../tournament/elo/elo.js';
-import { getAllSeasonId, getSeasonstartedATById } from "src/database/season";
-import { DEFAULT_RATINGS } from "src/tournament/elo/elo";
-import { getActualDate } from "src/database/db_utils";
+import { getAllSeasonId, getSeasonstartedATById } from "../database/season.js";
+import { DEFAULT_RATINGS } from "../tournament/elo/elo.js";
+import { getActualDate } from "../database/db_utils.js";
 
 interface EloChart {
 	dateList: string[];
@@ -145,4 +145,4 @@ async function getPlayerStats(req: FastifyRequest<{ Body: UserInfoBody }>, reply
 	sendReply(reply, Errors.REQUEST_FAILED, JSON.stringify(userInfos));
 }
 
-export { WinrateChart, GoalChart };
+export { WinrateChart, GoalChart, UserInfoBody, getPlayerStats };
