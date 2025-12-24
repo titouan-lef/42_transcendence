@@ -1,8 +1,5 @@
+import { POINTS_TO_WIN } from "src/game/settings/values.js";
 import { applyQuery } from "./db_utils.js";
-import { winrateChart } from "src/user_management/dashboard.js";
-
-/** @todo utiliser le vrai nombre */
-const NB_GOALS_TO_WIN = 11;
 
 /** @todo warning both with titouan branch*/
 async function getGamesPlayedCount(seasonId: number, username: string): Promise<number> {
@@ -30,7 +27,7 @@ async function getGamesWinsBySeason(seasonId: number, username: string): Promise
 			)
 			SELECT COUNT(gameId) AS gamesWinCount
 			FROM GamesScores
-			WHERE GoalCount = ${NB_GOALS_TO_WIN};`,
+			WHERE GoalCount = ${POINTS_TO_WIN};`,
 			[username, seasonId]
 		), "getGamesPlayedCount"
 	);
