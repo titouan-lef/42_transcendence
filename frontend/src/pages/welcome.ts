@@ -1,4 +1,7 @@
+import { getSafeElement } from "src/utils/getSafeElement";
 import { applyColor } from "../utils/applyColor";
+import { loadModularPage } from "./modular";
+import { ELEM } from "src/routes/page";
 
 /** @todo clamp : better responsivity (not working well here) */
 const WELCOME_STYLE = `
@@ -14,4 +17,8 @@ const WELCOME = `
 </div>
 `;
 
-export { WELCOME };
+function welcomeEvents(): void {
+	ELEM.addEventListener('click', loadModularPage);
+}
+
+export { WELCOME, welcomeEvents };
