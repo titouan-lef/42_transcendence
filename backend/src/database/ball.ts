@@ -30,18 +30,6 @@ async function insertBalls(): Promise<void> {
 	);
 }
 
-async function getAllBalls(): Promise<Ball[] | undefined> {
-	return await fetchAll(TABLE_NAME);
-}
-
-async function getBallById(id: number): Promise<Ball | undefined> {
-	return await applyQuery(
-		async (db) => await db.get(
-			`SELECT * FROM ${TABLE_NAME} WHERE id = ?`,[id]
-		), "get" + TABLE_NAME + "ById"
-	);
-}
-
 async function getBallId(name: string): Promise<number | undefined> {
 	const row = await applyQuery(
 		async (db) => await db.get(

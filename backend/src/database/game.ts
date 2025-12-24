@@ -34,32 +34,6 @@ async function insertGame(seasonId: number, duration: number): Promise<number | 
 	);
 }
 
-async function getAllGames(): Promise<Game[] | undefined> {
-	return await fetchAll(TABLE_NAME);
-}
-
-async function getGameById(id: number): Promise<Game | undefined> {
-	return await applyQuery(
-		async (db) => await db.get(
-			`SELECT *
-			FROM ${TABLE_NAME}
-			WHERE id = ?`,
-			[id]
-		), "get" + TABLE_NAME + "ById"
-	);
-}
-
-async function getGamesBySeason(seasonId: number):Promise<Game[] | undefined> {
-	return await applyQuery(
-		async (db) => await db.all(
-			`SELECT *
-			FROM ${TABLE_NAME}
-			WHERE seasonId = ?`,
-			[seasonId]
-		), "get" + TABLE_NAME + "BySeason"
-	);
-}
-
 async function getDateLastGame(username: string):Promise<string | undefined> {
 	const row = await applyQuery(
 		async (db) => await db.get(
@@ -86,4 +60,4 @@ async function getPlayerGameCountBySeason(username: string, seasonId: number):Pr
 	return (row?.nb_game);
 }
 
-export { Game, createGameTable, insertGame, getGameById, getDateLastGame, getPlayerGameCountBySeason };
+export { Game, createGameTable, insertGame, getDateLastGame, getPlayerGameCountBySeason };

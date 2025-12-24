@@ -25,19 +25,16 @@ async function insertSeason(): Promise<void> {
 	);
 }
 
-async function getAllSeason(): Promise<Season[] | undefined> {
-	return await fetchAll(TABLE_NAME);
-}
-
-async function getSeasonById(id: number): Promise<Season | undefined> {
-	return await applyQuery(
+async function getSeasonstartedATById(id: number): Promise<Date> {
+	const row = await applyQuery(
 		async (db) => await db.get(
-			`SELECT *
+			`SELECT startedAT
 			FROM ${TABLE_NAME}
 			WHERE id = ?`,
 			[id]
 		), "get" + TABLE_NAME + "ById"
 	);
+	return row?.startedAT;
 }
 
 async function getCurrentSeason(): Promise<number | undefined> {
@@ -49,4 +46,13 @@ async function getCurrentSeason(): Promise<number | undefined> {
 	return (row?.id);
 }
 
-export { Season, createSeasonTable, getCurrentSeason, insertSeason };
+async function getAllSeasonId(): Promise<number[]> {
+	const row: number[] = await applyQuery(
+		async (db) => await db.all(
+			`SELECT id FROM ${TABLE_NAME} ORDER BY startedAT DESC`
+		), "getAll" + TABLE_NAME + "Id"
+	);
+	return row ?? [];
+}
+
+export { Season, createSeasonTable, getCurrentSeason, insertSeason, getAllSeasonId, getSeasonstartedATById };
