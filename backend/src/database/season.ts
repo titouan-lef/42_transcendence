@@ -49,8 +49,8 @@ async function getCurrentSeason(): Promise<number | undefined> {
 }
 
 async function getAllSeasonId(): Promise<number[]> {
-	const row: number[] = await applyQuery(
-		async (db) => await db.all(
+	const row = await applyQuery(
+		async (db) => await db.all<number[]>(
 			`SELECT id FROM ${TABLE_NAME} ORDER BY startedAT DESC`
 		), "getAll" + TABLE_NAME + "Id"
 	);
