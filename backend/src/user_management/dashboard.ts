@@ -1,66 +1,66 @@
-import { FastifyRequest, FastifyReply, sendReply } from "fastify";
-import { getGamesLoosesBySeason, getGamesPlayedCount, getGamesWinsBySeason, getWinrateBySeasonAndDate } from "../database/fetchGame";
+import { FastifyRequest, FastifyReply } from "fastify";
+import { sendReply } from "../utils/HTTP.js";
+import { Errors, Success } from "#shared/status_codes.js";
+import { getGamesLoosesBySeason, getGamesPlayedCount, getGamesWinsBySeason } from "../database/fetchGame";
 import { BallOption, MapOption } from "#shared/types_transfert.js";
-import { getEloVariatonBySeason, getGameTimeAverageBySeason, getGoalAverageBySeason, getPreferedBallBySeason, getPreferedMapBySeason } from "src/database/fetchStats";
+import { getEloVariatonBySeason, getGameTimeAverageBySeason, getGoalAverageBySeason, getGoalAveragebySeasonAndDate, getPreferedBallBySeason, getPreferedMapBySeason, getWinrateBySeasonAndDate } from "src/database/fetchStats";
 import { getElo } from "src/database/web3/contract_service";
-import { Elo } from '../../tournament/elo/elo.js';
-import { getAllSeasonId } from "src/database/season";
+import { Elo } from '../tournament/elo/elo.js';
+import { getAllSeasonId, getSeasonstartedATById } from "src/database/season";
 import { DEFAULT_RATINGS } from "src/tournament/elo/elo";
+import { getActualDate } from "src/database/db_utils";
 
-// tableau de date envoyer qui permet de remplir le chart
-interface eloChart {
+interface EloChart {
 	dateList: string[];
 	eloList: number[];
 }
 
-// tableau de date envoyer qui permet de remplir le chart
-interface winrateChart {
+interface WinrateChart {
 	dateList: string[];
 	winrateList: number[];
 }
 
-// tableau de date envoyer qui permet de remplir le chart
-interface goalChart {
+interface GoalChart {
 	dateList: string[];
 	goalList: number[];
 }
 
-interface userInfos {
+interface UserInfos {
 	gamesPlayed: number;
-	gamesWins: number; // depuis le debut de la saison ?
+	gamesWins: number;
 	gamesLooses: number; 
 	elo: number;
 	goalAverage: number;
 	durationAverage: number;//(in seconds)
 	preferedBall: BallOption;
 	preferedMap: MapOption;
-	eloChart: eloChart;
-	winrateChart: winrateChart;
-	goalChart: goalChart;
+	eloChart: EloChart;
+	winrateChart: WinrateChart;
+	goalChart: GoalChart;
 }
 
 interface UserInfoBody {
 	user: string;
-	season: string;
-	dates: Date[];
+	season: number;
 }
 
+const NB_CHART_POINT = 7;
 
-async function getEloChart(season: number, user: string):Promise <eloChart> {
+
+async function getEloChart(season: number, user: string):Promise <EloChart> {
 
 	const eloVariaton = await getEloVariatonBySeason(season, user);
 	if (eloVariaton?.length === 0)
-		return {dateList: [], eloList: []};
+		return { dateList: [], eloList: [] };
 
 	const idSeasonTab: number[] = await getAllSeasonId();
 	if (idSeasonTab.length === 0)
-		return {dateList: [], eloList: []};
+		return { dateList: [], eloList: [] };
 
-	let lastSeasonElo = -1
+	let lastSeasonElo = -1;
 	for (let i = 1; i < idSeasonTab.length; i++) {
 		const tmpElo: number = await getRatingElo(user, idSeasonTab[i]);
-		if (tmpElo !== 0)
-		{
+		if (tmpElo !== 0) {
 			lastSeasonElo = tmpElo;
 			break;
 		}
@@ -68,9 +68,8 @@ async function getEloChart(season: number, user: string):Promise <eloChart> {
 	if (lastSeasonElo === -1)
 		lastSeasonElo = DEFAULT_RATINGS;
 
-	const eloChart: eloChart = {dateList: [], eloList: []};
-	for (const eloHistory of eloVariaton)
-	{
+	const eloChart: EloChart = { dateList: [], eloList: [] };
+	for (const eloHistory of eloVariaton) {
 		lastSeasonElo += eloHistory.variation;
 		eloChart.dateList.push(eloHistory.date);
 		eloChart.eloList.push(lastSeasonElo);
@@ -79,8 +78,35 @@ async function getEloChart(season: number, user: string):Promise <eloChart> {
 	return eloChart;
 }
 
-async function getGoalChart(season: number, user: string):Promise <goalChart> {
-	return ;
+
+async function getTabDate(season: number): Promise <string[]> {
+
+	const beginDate: Date = await getSeasonstartedATById(season);
+	const actualDate: Date = await getActualDate();
+
+	const beginDateInMs:number = beginDate.getTime();
+	const actualDateInMs:number = actualDate.getTime();
+
+	const intervaleDateInMs: number = (actualDateInMs - beginDateInMs) / (NB_CHART_POINT - 1);
+
+	const dates: string[] = [];
+
+	for (let i = 0; i < NB_CHART_POINT; i++) {
+		const pointDate = new Date(beginDateInMs + (intervaleDateInMs * i));
+		dates.push(pointDate.toString());
+	}
+
+	return dates;
+}
+
+async function getWinrateChart(season: number, user: string): Promise <WinrateChart> {
+	const dates: string[] = await getTabDate(season);
+	return await getWinrateBySeasonAndDate(season, user, dates);
+}
+
+async function getGoalChart(season: number, user: string): Promise <GoalChart> {
+	const dates: string[] = await getTabDate(season);
+	return await getGoalAveragebySeasonAndDate(season, user, dates);
 }
 
 async function getRatingElo(user: string, season: number): Promise<number> {
@@ -88,8 +114,8 @@ async function getRatingElo(user: string, season: number): Promise<number> {
 	return elo.r;
 }
 
-async function getUserInfos(user: string, season: number): Promise<userInfos> {
-	const userInfos: userInfos = {
+async function getUserInfos(user: string, season: number): Promise<UserInfos> {
+	const userInfos: UserInfos = {
 		gamesPlayed: await getGamesPlayedCount(season, user),
 		gamesWins: await getGamesWinsBySeason(season, user),
 		gamesLooses: await getGamesLoosesBySeason(season, user),
@@ -99,7 +125,7 @@ async function getUserInfos(user: string, season: number): Promise<userInfos> {
 		preferedBall: await getPreferedBallBySeason(season, user),
 		preferedMap: await getPreferedMapBySeason(season, user),
 		eloChart: await getEloChart(season, user),
-		winrateChart: await getWinrateBySeasonAndDate(season, user),
+		winrateChart: await getWinrateChart(season, user),
 		goalChart: await getGoalChart(season, user)
 	};
 	return userInfos;
@@ -112,12 +138,11 @@ async function getPlayerStats(req: FastifyRequest<{ Body: UserInfoBody }>, reply
 		return;
 	const season = req.body?.season;
 	if (!season) {
-		sendReply(reply, 400, "Season doesn't exist");
+		sendReply(reply, Errors.REQUEST_FAILED, "Season doesn't exist");
 		return;
 	}
-	const dates = req.dates;
-	const userInfos: userInfos = await getUserInfos(user, season);
-	sendReply(reply, 200, JSON.stringify(userInfos));
+	const userInfos: UserInfos = await getUserInfos(user, season);
+	sendReply(reply, Errors.REQUEST_FAILED, JSON.stringify(userInfos));
 }
 
-export { winrateChart }
+export { WinrateChart, GoalChart };
