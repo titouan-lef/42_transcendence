@@ -34,7 +34,9 @@ async function getSeasonstartedATById(id: number): Promise<Date> {
 			[id]
 		), "get" + TABLE_NAME + "ById"
 	);
-	return row?.startedAT;
+	if (!row)
+		return new Date();
+	return new Date(row.created_at);
 }
 
 async function getCurrentSeason(): Promise<number | undefined> {
