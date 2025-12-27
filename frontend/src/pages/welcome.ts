@@ -1,4 +1,3 @@
-import { getSafeElement } from "src/utils/getSafeElement";
 import { applyColor } from "../utils/applyColor";
 import { loadModularPage } from "./modular";
 import { ELEM } from "src/routes/page";
