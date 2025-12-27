@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { addFriendship, getFriendships, isFriendWith, removeFriendship } from "../database/friendship.js";
 import { sendReply } from "../utils/HTTP.js";
-import { doesUserExist, User } from "../database/user.js";
+import { doesUserExist } from "../database/user.js";
 import { UserBody } from "./connect_user.js";
 import { Errors, Success } from "#shared/status_codes.js";
 

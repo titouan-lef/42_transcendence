@@ -1,7 +1,5 @@
-import fastify, { FastifyRequest, FastifyReply } from "fastify";
+import fastify from "fastify";
 import fastifyStatic from "@fastify/static";
-
-const IP = process.env.IP || "localhost";
 
 const APP = fastify();
 
