@@ -22,7 +22,7 @@ function gameSelectorHandler(modal: HTMLDialogElement): void {
 				elem.addEventListener('click', playLocal);
 				break;
 			case 'btn-ai':
-				elem.addEventListener('click', playVSAI);
+				elem.addEventListener('click', playVsAi);
 				break;
 			case 'btn-ranked':
 				elem.addEventListener('click', playRanked);
@@ -45,7 +45,7 @@ function playLocal(): void {
 	go.addEventListener('click', newLocalGame);
 }
 
-function playVSAI(): void {
+function playVsAi(): void {
 	loadDialog(GAME_OPTIONS, gameSelectorHandler);
 	loadCheckboxes(AI_RULES);
 
