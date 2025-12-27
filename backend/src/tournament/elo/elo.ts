@@ -53,7 +53,8 @@ function calculateOutcome(scoreP1: number, scoreP2: number): number {
 
 function applyTimeOnRd(rd: number, t: number = SEASON_DURATION): number {
 	const rdUpdated = Math.sqrt(rd * rd + C_SQ * t);
-	return Math.min(rdUpdated, MAX_RD);
+	const rdUpdatedRound = Math.round(rdUpdated * Math.pow(10, 6)) / Math.pow(10, 6); /** @todo round 6 decimal --> function define branch ai not curently rebase */
+	return Math.min(rdUpdatedRound, MAX_RD);
 }
 
 /**
@@ -159,8 +160,8 @@ function rCalculation(r: number, sumDeviation: number, newRdSq: number): number 
 
 function rdCalculation(newRdSq: number): number {
 	const newRd = Math.sqrt(newRdSq);
-	/** @todo round 6 decimal --> function define branch ai not curently rebase */
-	return clamp(newRd, MIN_RD, MAX_RD);
+	const newRdRound = Math.round(newRd * Math.pow(10, 6)) / Math.pow(10, 6); /** @todo round 6 decimal --> function define branch ai not curently rebase */
+	return clamp(newRdRound, MIN_RD, MAX_RD);
 }
 
 export { Elo, DEFAULT_RATINGS, MAX_RD, NB_PLACEMENT_GAME };

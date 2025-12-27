@@ -34,9 +34,10 @@ async function updateElo(usernameP1: string, usernameP2: string, outcome: number
 }
 
 async function createEloData(username: string, seasonId: number, outcome: number): Promise<EloData | null> {
-	const nbGame = await getPlayerGameCountBySeason(username, seasonId);
-	if (nbGame === undefined)
+	const nbGameInDb = await getPlayerGameCountBySeason(username, seasonId);
+	if (nbGameInDb === undefined)
 		return null;
+	const nbGame = nbGameInDb + 1;// Games in database + current game.
 	const eloBeforeInactivity = await getElo(username, seasonId);
 	const elo = await getEloAfterInactivity(username, nbGame, eloBeforeInactivity, seasonId);
 	if (!elo)
@@ -45,7 +46,7 @@ async function createEloData(username: string, seasonId: number, outcome: number
 		username: username,
 		nbGame: nbGame,
 		oldElo: elo,
-		elo: elo,
+		elo: structuredClone(elo),// Clone to update elo without update oldElo.
 		outcome: outcome
 	};
 }
@@ -81,8 +82,10 @@ async function addPlacementGame(eloData: EloData, eloOpp: Elo, gameId: number): 
 }
 
 async function saveElo(eloData: EloData, eloOpp: Elo, gameId: number, seasonId: number): Promise<void> {
-	if (eloData.nbGame < NB_PLACEMENT_GAME) // Elo is updated if (nbGame === NB_PLACEMENT_GAME).
+	if (eloData.nbGame < NB_PLACEMENT_GAME) {
+		await insertEloVariation(eloData.username, gameId, 0);
 		return;
+	}
 	await manageUpdateElo(eloData, eloOpp, seasonId);
 	await setElo(eloData.username, seasonId, eloData.elo);
 	await insertEloVariation(eloData.username, gameId, eloData.elo.r - eloData.oldElo.r);
