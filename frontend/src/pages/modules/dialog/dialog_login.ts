@@ -4,6 +4,8 @@ import { connectUser } from "src/services/user_management/login";
 import { loadDialog } from "./dialog";
 import { SIGN_IN } from "./dialog_login_sign_in";
 import { SIGN_UP } from "./dialog_login_sign_up";
+import { navigateTo } from "src/routes/navigate";
+import { MODALS } from "src/routes/navigate_types";
 
 function signUpHandler(modal: HTMLDialogElement): void {
 	const allElements = modal.querySelectorAll('*[id]');
@@ -48,4 +50,12 @@ function openDialogSignIn(): void {
 	loadDialog(SIGN_IN, signInHandler);
 }
 
-export { openDialogSignIn, openDialogSignUp };
+function loadDialogSignUp(): void {
+	navigateTo(MODALS.SIGN_UP);
+}
+
+function loadDialogSignIn(): void {
+	navigateTo(MODALS.SIGN_IN);
+}
+
+export { loadDialogSignUp, loadDialogSignIn, openDialogSignIn, openDialogSignUp };
