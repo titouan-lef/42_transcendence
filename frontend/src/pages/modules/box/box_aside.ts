@@ -79,12 +79,6 @@ const ASIDE_BOX = `
 </aside>
 `;
 
-function onDisconnectEvent(): void {
-	disconnectUser();
-	clearUserInfos();
-	loadModularPage();
-}
-
 function asideConnectedEvents(): void {
 	const allElements = getSafeElement('aside', HTMLElement).querySelectorAll('*[id]');
 
@@ -103,6 +97,12 @@ function asideConnectedEvents(): void {
 				break;
 		}
 	});
+}
+
+function onDisconnectEvent(): void {
+	disconnectUser();
+	clearUserInfos();
+	loadModularPage();
 }
 
 function asideDisconnectedEvents(): void {
