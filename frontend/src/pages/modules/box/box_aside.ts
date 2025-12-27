@@ -3,8 +3,8 @@ import { createButtonHtml } from "../../../components/button";
 import { applyColor } from "../../../utils/applyColor";
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { openDialogAddFriend } from "../dialog/dialog_add_friend";
-import { openDialogSignIn, openDialogSignUp } from "../dialog/dialog_login";
-import { openProfile } from "../profile/profile";
+import { loadDialogSignIn, loadDialogSignUp, openDialogSignUp } from "../dialog/dialog_login";
+import { loadProfilePage } from "../profile/profile";
 import { clearUserInfos, getCurrentUserInfos } from "src/services/user_management/user_state";
 import { loadModularPage } from "src/pages/modular";
 import { disconnectUser } from "src/services/user_management/disconnect";
@@ -85,7 +85,7 @@ function asideConnectedEvents(): void {
 	allElements.forEach(elem => {
 		switch (elem.id) {
 			case 'btn-profile':
-				elem.addEventListener('click', openProfile);
+				elem.addEventListener('click', loadProfilePage);
 				break;
 			case 'btn-friend':
 				elem.addEventListener('click', openDialogAddFriend);
@@ -111,10 +111,10 @@ function asideDisconnectedEvents(): void {
 	allElements.forEach(elem => {
 		switch (elem.id) {
 			case 'btn-sign-in':
-				elem.addEventListener('click', openDialogSignIn);
+				elem.addEventListener('click', loadDialogSignIn);
 				break;
 			case 'btn-sign-up':
-				elem.addEventListener('click', openDialogSignUp);
+				elem.addEventListener('click', loadDialogSignUp);
 				break;
 			default:
 				break;

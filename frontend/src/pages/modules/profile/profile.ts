@@ -6,6 +6,8 @@ import { loadHistory } from "./profile_history";
 import { loadSummary } from "./profile_summary";
 import { DRAWER_HEADER } from "./profile_header";
 import { DRAWER_NAV } from "./profile_navbar";
+import { navigateTo } from "src/routes/navigate";
+import { MODALS } from "src/routes/navigate_types";
 
 const DRAWER_MAIN_STYLE = `
 fixed z-10 inset-y-0 inset-x-0
@@ -84,4 +86,9 @@ function initProfileEvents(): void {
 	});
 }
 
-export { openProfile };
+function loadProfilePage(): void {
+	navigateTo(MODALS.PROFILE);
+	console.log('COUCOU');
+}
+
+export { loadProfilePage, openProfile };

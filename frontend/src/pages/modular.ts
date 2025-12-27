@@ -4,6 +4,8 @@ import { getSafeElement } from "../utils/getSafeElement";
 import { ASIDE_BOX, loadAside } from "./modules/box/box_aside";
 import { exitDialog } from "./modules/dialog/dialog";
 import { loadMainHome } from "./modules/box/box_main_home";
+import { navigateTo } from "src/routes/navigate";
+import { PAGES } from "src/routes/navigate_types";
 
 const ROW_STYLE = `
 flex flex-row gap-[10px]
@@ -32,16 +34,21 @@ const MODULAR = `
 </div>
 `;
 
-function loadModularPage(): void {
-	ELEM.removeEventListener('click', loadModularPage);
-	loadPage(MODULAR, modularEvents);
-	loadMainHome();
-	loadAside();
-}
-
 function modularEvents(): void {
+	loadAside();
+	loadMainHome();
+
 	const modal = getSafeElement('modal', HTMLDialogElement);
 	modal.addEventListener('click', (e) => exitDialog(modal, e));
 }
 
-export { loadModularPage };
+function loadModularPage(): void {
+	navigateTo(PAGES.HOME);
+}
+
+function openModularPage(): void {
+	ELEM.removeEventListener('click', loadModularPage);
+	loadPage(MODULAR, modularEvents);
+}
+
+export { openModularPage, loadModularPage };

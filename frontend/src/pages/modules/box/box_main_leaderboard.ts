@@ -2,6 +2,8 @@ import { getSafeElement } from "src/utils/getSafeElement";
 import { loadMainBox, MAIN_BOX_BTN_STYLE } from "../box/box_main_utils";
 import { LEADERBOARD_USERS } from "./box_main_leaderboards_users";
 import { createButtonHtml } from "src/components/button";
+import { goBack, navigateTo } from "src/routes/navigate";
+import { PAGES } from "src/routes/navigate_types";
 
 /** @todo start filter with most recent season */
 const LEADERBOARD_FILTER = `
@@ -63,7 +65,7 @@ function leaderboardEvents(): void {
 	allElements.forEach(elem => {
 		switch (elem.id) {
 			case 'btn-back-home':
-				elem.addEventListener('click', () => console.log('go back home button')); /** @todo navigate to home with nav system */
+				elem.addEventListener('click', goBack);
 				break;
 			default:
 				break;
@@ -71,8 +73,12 @@ function leaderboardEvents(): void {
 	});
 }
 
-function loadLeaderboard(): void {
+function openLeaderboard(): void {
 	loadMainBox(LEADERBOARD_TABLE, leaderboardEvents);
 }
 
-export { loadLeaderboard };
+function loadLeaderboard(): void {
+	navigateTo(PAGES.LEADERBOARD);
+}
+
+export { loadLeaderboard, openLeaderboard };
