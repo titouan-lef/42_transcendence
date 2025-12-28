@@ -6,6 +6,8 @@ import { getSafeElement } from "../../../utils/getSafeElement.js";
 import { updateFriendList } from "../box/box_aside_friendlist.js";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_FORM_STYLE } from "./dialog_style.js";
 import { loadDialog } from "./dialog.js";
+import { navigateTo } from "src/routes/navigate.js";
+import { Modals } from "src/routes/navigate_types.js";
 
 /** @todo better front style for add friend */
 const ADD_FRIEND = `
@@ -38,4 +40,8 @@ function openDialogAddFriend(): void {
 	loadDialog(ADD_FRIEND, addFriendHandler);
 }
 
-export { openDialogAddFriend };
+function loadDialogAddFriend(): void {
+	navigateTo(Modals.ADD_FRIEND);
+}
+
+export { loadDialogAddFriend, openDialogAddFriend };

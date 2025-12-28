@@ -1,11 +1,15 @@
 import { openModularPage } from "../pages/modular.js";
 import { openProfile } from "../pages/modules/profile/profile.js";
-import { MODALS, NAVIGATION, PAGES, isModal, isPage } from "./navigate_types.js";
+import { Modals, Navigation, Pages, isModal, isPage } from "./navigate_types.js";
 import { openWelcomePage } from "../pages/welcome.js";
 import { openDialogSignIn, openDialogSignUp } from "src/pages/modules/dialog/dialog_login.js";
+import { openDialogAddFriend } from "src/pages/modules/dialog/dialog_add_friend.js";
+import { openGamePage } from "src/pages/game_page.js";
+import { openDialogGameSelector } from "src/pages/modules/dialog/dialog_game_selector.js";
+import { openDialogGameOption } from "src/pages/modules/dialog/dialog_game_options.js";
 import { openLeaderboard } from "src/pages/modules/box/box_main_leaderboard.js";
 
-function navigationSelector(nav: NAVIGATION): void {
+function navigationSelector(nav: Navigation): void {
 	console.log(nav);
 	if (isPage(nav))
 		pageSelector(nav);
@@ -13,39 +17,51 @@ function navigationSelector(nav: NAVIGATION): void {
 		modalSelector(nav);
 }
 
-function pageSelector(page: PAGES): void {
+function pageSelector(page: Pages): void {
 	switch(page) {
-		case PAGES.WELCOME:
+		case Pages.WELCOME:
 			openWelcomePage();
 			break;
-		case PAGES.HOME:
+		case Pages.HOME:
 			openModularPage();
 			break;
-		case PAGES.LEADERBOARD:
+		case Pages.LEADERBOARD:
 			openLeaderboard();
+			break;
+		case Pages.GAME:
+			openGamePage();
 			break;
 		default:
 			throw new Error("No such page");
 	}
 }
 
-function modalSelector(page: MODALS): void {
+function modalSelector(page: Modals): void {
 	switch(page) {
-		case MODALS.SIGN_IN:
+		case Modals.SIGN_IN:
 			openDialogSignIn();
 			break;
-		case MODALS.SIGN_UP:
+		case Modals.SIGN_UP:
 			openDialogSignUp();
 			break;
-		case MODALS.PROFILE:
+		case Modals.PROFILE:
 			openProfile();
+			break;
+		case Modals.ADD_FRIEND:
+			openDialogAddFriend();
+			break;
+		case Modals.GAME_SELECTION:
+			openDialogGameSelector();
+			break;
+		case Modals.GAME_OPTIONS:
+			openDialogGameOption();
 			break;
 		default:
 			throw new Error("No such modal");
 	}
 }
 
-function navigateTo(nav: NAVIGATION): void {
+function navigateTo(nav: Navigation): void {
 	history.pushState({ nav: nav }, "");
 	navigationSelector(nav);
 }
@@ -54,7 +70,7 @@ function goBack(): void {
 	history.back();
 }
 
-function initPage(nav: NAVIGATION): void {
+function initPage(nav: Navigation): void {
 	history.replaceState({ nav: nav }, ""); // Clears statement to setup back and forward button
 	navigationSelector(nav);
 }

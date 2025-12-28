@@ -40,7 +40,7 @@ function loadDialog(content: string, handler: (modal: HTMLDialogElement) => void
 
 function exitDialog(modal: HTMLDialogElement, event: Event): void {
 	if (event.target === modal) {
-		sendCancelQueue();
+		sendCancelQueue(); /** @todo not always, only for the waiting screen */
 		modal.close();
 	}
 }

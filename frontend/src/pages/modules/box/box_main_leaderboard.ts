@@ -3,7 +3,7 @@ import { loadMainBox, MAIN_BOX_BTN_STYLE } from "../box/box_main_utils";
 import { LEADERBOARD_USERS } from "./box_main_leaderboards_users";
 import { createButtonHtml } from "src/components/button";
 import { goBack, navigateTo } from "src/routes/navigate";
-import { PAGES } from "src/routes/navigate_types";
+import { Pages } from "src/routes/navigate_types";
 
 /** @todo start filter with most recent season */
 const LEADERBOARD_FILTER = `
@@ -78,7 +78,7 @@ function openLeaderboard(): void {
 }
 
 function loadLeaderboard(): void {
-	navigateTo(PAGES.LEADERBOARD);
+	navigateTo(Pages.LEADERBOARD);
 }
 
 export { loadLeaderboard, openLeaderboard };

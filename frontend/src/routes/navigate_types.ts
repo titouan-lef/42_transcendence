@@ -1,12 +1,19 @@
-enum PAGES {
-	WELCOME ,
+enum GameTypes {
+	LOCAL = "local",
+	AI = "solo",
+	RANKED = "ranked"
+}
+
+enum Pages {
+	WELCOME,
 	HOME,
-	LEADERBOARD
+	LEADERBOARD,
+	GAME,
 };
 
 const SEPARATOR = 100;
 
-enum MODALS {
+enum Modals {
 	WELCOME = 100, // enum member initializers must be compile-time constants, but must the same value as SEPARATOR.
 	HOME,
 	SIGN_UP,
@@ -18,17 +25,19 @@ enum MODALS {
 	PROFILE_HISTORY,
 	PROFILE_SETTINGS,
 	EMAIL_CONF,
-	GAME_SELECTION
+	GAME_SELECTION,
+	GAME_OPTIONS,
+	ADD_FRIEND
 };
 
-type NAVIGATION = PAGES | MODALS;
+type Navigation = Pages | Modals;
 
-function isModal(nav: NAVIGATION): nav is MODALS {
+function isModal(nav: Navigation): nav is Modals {
 	return nav >= SEPARATOR;
 }
 
-function isPage(nav: NAVIGATION): nav is PAGES {
+function isPage(nav: Navigation): nav is Pages {
 	return nav < SEPARATOR;
 }
 
-export { PAGES, MODALS, NAVIGATION, isPage, isModal };
+export { GameTypes, Pages, Modals, Navigation, isPage, isModal };
