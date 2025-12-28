@@ -2,19 +2,18 @@ import { startOrUpdateGame } from "../game/canvas_creation.js";
 import { DataMessage, Status } from "#shared/types_transfert.js";
 import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "./api_request.js";
 import { Errors } from '#shared/status_codes';
-import { AI_RULES, LOCAL_RULES, RANKED_RULES, setGameOptions } from "../game/settings/GameRules.js";
+import { getGameOptions } from "../game/settings/GameRules.js";
 import { loadGamePage } from "src/pages/game_page.js";
 import { openDialogWaiting } from "src/pages/modules/dialog/dialog_game_waiting.js";
 import { openDialogGameSelector } from "src/pages/modules/dialog/dialog_game_selector.js";
+import { GameTypes } from "src/routes/navigate_types.js";
 
 //////////////////////////////////////////
 //			Game management				//
 //////////////////////////////////////////
 
 async function askForGame(): Promise<boolean> {
-	setGameOptions(RANKED_RULES);
-	const options = RANKED_RULES;
-
+	const options = getGameOptions(GameTypes.RANKED);
 	const reply = await sendPostRequestToBack("/api/game/ranked_game", JSON.stringify(options));
 	const message = getReplyMessage(reply);
 	if (!isRequestSuccessfull(reply)) {
@@ -56,14 +55,12 @@ async function newRankedGame(): Promise<void> {
 		openDialogGameSelector();
 		return ;
 	}
-	loadGamePage('ranked');
+	loadGamePage(GameTypes.RANKED);
 	newGameSolo(id);
 }
 
 async function newGameVsAI(): Promise<void> {
-	setGameOptions(AI_RULES);
-	const options = AI_RULES;
-
+	const options = getGameOptions(GameTypes.AI);
 	const reply = await sendPostRequestToBack("/api/game/ai_game", JSON.stringify(options));
 	if (!isRequestSuccessfull(reply)) {
 		console.log("Error:",reply.code, getReplyMessage(reply));
@@ -71,7 +68,7 @@ async function newGameVsAI(): Promise<void> {
 	}
 	const id = Number(reply.content);
 	if (id >= 0) {
-		loadGamePage('ai');
+		loadGamePage(GameTypes.AI);
 		newGameSolo(id);
 	}
 }
@@ -109,10 +106,7 @@ async function newGameSolo(id: number): Promise<void> {
 }
 
 async function newLocalGame(): Promise<void> {
-	setGameOptions(LOCAL_RULES);
-	const options = LOCAL_RULES;
-	loadGamePage('local');
-
+	const options = getGameOptions(GameTypes.LOCAL);
 	const reply = await sendPostRequestToBack("/api/game/local_game", JSON.stringify(options));
 	if (!isRequestSuccessfull(reply)) {
 		console.log("Error:",reply.code, getReplyMessage(reply));
@@ -123,6 +117,7 @@ async function newLocalGame(): Promise<void> {
 		console.log("Negative ID"); /** @todo remove */
 		return;
 	}
+	loadGamePage(GameTypes.LOCAL);
 
 	const player1 = new WebSocket(`ws/${id}`);
 	const player2 = new WebSocket(`ws/${id}`);

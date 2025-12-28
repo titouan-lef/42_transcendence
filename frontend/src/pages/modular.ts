@@ -2,10 +2,9 @@ import { applyColor } from "src/utils/applyColor";
 import { ELEM, loadPage } from "../routes/page";
 import { getSafeElement } from "../utils/getSafeElement";
 import { ASIDE_BOX, loadAside } from "./modules/box/box_aside";
-import { exitDialog } from "./modules/dialog/dialog";
 import { loadMainHome } from "./modules/box/box_main_home";
 import { navigateTo } from "src/routes/navigate";
-import { PAGES } from "src/routes/navigate_types";
+import { Pages } from "src/routes/navigate_types";
 
 const ROW_STYLE = `
 flex flex-row gap-[10px]
@@ -39,11 +38,14 @@ function modularEvents(): void {
 	loadMainHome();
 
 	const modal = getSafeElement('modal', HTMLDialogElement);
-	modal.addEventListener('click', (e) => exitDialog(modal, e));
+	modal.addEventListener('click', (e) => {
+		if (e.target === modal)
+			loadModularPage();
+	});
 }
 
 function loadModularPage(): void {
-	navigateTo(PAGES.HOME);
+	navigateTo(Pages.HOME);
 }
 
 function openModularPage(): void {

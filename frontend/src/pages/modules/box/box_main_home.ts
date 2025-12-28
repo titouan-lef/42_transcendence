@@ -1,10 +1,10 @@
 import { createButtonHtml } from "src/components/button";
 import { getCurrentUserInfos } from "src/services/user_management/user_state";
-import { openDialogGameSelector } from "../dialog/dialog_game_selector";
-import { openDialogSignIn } from "../dialog/dialog_login";
+import { loadDialogSignIn } from "../dialog/dialog_login";
 import { getSafeElement } from "src/utils/getSafeElement";
 import { loadMainBox, MAIN_BOX_BTN_STYLE } from "./box_main_utils";
 import { loadLeaderboard } from "./box_main_leaderboard";
+import { loadDialogGameSelector, openDialogGameSelector } from "../dialog/dialog_game_selector";
 
 const MAIN_HOME_STYLE = `
 flex flex-col items-center gap-[10px]
@@ -33,9 +33,9 @@ const MAIN_HOME = `
 
 function openGameOption(): void {
 	if (getCurrentUserInfos())
-		openDialogGameSelector();
+		loadDialogGameSelector();
 	else
-		openDialogSignIn(); /** @todo (optionnal) QOL: when sign in or continue as guest -> open play directly */
+		loadDialogSignIn(); /** @todo (optionnal) QOL: when sign in or continue as guest -> open play directly */
 }
 
 function mainBoxEvents(): void {

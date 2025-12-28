@@ -1,6 +1,12 @@
+import { goBack, navigateTo } from "src/routes/navigate";
+import { loadDialog } from "./dialog";
 import { createCheckbox } from "../../../assets/svgs/svgs_boxes";
 import { SVG_BALL_DEFAULT, SVG_BALL_INVISIBLE, SVG_BALL_PULSE, SVG_BALL_SNAKE, SVG_BALL_TRICKY, SVG_CANON, SVG_MAP_DEFAULT, SVG_MAP_DESERT, SVG_MAP_SKY, SVG_MAP_VOLCANO, SVG_RULE_DASH, SVG_RULE_PROT, SVG_RULE_SPIN, SVG_RULE_WIND } from "../../../assets/svgs/svgs";
 import { DIALOG_BTN_STYLE, DIALOG_SEPARATOR_STYLE } from "./dialog_style";
+import { GameTypes, Modals } from "src/routes/navigate_types";
+import { getSafeElement } from "src/utils/getSafeElement";
+import { newGameVsAI, newLocalGame, newRankedGame } from "src/services/launching_game";
+import { loadCheckboxes } from "src/game/settings/GameRules";
 
 /** @todo front */
 const GAME_OPTIONS_MAPS = `
@@ -70,5 +76,59 @@ const GAME_OPTIONS = `
 	<button id='btn-go' class='${DIALOG_BTN_STYLE}'>GO</button>
 `;
 
+function optionSelectorHandler(modal: HTMLDialogElement,  startGame: () => void): void {
+	const allElements = modal.querySelectorAll('*[id]');
+	allElements.forEach(elem => {
+		switch (elem.id) {
+			case 'btn-back':
+				elem.addEventListener('click', goBack);
+				break;
+			case 'btn-go':
+				elem.addEventListener('click', startGame);
+				break;
+			default:
+				break;
+		}
+	});
+}
 
-export { GAME_OPTIONS };
+let currentGameType: GameTypes = GameTypes.RANKED; /** @todo ranked by default ? in case of error */
+
+/** @todo better? cound not get a function with two args to loadDialog */
+function openDialogGameOption(): void {
+	loadDialog(GAME_OPTIONS, () => {});
+	loadCheckboxes(currentGameType);
+	const modal = getSafeElement("modal", HTMLDialogElement);
+	switch (currentGameType) {
+		case GameTypes.LOCAL:
+			optionSelectorHandler(modal, newLocalGame);
+			break;
+		case GameTypes.AI:
+			optionSelectorHandler(modal, newGameVsAI);
+			break;
+		case GameTypes.RANKED:
+			optionSelectorHandler(modal, newRankedGame);
+			break;
+		default:
+			throw new Error("No such game type");
+	}
+}
+
+function loadDialogGameOption(gameType: GameTypes): void {
+	currentGameType = gameType;
+	navigateTo(Modals.GAME_OPTIONS);
+}
+
+function loadDialogGameLocalOption(): void {
+	loadDialogGameOption(GameTypes.LOCAL);
+}
+ 
+function loadDialogGameAiOption(): void {
+	loadDialogGameOption(GameTypes.AI);
+}
+
+function loadDialogGameRankedOption(): void {
+	loadDialogGameOption(GameTypes.RANKED);
+}
+
+export { openDialogGameOption, loadDialogGameLocalOption, loadDialogGameAiOption, loadDialogGameRankedOption };

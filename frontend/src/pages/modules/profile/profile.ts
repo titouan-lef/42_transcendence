@@ -7,7 +7,7 @@ import { loadSummary } from "./profile_summary";
 import { DRAWER_HEADER } from "./profile_header";
 import { DRAWER_NAV } from "./profile_navbar";
 import { navigateTo } from "src/routes/navigate";
-import { MODALS } from "src/routes/navigate_types";
+import { Modals } from "src/routes/navigate_types";
 
 const DRAWER_MAIN_STYLE = `
 fixed z-10 inset-y-0 inset-x-0
@@ -87,8 +87,7 @@ function initProfileEvents(): void {
 }
 
 function loadProfilePage(): void {
-	navigateTo(MODALS.PROFILE);
-	console.log('COUCOU');
+	navigateTo(Modals.PROFILE);
 }
 
 export { loadProfilePage, openProfile };

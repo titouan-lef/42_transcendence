@@ -2,11 +2,11 @@ import { updateAvatar } from "src/services/user_management/avatar";
 import { createButtonHtml } from "../../../components/button";
 import { applyColor } from "../../../utils/applyColor";
 import { getSafeElement } from "../../../utils/getSafeElement";
-import { openDialogAddFriend } from "../dialog/dialog_add_friend";
-import { loadDialogSignIn, loadDialogSignUp, openDialogSignUp } from "../dialog/dialog_login";
+import { loadDialogAddFriend } from "../dialog/dialog_add_friend";
+import { loadDialogSignIn, loadDialogSignUp } from "../dialog/dialog_login";
 import { loadProfilePage } from "../profile/profile";
 import { clearUserInfos, getCurrentUserInfos } from "src/services/user_management/user_state";
-import { loadModularPage } from "src/pages/modular";
+import { openModularPage } from "src/pages/modular";
 import { disconnectUser } from "src/services/user_management/disconnect";
 
 const ASIDE_BOX_STYLE = `
@@ -88,7 +88,7 @@ function asideConnectedEvents(): void {
 				elem.addEventListener('click', loadProfilePage);
 				break;
 			case 'btn-friend':
-				elem.addEventListener('click', openDialogAddFriend);
+				elem.addEventListener('click', loadDialogAddFriend);
 				break;
 			case 'btn-log-out':
 				elem.addEventListener('click', onDisconnectEvent);
@@ -102,7 +102,7 @@ function asideConnectedEvents(): void {
 function onDisconnectEvent(): void {
 	disconnectUser();
 	clearUserInfos();
-	loadModularPage();
+	openModularPage(); // bypass the nagivation system
 }
 
 function asideDisconnectedEvents(): void {

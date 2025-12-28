@@ -1,8 +1,9 @@
 import { getSafeElement } from "src/utils/getSafeElement";
-import { closeDialogID, exitDialog } from "./modules/dialog/dialog";
 import { loadPage } from "src/routes/page";
 import { applyColor } from "src/utils/applyColor";
 import { openDialogGameQuit } from "./modules/dialog/dialog_game_quit";
+import { navigateTo } from "src/routes/navigate";
+import { GameTypes, Pages } from "src/routes/navigate_types";
 
 const GAME_PAGE_STYLE = `
 flex flex-col gap-[10px]
@@ -58,22 +59,33 @@ const GAME_PAGE = `
 </div>
 `;
 
+let gameType: GameTypes | null = null;
+
 function gamePageEvents(): void {
 	const modal = getSafeElement('modal', HTMLDialogElement);
 	const ragequit = getSafeElement('btn-quit', HTMLElement);
 
-	modal.addEventListener('click', (e) => exitDialog(modal, e));
+	modal.addEventListener('click', (e) => {
+		if (e.target === modal && gameType)
+			loadGamePage(gameType);
+	});
 	ragequit.addEventListener('click', openDialogGameQuit);
 }
 
-function loadGamePage(type: 'local' | 'ai' | 'ranked'): void {
-	closeDialogID('modal');
+function openGamePage(): void {
+	if (!gameType)
+		return ;
+	// closeDialogID('modal'); no usefull I think
 
 	loadPage(GAME_PAGE, gamePageEvents);
 	const gametype = getSafeElement('game-type', HTMLElement);
 
-	gametype.innerHTML = type;
-	getSafeElement('modal', HTMLDialogElement).dataset.gametype = type;
+	gametype.innerHTML = gameType;
 }
 
-export { loadGamePage };
+function loadGamePage(type: GameTypes): void {
+	gameType = type;
+	navigateTo(Pages.GAME);
+}
+
+export { loadGamePage, openGamePage };
