@@ -6,7 +6,7 @@ import { BallOption, MapOption } from "#shared/types_transfert.js";
 import { getEloVariatonBySeason, getGameTimeAverageBySeason, getGoalAverageBySeason, getGoalAveragebySeasonAndDate, getPreferedBallBySeason, getPreferedMapBySeason, getWinrateBySeasonAndDate } from "../database/fetchStats.js";
 import { getElo } from "../database/web3/contract_service.js";
 import { Elo } from '../tournament/elo/elo.js';
-import { getAllSeasonId, getSeasonstartedATById } from "../database/season.js";
+import { getAllSeasonId, getSeasonStartedATById } from "../database/season.js";
 import { DEFAULT_RATINGS } from "../tournament/elo/elo.js";
 import { getActualDate } from "../database/db_utils.js";
 
@@ -81,7 +81,7 @@ async function getEloChart(season: number, user: string):Promise <EloChart> {
 
 async function getTabDate(season: number): Promise <string[]> {
 
-	const beginDate: Date = await getSeasonstartedATById(season);
+	const beginDate: Date = await getSeasonStartedATById(season);
 	const actualDate: Date = await getActualDate();
 
 	const beginDateInMs:number = beginDate.getTime();
