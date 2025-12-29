@@ -3,7 +3,7 @@ import { ELEM, loadPage } from "../routes/page";
 import { getSafeElement } from "../utils/getSafeElement";
 import { ASIDE_BOX, loadAside } from "./modules/box/box_aside";
 import { loadMainHome } from "./modules/box/box_main_home";
-import { navigateTo } from "src/routes/navigate";
+import { goBack, navigateTo } from "src/routes/navigate";
 import { Pages } from "src/routes/navigate_types";
 
 const ROW_STYLE = `
@@ -40,7 +40,7 @@ function modularEvents(): void {
 	const modal = getSafeElement('modal', HTMLDialogElement);
 	modal.addEventListener('click', (e) => {
 		if (e.target === modal)
-			loadModularPage();
+			goBack();
 	});
 }
 
