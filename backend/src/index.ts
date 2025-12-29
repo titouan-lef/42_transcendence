@@ -14,7 +14,7 @@ import { disable2FA, enable2FA, verify2FA } from "./security/2FA.js";
 import { verifyAuth } from "./security/JWT.js";
 import { GameOptions } from "./game/settings/GameSettings.js";
 import { getUserInfos } from "./user_management/user_infos.js";
-import { getPlayerStats, UserInfoBody } from "./user_management/dashboard.js";
+import { getPlayerStats, UserDashbordInfoBody } from "./user_management/dashboard.js";
 
 const APP = fastify();
 
@@ -70,7 +70,7 @@ APP.get("/api/game/waiting", { preHandler: verifyAuth }, isGameFound);
 APP.get("/api/game/cancel_queue", { preHandler: verifyAuth }, removePlayerFromMatchmakingSystem);
 
 // --- Dashboards ---
-APP.post<{ Body: UserInfoBody }>("/api/user/dashboard", { preHandler: verifyAuth }, getPlayerStats);
+APP.post<{ Body: UserDashbordInfoBody }>("/api/user/dashboard", { preHandler: verifyAuth }, getPlayerStats);
 
 /**
  * Register plugins like `fastifyCors` or `fastifyCookies` globally, Fastify applies those preHandlers and hooks immediately.

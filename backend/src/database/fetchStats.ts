@@ -155,7 +155,6 @@ async function getGoalAveragebySeasonAndDate(seasonId: number, username: string,
 	const goalTab: number[] = [];
 
 	for (const date of dates) {
-
 		const row = await applyQuery(
 			async (db) => await db.get(
 				`WITH MyGames AS (SELECT gameId FROM Elo WHERE username = ?),
@@ -187,7 +186,6 @@ async function getGoalAveragebySeasonAndDate(seasonId: number, username: string,
 					username, seasonId, date, ]
 			), "getGoalHistory"
 		);
-
 		dateTab.push(date);
 		goalTab.push(row.goalsAverage);
 	}
