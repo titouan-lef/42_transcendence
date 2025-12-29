@@ -12,7 +12,7 @@ function signUpHandler(modal: HTMLDialogElement): void {
 	allElements.forEach(elem => {
 		switch (elem.id) {
 			case 'btn-sign-in':
-				elem.addEventListener('click', openDialogSignIn);
+				elem.addEventListener('click', loadDialogSignIn);
 				break;
 			case 'btn-sign-up':
 				elem.addEventListener('click', newUser);
@@ -31,7 +31,7 @@ function signInHandler(modal: HTMLDialogElement): void {
 				elem.addEventListener('click', connectUser);
 				break;
 			case 'btn-sign-up':
-				elem.addEventListener('click', openDialogSignUp);
+				elem.addEventListener('click', loadDialogSignUp);
 				break;
 			case 'btn-guest':
 				elem.addEventListener('click', guestUser);

@@ -6,8 +6,8 @@ import { loadDialogAddFriend } from "../dialog/dialog_add_friend";
 import { loadDialogSignIn, loadDialogSignUp } from "../dialog/dialog_login";
 import { loadProfilePage } from "../profile/profile";
 import { clearUserInfos, getCurrentUserInfos } from "src/services/user_management/user_state";
-import { openModularPage } from "src/pages/modular";
 import { disconnectUser } from "src/services/user_management/disconnect";
+import { goBackToBeginning } from "src/routes/navigate";
 
 const ASIDE_BOX_STYLE = `
 grow
@@ -102,7 +102,7 @@ function asideConnectedEvents(): void {
 function onDisconnectEvent(): void {
 	disconnectUser();
 	clearUserInfos();
-	openModularPage(); // bypass the nagivation system
+	goBackToBeginning();
 }
 
 function asideDisconnectedEvents(): void {

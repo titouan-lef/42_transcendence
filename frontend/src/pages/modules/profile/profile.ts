@@ -6,8 +6,9 @@ import { loadHistory } from "./profile_history";
 import { loadSummary } from "./profile_summary";
 import { DRAWER_HEADER } from "./profile_header";
 import { DRAWER_NAV } from "./profile_navbar";
-import { navigateTo } from "src/routes/navigate";
-import { Modals } from "src/routes/navigate_types";
+import { goBack, navigateTo } from "src/routes/navigate";
+import { Pages } from "src/routes/navigate_types";
+import { getCurrentUserInfos } from "src/services/user_management/user_state";
 
 const DRAWER_MAIN_STYLE = `
 fixed z-10 inset-y-0 inset-x-0
@@ -49,15 +50,50 @@ const DRAWER_CONTENT = `
 </div>
 `;
 
+enum ProfiteTab {
+	SUMMARY,
+	HISTORY,
+	DASHBOARD,
+	SETTINGS
+}
+
+let currentTab: ProfiteTab = ProfiteTab.SUMMARY;
+
+function loadTab(): void {
+	switch (currentTab) {
+		case (ProfiteTab.SUMMARY):
+			loadSummary();
+			break;
+		case (ProfiteTab.HISTORY):
+			loadHistory();
+			break;
+		case (ProfiteTab.DASHBOARD):
+			loadDashboard();
+			break;
+		case (ProfiteTab.SETTINGS):
+			loadSettings();
+			break;
+		default:
+			throw new Error("No such profile tab");
+	}
+}
+
 function openProfile(): void {
+	if (!getCurrentUserInfos())
+		return;
 	const drawer = getSafeElement("modal", HTMLDialogElement);
 
 	drawer.className = DRAWER_BACKDROP_STYLE;
 	drawer.show();
 	drawer.innerHTML = DRAWER_CONTENT;
 
-	loadSummary();
+	loadTab();
 	initProfileEvents();
+}
+
+function changeTab(tab: ProfiteTab): void {
+	currentTab = tab;
+	loadTab();
 }
 
 function initProfileEvents(): void {
@@ -66,19 +102,19 @@ function initProfileEvents(): void {
 	drawer.querySelectorAll('*[id]').forEach(elem => {
 		switch (elem.id) {
 			case 'btn-return':
-				elem.addEventListener('click', () => drawer.close());
+				elem.addEventListener('click', goBack);
 				break;
 			case 'btn-summary':
-				elem.addEventListener('click', loadSummary);
+				elem.addEventListener('click', () => changeTab(ProfiteTab.SUMMARY));
 				break;
 			case 'btn-history':
-				elem.addEventListener('click', loadHistory);
+				elem.addEventListener('click', () => changeTab(ProfiteTab.HISTORY));
 				break;
 			case 'btn-dashboard':
-				elem.addEventListener('click', loadDashboard);
+				elem.addEventListener('click', () => changeTab(ProfiteTab.DASHBOARD));
 				break;
 			case 'btn-settings':
-				elem.addEventListener('click', loadSettings);
+				elem.addEventListener('click', () => changeTab(ProfiteTab.SETTINGS));
 				break;
 			default:
 				break;
@@ -87,7 +123,7 @@ function initProfileEvents(): void {
 }
 
 function loadProfilePage(): void {
-	navigateTo(Modals.PROFILE);
+	navigateTo(Pages.PROFILE);
 }
 
 export { loadProfilePage, openProfile };

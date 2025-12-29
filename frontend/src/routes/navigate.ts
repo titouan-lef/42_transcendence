@@ -1,6 +1,6 @@
 import { openModularPage } from "../pages/modular.js";
 import { openProfile } from "../pages/modules/profile/profile.js";
-import { GameModals, Modals, Navigation, Pages, isGameModal, isModal, isPage } from "./navigate_types.js";
+import { GameModals, Modals, Navigation, Pages, isGameModal, isHistorySavedModal, isModal, isPage } from "./navigate_types.js";
 import { openWelcomePage } from "../pages/welcome.js";
 import { openDialogSignIn, openDialogSignUp } from "src/pages/modules/dialog/dialog_login.js";
 import { openDialogAddFriend } from "src/pages/modules/dialog/dialog_add_friend.js";
@@ -10,6 +10,8 @@ import { openDialogGameOption } from "src/pages/modules/dialog/dialog_game_optio
 import { openLeaderboard } from "src/pages/modules/box/box_main_leaderboard.js";
 import { closeGame } from "src/game/canvas_creation.js";
 import { openDialogWaiting, sendCancelQueue } from "src/pages/modules/dialog/dialog_game_waiting.js";
+
+let historyLengthAtBeginning = 0;
 
 let currentPage: Pages = Pages.WELCOME;
 let isWaitingForGame = false;
@@ -52,6 +54,9 @@ function pageSelector(page: Pages): void {
 		case Pages.LEADERBOARD:
 			openLeaderboard();
 			break;
+		case Pages.PROFILE:
+			openProfile();
+			break;
 		case Pages.GAME:
 			openGamePage();
 			break;
@@ -67,9 +72,6 @@ function modalSelector(page: Modals): void {
 			break;
 		case Modals.SIGN_UP:
 			openDialogSignUp();
-			break;
-		case Modals.PROFILE:
-			openProfile();
 			break;
 		case Modals.ADD_FRIEND:
 			openDialogAddFriend();
@@ -99,9 +101,21 @@ function gameModalSelector(page: GameModals): void {
 	}
 }
 
+function manageHistoryPushing(nav: Navigation): void {
+	const currentNav: Navigation = history.state?.nav;
+	if (isGameModal(nav))
+		return;
+	if (isModal(currentNav) && !isHistorySavedModal(currentNav)) {
+		history.replaceState({ nav: nav }, "");
+		return;
+	}
+	if (currentNav === nav)
+		return;
+	history.pushState({ nav: nav }, "");
+}
+
 function navigateTo(nav: Navigation): void {
-	if (!isGameModal(nav))
-		history.pushState({ nav: nav }, "");
+	manageHistoryPushing(nav);
 	navigationSelector(nav);
 }
 
@@ -109,9 +123,15 @@ function goBack(): void {
 	history.back();
 }
 
+function goBackToBeginning(): void {
+	history.go(historyLengthAtBeginning - history.length);
+	history.replaceState({ nav: Pages.WELCOME }, "");
+}
+
 function initPage(nav: Navigation): void {
 	history.replaceState({ nav: nav }, ""); // Clears statement to setup back and forward button
 	navigationSelector(nav);
+	historyLengthAtBeginning = history.length;
 }
 
 /**
@@ -122,4 +142,4 @@ window.addEventListener("popstate", (event: PopStateEvent) => {
 		navigationSelector(event.state.nav);
 });
 
-export { navigateTo, goBack, initPage, navigationGameFound };
+export { navigateTo, goBack, goBackToBeginning, initPage, navigationGameFound };
