@@ -39,7 +39,7 @@ interface UserInfos {
 	goalChart: GoalChart;
 }
 
-interface UserDashbordInfoBody {
+interface UserDashboardInfoBody {
 	user: string;
 	season: number;
 }
@@ -127,7 +127,7 @@ async function getUserDashboardInfos(user: string, season: number): Promise<User
 	return userInfos;
 }
 
-async function getPlayerStats(req: FastifyRequest<{ Body: UserDashbordInfoBody }>, reply: FastifyReply): Promise<void> {
+async function getPlayerStats(req: FastifyRequest<{ Body: UserDashboardInfoBody }>, reply: FastifyReply): Promise<void> {
 	const user = req.user;
 	if (!user)
 		return;
@@ -140,4 +140,4 @@ async function getPlayerStats(req: FastifyRequest<{ Body: UserDashbordInfoBody }
 	sendReply(reply, Errors.REQUEST_FAILED, JSON.stringify(userInfos));
 }
 
-export { WinrateChart, GoalChart, UserDashbordInfoBody, getPlayerStats };
+export { WinrateChart, GoalChart, UserDashboardInfoBody, getPlayerStats };
