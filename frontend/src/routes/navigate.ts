@@ -1,6 +1,6 @@
 import { openModularPage } from "../pages/modular.js";
 import { openProfile } from "../pages/modules/profile/profile.js";
-import { GameModals, Modals, Navigation, Pages, isGameModal, isHistorySavedModal, isModal, isPage } from "./navigate_types.js";
+import { GameModals, Modals, Navigation, Pages, isGameModal, isModal, isPage, needToBeConnected } from "./navigate_types.js";
 import { openWelcomePage } from "../pages/welcome.js";
 import { openDialogSignIn, openDialogSignUp } from "src/pages/modules/dialog/dialog_login.js";
 import { openDialogAddFriend } from "src/pages/modules/dialog/dialog_add_friend.js";
@@ -10,6 +10,8 @@ import { openDialogGameOption } from "src/pages/modules/dialog/dialog_game_optio
 import { openLeaderboard } from "src/pages/modules/box/box_main_leaderboard.js";
 import { closeGame } from "src/game/canvas_creation.js";
 import { openDialogWaiting, sendCancelQueue } from "src/pages/modules/dialog/dialog_game_waiting.js";
+import { getCurrentUserInfos } from "src/services/user_management/user_state.js";
+
 
 let historyLengthAtBeginning = 0;
 
@@ -20,7 +22,10 @@ function navigationGameFound(): void {
 	isWaitingForGame = false;
 }
 
-function navigationSelector(nav: Navigation): void {
+function navigationSelector(nav: Navigation): boolean {
+	if (needToBeConnected(nav) && !getCurrentUserInfos())
+		return false;
+
 	if (isWaitingForGame)
 		sendCancelQueue();
 	if (nav !== GameModals.WAITING)
@@ -38,6 +43,7 @@ function navigationSelector(nav: Navigation): void {
 			pageSelector(Pages.GAME);
 		gameModalSelector(nav);
 	}
+	return true;
 }
 
 function pageSelector(page: Pages): void {
@@ -57,6 +63,12 @@ function pageSelector(page: Pages): void {
 		case Pages.PROFILE:
 			openProfile();
 			break;
+		case Pages.GAME_SELECTION:
+			openDialogGameSelector();
+			break;
+		case Pages.GAME_OPTIONS:
+			openDialogGameOption();
+			break;
 		case Pages.GAME:
 			openGamePage();
 			break;
@@ -75,12 +87,6 @@ function modalSelector(page: Modals): void {
 			break;
 		case Modals.ADD_FRIEND:
 			openDialogAddFriend();
-			break;
-		case Modals.GAME_SELECTION:
-			openDialogGameSelector();
-			break;
-		case Modals.GAME_OPTIONS:
-			openDialogGameOption();
 			break;
 		default:
 			throw new Error("No such modal");
@@ -105,7 +111,7 @@ function manageHistoryPushing(nav: Navigation): void {
 	const currentNav: Navigation = history.state?.nav;
 	if (isGameModal(nav))
 		return;
-	if (isModal(currentNav) && !isHistorySavedModal(currentNav)) {
+	if (isModal(currentNav)) {
 		history.replaceState({ nav: nav }, "");
 		return;
 	}
@@ -115,8 +121,9 @@ function manageHistoryPushing(nav: Navigation): void {
 }
 
 function navigateTo(nav: Navigation): void {
-	manageHistoryPushing(nav);
-	navigationSelector(nav);
+	const navigationSuccessfull = navigationSelector(nav);
+	if (navigationSuccessfull)
+		manageHistoryPushing(nav);
 }
 
 function goBack(): void {
@@ -124,14 +131,14 @@ function goBack(): void {
 }
 
 function goBackToBeginning(): void {
-	history.go(historyLengthAtBeginning - history.length);
-	history.replaceState({ nav: Pages.WELCOME }, "");
+	history.replaceState({}, ""); // prevent any forward in history
+	navigateTo(Pages.HOME);
 }
 
 function initPage(nav: Navigation): void {
 	history.replaceState({ nav: nav }, ""); // Clears statement to setup back and forward button
-	navigationSelector(nav);
 	historyLengthAtBeginning = history.length;
+	navigationSelector(nav);
 }
 
 /**

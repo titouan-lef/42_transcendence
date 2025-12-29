@@ -9,6 +9,8 @@ enum Pages {
 	HOME,
 	LEADERBOARD,
 	PROFILE,
+	GAME_SELECTION,
+	GAME_OPTIONS,
 	GAME,
 };
 
@@ -19,8 +21,6 @@ enum Modals {
 	SIGN_IN,
 	TWO_FA,
 	EMAIL_CONF,
-	GAME_SELECTION,
-	GAME_OPTIONS,
 	ADD_FRIEND
 };
 
@@ -41,12 +41,18 @@ function isModal(nav: Navigation): nav is Modals {
 	return nav >= MODAL_SEPARATOR && nav < GAME_MODAL_SEPARATOR;
 }
 
-function isHistorySavedModal(nav: Navigation): nav is Modals {
-	return nav === Modals.GAME_SELECTION || nav === Modals.GAME_OPTIONS;
-}
-
 function isGameModal(nav: Navigation): nav is GameModals {
 	return nav >= GAME_MODAL_SEPARATOR;
 }
 
-export { GameTypes, Pages, Modals, GameModals, Navigation, isPage, isModal, isGameModal, isHistorySavedModal };
+function needToBeConnected(nav: Navigation): boolean {
+	if (isPage(nav) && nav >= Pages.PROFILE)
+		return true;
+	if (isModal(nav) && nav >= Modals.EMAIL_CONF)
+		return true;
+	if (isGameModal(nav))
+		return true;
+	return false;
+}
+
+export { GameTypes, Pages, Modals, GameModals, Navigation, isPage, isModal, isGameModal, needToBeConnected };
