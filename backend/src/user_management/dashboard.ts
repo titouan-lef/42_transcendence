@@ -133,7 +133,7 @@ async function getPlayerStats(req: FastifyRequest<{ Body: UserDashboardInfoBody 
 		return;
 	const season = req.body?.season;
 	if (!season) {
-		sendReply(reply, Errors.NO_SEASON_GIVEN, "Season doesn't exist");
+		sendReply(reply, Errors.NO_SEASON_GIVEN);
 		return;
 	}
 	const userInfos: UserDashboardInfos = await getUserDashboardInfos(user, season);
