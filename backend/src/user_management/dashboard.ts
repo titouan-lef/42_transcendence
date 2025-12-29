@@ -25,7 +25,7 @@ interface GoalChart {
 	goalList: number[];
 }
 
-interface UserInfos {
+interface UserDashboardInfos {
 	gamesPlayed: number;
 	gamesWins: number;
 	gamesLooses: number; 
@@ -110,8 +110,8 @@ async function getRatingElo(user: string, season: number): Promise<number> {
 	return elo.r;
 }
 
-async function getUserDashboardInfos(user: string, season: number): Promise<UserInfos> {
-	const userInfos: UserInfos = {
+async function getUserDashboardInfos(user: string, season: number): Promise<UserDashboardInfos> {
+	const userInfos: UserDashboardInfos = {
 		gamesPlayed: await getGamesPlayedCount(season, user),
 		gamesWins: await getGamesWinsBySeason(season, user),
 		gamesLooses: await getGamesLoosesBySeason(season, user),
@@ -133,11 +133,11 @@ async function getPlayerStats(req: FastifyRequest<{ Body: UserDashboardInfoBody 
 		return;
 	const season = req.body?.season;
 	if (!season) {
-		sendReply(reply, Errors.REQUEST_FAILED, "Season doesn't exist");
+		sendReply(reply, Errors.NO_SEASON_GIVEN, "Season doesn't exist");
 		return;
 	}
-	const userInfos: UserInfos = await getUserDashboardInfos(user, season);
-	sendReply(reply, Errors.REQUEST_FAILED, JSON.stringify(userInfos));
+	const userInfos: UserDashboardInfos = await getUserDashboardInfos(user, season);
+	sendReply(reply, Success.USER_DASHBOARD_INFOS, JSON.stringify(userInfos));
 }
 
 export { WinrateChart, GoalChart, UserDashboardInfoBody, getPlayerStats };
