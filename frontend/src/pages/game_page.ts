@@ -66,13 +66,14 @@ function gamePageEvents(): void {
 	ragequit.addEventListener('click', openDialogGameQuit);
 }
 
-function loadGamePage(type: string): void {
+function loadGamePage(type: 'local' | 'ai' | 'ranked'): void {
 	closeDialogID('modal');
 
 	loadPage(GAME_PAGE, gamePageEvents);
 	const gametype = getSafeElement('game-type', HTMLElement);
 
 	gametype.innerHTML = type;
+	getSafeElement('modal', HTMLDialogElement).dataset.gametype = type;
 }
 
 export { loadGamePage };

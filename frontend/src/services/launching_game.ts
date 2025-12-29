@@ -71,7 +71,7 @@ async function newGameVsAI(): Promise<void> {
 	}
 	const id = Number(reply.content);
 	if (id >= 0) {
-		loadGamePage('solo');
+		loadGamePage('ai');
 		newGameSolo(id);
 	}
 }

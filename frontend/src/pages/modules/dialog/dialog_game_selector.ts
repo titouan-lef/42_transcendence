@@ -36,9 +36,27 @@ function gameSelectorHandler(modal: HTMLDialogElement): void {
 	});
 }
 
+function playGame(type: 'local' | 'ai' | 'ranked'): void {
+	switch (type) {
+		case 'local':
+			newLocalGame();
+			break;
+		case 'ai':
+			newGameVsAI();
+			break;
+		case 'ranked':
+			newRankedGame();
+			break;
+		default:
+			break;
+	}
+}
+
 function playLocal(): void {
 	loadDialog(GAME_OPTIONS, gameSelectorHandler);
 	loadCheckboxes(LOCAL_RULES);
+
+	getSafeElement('modal', HTMLDialogElement).dataset.gametype = 'local';
 
 	const go = getSafeElement('btn-go', HTMLElement);
 
@@ -49,6 +67,8 @@ function playVsAi(): void {
 	loadDialog(GAME_OPTIONS, gameSelectorHandler);
 	loadCheckboxes(AI_RULES);
 
+	getSafeElement('modal', HTMLDialogElement).dataset.gametype = 'ai';
+
 	const go = getSafeElement('btn-go', HTMLElement);
 
 	go.addEventListener('click', newGameVsAI);
@@ -57,6 +77,8 @@ function playVsAi(): void {
 function playRanked(): void {
 	loadDialog(GAME_OPTIONS, gameSelectorHandler);
 	loadCheckboxes(RANKED_RULES);
+
+	getSafeElement('modal', HTMLDialogElement).dataset.gametype = 'ranked';
 
 	const go = getSafeElement('btn-go', HTMLElement);
 
@@ -67,4 +89,4 @@ function openDialogGameSelector(): void {
 	loadDialog(GAME_SELECTOR, gameSelectorHandler);
 }
 
-export { openDialogGameSelector, playRanked };
+export { openDialogGameSelector, playRanked, playGame };

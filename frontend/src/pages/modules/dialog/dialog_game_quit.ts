@@ -1,3 +1,4 @@
+import { getSafeElement } from "src/utils/getSafeElement";
 import { closeDialogID, loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
 
@@ -17,8 +18,8 @@ function quitGame(): void {
 	closeDialogID('modal');
 }
 
-function gameQuitHandler(modal: HTMLDialogElement): void {
-	const allElements = modal.querySelectorAll('*[id]');
+function gameQuitHandler(): void {
+	const allElements = getSafeElement('modal', HTMLDialogElement).querySelectorAll('*[id]');
 	allElements.forEach(elem => {
 		switch (elem.id) {
 			case 'btn-yes':

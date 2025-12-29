@@ -4,7 +4,7 @@ import { PointSettings } from "./settings/PointSettings.js";
 import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import { DataMessage, OptionMessage, Status } from "#shared/types_transfert.js";
 import { getSafeElement } from "src/utils/getSafeElement.js";
-import { stopGame } from "./canvas_creation";
+import { openDialogGameDashboard } from "src/pages/modules/dialog/dialog_game_dashboard.js";
 
 class Game {
 	private readonly engine: babylon.Engine;
@@ -31,7 +31,8 @@ class Game {
 			const message : DataMessage = JSON.parse(event.data);
 			switch (message.status) {
 				case (Status.STOP):
-					stopGame(message);
+					this.closeGame();
+					openDialogGameDashboard(message.gameStats);
 					break;
 				case (Status.RENDER):
 					this.setDeltaTime(message.deltaMultiplicator);
