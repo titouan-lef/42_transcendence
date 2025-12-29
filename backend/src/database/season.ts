@@ -25,7 +25,7 @@ async function insertSeason(): Promise<void> {
 	);
 }
 
-async function getSeasonstartedATById(id: number): Promise<Date> {
+async function getSeasonStartedATById(id: number): Promise<Date> {
 	const row = await applyQuery(
 		async (db) => await db.get(
 			`SELECT startedAT
@@ -57,4 +57,4 @@ async function getAllSeasonId(): Promise<number[]> {
 	return row ?? [];
 }
 
-export { Season, createSeasonTable, getCurrentSeason, insertSeason, getAllSeasonId, getSeasonstartedATById };
+export { Season, createSeasonTable, getCurrentSeason, insertSeason, getAllSeasonId, getSeasonStartedATById };
