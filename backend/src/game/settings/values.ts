@@ -17,7 +17,7 @@ export const COLORS3 = {
 export const SHOW_DISPOSE_LOGS = false;
 
 /**GAMEPLAY GENERAL SETTINGS */
-export const POINTS_TO_WIN = 1; /** @todo set back to 11, game dashboard screen test */
+export const POINTS_TO_WIN = 5; /** @todo set back to 11, game dashboard screen test */
 export const START_TIMEOUT = 4; // in seconds
 const FPS_MULTIPLICATOR = 2;
 const PSPS_MULTIPLICATOR = 4;
