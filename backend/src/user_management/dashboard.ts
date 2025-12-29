@@ -39,25 +39,24 @@ interface UserInfos {
 	goalChart: GoalChart;
 }
 
-interface UserInfoBody {
+interface UserDashbordInfoBody {
 	user: string;
 	season: number;
 }
 
 const NB_CHART_POINT = 7;
 
-
 async function getEloChart(season: number, user: string):Promise <EloChart> {
 
 	const eloVariaton = await getEloVariatonBySeason(season, user);
-	if (eloVariaton?.length === 0)
+	if (eloVariaton.length === 0)
 		return { dateList: [], eloList: [] };
 
 	const idSeasonTab: number[] = await getAllSeasonId();
 	if (idSeasonTab.length === 0)
 		return { dateList: [], eloList: [] };
 
-	let lastSeasonElo = -1;
+	let lastSeasonElo = DEFAULT_RATINGS;
 	for (let i = 1; i < idSeasonTab.length; i++) {
 		const tmpElo: number = await getRatingElo(user, idSeasonTab[i]);
 		if (tmpElo !== 0) {
@@ -65,8 +64,6 @@ async function getEloChart(season: number, user: string):Promise <EloChart> {
 			break;
 		}
 	}
-	if (lastSeasonElo === -1)
-		lastSeasonElo = DEFAULT_RATINGS;
 
 	const eloChart: EloChart = { dateList: [], eloList: [] };
 	for (const eloHistory of eloVariaton) {
@@ -77,7 +74,6 @@ async function getEloChart(season: number, user: string):Promise <EloChart> {
 
 	return eloChart;
 }
-
 
 async function getTabDate(season: number): Promise <string[]> {
 
@@ -114,7 +110,7 @@ async function getRatingElo(user: string, season: number): Promise<number> {
 	return elo.r;
 }
 
-async function getUserInfos(user: string, season: number): Promise<UserInfos> {
+async function getUserDashboardInfos(user: string, season: number): Promise<UserInfos> {
 	const userInfos: UserInfos = {
 		gamesPlayed: await getGamesPlayedCount(season, user),
 		gamesWins: await getGamesWinsBySeason(season, user),
@@ -131,8 +127,7 @@ async function getUserInfos(user: string, season: number): Promise<UserInfos> {
 	return userInfos;
 }
 
-
-async function getPlayerStats(req: FastifyRequest<{ Body: UserInfoBody }>, reply: FastifyReply): Promise<void> {
+async function getPlayerStats(req: FastifyRequest<{ Body: UserDashbordInfoBody }>, reply: FastifyReply): Promise<void> {
 	const user = req.user;
 	if (!user)
 		return;
@@ -141,8 +136,8 @@ async function getPlayerStats(req: FastifyRequest<{ Body: UserInfoBody }>, reply
 		sendReply(reply, Errors.REQUEST_FAILED, "Season doesn't exist");
 		return;
 	}
-	const userInfos: UserInfos = await getUserInfos(user, season);
+	const userInfos: UserInfos = await getUserDashboardInfos(user, season);
 	sendReply(reply, Errors.REQUEST_FAILED, JSON.stringify(userInfos));
 }
 
-export { WinrateChart, GoalChart, UserInfoBody, getPlayerStats };
+export { WinrateChart, GoalChart, UserDashbordInfoBody, getPlayerStats };

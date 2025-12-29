@@ -55,7 +55,6 @@ async function getFriendships(username: string): Promise<string[] | undefined> {
 	);
 	if (!rows)
 		return undefined;
-
 	return rows.map(row => row.friendName);
 }
 

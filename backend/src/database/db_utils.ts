@@ -28,7 +28,7 @@ async function getActualDate(): Promise<Date> {
 			CURRENT_TIMESTAMP;`
 		), "getActualDate"
 	);
-	return new Date(date);
+	return new Date(date.CURRENT_TIMESTAMP);
 }
 
 export { applyQuery, fetchAll, getActualDate };
