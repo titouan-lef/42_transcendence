@@ -58,7 +58,6 @@ async function getFriendships(username: string): Promise<string[] | undefined> {
 	return rows.map(row => row.friendName);
 }
 
-
 async function removeFriendship(username: string, friendName: string): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
