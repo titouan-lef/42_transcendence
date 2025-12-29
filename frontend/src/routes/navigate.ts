@@ -8,25 +8,39 @@ import { openGamePage } from "src/pages/game_page.js";
 import { openDialogGameSelector } from "src/pages/modules/dialog/dialog_game_selector.js";
 import { openDialogGameOption } from "src/pages/modules/dialog/dialog_game_options.js";
 import { openLeaderboard } from "src/pages/modules/box/box_main_leaderboard.js";
+import { closeGame } from "src/game/canvas_creation.js";
+import { openDialogWaiting, sendCancelQueue } from "src/pages/modules/dialog/dialog_game_waiting.js";
 
 let currentPage: Pages = Pages.WELCOME;
+let isWaitingForGame = false;
+
+function navigationGameFound(): void {
+	isWaitingForGame = false;
+}
 
 function navigationSelector(nav: Navigation): void {
+	if (isWaitingForGame)
+		sendCancelQueue();
+	if (nav !== GameModals.WAITING)
+		isWaitingForGame = false;
+
 	console.log(nav);
 	if (isPage(nav))
 		pageSelector(nav);
 	else if (isModal(nav)) {
 		if (currentPage !== Pages.HOME)
-			openModularPage();
+			pageSelector(Pages.HOME);
 		modalSelector(nav);
 	} else if (isGameModal(nav)) {
 		if (currentPage !== Pages.GAME)
-			openGamePage();
+			pageSelector(Pages.GAME);
 		gameModalSelector(nav);
 	}
 }
 
 function pageSelector(page: Pages): void {
+	if (currentPage === Pages.GAME && page !== Pages.GAME)
+		closeGame();
 	currentPage = page;
 	switch(page) {
 		case Pages.WELCOME:
@@ -73,6 +87,10 @@ function modalSelector(page: Modals): void {
 
 function gameModalSelector(page: GameModals): void {
 	switch(page) {
+		case GameModals.WAITING:
+			isWaitingForGame = true;
+			openDialogWaiting();
+			break;
 		case GameModals.GAME_QUIT:
 			openDialogSignIn();
 			break;
@@ -82,7 +100,8 @@ function gameModalSelector(page: GameModals): void {
 }
 
 function navigateTo(nav: Navigation): void {
-	history.pushState({ nav: nav }, "");
+	if (!isGameModal(nav))
+		history.pushState({ nav: nav }, "");
 	navigationSelector(nav);
 }
 
@@ -103,4 +122,4 @@ window.addEventListener("popstate", (event: PopStateEvent) => {
 		navigationSelector(event.state.nav);
 });
 
-export { navigateTo, goBack, initPage };
+export { navigateTo, goBack, initPage, navigationGameFound };

@@ -4,6 +4,10 @@ import { applyColor } from "src/utils/applyColor";
 import { openDialogGameQuit } from "./modules/dialog/dialog_game_quit";
 import { navigateTo } from "src/routes/navigate";
 import { GameTypes, Pages } from "src/routes/navigate_types";
+import { newGameVsAI, newLocalGame, newRankedGame } from "src/services/launching_game";
+import { registerGameOptions } from "src/game/settings/GameRules";
+import { loadDialogWaiting } from "./modules/dialog/dialog_game_waiting";
+import { closeDialogID, exitDialog } from "./modules/dialog/dialog";
 
 const GAME_PAGE_STYLE = `
 flex flex-col gap-[10px]
@@ -66,8 +70,8 @@ function gamePageEvents(): void {
 	const ragequit = getSafeElement('btn-quit', HTMLElement);
 
 	modal.addEventListener('click', (e) => {
-		if (e.target === modal && gameType)
-			loadGamePage(gameType);
+		if (e.target === modal)
+			closeDialogID(`modal`);
 	});
 	ragequit.addEventListener('click', openDialogGameQuit);
 }
@@ -75,12 +79,26 @@ function gamePageEvents(): void {
 function openGamePage(): void {
 	if (!gameType)
 		return ;
-	// closeDialogID('modal'); no usefull I think
+	// closeDialogID('modal'); not usefull I think
 
-	loadPage(GAME_PAGE, gamePageEvents);
-	const gametype = getSafeElement('game-type', HTMLElement);
+	loadPage(GAME_PAGE, () => {});
 
-	gametype.innerHTML = gameType;
+	switch (gameType) {
+		case (GameTypes.LOCAL):
+			gamePageEvents();
+			newLocalGame();
+			break;
+		case (GameTypes.AI):
+			gamePageEvents();
+			newGameVsAI();
+			break;
+		case (GameTypes.RANKED):
+			loadDialogWaiting();
+			break;
+		default:
+			throw new Error("No such game type.");
+	}
+	getSafeElement('game-type', HTMLElement).innerHTML = gameType;
 }
 
 function loadGamePage(type: GameTypes): void {
@@ -88,4 +106,19 @@ function loadGamePage(type: GameTypes): void {
 	navigateTo(Pages.GAME);
 }
 
-export { loadGamePage, openGamePage };
+function loadLocalGamePage(): void {
+	registerGameOptions(GameTypes.LOCAL);
+	loadGamePage(GameTypes.LOCAL);
+}
+
+function loadSoloGamePage(): void {
+	registerGameOptions(GameTypes.AI);
+	loadGamePage(GameTypes.AI);
+}
+
+function loadRankedGamePage(): void {
+	registerGameOptions(GameTypes.RANKED);
+	loadGamePage(GameTypes.RANKED);
+}
+
+export { loadLocalGamePage, loadSoloGamePage, loadRankedGamePage, openGamePage, gamePageEvents };

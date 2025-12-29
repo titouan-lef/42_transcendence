@@ -1,7 +1,13 @@
-import { sendCancelQueue } from "src/services/launching_game";
+import { newRankedGame } from "src/services/launching_game";
 import { getSafeElement } from "../../../utils/getSafeElement";
-import { loadDialog } from "./dialog";
+import { closeDialogID, loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
+import { navigateTo, navigationGameFound } from "src/routes/navigate";
+import { GameModals, GameTypes } from "src/routes/navigate_types";
+import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "src/services/api_request";
+import { Errors } from '#shared/status_codes';
+import { getGameOptions } from "src/game/settings/GameRules";
+import { gamePageEvents } from "src/pages/game_page";
 
 const GIF_STYLE = `
 rounded-2xl
@@ -32,14 +38,62 @@ function getRandomGifPath(): string {
 	return path;
 }
 
-function gameWaitingHandler(): void {
-	const elem = getSafeElement('btn-cancel', HTMLElement);
+async function sendCancelQueue(): Promise<void> {
+	const reply = await sendGetRequestToBack("/api/game/cancel_queue");
+	if (!isRequestSuccessfull(reply)) {
+		console.log("Error:", reply.content);
+		return;
+	}
+	return;
+}
 
+async function waitForGame(): Promise<number | null> {
+	let id = -1;
+	let reply: ReplyFromBack;
+	do {
+		reply = await sendGetRequestToBack("/api/game/waiting");
+		if (isRequestSuccessfull(reply))
+			id = Number(reply.content);
+	} while (id < 0 && reply.code !== Errors.NOT_IN_QUEUE);
+	if (id >= 0)
+		return id;
+	return null;
+}
+
+async function askForGame(): Promise<boolean> {
+	const options = getGameOptions(GameTypes.RANKED);
+	const reply = await sendPostRequestToBack("/api/game/ranked_game", JSON.stringify(options));
+	const message = getReplyMessage(reply);
+	if (!isRequestSuccessfull(reply)) {
+		console.log("Error:", message);
+		return false;
+	}
+	return true;
+}
+
+async function gameWaitingHandler(): Promise<void> {
+	const elem = getSafeElement('btn-cancel', HTMLElement);
 	elem.addEventListener('click', sendCancelQueue);
+
+	if (!await askForGame())
+		return;
+	const id = await waitForGame();
+	if (id === null) { // => queue got canceled
+		/**@todo will pop even if we click outside of the modal, but its fine tbh*/
+		return;
+	}
+	closeDialogID('modal');
+	navigationGameFound();
+	gamePageEvents();
+	newRankedGame(id);
 }
 
 function openDialogWaiting(): void {
 	loadDialog(GAME_WAITING, gameWaitingHandler);
 }
 
-export { openDialogWaiting };
+function loadDialogWaiting(): void {
+	navigateTo(GameModals.WAITING);
+}
+
+export { openDialogWaiting, loadDialogWaiting, sendCancelQueue };

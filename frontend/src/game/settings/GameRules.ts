@@ -42,7 +42,7 @@ const RANKED_RULES: GameOptions = {
 	canonCount: 1
 };
 
-function getGameRules(gameType: GameTypes): GameOptions {
+function getGameOptions(gameType: GameTypes): GameOptions {
 	switch (gameType) {
 		case GameTypes.LOCAL:
 			return LOCAL_RULES ;
@@ -55,7 +55,7 @@ function getGameRules(gameType: GameTypes): GameOptions {
 	}
 }
 
-function getGameOptions(gameType: GameTypes): GameOptions {
+function registerGameOptions(gameType: GameTypes): void {
 	const balls: BallOption[] = [];
 	const maps: MapOption[] = [];
 
@@ -77,19 +77,18 @@ function getGameOptions(gameType: GameTypes): GameOptions {
 	if (balls.length === 0)
 		balls.push('default');
 
-	const rules = getGameRules(gameType);
+	const rules = getGameOptions(gameType);
 	rules.map = maps;
 	rules.ball = balls;
 	rules.spin = getSafeElement(`chk-rule-spin`, HTMLInputElement).checked;
 	rules.windAffectsBall = getSafeElement(`chk-rule-wind`, HTMLInputElement).checked;
 	rules.rotatingPlayer = getSafeElement(`chk-rule-prot`, HTMLInputElement).checked;
 	rules.dashingPlayer = getSafeElement(`chk-rule-dash`, HTMLInputElement).checked;
-	rules.canonCount = +getSafeElement(`canon-nbr`, HTMLInputElement).value;
-	return rules;
+	rules.canonCount = Number(getSafeElement(`canon-nbr`, HTMLInputElement).value);
 }
 
 function loadCheckboxes(gameType: GameTypes): void {
-	const rules = getGameRules(gameType);
+	const rules = getGameOptions(gameType);
 	rules.map.forEach(map => {
 		getSafeElement(`chk-map-${map}`, HTMLInputElement).checked = true;
 	});
@@ -103,4 +102,4 @@ function loadCheckboxes(gameType: GameTypes): void {
 	getSafeElement(`canon-nbr`, HTMLInputElement).value = rules.canonCount.toString();
 }
 
-export { getGameOptions, loadCheckboxes };
+export { registerGameOptions, getGameOptions, loadCheckboxes };

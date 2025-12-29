@@ -87,6 +87,8 @@ class Game {
 		this.engine.dispose();
 		this.canvas.remove();
 		this.gameEnded = true;
+		this.settings.player1.socket?.close();
+		this.settings.player2.socket?.close();
 		/** @todo manage game stats */
 	}
 

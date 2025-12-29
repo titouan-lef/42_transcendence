@@ -5,8 +5,8 @@ import { SVG_BALL_DEFAULT, SVG_BALL_INVISIBLE, SVG_BALL_PULSE, SVG_BALL_SNAKE, S
 import { DIALOG_BTN_STYLE, DIALOG_SEPARATOR_STYLE } from "./dialog_style";
 import { GameTypes, Modals } from "src/routes/navigate_types";
 import { getSafeElement } from "src/utils/getSafeElement";
-import { newGameVsAI, newLocalGame, newRankedGame } from "src/services/launching_game";
 import { loadCheckboxes } from "src/game/settings/GameRules";
+import { loadLocalGamePage, loadRankedGamePage, loadSoloGamePage } from "src/pages/game_page";
 
 /** @todo front */
 const GAME_OPTIONS_MAPS = `
@@ -101,13 +101,13 @@ function openDialogGameOption(): void {
 	const modal = getSafeElement("modal", HTMLDialogElement);
 	switch (currentGameType) {
 		case GameTypes.LOCAL:
-			optionSelectorHandler(modal, newLocalGame);
+			optionSelectorHandler(modal, loadLocalGamePage);
 			break;
 		case GameTypes.AI:
-			optionSelectorHandler(modal, newGameVsAI);
+			optionSelectorHandler(modal, loadSoloGamePage);
 			break;
 		case GameTypes.RANKED:
-			optionSelectorHandler(modal, newRankedGame);
+			optionSelectorHandler(modal, loadRankedGamePage);
 			break;
 		default:
 			throw new Error("No such game type");

@@ -1,6 +1,5 @@
 import { applyColor } from "../../../utils/applyColor.js";
 import { getSafeElement } from "../../../utils/getSafeElement.js";
-import { sendCancelQueue } from "src/services/launching_game.js";
 
 const DIALOG_MAIN_STYLE = `
 	m-auto p-0 rounded-2xl
@@ -38,16 +37,9 @@ function loadDialog(content: string, handler: (modal: HTMLDialogElement) => void
 	handler(modal);
 }
 
-function exitDialog(modal: HTMLDialogElement, event: Event): void {
-	if (event.target === modal) {
-		sendCancelQueue(); /** @todo not always, only for the waiting screen */
-		modal.close();
-	}
-}
-
 function closeDialogID(id: string): void {
 	const dialog = getSafeElement(id, HTMLDialogElement);
 	dialog.close();
 }
 
-export { closeDialogID, exitDialog, loadDialog };
+export { closeDialogID, loadDialog };
