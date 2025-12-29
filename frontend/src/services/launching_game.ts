@@ -1,61 +1,14 @@
 import { startOrUpdateGame } from "../game/canvas_creation.js";
 import { DataMessage, Status } from "#shared/types_transfert.js";
-import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "./api_request.js";
-import { Errors } from '#shared/status_codes';
+import { getReplyMessage, isRequestSuccessfull, sendGetRequestToBack, sendPostRequestToBack } from "./api_request.js";
 import { getGameOptions } from "../game/settings/GameRules.js";
-import { loadGamePage } from "src/pages/game_page.js";
-import { openDialogWaiting } from "src/pages/modules/dialog/dialog_game_waiting.js";
-import { openDialogGameSelector } from "src/pages/modules/dialog/dialog_game_selector.js";
 import { GameTypes } from "src/routes/navigate_types.js";
 
 //////////////////////////////////////////
 //			Game management				//
 //////////////////////////////////////////
 
-async function askForGame(): Promise<boolean> {
-	const options = getGameOptions(GameTypes.RANKED);
-	const reply = await sendPostRequestToBack("/api/game/ranked_game", JSON.stringify(options));
-	const message = getReplyMessage(reply);
-	if (!isRequestSuccessfull(reply)) {
-		console.log("Error:", message);
-		return false;
-	}
-	return true;
-}
-
-async function sendCancelQueue(): Promise<void> {
-	const reply = await sendGetRequestToBack("/api/game/cancel_queue");
-	if (!isRequestSuccessfull(reply)) {
-		console.log("Error:", reply.content);
-		return;
-	}
-	return;
-}
-
-async function waitForGame(): Promise<number | null> {
-	let id = -1;
-	let reply: ReplyFromBack;
-	do {
-		reply = await sendGetRequestToBack("/api/game/waiting");
-		if (isRequestSuccessfull(reply))
-			id = Number(reply.content);
-	} while (id < 0 && reply.code !== Errors.NOT_IN_QUEUE);
-	if (id >= 0)
-		return id;
-	return null;
-}
-
-async function newRankedGame(): Promise<void> {
-	if (!await askForGame())
-		return;
-	openDialogWaiting();
-	const id = await waitForGame();
-	if (id === null) { // => queue got canceled
-		/**@todo will pop even if we click outside of the modal, but its fine tbh*/
-		openDialogGameSelector();
-		return ;
-	}
-	loadGamePage(GameTypes.RANKED);
+async function newRankedGame(id: number): Promise<void> {
 	newGameSolo(id);
 }
 
@@ -67,10 +20,8 @@ async function newGameVsAI(): Promise<void> {
 		return;
 	}
 	const id = Number(reply.content);
-	if (id >= 0) {
-		loadGamePage(GameTypes.AI);
+	if (id >= 0)
 		newGameSolo(id);
-	}
 }
 
 //////////////////////////////////////////
@@ -117,7 +68,6 @@ async function newLocalGame(): Promise<void> {
 		console.log("Negative ID"); /** @todo remove */
 		return;
 	}
-	loadGamePage(GameTypes.LOCAL);
 
 	const player1 = new WebSocket(`ws/${id}`);
 	const player2 = new WebSocket(`ws/${id}`);
@@ -157,4 +107,4 @@ async function newLocalGame(): Promise<void> {
 	};
 }
 
-export { newRankedGame, newLocalGame, newGameVsAI, sendCancelQueue };
+export { newRankedGame, newLocalGame, newGameVsAI };

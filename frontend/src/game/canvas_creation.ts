@@ -34,4 +34,9 @@ async function startOrUpdateGame(options: OptionMessage, player1: WebSocket, pla
 	}
 }
 
-export { startOrUpdateGame };
+function closeGame(): void {
+	game?.closeGame();
+	game = null;
+}
+
+export { startOrUpdateGame, closeGame };

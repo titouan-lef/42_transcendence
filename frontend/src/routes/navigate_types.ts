@@ -30,7 +30,8 @@ enum Modals {
 const GAME_MODAL_SEPARATOR = 200;
 
 enum GameModals {
-	GAME_QUIT = 200
+	WAITING = 200,
+	GAME_QUIT
 }
 
 type Navigation = Pages | Modals | GameModals;
