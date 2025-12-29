@@ -45,30 +45,36 @@ function setGameOptions(rules: GameOptions): void {
 	const balls: BallOption[] = [];
 	const maps: MapOption[] = [];
 
-	getSafeElement('chk-map', HTMLElement).querySelectorAll('*[id]').forEach(map => {
-		if (map instanceof HTMLInputElement && map.checked) {
-			if (map.value === 'default' || map.value === 'sky' || map.value === 'volcano' || map.value === 'desert') {
-				maps.push(map.value);
+	try {
+		const getMaps = getSafeElement('chk-map', HTMLElement);
+		getMaps.querySelectorAll('*[id]').forEach(map => {
+			if (map instanceof HTMLInputElement && map.checked) {
+				if (map.value === 'default' || map.value === 'sky' || map.value === 'volcano' || map.value === 'desert') {
+					maps.push(map.value);
+				}
 			}
-		}
-	});
-	getSafeElement('chk-ball', HTMLElement).querySelectorAll('*[id]').forEach(ball => {
-		if (ball instanceof HTMLInputElement && ball.checked) {
-			if (ball.value === 'default' || ball.value === 'snake' || ball.value === 'invisible' || ball.value === 'tricky' || ball.value === 'pulse')
-				balls.push(ball.value);
-		}
-	});
-	if (maps.length === 0)
-		maps.push('default');
-	if (balls.length === 0)
-		balls.push('default');
-	rules.map = maps;
-	rules.ball = balls;
-	rules.spin = getSafeElement(`chk-rule-spin`, HTMLInputElement).checked;
-	rules.windAffectsBall = getSafeElement(`chk-rule-wind`, HTMLInputElement).checked;
-	rules.rotatingPlayer = getSafeElement(`chk-rule-prot`, HTMLInputElement).checked;
-	rules.dashingPlayer = getSafeElement(`chk-rule-dash`, HTMLInputElement).checked;
-	rules.canonCount = +getSafeElement(`canon-nbr`, HTMLInputElement).value;
+		});
+		const getBalls = getSafeElement('chk-ball', HTMLElement);
+		getBalls.querySelectorAll('*[id]').forEach(ball => {
+			if (ball instanceof HTMLInputElement && ball.checked) {
+				if (ball.value === 'default' || ball.value === 'snake' || ball.value === 'invisible' || ball.value === 'tricky' || ball.value === 'pulse')
+					balls.push(ball.value);
+			}
+		});
+		if (maps.length === 0)
+			maps.push('default');
+		if (balls.length === 0)
+			balls.push('default');
+		rules.map = maps;
+		rules.ball = balls;
+		rules.spin = getSafeElement(`chk-rule-spin`, HTMLInputElement).checked;
+		rules.windAffectsBall = getSafeElement(`chk-rule-wind`, HTMLInputElement).checked;
+		rules.rotatingPlayer = getSafeElement(`chk-rule-prot`, HTMLInputElement).checked;
+		rules.dashingPlayer = getSafeElement(`chk-rule-dash`, HTMLInputElement).checked;
+		rules.canonCount = +getSafeElement(`canon-nbr`, HTMLInputElement).value;
+	} catch {
+		console.log('not ruleset found, last rules or default applied'); /** @todo better to do for replay button ? */
+	}
 }
 
 function loadCheckboxes(rules: GameOptions): void {
