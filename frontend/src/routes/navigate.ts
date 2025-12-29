@@ -1,6 +1,6 @@
 import { openModularPage } from "../pages/modular.js";
 import { openProfile } from "../pages/modules/profile/profile.js";
-import { Modals, Navigation, Pages, isModal, isPage } from "./navigate_types.js";
+import { GameModals, Modals, Navigation, Pages, isGameModal, isModal, isPage } from "./navigate_types.js";
 import { openWelcomePage } from "../pages/welcome.js";
 import { openDialogSignIn, openDialogSignUp } from "src/pages/modules/dialog/dialog_login.js";
 import { openDialogAddFriend } from "src/pages/modules/dialog/dialog_add_friend.js";
@@ -9,15 +9,25 @@ import { openDialogGameSelector } from "src/pages/modules/dialog/dialog_game_sel
 import { openDialogGameOption } from "src/pages/modules/dialog/dialog_game_options.js";
 import { openLeaderboard } from "src/pages/modules/box/box_main_leaderboard.js";
 
+let currentPage: Pages = Pages.WELCOME;
+
 function navigationSelector(nav: Navigation): void {
 	console.log(nav);
 	if (isPage(nav))
 		pageSelector(nav);
-	else if (isModal(nav))
+	else if (isModal(nav)) {
+		if (currentPage !== Pages.HOME)
+			openModularPage();
 		modalSelector(nav);
+	} else if (isGameModal(nav)) {
+		if (currentPage !== Pages.GAME)
+			openGamePage();
+		gameModalSelector(nav);
+	}
 }
 
 function pageSelector(page: Pages): void {
+	currentPage = page;
 	switch(page) {
 		case Pages.WELCOME:
 			openWelcomePage();
@@ -55,6 +65,16 @@ function modalSelector(page: Modals): void {
 			break;
 		case Modals.GAME_OPTIONS:
 			openDialogGameOption();
+			break;
+		default:
+			throw new Error("No such modal");
+	}
+}
+
+function gameModalSelector(page: GameModals): void {
+	switch(page) {
+		case GameModals.GAME_QUIT:
+			openDialogSignIn();
 			break;
 		default:
 			throw new Error("No such modal");
