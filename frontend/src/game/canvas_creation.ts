@@ -2,7 +2,7 @@ import { Game } from "./Game.js";
 import { PointSettings } from "./settings/PointSettings.js";
 import { AI_RANKED_PLAYER_KEYS, LOCAL_PLAYER1_KEYS, LOCAL_PLAYER2_KEYS } from "./settings/KeySets.js";
 import { OptionMessage, StopMessage } from "#shared/types_transfert.js";
-import { openDialogGameDashboard } from "src/pages/modules/dialog/dialog.js";
+import { openDialogGameDashboard } from "src/pages/modules/dialog/dialog_game_dashboard.js";
 
 /**@todo gameManager to handle several games and reconect a user tha has been disconected for a few seconds */
 let game: Game | null = null;
