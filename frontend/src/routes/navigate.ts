@@ -66,9 +66,8 @@ function navigationSelector(nav: Navigation): boolean {
 function pageSelector(page: Pages): void {
 	if (currentPage === Pages.GAME && page !== Pages.GAME)
 		closeGame();
-	if (isModularPage(page)) {
+	if (isModularPage(page)) /** @todo donot reload modular if already open (carefull with the backawrd from a modal)*/
 		openModularPage();
-	}
 	currentPage = page;
 	switch(page) {
 		case Pages.WELCOME:

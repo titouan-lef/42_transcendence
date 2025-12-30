@@ -15,6 +15,10 @@ enum Pages {
 	GAME
 }
 
+const ALL_PAGES: Pages[] = Object.keys(Pages)
+	.map(Number)
+	.filter(n => !Number.isNaN(n));
+
 const SEPARATOR = 100;
 
 enum Modals {
@@ -51,10 +55,6 @@ function isModularPage(nav: Navigation): nav is Pages {
 function isModal(nav: Navigation): nav is Modals {
 	return nav >= SEPARATOR;
 }
-
-const ALL_PAGES: Pages[] = Object.keys(Pages)
-	.map(Number)
-	.filter(n => !Number.isNaN(n));
 
 function isAssociatedPage(modal: Modals, page: Pages): boolean {
 	return PAGES_MODALS[page].includes(modal);
