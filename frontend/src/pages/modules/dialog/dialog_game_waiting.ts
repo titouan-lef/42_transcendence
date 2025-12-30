@@ -2,8 +2,8 @@ import { newRankedGame } from "src/services/launching_game";
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { closeDialogID, loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
-import { navigateTo, navigationGameFound } from "src/routes/navigate";
-import { GameModals, GameTypes } from "src/routes/navigate_types";
+import { goBack, navigateTo, navigationGameFound } from "src/routes/navigate";
+import { Modals, GameTypes } from "src/routes/navigate_types";
 import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "src/services/api_request";
 import { Errors } from '#shared/status_codes';
 import { getGameOptions } from "src/game/settings/GameRules";
@@ -38,15 +38,6 @@ function getRandomGifPath(): string {
 	return path;
 }
 
-async function sendCancelQueue(): Promise<void> {
-	const reply = await sendGetRequestToBack("/api/game/cancel_queue");
-	if (!isRequestSuccessfull(reply)) {
-		console.log("Error:", reply.content);
-		return;
-	}
-	return;
-}
-
 async function waitForGame(): Promise<number | null> {
 	let id = -1;
 	let reply: ReplyFromBack;
@@ -73,7 +64,7 @@ async function askForGame(): Promise<boolean> {
 
 async function gameWaitingHandler(): Promise<void> {
 	const elem = getSafeElement('btn-cancel', HTMLElement);
-	elem.addEventListener('click', sendCancelQueue);
+	elem.addEventListener('click', goBack);
 
 	if (!await askForGame())
 		return;
@@ -93,7 +84,7 @@ function openDialogWaiting(): void {
 }
 
 function loadDialogWaiting(): void {
-	navigateTo(GameModals.WAITING);
+	navigateTo(Modals.WAITING);
 }
 
-export { openDialogWaiting, loadDialogWaiting, sendCancelQueue };
+export { openDialogWaiting, loadDialogWaiting };

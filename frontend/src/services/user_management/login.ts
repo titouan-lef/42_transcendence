@@ -1,13 +1,11 @@
 import { isOneStringEmtpy } from "../../utils/strings.js";
 import { sendPostRequestToBack, printReplyInDiv, isRequestSuccessfull, ReplyFromBack } from "../api_request.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
-import { updateFriendList } from "../../pages/modules/box/box_aside_friendlist.js";
-import { loadModularPage } from "../../pages/modular.js";
-import { openProfile } from "../../pages/modules/profile/profile.js";
 import { Errors } from '#shared/status_codes';
 import { getCurrentUserInfos, getUserInfos } from "./user_state.js";
-import { openDialog2FA } from "../../pages/modules/dialog/dialog_2FA.js";
-import { loadSettings } from "../../pages/modules/profile/profile_settings.js";
+import { loadDialog2FA } from "../../pages/modules/dialog/dialog_2FA.js";
+import { goBackToCurrentPage, navigateTo } from "../../routes/navigate.js";
+import { Pages } from "../../routes/navigate_types.js";
 
 let user = "";
 
@@ -30,19 +28,14 @@ async function connectUser(): Promise<void> {
 
 	user = userId.value;
 	if (reply.code === Errors.TWOFA_REQUIRED ) {
-		openDialog2FA();
+		loadDialog2FA();
 		return;
 	}
 	if (!isRequestSuccessfull(reply)) {
 		printReplyInDiv(reply, "print-content");
 		return;
 	}
-
-	const modal = getSafeElement('modal', HTMLDialogElement);
-	modal.close();
-	await getUserInfos();
-	loadModularPage();
-	updateFriendList();
+	navigateTo(Pages.HOME);
 }
 
 async function sendSecureCode(): Promise<boolean> {
@@ -63,25 +56,13 @@ async function sendSecureCode(): Promise<boolean> {
 		printReplyInDiv(reply, "print-content");
 		return false;
 	}
-	const modal = getSafeElement('modal', HTMLDialogElement);
-	modal.close();
 	return true;
 }
 
-async function verify2FAConnection(): Promise<void> {
+async function verify2FA(): Promise<void> {
 	if(!await sendSecureCode())
 		return;
-	await getUserInfos();
-	loadModularPage();
-	updateFriendList();
+	goBackToCurrentPage();
 }
 
-async function verify2FAConfirmation(): Promise<void> {
-	if(!await sendSecureCode())
-		return;
-	await getUserInfos();
-	openProfile(); // go back to settings
-	loadSettings();
-}
-
-export { getUserInfos, connectUser, verify2FAConnection, verify2FAConfirmation };
+export { getUserInfos, connectUser, verify2FA };

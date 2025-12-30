@@ -6,7 +6,7 @@ import { getSafeElement } from "../../../utils/getSafeElement.js";
 import { updateFriendList } from "../box/box_aside_friendlist.js";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_FORM_STYLE } from "./dialog_style.js";
 import { loadDialog } from "./dialog.js";
-import { navigateTo } from "src/routes/navigate.js";
+import { goBackToCurrentPage, navigateTo } from "src/routes/navigate.js";
 import { Modals } from "src/routes/navigate_types.js";
 
 /** @todo better front style for add friend */
@@ -31,8 +31,7 @@ function addFriendHandler(modal: HTMLDialogElement): void {
 			printReplyInDiv(reply, "print-content");
 			return;
 		}
-		updateFriendList();
-		modal.close();
+		goBackToCurrentPage();
 	});
 }
 

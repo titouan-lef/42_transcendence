@@ -1,10 +1,12 @@
-import { loadModularPage } from "src/pages/modular";
 import { getSafeElement } from "src/utils/getSafeElement";
 import { GameStats } from "#shared/types_transfert.js";
 import { loadMainBox, MAIN_BOX_BTN_STYLE, MAIN_BOX_SEPARATOR_STYLE } from "../box/box_main_utils";
-import { loadMainHome } from "../box/box_main_home";
 import { formatScore, formatTime, getGameStats, setGameStats } from "./box_main_dashboard_utils";
 import { generatePointList, generateRules } from "./box_main_dashboard_generators";
+import { navigateTo } from "src/routes/navigate";
+import { Pages } from "src/routes/navigate_types";
+import { loadHomePage } from "./box_main_home";
+import { loadSoloGamePage } from "src/pages/game_page";
 
 const GAME_DASHBOARD_BUTTONS = `
 <div class='flex flex-row gap-3'>
@@ -50,10 +52,10 @@ function gameDashboardEvents(): void {
 	allElements.forEach(elem => {
 		switch (elem.id) {
 			case 'btn-replay':
-				elem.addEventListener('click', () => console.log('launch new same game behavior')); /** @todo link with new nav replay system */
+				elem.addEventListener('click', () => navigateTo(Pages.GAME));
 				break;
 			case 'btn-home':
-				elem.addEventListener('click', loadMainHome);
+				elem.addEventListener('click', loadHomePage);
 				break;
 			case 'btn-oppo-profile':
 				elem.addEventListener('click', () => console.log('open opponent\'s profile')); /** @todo oppo's profile */
@@ -64,11 +66,19 @@ function gameDashboardEvents(): void {
 	});
 }
 
-function loadMainDashboard(stats: GameStats): void {
-	loadModularPage();
-	setGameStats(stats);
+let gameStats: GameStats | null = null;
 
-	loadMainBox(generateGameDashboard(), gameDashboardEvents);
+function openMainDashboard(): void {
+	if (!gameStats)
+		return;
+	setGameStats(gameStats);
+	const gameDashboard = generateGameDashboard();
+	loadMainBox(gameDashboard, gameDashboardEvents);
 }
 
-export { loadMainDashboard };
+function loadMainDashboard(stats: GameStats): void {
+	gameStats = stats;
+	navigateTo(Pages.DASHBOARD);
+}
+
+export { loadMainDashboard, openMainDashboard };

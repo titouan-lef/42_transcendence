@@ -5,18 +5,22 @@ import { getCurrentUserInfos, getUserInfos } from "../user_management/user_state
 
 async function enable2FA(): Promise<void> {
 	const reply = await sendGetRequestToBack("/api/user/enable-secure");
-	if (!isRequestSuccessfull(reply))
+	if (!isRequestSuccessfull(reply)) {
 		printReplyInDiv(reply, "print-2fa-reply");
-	else
-		update2FAButton();
+		return;
+	}
+	await getUserInfos();
+	update2FAButton();
 }
 
 async function disable2FA(): Promise<void> {
 	const reply = await sendGetRequestToBack("/api/user/disable-secure");
-	if (!isRequestSuccessfull(reply))
+	if (!isRequestSuccessfull(reply)) {
 		printReplyInDiv(reply, "print-2fa-reply");
-	else
-		update2FAButton();
+		return;
+	}
+	await getUserInfos();
+	update2FAButton();
 }
 
 async function update2FAButton(): Promise<void> {
@@ -24,11 +28,8 @@ async function update2FAButton(): Promise<void> {
 	if (!currentUser)
 		return;
 
-	await getUserInfos();
-
 	const switch2fa = getSafeElement('switch-2fa', HTMLElement);
 	switch2fa.innerHTML = (currentUser.is2FAEnabled) ? SETTINGS_2FA_DISABLE : SETTINGS_2FA_ENABLE;
-
 	twoFactorAuthEvents();
 }
 

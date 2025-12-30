@@ -1,8 +1,10 @@
+import { navigateTo } from "src/routes/navigate";
 import { createButtonHtml } from "../../../components/button";
 import { createInputHtml } from "../../../components/input";
-import { verify2FAConfirmation, verify2FAConnection } from "../../../services/user_management/login";
+import { verify2FA } from "../../../services/user_management/login";
 import { loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_SEPARATOR_STYLE, DIALOG_FORM_STYLE } from "./dialog_style";
+import { Modals } from "src/routes/navigate_types";
 
 /** @todo make print-content great. again? */
 /** @todo change `password` into `verification code` */
@@ -34,11 +36,12 @@ function twoFAHandler(modal: HTMLDialogElement): void {
 	const allElements = modal.querySelectorAll('*[id]');
 	allElements.forEach(elem => {
 		switch (elem.id) {
+			/** @todo add cancel button, resend button */
 			case 'btn-sign-up':
-				elem.addEventListener('click', verify2FAConnection);
+				elem.addEventListener('click', verify2FA);
 				break;
 			case 'btn-verify-email':
-				elem.addEventListener('click', verify2FAConfirmation);
+				elem.addEventListener('click', verify2FA);
 				break;
 			default:
 				break;
@@ -54,4 +57,12 @@ function openDialogEmail(): void {
 	loadDialog(EMAIL_CONFIRMATION, twoFAHandler);
 }
 
-export { openDialog2FA, openDialogEmail };
+function loadDialog2FA(): void {
+	navigateTo(Modals.TWO_FA);
+}
+
+function loadDialogEmail(): void {
+	navigateTo(Modals.EMAIL_CONF);
+}
+
+export { loadDialog2FA, loadDialogEmail, openDialog2FA, openDialogEmail };
