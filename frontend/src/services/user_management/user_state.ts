@@ -64,4 +64,4 @@ function clearUserInfos(): void {
 	currentUser = null;
 }
 
-export { getCurrentUserInfos, getUserInfos, clearUserInfos, guestConnection, isGuest, isUserConnected };
+export { InfoList, getCurrentUserInfos, getUserInfos, clearUserInfos, guestConnection, isGuest, isUserConnected };
