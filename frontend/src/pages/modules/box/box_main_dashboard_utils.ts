@@ -1,5 +1,5 @@
 import { Point, GameStats } from "#shared/types_transfert.js";
-import { createSvgBoxByBall, createSvgBoxByMap } from "./dialog_game_svgs_boxes";
+import { createSvgBoxByBall, createSvgBoxByMap } from "../dialog/dialog_game_svgs_boxes";
 
 let stats: GameStats;
 
@@ -18,7 +18,7 @@ function formatTime(time: number, verbose = true): string {
 }
 
 function formatScore(stats: GameStats): string {
-	return `${stats.player1.name} [ ${stats.player1.score} | ${stats.player2.score} ] ${stats.player2.name}`;
+	return `${stats.player1.score} - ${stats.player2.score}`;
 }
 
 function formatPoint(point: Point, goaler: string): string {

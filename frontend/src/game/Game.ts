@@ -4,7 +4,7 @@ import { PointSettings } from "./settings/PointSettings.js";
 import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
 import { DataMessage, OptionMessage, Status } from "#shared/types_transfert.js";
 import { getSafeElement } from "src/utils/getSafeElement.js";
-import { openDialogGameDashboard } from "src/pages/modules/dialog/dialog_game_dashboard.js";
+import { loadMainDashboard } from "src/pages/modules/box/box_main_dashboard.js";
 
 class Game {
 	private readonly engine: babylon.Engine;
@@ -32,7 +32,7 @@ class Game {
 			switch (message.status) {
 				case (Status.STOP):
 					this.closeGame();
-					openDialogGameDashboard(message.gameStats);
+					loadMainDashboard(message.gameStats);
 					break;
 				case (Status.RENDER):
 					this.setDeltaTime(message.deltaMultiplicator);

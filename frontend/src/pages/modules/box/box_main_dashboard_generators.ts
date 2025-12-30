@@ -1,8 +1,7 @@
-import { formatPoint, getGameStats } from "./dialog_game_dashboard_utils";
-import { SVG_RULE_DASH, SVG_RULE_PROT, SVG_RULE_SPIN, SVG_RULE_WIND } from "./dialog_game_svgs";
-import { createSvgBox, createSvgBoxByBall, createSvgBoxByMap } from "./dialog_game_svgs_boxes";
-import { DIALOG_BTN_STYLE, DIALOG_SEPARATOR_STYLE } from "./dialog_style";
 import { MapOption, BallOption, Rules } from "#shared/types_transfert.js";
+import { SVG_RULE_DASH, SVG_RULE_PROT, SVG_RULE_SPIN, SVG_RULE_WIND } from "../dialog/dialog_game_svgs";
+import { createSvgBox, createSvgBoxByBall, createSvgBoxByMap } from "../dialog/dialog_game_svgs_boxes";
+import { formatPoint, getGameStats } from "./box_main_dashboard_utils";
 
 const POINT_STYLE = `
 `;
@@ -22,10 +21,9 @@ function generatePointList(): string {
 	});
 
 	return `
-	${pointList}
-	<hr class="${DIALOG_SEPARATOR_STYLE}">
-	<button id='btn-back' class='${DIALOG_BTN_STYLE}'>back</button>
-	</div>`;
+		${pointList}
+		</div>
+	`;
 }
 
 function generateRules(): string {
@@ -44,8 +42,6 @@ function generateRules(): string {
 		<div class=''>
 			canon number : ${stats.rules.canonCount}
 		</div>
-		<hr class="${DIALOG_SEPARATOR_STYLE}">
-		<button id='btn-back' class='${DIALOG_BTN_STYLE}'>back</button>
 	`;
 }
 
