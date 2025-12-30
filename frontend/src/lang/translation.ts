@@ -40,6 +40,7 @@ const TRANSLATOR = {
 	map: { en: "map", fr: "map" },
 	ball: { en: "ball", fr: "balle" },
 	nothing: { en: "nothing", fr: "rien" },
+	leaderboard: { en: "leaderbord", fr: "classement" },
 
 	// STATES | ADJECTIVES
 	logged_in: { en: "logged in", fr: "connecté" },

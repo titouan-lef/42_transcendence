@@ -26,7 +26,7 @@ const MAIN_HOME = `
 	<h1 class="${PONG_STYLE}">PONG</h1>
 	<div class='flex flex-row gap-4'>
 		${createButtonHtml(["play"], "btn-play", { "class": `${PLAY_BTN_STYLE}` })}
-		<button id='btn-leaderboard' class='${MAIN_BOX_BTN_STYLE}'>leaderboard</button>
+		${createButtonHtml(["leaderboard"], "btn-leaderboard", { "class": `${MAIN_BOX_BTN_STYLE}` })}
 	</div>
 </div>
 `;
