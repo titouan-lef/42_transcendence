@@ -1,6 +1,7 @@
 import { getSafeElement } from "src/utils/getSafeElement";
 import { loadMainBox, MAIN_BOX_BTN_STYLE } from "../box/box_main_utils";
 import { LEADERBOARD_USERS } from "./box_main_leaderboards_users";
+import { createButtonHtml } from "src/components/button";
 
 /** @todo start filter with most recent season */
 const LEADERBOARD_FILTER = `
@@ -33,7 +34,7 @@ ${LEADERBOARD_FILTER}
 		${generateLeaderboardRows()}
 	</tbody>
 </table>
-<button id='btn-back-home' class='${MAIN_BOX_BTN_STYLE}'>back home</div>
+${createButtonHtml(["go_back"], "btn-back-home", { "class": `${MAIN_BOX_BTN_STYLE}` })}
 `;
 
 /** @todo fetch all user info ? */
