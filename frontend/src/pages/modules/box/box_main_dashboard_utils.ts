@@ -1,5 +1,5 @@
 import { Point, GameStats } from "#shared/types_transfert.js";
-import { createSvgBoxByBall, createSvgBoxByMap } from "../dialog/dialog_game_svgs_boxes";
+import { createSvgBoxByBall, createSvgBoxByMap } from "../../../assets/svgs/svgs_boxes";
 
 let stats: GameStats;
 
