@@ -4,6 +4,7 @@ import { openDialogGameSelector } from "../dialog/dialog_game_selector";
 import { openDialogSignIn } from "../dialog/dialog_login";
 import { getSafeElement } from "src/utils/getSafeElement";
 import { loadMainBox, MAIN_BOX_BTN_STYLE } from "./box_main_utils";
+import { loadLeaderboard } from "./box_main_leaderboard";
 
 const MAIN_HOME_STYLE = `
 flex flex-col items-center gap-[10px]
@@ -23,7 +24,10 @@ ${MAIN_BOX_BTN_STYLE}
 const MAIN_HOME = `
 <div class="${MAIN_HOME_STYLE}">
 	<h1 class="${PONG_STYLE}">PONG</h1>
-	${createButtonHtml(["play"], "btn-play", { "class": `${PLAY_BTN_STYLE}` })}
+	<div class='flex flex-row gap-4'>
+		${createButtonHtml(["play"], "btn-play", { "class": `${PLAY_BTN_STYLE}` })}
+		<button id='btn-leaderboard' class='${MAIN_BOX_BTN_STYLE}'>leaderboard</button>
+	</div>
 </div>
 `;
 
@@ -36,8 +40,10 @@ function openGameOption(): void {
 
 function mainBoxEvents(): void {
 	const play = getSafeElement('btn-play', HTMLElement);
+	const leaderboard = getSafeElement('btn-leaderboard', HTMLElement);
 
 	play.addEventListener('click', openGameOption);
+	leaderboard.addEventListener('click', loadLeaderboard);
 }
 
 function loadMainHome(): void {
