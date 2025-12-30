@@ -20,7 +20,7 @@ async function createGoalTable(): Promise<void> {
 			mapId INTEGER REFERENCES Map(id),
 			ballId INTEGER REFERENCES Ball(id),
 			gameId INTEGER REFERENCES Game(id),
-			by TEXT REFERENCES User(pseudo));`
+			by TEXT REFERENCES User(username));`
 		), "create" + TABLE_NAME + "Table"
 	);
 }

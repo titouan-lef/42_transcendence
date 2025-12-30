@@ -31,7 +31,7 @@ interface UserDashboardInfos {
 	gamesLooses: number; 
 	elo: number;
 	goalAverage: number;
-	durationAverage: number;//(in seconds)
+	durationAverage: number;
 	preferedBall: BallOption;
 	preferedMap: MapOption;
 	eloChart: EloChart;
@@ -137,7 +137,11 @@ async function getPlayerStats(req: FastifyRequest<{ Body: UserDashboardInfoBody 
 		return;
 	}
 	const userInfos: UserDashboardInfos = await getUserDashboardInfos(user, season);
-	sendReply(reply, Success.USER_DASHBOARD_INFOS, JSON.stringify(userInfos));
+	console.log(userInfos);
+
+	const test = JSON.stringify(userInfos);
+	console.log(test);
+	sendReply(reply, Success.USER_DASHBOARD_INFOS, test);
 }
 
 export { WinrateChart, GoalChart, UserDashboardInfoBody, getPlayerStats };
