@@ -1,6 +1,8 @@
+import { navigateTo } from "src/routes/navigate";
 import { getSafeElement } from "src/utils/getSafeElement";
 import { closeDialogID, loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
+import { Pages } from "src/routes/navigate_types";
 
 /** @todo front */
 const GAME_QUIT = `
@@ -12,18 +14,12 @@ const GAME_QUIT = `
 </div>
 `;
 
-function quitGame(): void {
-	/** @todo ragequit event */
-	console.log("sorry can't leave game"); /** @todo remove */
-	closeDialogID('modal');
-}
-
 function gameQuitHandler(): void {
 	const allElements = getSafeElement('modal', HTMLDialogElement).querySelectorAll('*[id]');
 	allElements.forEach(elem => {
 		switch (elem.id) {
 			case 'btn-yes':
-				elem.addEventListener('click', quitGame);
+				elem.addEventListener('click', () => navigateTo(Pages.HOME));
 				break;
 			case 'btn-cancel':
 				elem.addEventListener('click', () => closeDialogID('modal'));

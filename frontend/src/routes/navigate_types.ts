@@ -69,8 +69,8 @@ function getAssociatedPage(modal: Modals): Pages {
 }
 
 function needToBeConnected(nav: Navigation): boolean {
-	if (isPage(nav))
-		return false;
+	if (isPage(nav) && nav >= Pages.DASHBOARD)
+		return true;
 	if (isModal(nav) && nav >= Modals.EMAIL_CONF)
 		return true;
 	return false;
