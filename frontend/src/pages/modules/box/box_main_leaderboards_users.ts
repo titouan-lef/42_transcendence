@@ -1,3 +1,5 @@
+/** @todo replace this file by something that get in back informations */
+
 interface LeaderboardUser {
 	nick: string,
 	elo: number,
