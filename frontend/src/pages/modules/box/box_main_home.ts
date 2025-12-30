@@ -1,6 +1,5 @@
 import { createButtonHtml } from "src/components/button";
 import { getCurrentUserInfos } from "src/services/user_management/user_state";
-import { applyColor } from "src/utils/applyColor";
 import { openDialogGameSelector } from "../dialog/dialog_game_selector";
 import { openDialogSignIn } from "../dialog/dialog_login";
 import { getSafeElement } from "src/utils/getSafeElement";
