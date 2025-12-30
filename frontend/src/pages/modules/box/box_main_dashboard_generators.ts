@@ -1,6 +1,6 @@
 import { MapOption, BallOption, Rules } from "#shared/types_transfert.js";
-import { SVG_RULE_DASH, SVG_RULE_PROT, SVG_RULE_SPIN, SVG_RULE_WIND } from "../dialog/dialog_game_svgs";
-import { createSvgBox, createSvgBoxByBall, createSvgBoxByMap } from "../dialog/dialog_game_svgs_boxes";
+import { SVG_RULE_DASH, SVG_RULE_PROT, SVG_RULE_SPIN, SVG_RULE_WIND } from "../../../assets/svgs/svgs";
+import { createSvgBox, createSvgBoxByBall, createSvgBoxByMap } from "../../../assets/svgs/svgs_boxes";
 import { formatPoint, getGameStats } from "./box_main_dashboard_utils";
 
 const POINT_STYLE = `
