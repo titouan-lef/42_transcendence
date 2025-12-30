@@ -8,7 +8,8 @@ import { DRAWER_HEADER } from "./profile_header";
 import { DRAWER_NAV } from "./profile_navbar";
 import { goBack, navigateTo } from "src/routes/navigate";
 import { Pages } from "src/routes/navigate_types";
-import { getCurrentUserInfos } from "src/services/user_management/user_state";
+import { getCurrentUserInfos, getUserInfos } from "src/services/user_management/user_state";
+import { updateFriendList } from "../box/box_aside_friendlist";
 
 const DRAWER_MAIN_STYLE = `
 fixed z-10 inset-y-0 inset-x-0
@@ -78,15 +79,18 @@ function loadTab(): void {
 	}
 }
 
-function openProfile(): void {
+async function openProfile(): Promise<void> {
 	if (!getCurrentUserInfos())
 		return;
 	const drawer = getSafeElement("modal", HTMLDialogElement);
+	drawer.close();
 
 	drawer.className = DRAWER_BACKDROP_STYLE;
 	drawer.show();
 	drawer.innerHTML = DRAWER_CONTENT;
 
+	updateFriendList();
+	await getUserInfos();
 	loadTab();
 	initProfileEvents();
 }
@@ -97,12 +101,12 @@ function changeTab(tab: ProfiteTab): void {
 }
 
 function initProfileEvents(): void {
-	const drawer = getSafeElement("modal", HTMLDialogElement);
+	const drawer = getSafeElement("modal", HTMLDialogElement); /** @todo use another id `profile` to enable modal on top of profile */
 
 	drawer.querySelectorAll('*[id]').forEach(elem => {
 		switch (elem.id) {
 			case 'btn-return':
-				elem.addEventListener('click', goBack);
+				elem.addEventListener('click', goBack); /** @todo fix back after addfriend */
 				break;
 			case 'btn-summary':
 				elem.addEventListener('click', () => changeTab(ProfiteTab.SUMMARY));

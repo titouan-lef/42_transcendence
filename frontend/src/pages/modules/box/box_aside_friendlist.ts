@@ -102,8 +102,8 @@ function inviteFriend(): void { /** @todo we might not do it */
 	console.log('friend invited');
 }
 
-function deleteFriend(friend: string): void {
-	sendPostRequestToBack('/api/friends/remove', JSON.stringify({ user: friend }));
+async function deleteFriend(friend: string): Promise<void> {
+	await sendPostRequestToBack('/api/friends/remove', JSON.stringify({ user: friend }));
 	updateFriendList();
 }
 

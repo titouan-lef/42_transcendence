@@ -4,7 +4,10 @@ import { loadDialogSignIn } from "../dialog/dialog_login";
 import { getSafeElement } from "src/utils/getSafeElement";
 import { loadMainBox, MAIN_BOX_BTN_STYLE } from "./box_main_utils";
 import { loadLeaderboard } from "./box_main_leaderboard";
-import { loadDialogGameSelector, openDialogGameSelector } from "../dialog/dialog_game_selector";
+import { loadDialogGameSelector } from "../dialog/dialog_game_selector";
+import { navigateTo } from "src/routes/navigate";
+import { Pages } from "src/routes/navigate_types";
+import { ELEM } from "src/routes/page";
 
 const MAIN_HOME_STYLE = `
 flex flex-col items-center gap-[10px]
@@ -46,8 +49,13 @@ function mainBoxEvents(): void {
 	leaderboard.addEventListener('click', loadLeaderboard);
 }
 
-function loadMainHome(): void {
+function openMainHome(): void {
 	loadMainBox(MAIN_HOME, mainBoxEvents);
 }
 
-export { loadMainHome };
+function loadHomePage(): void {
+	ELEM.removeEventListener('click', loadHomePage);
+	navigateTo(Pages.HOME);
+}
+
+export { openMainHome, loadHomePage };

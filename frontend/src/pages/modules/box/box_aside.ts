@@ -5,9 +5,10 @@ import { getSafeElement } from "../../../utils/getSafeElement";
 import { loadDialogAddFriend } from "../dialog/dialog_add_friend";
 import { loadDialogSignIn, loadDialogSignUp } from "../dialog/dialog_login";
 import { loadProfilePage } from "../profile/profile";
-import { clearUserInfos, getCurrentUserInfos } from "src/services/user_management/user_state";
+import { clearUserInfos, getCurrentUserInfos, getUserInfos } from "src/services/user_management/user_state";
 import { disconnectUser } from "src/services/user_management/disconnect";
 import { goBackToBeginning } from "src/routes/navigate";
+import { updateFriendList } from "./box_aside_friendlist";
 
 const ASIDE_BOX_STYLE = `
 grow
@@ -99,8 +100,8 @@ function asideConnectedEvents(): void {
 	});
 }
 
-function onDisconnectEvent(): void {
-	disconnectUser();
+async function onDisconnectEvent(): Promise<void> {
+	await disconnectUser();
 	clearUserInfos();
 	goBackToBeginning();
 }
@@ -122,17 +123,17 @@ function asideDisconnectedEvents(): void {
 	});
 }
 
-function loadAside(): void {
+async function loadAside(): Promise<void> {
 	const aside = getSafeElement('aside-status', HTMLElement);
-
+	await getUserInfos();
 	if (getCurrentUserInfos()) {
 		aside.innerHTML = ASIDE_CONNECTED;
 		asideConnectedEvents();
+		updateFriendList();
 	} else {
 		aside.innerHTML = ASIDE_NOT_CONNECTED;
 		asideDisconnectedEvents();
 	}
-
 	updateAvatar();
 }
 

@@ -1,6 +1,6 @@
 import { ELEM, loadPage } from "../routes/page";
 import { applyColor } from "../utils/applyColor";
-import { loadModularPage } from "./modular";
+import { loadHomePage } from "./modules/box/box_main_home";
 
 /** @todo clamp : better responsivity (not working well here) */
 const WELCOME_STYLE = `
@@ -17,7 +17,7 @@ const WELCOME = `
 `;
 
 function welcomeEvents(): void {
-	ELEM.addEventListener('click', loadModularPage);
+	ELEM.addEventListener('click', loadHomePage);
 }
 
 function openWelcomePage(): void {
