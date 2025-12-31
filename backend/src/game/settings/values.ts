@@ -90,5 +90,5 @@ export const TRICKY_BALL_FORWARD_ONLY = true;
 
 export const PULSE_BALL_EFFECT_INTERVAL = 100 * FPS_MULTIPLICATOR;
 
-export const SNAKE_BALL_ANGULAR_FORCE = 4 / FPS_MULTIPLICATOR;
-export const SNAKE_BALL_ANGULAR_INTERVAL = 20 * FPS_MULTIPLICATOR; /** Angular interval is the number of step it will take to reach max/min value */
+export const SNAKE_BALL_ANGULAR_FORCE = 150 / FPS_MULTIPLICATOR;
+export const SNAKE_BALL_ANGULAR_INTERVAL = 5 * FPS_MULTIPLICATOR; /** Angular interval is the number of step it will take to reach max/min value */
