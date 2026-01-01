@@ -113,17 +113,17 @@ function friendsHandler(): void {
 
 		allElements.forEach(elem => {
 			switch (elem.id) {
-				case `${friend}`:
+				case `${friend.username}`:
 					elem.addEventListener('click', closeAllDetails);
 					break;
-				case `btn-profile-${friend}`:
+				case `btn-profile-${friend.username}`:
 					elem.addEventListener('click', openProfile);
 					break;
-				case `btn-invite-${friend}`:
+				case `btn-invite-${friend.username}`:
 					elem.addEventListener('click', inviteFriend);
 					break;
-				case `btn-delete-${friend}`:
-					elem.addEventListener('click', () => deleteFriend(friend));
+				case `btn-delete-${friend.username}`:
+					elem.addEventListener('click', () => deleteFriend(friend.username));
 					break;
 				default:
 					break;
