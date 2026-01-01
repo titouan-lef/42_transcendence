@@ -87,7 +87,6 @@ async function getEloChartGlobal(user: string):Promise <EloChart> {
 
 	let lastSeasonElo = DEFAULT_RATINGS;
 	for (let i = 1; i < idSeasonTab.length; i++) {
-		console.log(idSeasonTab[i]);
 		const tmpElo: number = await getRatingEloBySeason(user, idSeasonTab[i]);
 		if (tmpElo !== 0) {
 			lastSeasonElo = tmpElo;

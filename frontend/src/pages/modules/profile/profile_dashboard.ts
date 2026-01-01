@@ -56,85 +56,115 @@ px-4 py-2 pr-8 rounded-2xl
 text-secondary cursor-pointer
 `;
 
-const DASHBOARD_FILTER_OPTIONS = `
-<option value="all">${createParagraphHtml(['all'], 'p-all')}</option>
-<option value="s3">${createParagraphHtml(['s3'], 'p-s3')}</option>
-<option value="s2">${createParagraphHtml(['s2'], 'p-s2')}</option>
-<option value="s1">${createParagraphHtml(['s1'], 'p-s1')}</option>
-`;
-
-const DASHBOARD_FILTER = `
-<div class="relative w-[200px]">
-	<div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-secondary">
-		${ARROW_SVG}
-	</div>
-	<select id="filter" class="${DASHBOARD_FILTER_STYLE}">
-		${DASHBOARD_FILTER_OPTIONS}
-	</select>
-</div>
-`;
-
 const DASHBOARD_BOX_STYLE = `
 flex flex-col h-full w-full pb-10 pt-4 gap-4
 scrollbar-none overflow-y-scroll overflow-hidden
 [mask-image:linear-gradient(to_bottom,transparent,black_2%,black_90%,transparent)]
 `;
 
+/** @todo bloquer a 3s eason max voir avec les frontist*/
+function generateSeasonOptions(maxSeason: number): string {
+	let options = `<option value="all">${createParagraphHtml(['all'], 'p-all')}</option>`;
+
+	for (let i: number = maxSeason; i >= 1; i--) {
+		options += `<option value="${i}">${i}</option>`;
+	}
+
+	return options;
+}
+
+function getDashboardFilterHtml(maxSeason: number): string {
+	return `
+	<div class="relative w-[200px]">
+		<div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-secondary">
+			${ARROW_SVG}
+		</div>
+		<select id="filter" class="${DASHBOARD_FILTER_STYLE}">
+		${generateSeasonOptions(maxSeason)}
+		</select>
+	</div>
+`;
+}
+
 /** @todo better select/option with divs ? menue is not personnalisable at this time */
-function getDashboardHtmlCss(data: UserDashboardInfos ): string {
+function getDashboardPage(maxSeason: number ): string {
 
 	return ( `
 	<div class="px-4 flex flex-col h-full w-full">
-	<div class='pb-2'>
-		${DASHBOARD_FILTER}
+		<div class='pb-2'>
+			${getDashboardFilterHtml(maxSeason)}
 		</div>
-		<div class="${DASHBOARD_BOX_STYLE}">
-		<div class="grid grid-cols-3 grid-rows-1 gap-4 h-full w-full">
+		<div id="dashboard" class="${DASHBOARD_BOX_STYLE}">
+		</div>
+	</div>
+	`);
+}
+
+function getDashboardTable(data: UserDashboardInfos): string {
+
+	return ( `
+	<div class="grid grid-cols-3 grid-rows-1 gap-4 h-full w-full">
 		${createDashboardCard('wins', data.gamesWins)}
 		${createDashboardCard('loses', data.gamesLooses)}
-		${createDashboardCard('win_rate', data.gamesPlayed > 0 ? (data.gamesWins / data.gamesPlayed * 100) : 0)}
-		</div>
-		<div class="">
+		${createDashboardCard('win_rate', data.gamesPlayed > 0 ? (data.gamesWins / data.gamesPlayed) : 0)}
+	</div>
+	<div class="">
 		${createDashboardChartBox('win_rate_chart')}
-		</div>
-		<div class="grid grid-cols-3 grid-rows-2 gap-4 h-full w-full">
-		${createDashboardCard('elo', data.elo)}
-		${createDashboardCard('games_played', data.gamesPlayed)}
-		${createDashboardCard('goals_avg', data.goalAverage)}
-		${createDashboardCard('games_time', data.durationAverage)}
-			${createDashboardCard('prefered_ball', data.preferedBall)}
-			${createDashboardCard('prefered_map', data.preferedMap)}
-		</div>
-		<div class="grid grid-cols-2 gap-4 h-full w-full">
+	</div>
+	<div class="grid grid-cols-3 grid-rows-2 gap-4 h-full w-full">
+		${createDashboardCard('elo', data.elo)}	
+		${createDashboardCard('games_played', data.gamesPlayed)}	
+		${createDashboardCard('goals_avg', data.goalAverage)}	
+		${createDashboardCard('games_time', data.durationAverage)}	
+		${createDashboardCard('prefered_ball', data.preferedBall)}	
+		${createDashboardCard('prefered_map', data.preferedMap)}
+	</div>
+	<div class="grid grid-cols-2 gap-4 h-full w-full">
 		${createDashboardChartBox('elo_chart')}
 		${createDashboardChartBox('diff_goals_chart')}
-		</div>
-		</div>
-		</div>
-		`);
+	</div>
+	`);
 }
+
 
 async function loadDashboard(): Promise<void> {
 	const currentUser: InfoList | null = getCurrentUserInfos();
 	if (!currentUser)
 		return;
-	/** @todo utiliser si besoin const currentSeason: number = getCurrentSeason(); */
 
-	const reply = await sendPostRequestToBack('/api/user/dashboard', JSON.stringify({ user: currentUser.username, season: -1 }));
+	/** @todo request actual season number */
+	const seasonNumber = 3;
+
+	const elem = getSafeElement('profile-content', HTMLElement);
+	elem.innerHTML = getDashboardPage(seasonNumber);
+
+	await updateDashboradData();
+	const filter = getSafeElement('filter', HTMLSelectElement);
+	filter.addEventListener('change', updateDashboradData);
+
+	setActiveBtn('btn-dashboard');
+}
+
+async function updateDashboradData(): Promise<void> {
+	const currentUser: InfoList | null = getCurrentUserInfos();
+	if (!currentUser)
+		return;
+
+	const filter = getSafeElement('filter', HTMLSelectElement);
+	let targetSeason = Number(filter.value);
+	if (!targetSeason)
+		targetSeason = -1;
+	const reply = await sendPostRequestToBack('/api/user/dashboard', JSON.stringify({ user: currentUser.username, season: targetSeason }));
 	if (!isRequestSuccessfull(reply))
 		return;
 
 	const data: UserDashboardInfos = JSON.parse(reply.content);
-
-	const elem = getSafeElement('profile-content', HTMLElement);
-
-	elem.innerHTML = getDashboardHtmlCss(data);
-
-	setActiveBtn('btn-dashboard'); 
+	const elem = getSafeElement('dashboard', HTMLElement);
+	elem.innerHTML = getDashboardTable(data);
 
 	createDashboardChart('elo_chart', configureChart(data.eloChart.dateList, data.eloChart.eloList));
 	createDashboardChart('win_rate_chart', configureChart(data.winrateChart.dateList, data.winrateChart.winrateList));
 	createDashboardChart('diff_goals_chart', configureChart(data.goalChart.dateList, data.goalChart.goalList));
 }
 
-export { loadDashboard };
+export { loadDashboard }; 
