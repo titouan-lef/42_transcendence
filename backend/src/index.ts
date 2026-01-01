@@ -15,6 +15,7 @@ import { verifyAuth } from "./security/JWT.js";
 import { GameOptions } from "./game/settings/GameSettings.js";
 import { getUserInfos } from "./user_management/user_infos.js";
 import { getPlayerStats, UserDashboardInfoBody } from "./user_management/dashboard.js";
+import { manageOnlineStatus } from "./user_management/online_status.js";
 
 const APP = fastify();
 
@@ -81,6 +82,7 @@ APP.post<{ Body: UserDashboardInfoBody }>("/api/user/dashboard", { preHandler: v
 // --- Web Socket route handlers ---
 APP.register(() => {
 	APP.get('/ws/:id', { websocket: true }, newGame);
+	APP.get('/ws/online', { websocket: true }, manageOnlineStatus);
 });
 
 // --- Start server ---

@@ -6,8 +6,8 @@ import { loadModularPage } from "../../pages/modular.js";
 import { openProfile } from "../../pages/modules/profile/profile.js";
 import { Errors } from '#shared/status_codes';
 import { getCurrentUserInfos, getUserInfos } from "./user_state.js";
-import { openDialog2FA } from "src/pages/modules/dialog/dialog_2FA.js";
-import { loadSettings } from "src/pages/modules/profile/profile_settings.js";
+import { openDialog2FA } from "../../pages/modules/dialog/dialog_2FA.js";
+import { loadSettings } from "../../pages/modules/profile/profile_settings.js";
 
 let user = "";
 

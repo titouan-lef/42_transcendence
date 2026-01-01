@@ -115,7 +115,7 @@ async function newGame(socket: WebSocket, req: FastifyRequest<{ Params: GamePara
 	}
 	if (gameData.type === GameType.RANKED) {
 		const user = await verifyAuthWS(socket, req);
-		if(!user || !gameData.players.includes(user)) {
+		if (!user || !gameData.players.includes(user)) {
 			socket.close(1003, "You do not belong in this game");
 			return;
 		}
@@ -124,4 +124,4 @@ async function newGame(socket: WebSocket, req: FastifyRequest<{ Params: GamePara
 	identifyGame(socket, gameId, gameData);
 }
 
-export { GameType, isGameFound, newGame, newLocalGame, newAIGame };
+export { GameType, isGameFound, newGame, newLocalGame, newAIGame, verifyAuthWS };
