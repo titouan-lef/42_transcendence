@@ -42,7 +42,7 @@ async function getGamesWinsBySeason(seasonId: number, username: string): Promise
 			SELECT COUNT(gameId) AS gamesWinCount
 			FROM GamesScores
 			WHERE GoalCount = ${POINTS_TO_WIN};`,
-			[username, seasonId]
+			[seasonId, username]
 		), "getGamesWinsBySeason"
 	);
 	if (!row)

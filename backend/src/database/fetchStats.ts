@@ -12,18 +12,18 @@ async function getGoalAverageBySeason(seasonId: number, username: string): Promi
 		), "getGoalAverageBySeason"
 	);
 
-	const nbGoal = await applyQuery(
+	const nbGoals = await applyQuery(
 		async (db) => await db.get(
-			`SELECT COUNT(Goal.id) FROM Goal JOIN Game ON Goal.gameId = Game.id
+			`SELECT COUNT(Goal.id) AS nbGoals FROM Goal JOIN Game ON Goal.gameId = Game.id
 			WHERE Goal.by = ? AND Game.seasonId = ?;`,
 			[username, seasonId]
 		), "getGoalAverageBySeason"
 	);
-	if (!nbGame || !nbGoal)
+	if (!nbGame || !nbGoals)
 		return 0;
 	if (nbGame.nbGame === 0)
 		return 0;
-	return (nbGoal.goals / nbGame.nbGame);
+	return (nbGoals.nbGoals / nbGame.nbGame);
 }
 
 async function getGoalAverageGlobal(username: string): Promise<number> {
@@ -38,7 +38,7 @@ async function getGoalAverageGlobal(username: string): Promise<number> {
 
 	const nbGoal = await applyQuery(
 		async (db) => await db.get(
-			`SELECT COUNT(Goal.id) FROM Goal WHERE Goal.by = ?;`,
+			`SELECT COUNT(Goal.id) AS nbGoals FROM Goal WHERE Goal.by = ?;`,
 			[username]
 		), "getGoalAverageGlobal"
 	);
@@ -46,7 +46,7 @@ async function getGoalAverageGlobal(username: string): Promise<number> {
 		return 0;
 	if (nbGame.nbGame === 0)
 		return 0;
-	return (nbGoal.goals / nbGame.nbGame);
+	return (nbGoal.nbGoals / nbGame.nbGame);
 }
 
 async function getGameTimeAverageBySeason(seasonId: number, username: string): Promise<number> {
@@ -190,7 +190,7 @@ async function getEloVariatonGlobal(username: string): Promise<EloHistory[]> {
 			FROM Elo E
 			JOIN Game G ON E.gameId = G.id
 			WHERE E.username = ?
-			ORDER BY G.beganAt DESC;`, [username]
+			ORDER BY G.beganAt ASC LIMIT 7;`, [username]
 		), "getAllEloVariaton"
 	);
 	return tab ?? [];
