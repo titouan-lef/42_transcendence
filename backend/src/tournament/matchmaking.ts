@@ -37,11 +37,18 @@ async function removePlayerFromMatchmakingSystem(req: FastifyRequest, reply: Fas
 	const user = req.user;
 	if (!user)
 		return;
-	if (!isUserWaiting(user)) {
+
+	let id: string = user;
+	if (user === GUEST_NAME)
+		id = String(req.guestId);
+	if (!id)
+		return;
+
+	if (!isUserWaiting(id)) {
 		sendReply(reply, Errors.NOT_IN_QUEUE);
 		return;
 	}
-	WAITING_PLAYERS.delete(user);
+	WAITING_PLAYERS.delete(id);
 	sendReply(reply, Success.REMOVED_FROM_QUEUE);
 }
 
