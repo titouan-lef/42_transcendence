@@ -1,3 +1,4 @@
+import { hashString } from "../utils/hash_string.js";
 import { applyQuery, fetchAll } from "./db_utils.js";
 
 interface User {
@@ -35,6 +36,10 @@ async function insertUser(username: string, pseudo: string, hashedPassword: stri
 			[username, pseudo, hashedPassword, false, null]
 		), "insert" + TABLE_NAME
 	);
+}
+
+async function insertGuest(): Promise<void> {
+	await insertUser('guest', 'guest', hashString(''));
 }
 
 async function getAllUser(): Promise<User[] | undefined> {
@@ -174,6 +179,6 @@ async function updateTheme(username: string, theme: string): Promise<void> {
 	}, "update" + TABLE_NAME + "Theme");
 }
 
-export { User, getUserByUsername, createUserTable, getUserPassword, doesUserExist, insertUser, disabled2FA, enabled2FA, getUserEmail };
+export { User, getUserByUsername, createUserTable, getUserPassword, doesUserExist, insertUser, insertGuest, disabled2FA, enabled2FA, getUserEmail };
 export { updatePseudo, updatePassword, updateEmail, updateTheme };
 export { is2FAEnabled, isEmailDefined };

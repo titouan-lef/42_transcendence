@@ -77,6 +77,10 @@ const TRANSLATOR = {
 		en: "No such {user}",
 		fr: "Aucun {user} de ce nom",
 	},
+	invalid_username: {
+		en: "{invalid} {user_name}",
+		fr: "{already} {invalid}",
+	},
 	username_taken: {
 		en: "{user_name} {already} {taken}",
 		fr: "{user_name} {already} {taken}",

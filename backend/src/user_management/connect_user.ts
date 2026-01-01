@@ -46,10 +46,6 @@ interface UserBody {
 	user?: string;
 }
 
-interface EmailBody {
-	email: string;
-}
-
 async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const user = req.user;
 	if (!user)
