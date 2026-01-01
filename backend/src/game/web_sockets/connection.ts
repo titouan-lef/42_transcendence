@@ -1,13 +1,14 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { WebSocket } from "ws";
 import { doesUserExist } from "../../database/user.js";
-import { identifyUser } from "../../security/JWT.js";
+import { identifyUser, UserIdentity } from "../../security/JWT.js";
 import { askMatchmakingSystem, isUserWaiting } from "../../tournament/matchmaking.js";
 import { sendReply } from "../../utils/HTTP.js";
 import { wait } from "../../utils/time.js";
 import { GameOptions } from "../settings/GameSettings.js";
 import { GameType, getGameOptions, identifyGame, registerGameOptions } from "../game_manager.js";
 import { Errors, Success } from "#shared/status_codes.js";
+import { GUEST_NAME } from "../../user_management/create_account.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -23,10 +24,11 @@ const TIMEOUT = 10000; // in ms
 const SCAN_DELAY = 1000; // in ms
 
 async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-	const user = req.user;
+	let user = req.user;
+	if (user === GUEST_NAME)
+		user = String(req.guestId);
 	if (!user)
 		return;
-
 	let waited = 0;
 	let id = -1;
 	while (id < 0) {
@@ -95,21 +97,26 @@ function startHeartbeat(socket: WebSocket): void {
 async function verifyAuthWS(socket: WebSocket, req: FastifyRequest): Promise<string | null> {
 	const token = req.cookies?.token;
 	if (!token) {
-		socket.close(1008, "User not logged in"); /**@todo use translate tool ? */
+		socket.close(1008, "User not logged in");
 		return null;
 	}
-	let user: string;
+	let user: UserIdentity;
+	let id: string;
 	try {
-		user = identifyUser(token).username;
+		user = identifyUser(token);
+		if (user.username === GUEST_NAME)
+			id = String(user.guestId);
+		else
+			id = user.username;
 	} catch {
 		socket.close(1008, "Please connect");
 		return null;
 	}
-	if (!await doesUserExist(user)) {
+	if (!await doesUserExist(user.username)) {
 		socket.close(1008, "User does not exist");
 		return null;
 	}
-	return user;
+	return id;
 }
 
 async function newGame(socket: WebSocket, req: FastifyRequest<{ Params: GameParams }>): Promise<void> {

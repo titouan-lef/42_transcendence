@@ -87,4 +87,4 @@ async function rejectGuest(req: FastifyRequest, reply: FastifyReply): Promise<vo
 		sendReply(reply, Errors.AUTH_REQUIRED);
 }
 
-export { addAuthCookies, removeAuthCookies, verifyAuth, identifyUser, rejectGuest };
+export { UserIdentity, addAuthCookies, removeAuthCookies, verifyAuth, identifyUser, rejectGuest };

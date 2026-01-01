@@ -21,7 +21,7 @@ async function addPlayerToMatchmakingSystem(req: FastifyRequest<{ Body: GameOpti
 
 	let id: string = user;
 	if (user === GUEST_NAME)
-		id = String(req.id);
+		id = String(req.guestId);
 	if (!id)
 		return;
 
