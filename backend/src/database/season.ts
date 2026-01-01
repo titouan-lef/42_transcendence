@@ -54,7 +54,7 @@ async function getFirstSeason(): Promise<number> {
 	const row = await applyQuery(
 		async (db) => await db.get(
 			`SELECT id FROM ${TABLE_NAME} ORDER BY startedAt ASC LIMIT 1`,
-		), "getCurrent" + TABLE_NAME
+		), "getFirst" + TABLE_NAME
 	);
 	if (!row)
 		return 0;
@@ -76,4 +76,22 @@ async function getAllSeasonId(): Promise<number[]> {
 	return rows.map(row => row.id);
 }
 
-export { Season, createSeasonTable, getCurrentSeason, insertSeason, getAllSeasonId, getSeasonStartedAtById, getFirstSeason };
+async function getEndSeason(season: number): Promise<Date> {
+	const row = await applyQuery(
+		async (db) => await db.get(
+			` SELECT startedAt FROM ${TABLE_NAME} 
+				WHERE startedAt > (SELECT startedAt FROM ${TABLE_NAME} WHERE id = ?)
+				ORDER BY startedAt ASC LIMIT 1; 
+			`, [season]
+
+		), "getEnd" + TABLE_NAME
+	);
+	if (!row)
+		return new Date();
+	return new Date(row.startedAt);
+}
+
+export { Season, createSeasonTable, 
+	getCurrentSeason, insertSeason,
+	getAllSeasonId, getSeasonStartedAtById,
+	getFirstSeason, getEndSeason };

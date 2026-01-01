@@ -6,7 +6,7 @@ import { BallOption, MapOption } from "#shared/types_transfert.js";
 import { getEloVariatonBySeason, getEloVariatonGlobal, getGameTimeAverageBySeason, getGameTimeAverageGlobal, getGoalAverageBySeason, getGoalAverageBySeasonAndDate, getGoalAverageGlobal, getGoalAverageGlobalAndDate, getPreferedBallBySeason, getPreferedBallGlobal, getPreferedMapBySeason, getPreferedMapGlobal, getWinrateBySeasonAndDate, getWinrateGlobalAndDate } from "../database/fetchStats.js";
 import { getElo } from "../database/web3/contract_service.js";
 import { Elo } from '../tournament/elo/elo.js';
-import { getAllSeasonId, getCurrentSeason, getFirstSeason, getSeasonStartedAtById } from "../database/season.js";
+import { getAllSeasonId, getCurrentSeason, getEndSeason, getFirstSeason, getSeasonStartedAtById } from "../database/season.js";
 import { DEFAULT_RATINGS } from "../tournament/elo/elo.js";
 import { getActualDate } from "../database/db_utils.js";
 
@@ -107,12 +107,17 @@ async function getEloChartGlobal(user: string):Promise <EloChart> {
 async function getTabDateBySeason(season: number): Promise <string[]> {
 
 	const beginDate: Date = await getSeasonStartedAtById(season);
-	const actualDate: Date = await getActualDate();
+
+	let endDate: Date;
+	if (season !== await getCurrentSeason()) {
+		endDate = await getEndSeason(season);
+	} else
+		endDate = await getActualDate();
 
 	const beginDateInMs:number = beginDate.getTime();
-	const actualDateInMs:number = actualDate.getTime();
+	const endDateInMs:number = endDate.getTime();
 
-	const intervaleDateInMs: number = (actualDateInMs - beginDateInMs) / (NB_CHART_POINT - 1);
+	const intervaleDateInMs: number = (endDateInMs - beginDateInMs) / (NB_CHART_POINT - 1);
 
 	const dates: string[] = [];
 
