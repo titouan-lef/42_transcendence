@@ -4,7 +4,7 @@ import { WebSocket } from "ws";
 
 const CONNETED_USERS = new Set<string>();
 
-function isUserCnnected(username: string): boolean {
+function isUserConnected(username: string): boolean {
 	return CONNETED_USERS.has(username);
 }
 
@@ -28,4 +28,4 @@ async function manageOnlineStatus(socket: WebSocket, req: FastifyRequest): Promi
 
 }
 
-export { isUserCnnected, manageOnlineStatus };
+export { isUserConnected, manageOnlineStatus };

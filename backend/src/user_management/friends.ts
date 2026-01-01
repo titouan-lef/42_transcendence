@@ -4,6 +4,8 @@ import { sendReply } from "../utils/HTTP.js";
 import { doesUserExist } from "../database/user.js";
 import { UserBody } from "./connect_user.js";
 import { Errors, Success } from "#shared/status_codes.js";
+import { isUserConnected } from "./online_status.js";
+import { Friend } from "#shared/HTTP.js";
 
 async function getFriendList(req: FastifyRequest<{ "Body": UserBody }>, reply: FastifyReply): Promise<void> {
 	const user = req.body?.user;
@@ -15,7 +17,14 @@ async function getFriendList(req: FastifyRequest<{ "Body": UserBody }>, reply: F
 		sendReply(reply, Errors.NO_SUCH_USER);
 		return;
 	}
-	const list = await getFriendships(user);
+	const firendList = await getFriendships(user);
+	const list: Friend[] = [];
+	firendList?.forEach((friend) => {
+		list.push({
+			username: friend,
+			onlineStatus: isUserConnected(friend)
+		});
+	});
 	sendReply(reply, Success.FRIEND_LIST, JSON.stringify(list));
 }
 

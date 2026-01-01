@@ -49,7 +49,8 @@ async function getFriendships(username: string): Promise<string[] | undefined> {
 		async (db) => await db.all(
 			`SELECT friendName
 			FROM ${TABLE_NAME}
-			WHERE username = ?`,
+			WHERE username = ?
+			ORDER BY friendName ASC`,
 			[username]
 		), "get" + TABLE_NAME
 	);
