@@ -47,7 +47,7 @@ APP.register(fastifyStatic, {
 // --- Users ---
 APP.post("/api/user/new_user", addNewUser);
 APP.post<{ "Body": UpdateUserBody }>("/api/user/update_user", { preHandler: [verifyAuth, rejectGuest] }, updateUserInfos);
-APP.get("/api/user/get_user", { preHandler: [verifyAuth, rejectGuest] }, getUserInfos); /** @todo maybe not rejectGuest */
+APP.get("/api/user/get_user", { preHandler: verifyAuth }, getUserInfos);
 APP.post("/api/user/login", connectUser);
 APP.get("/api/user/logout", { preHandler: [verifyAuth, rejectGuest] }, disconnectUser);
 APP.post("/api/user/change_picture", { preHandler: [verifyAuth, rejectGuest] }, changePicture);
