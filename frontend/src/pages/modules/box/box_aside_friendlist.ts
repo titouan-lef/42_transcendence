@@ -1,10 +1,11 @@
-import { getCurrentUserInfos } from "src/services/user_management/user_state";
+import { getCurrentUserInfos } from "../../../services/user_management/user_state";
 import { createButtonHtml } from "../../../components/button";
 import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
 import { applyColor } from "../../../utils/applyColor";
 import { getSafeElement } from "../../../utils/getSafeElement";
+import { Friend } from "#shared/HTTP";
 
-const FRIENDLIST: string[] = [];
+const FRIENDLIST = new Set<Friend>(); ;
 
 const DETAILS_STYLE = `
 	rounded-2xl
@@ -48,13 +49,13 @@ async function getFriendList(): Promise<void> {
 	const currentUser = getCurrentUserInfos();
 	if (!currentUser)
 		return;
-	FRIENDLIST.length = 0;
+	FRIENDLIST.clear();
 	const reply = await sendPostRequestToBack("/api/friends/list", JSON.stringify({ user: currentUser.username }));
 	if (!isRequestSuccessfull(reply))
 		return;
-	const friendList: string[] = JSON.parse(reply.content);
+	const friendList: Friend[] = JSON.parse(reply.content);
 	friendList.forEach(element => {
-		FRIENDLIST.push(element);
+		FRIENDLIST.add(element);
 	});
 }
 
@@ -63,19 +64,21 @@ async function updateFriendList(): Promise<void> {
 	const elem = getSafeElement("friendlist", HTMLElement);
 	elem.innerHTML = '';
 	await getFriendList();
-	FRIENDLIST.sort();
 
+	/** @todo red or green dot for online status */
 	FRIENDLIST.forEach(friend => {
+		console.log(friend);
+		const connected = friend.online ? "conected": "not connected";
 		elem.innerHTML += `
-			<details id="${friend}" class="${DETAILS_STYLE}">
+			<details id="${friend.username}" class="${DETAILS_STYLE}">
 				<summary class="${SUM_STYLE}">
-					<p class="${FRIEND_STYLE}" title="${friend}">${friend}</p>
+					<p class="${FRIEND_STYLE}" title="${friend.username}">${friend.username}-${connected}</p> 
 				</summary>
 				<div class="${DEPLOYED_STYLE}">
-					${createButtonHtml(["profile"], `btn-profile-${friend}`, { "class": `${BTN_STYLE}` })}
-					${createButtonHtml(["invite"], `btn-invite-${friend}`, { "class": `${BTN_STYLE}` })}
+					${createButtonHtml(["profile"], `btn-profile-${friend.username}`, { "class": `${BTN_STYLE}` })}
+					${createButtonHtml(["invite"], `btn-invite-${friend.username}`, { "class": `${BTN_STYLE}` })}
 					<hr class="${SEPARATOR_STYLE}">
-					${createButtonHtml(["delete"], `btn-delete-${friend}`, { "class": `${BTN_DELETE_STYLE}` })}
+					${createButtonHtml(["delete"], `btn-delete-${friend.username}`, { "class": `${BTN_DELETE_STYLE}` })}
 				</div>
 			</details>
 		`;
