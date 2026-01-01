@@ -11,7 +11,7 @@ import { isGameFound, newAIGame, newGame, newLocalGame } from "./game/web_socket
 import { addPlayerToMatchmakingSystem, removePlayerFromMatchmakingSystem } from "./tournament/matchmaking.js";
 import { getFriendList, newFriend, removeFriend } from "./user_management/friends.js";
 import { disable2FA, enable2FA, verify2FA } from "./security/2FA.js";
-import { verifyAuth } from "./security/JWT.js";
+import { rejectGuest, verifyAuth } from "./security/JWT.js";
 import { GameOptions } from "./game/settings/GameSettings.js";
 import { getUserInfos } from "./user_management/user_infos.js";
 import { getPlayerStats, UserDashboardInfoBody } from "./user_management/dashboard.js";
@@ -46,22 +46,22 @@ APP.register(fastifyStatic, {
 
 // --- Users ---
 APP.post("/api/user/new_user", addNewUser);
-APP.post<{ "Body": UpdateUserBody }>("/api/user/update_user", { preHandler: verifyAuth }, updateUserInfos);
-APP.get("/api/user/get_user", { preHandler: verifyAuth }, getUserInfos);
+APP.post<{ "Body": UpdateUserBody }>("/api/user/update_user", { preHandler: [verifyAuth, rejectGuest] }, updateUserInfos);
+APP.get("/api/user/get_user", { preHandler: [verifyAuth, rejectGuest] }, getUserInfos); /** @todo maybe not rejectGuest */
 APP.post("/api/user/login", connectUser);
-APP.get("/api/user/logout", { preHandler: verifyAuth }, disconnectUser);
-APP.post("/api/user/change_picture", { preHandler: verifyAuth }, changePicture);
-APP.post<{ Body:ThemeBody }>("/api/user/change_theme", { preHandler: verifyAuth }, changeTheme);
+APP.get("/api/user/logout", { preHandler: [verifyAuth, rejectGuest] }, disconnectUser);
+APP.post("/api/user/change_picture", { preHandler: [verifyAuth, rejectGuest] }, changePicture);
+APP.post<{ Body:ThemeBody }>("/api/user/change_theme", { preHandler: [verifyAuth, rejectGuest] }, changeTheme);
 
 // --- 2FA ---
 APP.post("/api/user/secure", verify2FA);
-APP.get("/api/user/enable-secure", { preHandler: verifyAuth }, enable2FA);
-APP.get("/api/user/disable-secure", { preHandler: verifyAuth }, disable2FA);
+APP.get("/api/user/enable-secure", { preHandler: [verifyAuth, rejectGuest] }, enable2FA);
+APP.get("/api/user/disable-secure", { preHandler: [verifyAuth, rejectGuest] }, disable2FA);
 
 // --- Friends ---
 APP.post("/api/friends/list", getFriendList);
-APP.post<{ Body: UserBody }>("/api/friends/add", { preHandler: verifyAuth }, newFriend);
-APP.post<{ Body: UserBody }>("/api/friends/remove", { preHandler: verifyAuth }, removeFriend);
+APP.post<{ Body: UserBody }>("/api/friends/add", { preHandler: [verifyAuth, rejectGuest] }, newFriend);
+APP.post<{ Body: UserBody }>("/api/friends/remove", { preHandler: [verifyAuth, rejectGuest] }, removeFriend);
 
 // --- Games ---
 APP.post<{ Body: GameOptions }>("/api/game/local_game", { preHandler: verifyAuth }, newLocalGame);
@@ -71,7 +71,7 @@ APP.get("/api/game/waiting", { preHandler: verifyAuth }, isGameFound);
 APP.get("/api/game/cancel_queue", { preHandler: verifyAuth }, removePlayerFromMatchmakingSystem);
 
 // --- Dashboards ---
-APP.post<{ Body: UserDashboardInfoBody }>("/api/user/dashboard", { preHandler: verifyAuth }, getPlayerStats);
+APP.post<{ Body: UserDashboardInfoBody }>("/api/user/dashboard", { preHandler: [verifyAuth, rejectGuest] }, getPlayerStats);
 
 /**
  * Register plugins like `fastifyCors` or `fastifyCookies` globally, Fastify applies those preHandlers and hooks immediately.

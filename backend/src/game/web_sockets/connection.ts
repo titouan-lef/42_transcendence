@@ -98,7 +98,13 @@ async function verifyAuthWS(socket: WebSocket, req: FastifyRequest): Promise<str
 		socket.close(1008, "User not logged in"); /**@todo use translate tool ? */
 		return null;
 	}
-	const user = identifyUser(token);
+	let user: string;
+	try {
+		user = identifyUser(token).username;
+	} catch {
+		socket.close(1008, "Please connect");
+		return null;
+	}
 	if (!await doesUserExist(user)) {
 		socket.close(1008, "User does not exist");
 		return null;

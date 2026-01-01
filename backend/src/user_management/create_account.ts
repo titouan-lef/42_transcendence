@@ -5,6 +5,8 @@ import { doesUserExist, getUserByUsername, insertUser, is2FAEnabled, updateEmail
 import { request2FA } from "../security/2FA.js";
 import { Errors, Success } from "#shared/status_codes.js";
 
+const GUEST_NAME = 'guest';
+
 interface NewUserBody {
 	username: string;
 	pseudo: string;
@@ -17,13 +19,24 @@ interface UpdateUserBody {
 	email: string;
 }
 
+function isValidName(username: string): boolean {
+	return (
+		!/[\r\n]/.test(username) &&			// prevent CR/LF injection
+		/^(?!\d+$).+$/.test(username)		// not only numbers
+	);
+}
+
 async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
 	const { username, pseudo, password } = req.body;
-	if (await doesUserExist(username)) {
-		sendReply(reply, Errors.USERNAME_TAKEN); /**@todo use translate tool */
+	if (!isValidName(username)) {
+		sendReply(reply, Errors.INVALID_USERNAME);
 		return;
 	}
-	await insertUser(username, pseudo, hashString(password));  /**@todo use translate tool */
+	if (await doesUserExist(username)) {
+		sendReply(reply, Errors.USERNAME_TAKEN);
+		return;
+	}
+	await insertUser(username, pseudo, hashString(password));
 	sendReply(reply, Success.USER_CREATED);
 }
 
@@ -71,4 +84,4 @@ async function updateUserInfos(req: FastifyRequest<{ "Body": UpdateUserBody }>, 
 	sendReply(reply, Success.USER_UPDATED);
 }
 
-export { UpdateUserBody, addNewUser, updateUserInfos };
+export { UpdateUserBody, addNewUser, updateUserInfos, GUEST_NAME };

@@ -4,6 +4,7 @@ import { sendReply } from "../utils/HTTP.js";
 import { GameOptions } from "../game/settings/GameSettings.js";
 import { registerGameOptions } from "../game/game_manager.js";
 import { Errors, Success } from "#shared/status_codes.js";
+import { GUEST_NAME } from "../user_management/create_account.js";
 
 const WAITING_PLAYERS = new Map<string, GameOptions>(); // username | options
 const MATCHS = new Map<string, number>();
@@ -17,11 +18,18 @@ async function addPlayerToMatchmakingSystem(req: FastifyRequest<{ Body: GameOpti
 	const options: GameOptions = req.body;
 	if (!user || !options)
 		return;
-	if (isUserWaiting(user)) {
+
+	let id: string = user;
+	if (user === GUEST_NAME)
+		id = String(req.id);
+	if (!id)
+		return;
+
+	if (isUserWaiting(id)) {
 		sendReply(reply, Errors.ALREADY_IN_QUEUE);
 		return;
 	}
-	WAITING_PLAYERS.set(user, options);
+	WAITING_PLAYERS.set(id, options);
 	sendReply(reply, Success.ADDED_TO_QUEUE);
 }
 

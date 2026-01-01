@@ -2,7 +2,7 @@ import sqlite3 from "sqlite3";
 import { existsSync } from "fs";
 import { open, Database } from "sqlite";
 import { createThemeTable, insertThemes } from "./theme.js";
-import { createUserTable } from "./user.js";
+import { createUserTable, insertGuest } from "./user.js";
 import { createFriendshipTable } from "./friendship.js";
 import { createSeasonTable, insertSeason } from "./season.js";
 import { createMapTable, insertMaps } from "./map.js";
@@ -74,6 +74,7 @@ async function initDB(): Promise<void> {
 		await createPlacementTable();
 
 		await insertSeason();
+		await insertGuest();
 	}
 	seasonManagement();
 }

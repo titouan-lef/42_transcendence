@@ -7,6 +7,7 @@ const REPLY_MESSAGES: Partial<Record<ReplyStatus, TranslationKey>> = {
 	[Errors.TWOFA_REQUIRED]: "twofa_required",
 	[Errors.AUTH_REQUIRED]: "not_connected",
 	[Errors.NO_SUCH_USER]: "no_such_user",
+	[Errors.INVALID_USERNAME]: "invalid_username",
 	[Errors.USERNAME_TAKEN]: "username_taken",
 	[Errors.NO_DATA_TO_UPDATE]: "nothing_updated",
 	[Errors.INVALID_EMAIL]: "invalid_email",
