@@ -1,6 +1,6 @@
 import { openModularPage } from "../pages/modular.js";
 import { openProfile } from "../pages/modules/profile/profile.js";
-import {  Modals, Navigation, Pages, getAssociatedPage, isAssociatedPage, isModal, isModularPage, isPage, needToBeConnected } from "./navigate_types.js";
+import { Modals, Navigation, Pages, getAssociatedPage, isAssociatedPage, isModal, isModularPage, isPage, needToBeConnected, needToRejectGuest } from "./navigate_types.js";
 import { openWelcomePage } from "../pages/welcome.js";
 import { openDialogSignIn, openDialogSignUp } from "src/pages/modules/dialog/dialog_login.js";
 import { openDialogAddFriend } from "src/pages/modules/dialog/dialog_add_friend.js";
@@ -10,7 +10,7 @@ import { openDialogGameOption } from "src/pages/modules/dialog/dialog_game_optio
 import { openLeaderboard } from "src/pages/modules/box/box_main_leaderboard.js";
 import { closeGame } from "src/game/canvas_creation.js";
 import { openDialogWaiting } from "src/pages/modules/dialog/dialog_game_waiting.js";
-import { getCurrentUserInfos } from "src/services/user_management/user_state.js";
+import { getCurrentUserInfos, isGuest } from "src/services/user_management/user_state.js";
 import { openDialog2FA, openDialogEmail } from "src/pages/modules/dialog/dialog_2FA.js";
 import { openDialogGameQuit } from "src/pages/modules/dialog/dialog_game_quit.js";
 import { isRequestSuccessfull, sendGetRequestToBack } from "src/services/api_request.js";
@@ -41,6 +41,8 @@ function manageParticularPages(page: Pages): void {
 
 function navigationSelector(nav: Navigation): boolean {
 	if (needToBeConnected(nav) && !getCurrentUserInfos())
+		return false;
+	if (isGuest() && needToRejectGuest(nav))
 		return false;
 
 	if (isWaitingForGame)
@@ -160,10 +162,10 @@ function goBackToCurrentPage(): void {
 	navigateTo(currentPage);
 }
 
-function goBackToBeginning(): void {
+document.addEventListener("user:logout", () => {
 	history.replaceState({}, ""); // prevent any forward in history
 	navigateTo(Pages.HOME);
-}
+});
 
 function initPage(nav: Navigation): void {
 	history.replaceState({ nav: nav }, ""); // Clears statement to setup back and forward button
@@ -178,4 +180,4 @@ window.addEventListener("popstate", (event: PopStateEvent) => {
 		navigationSelector(event.state.nav);
 });
 
-export { navigateTo, goBack, goBackToCurrentPage, goBackToBeginning, initPage, navigationGameFound };
+export { navigateTo, goBack, goBackToCurrentPage, initPage, navigationGameFound };

@@ -6,7 +6,7 @@ import { generateThemeEvents, SETTINGS_THEME_SELECTOR } from "./profile_settings
 import { uploadProfilePicture } from "../../../services/user_management/avatar";
 import { generateKeybindsButtons, keybindsNavbarEvents, SETTINGS_KEYBINDS_SELECTOR } from "./profile_settings_keybinds";
 import { AI_RANKED_PLAYER_KEYS } from "../../../game/settings/KeySets";
-import { getCurrentUserInfos } from "src/services/user_management/user_state";
+import { getCurrentUserInfos, isUserConnected } from "src/services/user_management/user_state";
 import { showUserInfos } from "src/services/user_management/update_user";
 import { update2FAButton } from "src/services/security/2FA";
 
@@ -54,7 +54,7 @@ const SETTINGS = `
 `;
 
 function loadSettings(): void {
-	if (!getCurrentUserInfos())
+	if (!isUserConnected())
 		return;
 
 	const elem = getSafeElement('profile-content', HTMLElement);

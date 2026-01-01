@@ -9,13 +9,36 @@ interface InfoList {
 	email: string | null;
 	is2FAEnabled: boolean;
 	isAvatarSet: boolean;
-	theme: Themes | null
+	theme: Themes | null;
 }
 
 let currentUser: InfoList | null = null;
 
 function getCurrentUserInfos(): InfoList | null {
 	return currentUser;
+}
+
+function guestConnection(): void {
+	currentUser = {
+		username: 'guest',
+		pseudo: 'guest',
+		email: null,
+		is2FAEnabled: false,
+		isAvatarSet: false,
+		theme: null
+	};
+}
+
+function isGuest(): boolean {
+	return currentUser?.username === `guest`;
+}
+
+function isUserConnected(): boolean {
+	if (currentUser === null)
+		return false;
+	if (isGuest())
+		return false;
+	return true;
 }
 
 async function getUserInfos(): Promise<void> {
@@ -41,4 +64,4 @@ function clearUserInfos(): void {
 	currentUser = null;
 }
 
-export { getCurrentUserInfos, getUserInfos, clearUserInfos };
+export { getCurrentUserInfos, getUserInfos, clearUserInfos, guestConnection, isGuest, isUserConnected };
