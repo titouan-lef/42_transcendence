@@ -76,4 +76,12 @@ function needToBeConnected(nav: Navigation): boolean {
 	return false;
 }
 
-export { GameTypes, Pages, Modals, Navigation, isPage, isModularPage, isModal, needToBeConnected, isAssociatedPage, getAssociatedPage };
+function needToRejectGuest(nav: Navigation): boolean {
+	if (nav === Pages.PROFILE)
+		return true;
+	if (nav === Modals.EMAIL_CONF || nav === Modals.ADD_FRIEND)
+		return true;
+	return false;
+}
+
+export { GameTypes, Pages, Modals, Navigation, isPage, isModularPage, isModal, needToBeConnected, needToRejectGuest, isAssociatedPage, getAssociatedPage };

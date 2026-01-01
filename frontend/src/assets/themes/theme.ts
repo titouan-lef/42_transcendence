@@ -1,6 +1,6 @@
 import { Themes, THEMES_LIST } from "./themes";
 import { sendPostRequestToBack } from "../../services/api_request";
-import { getCurrentUserInfos } from "src/services/user_management/user_state";
+import { getCurrentUserInfos, isUserConnected } from "src/services/user_management/user_state";
 
 function randomTheme(): void {
 	const randomIndex = Math.floor(Math.random() * THEMES_LIST.length);
@@ -19,7 +19,8 @@ function updateTheme(theme: Themes): void {
 	const currentUser = getCurrentUserInfos();
 	if (!currentUser)
 		return;
-	sendPostRequestToBack("/api/user/change_theme", JSON.stringify({ theme: theme }));
+	if (isUserConnected())
+		sendPostRequestToBack("/api/user/change_theme", JSON.stringify({ theme: theme }));
 	currentUser.theme = theme;
 	setTheme();
 }

@@ -1,8 +1,8 @@
-import { applyColor } from "src/utils/applyColor";
+import { applyColor } from "../utils/applyColor";
 import { loadPage } from "../routes/page";
 import { getSafeElement } from "../utils/getSafeElement";
 import { ASIDE_BOX, loadAside } from "./modules/box/box_aside";
-import { goBack } from "src/routes/navigate";
+// import { goBack } from "../routes/navigate";
 
 const ROW_STYLE = `
 flex flex-row gap-[10px]
@@ -36,10 +36,9 @@ function modularEvents(): void {
 	const modal = getSafeElement('modal', HTMLDialogElement);
 	modal.addEventListener('click', (e) => {
 		if (e.target === modal)
-			goBack();
+			history.back();
 	});
 }
-
 
 function openModularPage(): void {
 	loadPage(MODULAR, modularEvents);
