@@ -292,7 +292,7 @@ async function getGoalAverageBySeasonAndDate(seasonId: number, username: string,
 					FROM Goal g
 					JOIN Game gm ON g.gameId = gm.id
 					WHERE g.by = ?
-					AND gm.seasonId =?
+					AND gm.seasonId = ?
 					AND gm.beganAt <= ?
 					),
 				GoalsConceded AS (
