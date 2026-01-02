@@ -71,7 +71,7 @@ APP.get("/api/game/waiting", { preHandler: verifyAuth }, isGameFound);
 APP.get("/api/game/cancel_queue", { preHandler: verifyAuth }, removePlayerFromMatchmakingSystem);
 
 // --- Dashboards ---
-APP.post<{ Body: UserDashboardInfoBody }>("/api/user/dashboard", { preHandler: [verifyAuth, rejectGuest] }, getPlayerStats);
+APP.post<{ Body: UserDashboardInfoBody }>("/api/user/dashboard", { preHandler: verifyAuth }, getPlayerStats);
 
 /**
  * Register plugins like `fastifyCors` or `fastifyCookies` globally, Fastify applies those preHandlers and hooks immediately.

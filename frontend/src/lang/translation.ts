@@ -79,7 +79,7 @@ const TRANSLATOR = {
 	},
 	invalid_username: {
 		en: "{invalid} {user_name}",
-		fr: "{already} {invalid}",
+		fr: "{user_name} {invalid}",
 	},
 	username_taken: {
 		en: "{user_name} {already} {taken}",
