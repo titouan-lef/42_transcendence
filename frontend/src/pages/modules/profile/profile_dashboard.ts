@@ -8,6 +8,7 @@ import { BallOption, MapOption } from "#shared/types_transfert.js";
 import { isRequestSuccessfull, sendGetRequestToBack, sendPostRequestToBack } from "src/services/api_request";
 import { getCurrentUserInfos, InfoList } from "src/services/user_management/user_state";
 
+/** @todo mettre dans le shared */
 interface EloChart {
 	dateList: string[];
 	eloList: number[];
@@ -37,12 +38,6 @@ interface UserDashboardInfos {
 	goalChart: GoalChart;
 }
 
-interface UserDashboardInfoBody {
-	user: string;
-	season: number;
-}
-
-/** @todo fetch database infos */
 const ARROW_SVG = `
 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
 	<path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
