@@ -1,6 +1,6 @@
 import { getSafeElement } from "../../utils/getSafeElement";
 import { BallOption, MapOption } from "#shared/types_transfert.js";
-import { GameTypes } from "src/routes/navigate_types";
+import { GameTypes } from "../../routes/navigate_types";
 
 interface GameOptions {
 	map: MapOption[];
