@@ -15,10 +15,12 @@ enum Success {
 	FRIEND_LIST, // object needed
 	FRIEND_ADDED,
 	FRIEND_REMOVED,
-	// GAMES 
+	// GAMES
 	ADDED_TO_QUEUE,
 	GAME_FOUND, // object needed
-	REMOVED_FROM_QUEUE
+	REMOVED_FROM_QUEUE,
+	// SEASON
+	CURRENT_SEASON
 
 }
 

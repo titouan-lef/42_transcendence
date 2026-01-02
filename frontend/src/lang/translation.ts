@@ -154,18 +154,6 @@ const TRANSLATOR = {
 	},
 	all: { en: "all", fr: "tout" },
 	season: { en: "season", fr: "saison" },
-	s1: { /** @todo find better solution */
-		en: "{season} one",
-		fr: "{season} une"
-	},
-	s2: { /** @todo find better solution */
-		en: "{season} two",
-		fr: "{season} deux"
-	},
-	s3: { /** @todo find better solution */
-		en: "{season} three",
-		fr: "{season} trois"
-	},
 	tfa_mail: { en: "{twofa} e-mail", fr: "courriel de la {twofa}" },
 	new_password: { en: "new password", fr: "nouveau mot de passe" },
 	user_informations: { en: "user informations", fr: "informations" },
