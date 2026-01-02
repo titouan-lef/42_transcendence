@@ -1,43 +1,15 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { sendReply } from "../utils/HTTP.js";
 import { Errors, Success } from "#shared/status_codes.js";
+import { UserDashboardInfos } from "#shared/HTTP.js";
+import { EloChart, GoalChart, WinrateChart } from "#shared/types_dashboard.js";
 import { getGamesLoosesBySeason, getGamesLoosesGlobal, getGamesPlayedCountBySeason, getGamesPlayedCountGlobal, getGamesWinsBySeason, getGamesWinsGlobal } from "../database/fetchGame.js";
-import { BallOption, MapOption } from "#shared/types_transfert.js";
+import { sendReply } from "../utils/HTTP.js";
 import { getEloVariatonBySeason, getEloVariatonGlobal, getGameTimeAverageBySeason, getGameTimeAverageGlobal, getGoalAverageBySeason, getGoalAverageBySeasonAndDate, getGoalAverageGlobal, getGoalAverageGlobalAndDate, getPreferedBallBySeason, getPreferedBallGlobal, getPreferedMapBySeason, getPreferedMapGlobal, getWinrateBySeasonAndDate, getWinrateGlobalAndDate } from "../database/fetchStats.js";
 import { getElo } from "../database/web3/contract_service.js";
 import { Elo } from '../tournament/elo/elo.js';
 import { getAllSeasonId, getCurrentSeason, getEndSeason, getFirstSeason, getSeasonStartedAtById } from "../database/season.js";
 import { DEFAULT_RATINGS } from "../tournament/elo/elo.js";
 import { getActualDate } from "../database/db_utils.js";
-
-interface EloChart {
-	dateList: string[];
-	eloList: number[];
-}
-
-interface WinrateChart {
-	dateList: string[];
-	winrateList: number[];
-}
-
-interface GoalChart {
-	dateList: string[];
-	goalList: number[];
-}
-
-interface UserDashboardInfos {
-	gamesPlayed: number;
-	gamesWins: number;
-	gamesLooses: number; 
-	elo: number;
-	goalAverage: number;
-	durationAverage: number;
-	preferedBall: BallOption;
-	preferedMap: MapOption;
-	eloChart: EloChart;
-	winrateChart: WinrateChart;
-	goalChart: GoalChart;
-}
 
 interface UserDashboardInfoBody {
 	user: string;
