@@ -186,11 +186,11 @@ interface EloHistory {
 async function getEloVariatonGlobal(username: string): Promise<EloHistory[]> {
 	const tab: EloHistory[] | undefined = await applyQuery(
 		async (db) => await db.all(
-			`SELECT G.beganAt AS dateGame, E.variation
+			`SELECT G.beganAt AS date, E.variation
 			FROM Elo E
 			JOIN Game G ON E.gameId = G.id
 			WHERE E.username = ?
-			ORDER BY G.beganAt ASC LIMIT 7;`, [username]
+			ORDER BY G.beganAt ASC;`, [username]
 		), "getAllEloVariaton"
 	);
 	return tab ?? [];
@@ -199,11 +199,11 @@ async function getEloVariatonGlobal(username: string): Promise<EloHistory[]> {
 async function getEloVariatonBySeason(seasonId: number, username: string): Promise<EloHistory[]> {
 	const tab = await applyQuery(
 		async (db) => await db.all<EloHistory[]>(
-			`SELECT G.beganAt AS dateGame, E.variation
+			`SELECT G.beganAt AS date, E.variation
 			FROM Elo E
 			JOIN Game G ON E.gameId = G.id
 			WHERE E.username = ? AND G.seasonId = ?
-			ORDER BY G.beganAt ASC LIMIT 7;`,[username, seasonId]
+			ORDER BY G.beganAt ASC;`,[username, seasonId]
 		), "getEloVariatonBySeason"
 	);
 	return tab ?? [];
@@ -242,7 +242,7 @@ async function getWinrateBySeasonAndDate(seasonId: number, username: string, dat
 		const winrate = total > 0 ? (wins / total) * 100 : 0;
 
 		dateTab.push(dateToString(new Date(date)));
-		winrateTab.push(Math.round(winrate * 100) / 10);
+		winrateTab.push(Math.round(winrate));
 	}
 
 	const history: WinrateChart = { dateList: dateTab, winrateList: winrateTab };
@@ -272,7 +272,7 @@ async function getWinrateGlobalAndDate(username: string, dates: string[]): Promi
 		const winrate = total > 0 ? (wins / total) * 100 : 0;
 
 		dateTab.push(dateToString(new Date(date)));
-		winrateTab.push(Math.round(winrate * 100) / 10);
+		winrateTab.push(Math.round(winrate));
 	}
 
 	const history: WinrateChart = { dateList: dateTab, winrateList: winrateTab };

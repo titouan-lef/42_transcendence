@@ -106,7 +106,7 @@ function getDashboardTable(data: UserDashboardInfos): string {
 	<div class="grid grid-cols-3 grid-rows-1 gap-4 h-full w-full">
 		${createDashboardCard('wins', data.gamesWins)}
 		${createDashboardCard('loses', data.gamesLooses)}
-		${createDashboardCard('win_rate', data.gamesPlayed > 0 ? (data.gamesWins / data.gamesPlayed) : 0)}
+		${createDashboardCard('win_rate', data.gamesPlayed > 0 ? (data.gamesWins / data.gamesPlayed) * 100 : 0)}
 	</div>
 	<div class="">
 		${createDashboardChartBox('win_rate_chart')}
