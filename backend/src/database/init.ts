@@ -17,6 +17,8 @@ import { createPlacementTable } from "./placement.js";
 const DB_FILE = "Database.db";
 const DB_PATH_FILE = "/app/backups/" + DB_FILE;
 
+const SEASON_DURATION = 15 * 60 * 1000; // 15 minutes en ms
+
 async function getDB(): Promise<Database> {
 	return open({
 		filename: DB_PATH_FILE,
@@ -50,6 +52,10 @@ function databaseExist(): boolean {
 	return true;
 }
 
+async function seasonManagement(): Promise<void> {
+	setInterval(insertSeason, SEASON_DURATION);
+}
+
 async function initDB(): Promise<void> {
 	if (!databaseExist()) {
 		// No foreign key.
@@ -67,9 +73,9 @@ async function initDB(): Promise<void> {
 		await createEloTable();
 		await createPlacementTable();
 
-		/** @todo gerer ca ailleurs*/
 		await insertSeason();
 	}
+	seasonManagement();
 }
 
 export { getDB, initDB };
