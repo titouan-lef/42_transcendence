@@ -216,9 +216,11 @@ async function getUserDashboardInfosGlobal(user: string): Promise<UserDashboardI
 }
 
 async function getPlayerStats(req: FastifyRequest<{ Body: UserDashboardInfoBody }>, reply: FastifyReply): Promise<void> {
-	const user = req.user;
-	if (!user)
+	const user = req.body?.user;
+	if (!user) {
+		sendReply(reply, Errors.NO_USER_GIVEN);
 		return;
+	}
 	const season = req.body?.season;
 	if (!season) {
 		sendReply(reply, Errors.NO_SEASON_GIVEN);
@@ -226,10 +228,15 @@ async function getPlayerStats(req: FastifyRequest<{ Body: UserDashboardInfoBody 
 	}
 	let userInfos: UserDashboardInfos;
 	if (season === -1)
-		userInfos = await getUserDashboardInfosGlobal(user);
+		userInfos = await getUserDashboardInfosGlobal(user); 
 	else
 		userInfos = await getUserDashboardInfosBySeason(user, season);
 	sendReply(reply, Success.USER_DASHBOARD_INFOS, JSON.stringify(userInfos));
 }
 
-export { WinrateChart, GoalChart, UserDashboardInfoBody, getPlayerStats };
+async function geCurrentSeasonInfo(req: FastifyRequest, reply: FastifyReply): Promise<void> {
+	const numberSeason : number = await getCurrentSeason();
+	sendReply(reply, Success.CURRENT_SEASON, JSON.stringify(numberSeason));
+}
+
+export { WinrateChart, GoalChart, UserDashboardInfoBody, getPlayerStats, getRatingLastElo, geCurrentSeasonInfo };

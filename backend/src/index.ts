@@ -14,7 +14,7 @@ import { disable2FA, enable2FA, verify2FA } from "./security/2FA.js";
 import { rejectGuest, verifyAuth } from "./security/JWT.js";
 import { GameOptions } from "./game/settings/GameSettings.js";
 import { getUserInfos } from "./user_management/user_infos.js";
-import { getPlayerStats, UserDashboardInfoBody } from "./user_management/dashboard.js";
+import { geCurrentSeasonInfo, getPlayerStats, UserDashboardInfoBody } from "./user_management/dashboard.js";
 import { manageOnlineStatus } from "./user_management/online_status.js";
 
 const APP = fastify();
@@ -72,7 +72,7 @@ APP.get("/api/game/cancel_queue", { preHandler: verifyAuth }, removePlayerFromMa
 
 // --- Dashboards ---
 APP.post<{ Body: UserDashboardInfoBody }>("/api/user/dashboard", { preHandler: verifyAuth }, getPlayerStats);
-
+APP.get("/api/season", geCurrentSeasonInfo);
 /**
  * Register plugins like `fastifyCors` or `fastifyCookies` globally, Fastify applies those preHandlers and hooks immediately.
  * For WebSocket routes, this can break the upgrade request, because WS upgrade requests are special HTTP GETs:

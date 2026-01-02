@@ -5,7 +5,7 @@ import { createDashboardCard } from "./profile_dashboard_card";
 import { configureChart, createDashboardChart, createDashboardChartBox } from "./profile_dashboard_chart";
 
 import { BallOption, MapOption } from "#shared/types_transfert.js";
-import { isRequestSuccessfull, sendPostRequestToBack } from "src/services/api_request";
+import { isRequestSuccessfull, sendGetRequestToBack, sendPostRequestToBack } from "src/services/api_request";
 import { getCurrentUserInfos, InfoList } from "src/services/user_management/user_state";
 
 interface EloChart {
@@ -131,9 +131,10 @@ async function loadDashboard(): Promise<void> {
 	const currentUser: InfoList | null = getCurrentUserInfos();
 	if (!currentUser)
 		return;
-
-	/** @todo request actual season number */
-	const seasonNumber = 3;
+	const reply = await sendGetRequestToBack('/api/season');
+	if (!isRequestSuccessfull(reply))
+		return;
+	const seasonNumber: number = JSON.parse(reply.content);
 
 	const elem = getSafeElement('profile-content', HTMLElement);
 	elem.innerHTML = getDashboardPage(seasonNumber);
