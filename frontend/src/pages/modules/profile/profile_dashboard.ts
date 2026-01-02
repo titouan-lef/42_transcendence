@@ -3,40 +3,9 @@ import { getSafeElement } from "../../../utils/getSafeElement";
 import { setActiveBtn } from "./profile_navbar";
 import { createDashboardCard } from "./profile_dashboard_card";
 import { configureChart, createDashboardChart, createDashboardChartBox } from "./profile_dashboard_chart";
-
-import { BallOption, MapOption } from "#shared/types_transfert.js";
-import { isRequestSuccessfull, sendGetRequestToBack, sendPostRequestToBack } from "src/services/api_request";
-import { getCurrentUserInfos, InfoList } from "src/services/user_management/user_state";
-
-/** @todo mettre dans le shared */
-interface EloChart {
-	dateList: string[];
-	eloList: number[];
-}
-
-interface WinrateChart {
-	dateList: string[];
-	winrateList: number[];
-}
-
-interface GoalChart {
-	dateList: string[];
-	goalList: number[];
-}
-
-interface UserDashboardInfos {
-	gamesPlayed: number;
-	gamesWins: number;
-	gamesLooses: number; 
-	elo: number;
-	goalAverage: number;
-	durationAverage: number;//(in seconds)
-	preferedBall: BallOption;
-	preferedMap: MapOption;
-	eloChart: EloChart;
-	winrateChart: WinrateChart;
-	goalChart: GoalChart;
-}
+import { UserDashboardInfos } from "#shared/HTTP";
+import { isRequestSuccessfull, sendGetRequestToBack, sendPostRequestToBack } from "../../../services/api_request";
+import { getCurrentUserInfos, InfoList } from "../../../services/user_management/user_state";
 
 const ARROW_SVG = `
 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
