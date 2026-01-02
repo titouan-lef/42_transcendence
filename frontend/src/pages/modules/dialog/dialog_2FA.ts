@@ -1,10 +1,10 @@
 import { navigateTo } from "src/routes/navigate";
 import { createButtonHtml } from "../../../components/button";
 import { createInputHtml } from "../../../components/input";
-import { verify2FA } from "../../../services/user_management/login";
 import { loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_SEPARATOR_STYLE, DIALOG_FORM_STYLE } from "./dialog_style";
 import { Modals } from "src/routes/navigate_types";
+import { verify2FA } from "src/services/security/2FA";
 
 /** @todo make print-content great. again? */
 /** @todo change `password` into `verification code` */

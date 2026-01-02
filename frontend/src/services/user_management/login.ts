@@ -2,9 +2,9 @@ import { isOneStringEmtpy } from "../../utils/strings.js";
 import { sendPostRequestToBack, printReplyInDiv, isRequestSuccessfull, ReplyFromBack } from "../api_request.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
 import { Errors } from '#shared/status_codes';
-import { getCurrentUserInfos, getUserInfos } from "./user_state.js";
+import { getUserInfos } from "./user_state.js";
 import { loadDialog2FA } from "../../pages/modules/dialog/dialog_2FA.js";
-import { goBackToCurrentPage, navigateTo } from "../../routes/navigate.js";
+import { navigateTo } from "../../routes/navigate.js";
 import { Pages } from "../../routes/navigate_types.js";
 
 let user = "";
@@ -38,31 +38,4 @@ async function connectUser(): Promise<void> {
 	navigateTo(Pages.HOME);
 }
 
-async function sendSecureCode(): Promise<boolean> {
-	const code = getSafeElement('password', HTMLInputElement).value;
-	const container: HTMLElement = getSafeElement("print-content", HTMLElement);
-	if (!code) {
-		container.innerHTML = `<p>Please enter a 4 digit code.</p>`; /**@todo use translate tool */
-		return false;
-	}
-	let reply: ReplyFromBack;
-	const currentUser = getCurrentUserInfos();
-	if (currentUser)
-		reply = await sendPostRequestToBack("/api/user/secure", JSON.stringify({ user: currentUser.username, code: code }));
-	else
-		reply = await sendPostRequestToBack("/api/user/secure", JSON.stringify({ user: user, code: code }));
-
-	if (!isRequestSuccessfull(reply)) {
-		printReplyInDiv(reply, "print-content");
-		return false;
-	}
-	return true;
-}
-
-async function verify2FA(): Promise<void> {
-	if(!await sendSecureCode())
-		return;
-	goBackToCurrentPage();
-}
-
-export { getUserInfos, connectUser, verify2FA };
+export { getUserInfos, connectUser };

@@ -67,8 +67,7 @@ async function updateFriendList(): Promise<void> {
 
 	/** @todo red or green dot for online status */
 	FRIENDLIST.forEach(friend => {
-		console.log(friend);
-		const connected = friend.online ? "conected": "not connected";
+		const connected = friend.onlineStatus ? "conected": "not connected";
 		elem.innerHTML += `
 			<details id="${friend.username}" class="${DETAILS_STYLE}">
 				<summary class="${SUM_STYLE}">
