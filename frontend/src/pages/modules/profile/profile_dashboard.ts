@@ -83,9 +83,8 @@ function getDashboardTable(data: UserDashboardInfos): string {
 		${createDashboardCard('prefered_ball', data.preferedBall)}	
 		${createDashboardCard('prefered_map', data.preferedMap)}
 	</div>
-	<div class="grid grid-cols-2 gap-4 h-full w-full">
+	<div class="">
 		${createDashboardChartBox('elo_chart')}
-		${createDashboardChartBox('diff_goals_chart')}
 	</div>
 	`);
 }
@@ -129,7 +128,6 @@ async function updateDashboradData(): Promise<void> {
 
 	createDashboardChart('elo_chart', configureChart(data.eloChart.dateList, data.eloChart.eloList));
 	createDashboardChart('win_rate_chart', configureChart(data.winrateChart.dateList, data.winrateChart.winrateList));
-	createDashboardChart('diff_goals_chart', configureChart(data.goalChart.dateList, data.goalChart.goalList));
 }
 
 export { loadDashboard }; 

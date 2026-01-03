@@ -4,7 +4,7 @@ import { UserDashboardInfos } from "#shared/HTTP.js";
 import { EloChart, GoalChart, WinrateChart } from "#shared/types_dashboard.js";
 import { getGamesLoosesBySeason, getGamesLoosesGlobal, getGamesPlayedCountBySeason, getGamesPlayedCountGlobal, getGamesWinsBySeason, getGamesWinsGlobal } from "../database/fetchGame.js";
 import { sendReply } from "../utils/HTTP.js";
-import { getEloVariatonBySeason, getEloVariatonGlobal, getGameTimeAverageBySeason, getGameTimeAverageGlobal, getGoalAverageBySeason, getGoalAverageBySeasonAndDate, getGoalAverageGlobal, getGoalAverageGlobalAndDate, getPreferedBallBySeason, getPreferedBallGlobal, getPreferedMapBySeason, getPreferedMapGlobal, getWinrateBySeasonAndDate, getWinrateGlobalAndDate } from "../database/fetchStats.js";
+import { getEloVariatonBySeason, getEloVariatonGlobal, getGameTimeAverageBySeason, getGameTimeAverageGlobal, getGoalAverageBySeason, getGoalAverageGlobal, getPreferedBallBySeason, getPreferedBallGlobal, getPreferedMapBySeason, getPreferedMapGlobal, getWinrateBySeasonAndDate, getWinrateGlobalAndDate } from "../database/fetchStats.js";
 import { getElo } from "../database/web3/contract_service.js";
 import { Elo } from '../tournament/elo/elo.js';
 import { getAllSeasonId, getCurrentSeason, getEndSeason, getFirstSeason, getSeasonStartedAtById } from "../database/season.js";
@@ -127,11 +127,6 @@ async function getWinrateChartBySeason(season: number, user: string): Promise <W
 	return await getWinrateBySeasonAndDate(season, user, dates);
 }
 
-async function getGoalChartBySeason(season: number, user: string): Promise <GoalChart> {
-	const dates: string[] = await getTabDateBySeason(season);
-	return await getGoalAverageBySeasonAndDate(season, user, dates);
-}
-
 async function getRatingEloBySeason(user: string, season: number): Promise<number> {
 	const elo: Elo = await getElo(user, season);
 	return elo.r;
@@ -140,11 +135,6 @@ async function getRatingEloBySeason(user: string, season: number): Promise<numbe
 async function getWinrateChartGlobal(user: string): Promise <WinrateChart> {
 	const dates: string[] = await getTabDateGlobal();
 	return await getWinrateGlobalAndDate(user, dates);
-}
-
-async function getGoalChartGlobal(user: string): Promise <GoalChart> {
-	const dates: string[] = await getTabDateGlobal();
-	return await getGoalAverageGlobalAndDate(user, dates);
 }
 
 async function getRatingLastElo(user: string): Promise<number> {
@@ -164,8 +154,7 @@ async function getUserDashboardInfosBySeason(user: string, season: number): Prom
 		preferedBall: await getPreferedBallBySeason(season, user),
 		preferedMap: await getPreferedMapBySeason(season, user),
 		eloChart: await getEloChartBySeason(season, user),
-		winrateChart: await getWinrateChartBySeason(season, user),
-		goalChart: await getGoalChartBySeason(season, user)
+		winrateChart: await getWinrateChartBySeason(season, user)
 	};
 	return userInfos;
 }
@@ -181,8 +170,7 @@ async function getUserDashboardInfosGlobal(user: string): Promise<UserDashboardI
 		preferedBall: await getPreferedBallGlobal(user),
 		preferedMap: await getPreferedMapGlobal(user),
 		eloChart: await getEloChartGlobal(user),
-		winrateChart: await getWinrateChartGlobal(user),
-		goalChart: await getGoalChartGlobal(user)
+		winrateChart: await getWinrateChartGlobal(user)
 	};
 	return userInfos;
 }
@@ -203,6 +191,7 @@ async function getPlayerStats(req: FastifyRequest<{ Body: UserDashboardInfoBody 
 		userInfos = await getUserDashboardInfosGlobal(user); 
 	else
 		userInfos = await getUserDashboardInfosBySeason(user, season);
+
 	sendReply(reply, Success.USER_DASHBOARD_INFOS, JSON.stringify(userInfos));
 }
 

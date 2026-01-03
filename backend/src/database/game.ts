@@ -48,6 +48,37 @@ async function getDateLastGame(username: string):Promise<string | undefined> {
 	return (row?.beganAt);
 }
 
+async function getPlayedGameAtDateByseason(username: string, seasonId: number, date: string): Promise<number> {
+	const gamePlayed = await applyQuery(
+		async (db) => await db.get(
+			`SELECT COUNT(G.id) AS total_games
+				FROM Game G
+				JOIN Elo E ON G.id = E.gameId
+				WHERE E.username = ? AND G.seasonId = ? AND G.beganAt <= ?
+			`, [username, seasonId, date]
+		), "getPlayedGameAtDateByseason"
+	);
+	if (!gamePlayed)
+		return 0;
+	return gamePlayed.total_games;
+}
+
+async function getPlayedGameAtDate(username: string, date: string): Promise<number> {
+	const gamePlayed = await applyQuery(
+		async (db) => await db.get(
+			`SELECT COUNT(G.id) AS total_games
+				FROM Game G
+				JOIN Elo E ON G.id = E.gameId
+				WHERE E.username = ? AND G.beganAt <= ?
+			`, [username, date]
+		), "getPlayedGameAtDate"
+	);
+	if (!gamePlayed)
+		return 0;
+	return gamePlayed.total_games;
+}
+
+/** @todo faire un point avec titoutan */
 async function getPlayerGameCountBySeason(username: string, seasonId: number):Promise<number | undefined> {
 	const row = await applyQuery(
 		async (db) => await db.get(
@@ -60,4 +91,4 @@ async function getPlayerGameCountBySeason(username: string, seasonId: number):Pr
 	return (row?.nb_game);
 }
 
-export { Game, createGameTable, insertGame, getDateLastGame, getPlayerGameCountBySeason };
+export { Game, createGameTable, insertGame, getDateLastGame, getPlayedGameAtDateByseason, getPlayedGameAtDate, getPlayerGameCountBySeason };
