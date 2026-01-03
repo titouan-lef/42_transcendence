@@ -6,19 +6,7 @@ import { configureChart, createDashboardChart, createDashboardChartBox } from ".
 import { UserDashboardInfos } from "#shared/HTTP";
 import { isRequestSuccessfull, sendGetRequestToBack, sendPostRequestToBack } from "../../../services/api_request";
 import { getCurrentUserInfos, InfoList } from "../../../services/user_management/user_state";
-
-const ARROW_SVG = `
-<svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-	<path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-</svg>
-`;
-
-const DASHBOARD_FILTER_STYLE = `
-block appearance-none w-full
-bg-dark border border-primary hover:border-light
-px-4 py-2 pr-8 rounded-2xl
-text-secondary cursor-pointer
-`;
+import { getFilterHtml } from "../../../components/selectionMenu";
 
 const DASHBOARD_BOX_STYLE = `
 flex flex-col h-full w-full pb-10 pt-4 gap-4
@@ -26,36 +14,13 @@ scrollbar-none overflow-y-scroll overflow-hidden
 [mask-image:linear-gradient(to_bottom,transparent,black_2%,black_90%,transparent)]
 `;
 
-function generateSeasonOptions(maxSeason: number): string {
-	let options = `<option value="all">${createParagraphHtml(['all'], 'p-all')}</option>`;
-
-	for (let i: number = maxSeason; i >= 1; i--) {
-		options += `<option value="${i}">${i}</option>`;
-	}
-
-	return options;
-}
-
-function getDashboardFilterHtml(maxSeason: number): string {
-	return `
-	<div class="relative w-[200px]">
-		<div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-secondary">
-			${ARROW_SVG}
-		</div>
-		<select id="filter" class="${DASHBOARD_FILTER_STYLE}">
-		${generateSeasonOptions(maxSeason)}
-		</select>
-	</div>
-`;
-}
-
 /** @todo better select/option with divs ? menue is not personnalisable at this time */
 function getDashboardPage(maxSeason: number ): string {
 
 	return ( `
 	<div class="px-4 flex flex-col h-full w-full">
 		<div class='pb-2'>
-			${getDashboardFilterHtml(maxSeason)}
+			${getFilterHtml(maxSeason)}
 		</div>
 		<div id="dashboard" class="${DASHBOARD_BOX_STYLE}">
 		</div>
@@ -88,26 +53,6 @@ function getDashboardTable(data: UserDashboardInfos): string {
 	`);
 }
 
-
-async function loadDashboard(): Promise<void> {
-	const currentUser: InfoList | null = getCurrentUserInfos();
-	if (!currentUser)
-		return;
-	const reply = await sendGetRequestToBack('/api/season');
-	if (!isRequestSuccessfull(reply))
-		return;
-	const seasonNumber: number = JSON.parse(reply.content);
-
-	const elem = getSafeElement('profile-content', HTMLElement);
-	elem.innerHTML = getDashboardPage(seasonNumber);
-
-	const filter = getSafeElement('filter', HTMLSelectElement);
-	filter.addEventListener('change', updateDashboardData);
-	await updateDashboardData();
-
-	setActiveBtn('btn-dashboard');
-}
-
 async function updateDashboardData(): Promise<void> {
 	const currentUser: InfoList | null = getCurrentUserInfos();
 	if (!currentUser)
@@ -129,4 +74,24 @@ async function updateDashboardData(): Promise<void> {
 	createDashboardChart('win_rate_chart', configureChart(data.winrateChart.dateList, data.winrateChart.winrateList));
 }
 
-export { loadDashboard, getDashboardFilterHtml }; 
+async function loadDashboard(): Promise<void> {
+	setActiveBtn('btn-dashboard');
+
+	const currentUser: InfoList | null = getCurrentUserInfos();
+	if (!currentUser)
+		return;
+	const reply = await sendGetRequestToBack('/api/season');
+	if (!isRequestSuccessfull(reply))
+		return;
+	const seasonNumber: number = JSON.parse(reply.content);
+
+	const elem = getSafeElement('profile-content', HTMLElement);
+	elem.innerHTML = getDashboardPage(seasonNumber);
+
+	const filter = getSafeElement('filter', HTMLSelectElement);
+	filter.addEventListener('change', updateDashboardData);
+	await updateDashboardData();
+
+}
+
+export { loadDashboard }; 

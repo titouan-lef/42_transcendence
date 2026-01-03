@@ -54,13 +54,12 @@ const SETTINGS = `
 `;
 
 function loadSettings(): void {
-	if (!isUserConnected())
+	if (!isUserConnected()) /** @todo maybe not necessary anymore */
 		return;
 
-	const elem = getSafeElement('profile-content', HTMLElement);
-
-	elem.innerHTML = SETTINGS;
 	setActiveBtn('btn-settings');
+	const elem = getSafeElement('profile-content', HTMLElement);
+	elem.innerHTML = SETTINGS;
 
 	const avatar = getSafeElement('change-avatar', HTMLElement);
 	avatar.addEventListener('change', (event) => {

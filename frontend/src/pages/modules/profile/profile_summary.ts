@@ -43,10 +43,10 @@ const SUMMARY = `
 `;
 
 function loadSummary(): void {
-	const content = getSafeElement('profile-content', HTMLElement);
-
-	content.innerHTML = SUMMARY;
 	setActiveBtn('btn-summary');
+
+	const content = getSafeElement('profile-content', HTMLElement);
+	content.innerHTML = SUMMARY;
 
 	const dashboardButton = getSafeElement('btn-sum-dashboard', HTMLButtonElement);
 	const historyButton = getSafeElement('btn-sum-history', HTMLButtonElement);

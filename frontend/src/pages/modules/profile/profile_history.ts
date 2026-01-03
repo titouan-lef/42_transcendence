@@ -34,14 +34,16 @@ async function loadHistory(): Promise<void> {
 	if (!currentUser)
 		return;
 
+	setActiveBtn('btn-history');
+
 	const reply = await sendPostRequestToBack('/api/user/history', JSON.stringify({ user: currentUser.username }));
 	if (!isRequestSuccessfull(reply))
 		return;
 
 	const data: GameHistoryWithAvatar[] = JSON.parse(reply.content);
+
 	const elem = getSafeElement('profile-content', HTMLElement);
 	elem.innerHTML = getHistoryTable(data);
-	setActiveBtn('btn-history');
 
 }
 
