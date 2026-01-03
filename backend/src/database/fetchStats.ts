@@ -1,4 +1,4 @@
-import { GoalChart, WinrateChart } from "../user_management/dashboard.js";
+import { WinrateChart } from "../user_management/dashboard.js";
 import { applyQuery } from "./db_utils.js";
 import { BallOption, MapOption } from "#shared/types_transfert.js";
 import { getGamesPlayedCountBySeason, getGamesPlayedCountGlobal } from "./fetchGame.js";

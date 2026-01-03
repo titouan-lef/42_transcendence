@@ -1,109 +1,9 @@
 import { getSafeElement } from "../../../utils/getSafeElement";
-import { createHistoryBox, GameHistory } from "./profile_history_box";
+import { createHistoryBox } from "./profile_history_box";
+import { GameHistoryWithAvatar } from "#shared/HTTP";
 import { setActiveBtn } from "./profile_navbar";
-
-/** @todo replace by fetching to back */
-const HISTORYLIST: GameHistory[] = [
-	{
-		date: '29/06/1990',
-		time: 886,
-		opponent_avatar: './images/avatar.png',
-		opponent_name: 'opponent1',
-		elo: 42,
-		player_score: 11,
-		opponent_score: 0,
-	},
-	{
-		date: '29/06/1990',
-		time: 886,
-		opponent_avatar: './images/avatar.png',
-		opponent_name: 'opponent_too_long_name',
-		elo: -18,
-		player_score: 10,
-		opponent_score: 11,
-	},
-	{
-		date: '29/06/1990',
-		time: 886,
-		opponent_avatar: './images/avatar.png',
-		opponent_name: 'opponent2',
-		elo: -7,
-		player_score: 5,
-		opponent_score: 10,
-	},
-	{
-		date: '29/06/1990',
-		time: 886,
-		opponent_avatar: './images/avatar.png',
-		opponent_name: 'o',
-		elo: 42,
-		player_score: 11,
-		opponent_score: 0,
-	},
-	{
-		date: '29/06/1990',
-		time: 886,
-		opponent_avatar: './images/avatar.png',
-		opponent_name: 'opponent115465465',
-		elo: 42,
-		player_score: 11,
-		opponent_score: 0,
-	},
-	{
-		date: '29/06/1990',
-		time: 886,
-		opponent_avatar: './images/avatar.png',
-		opponent_name: 'opponent111233333',
-		elo: 42,
-		player_score: 11,
-		opponent_score: 0,
-	},
-	{
-		date: '29/06/1990',
-		time: 886,
-		opponent_avatar: './images/avatar.png',
-		opponent_name: 'opponentdwqdwqd',
-		elo: 42,
-		player_score: 11,
-		opponent_score: 0,
-	},
-	{
-		date: '29/06/1990',
-		time: 886,
-		opponent_avatar: './images/avatar.png',
-		opponent_name: 'dwqdwqdwqd',
-		elo: 42,
-		player_score: 11,
-		opponent_score: 0,
-	},
-	{
-		date: '29/06/1990',
-		time: 886,
-		opponent_avatar: './images/avatar.png',
-		opponent_name: 'vcxvcxedwev',
-		elo: 42,
-		player_score: 11,
-		opponent_score: 0,
-	},
-	{
-		date: '29/06/1990',
-		time: 886,
-		opponent_avatar: './images/avatar.png',
-		opponent_name: 'rtbrt26+5+',
-		elo: 42,
-		player_score: 11,
-		opponent_score: 0,
-	},
-	{
-		date: '29/06/1990',
-		time: 886,
-		opponent_avatar: './images/avatar.png',
-		opponent_name: 'vdfrobert',
-		elo: 42,
-		player_score: 11,
-		opponent_score: 0,
-	},
-];
+import { getCurrentUserInfos, InfoList } from "../../../services/user_management/user_state";
+import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
 
 const HISTORY_STYLE = `
 flex flex-col justify-start items-center gap-4
@@ -112,31 +12,37 @@ scrollbar-none overflow-y-scroll overflow-hidden
 [mask-image:linear-gradient(to_bottom,transparent,black_5%,black_90%,transparent)]
 `;
 
-const HISTORY = `
-<div class="${HISTORY_STYLE}">
-	${generateHistory(HISTORYLIST.length)}
-</div>
-`;
+function getHistoryTable(history: GameHistoryWithAvatar[]): string {
+	return (`
+	<div class="${HISTORY_STYLE}">
+		${generateHistory(history, history.length)}
+	</div>
+	`);
+}
 
-function generateHistory(n: number): string {
-	let i = 0;
+function generateHistory(history: GameHistoryWithAvatar[], numberDisplay: number): string {
 	let histBoxes = ``;
+	const size = history.length;
 
-	while (i < HISTORYLIST.length && i < n) {
-		histBoxes += createHistoryBox(HISTORYLIST[i]);
-		i++;
-	}
-
+	for(let i =0; i < size && i < numberDisplay; i++)
+		histBoxes += createHistoryBox(history[i]);
 	return histBoxes;
 }
 
-function loadHistory(): void {
-	const elem = getSafeElement('profile-content', HTMLElement);
+async function loadHistory(): Promise<void> {
+	const currentUser: InfoList | null = getCurrentUserInfos();
+	if (!currentUser)
+		return;
 
-	elem.innerHTML = HISTORY;
+	const reply = await sendPostRequestToBack('/api/user/history', JSON.stringify({ user: currentUser.username }));
+	if (!isRequestSuccessfull(reply))
+		return;
+
+	const data: GameHistoryWithAvatar[] = JSON.parse(reply.content);
+	const elem = getSafeElement('profile-content', HTMLElement);
+	elem.innerHTML = getHistoryTable(data);
 	setActiveBtn('btn-history');
 
-	/** @todo events: clicking on history boxes to get more infos ? */
 }
 
-export { HISTORY, loadHistory, generateHistory };
+export { loadHistory, generateHistory };
