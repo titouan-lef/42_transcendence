@@ -5,8 +5,8 @@ import { goBack, navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
 import { isRequestSuccessfull, sendGetRequestToBack } from "src/services/api_request";
 import { LeaderboardInfos, Ranking } from "#shared/HTTP.js";
-import { getDashboardFilterHtml } from "../profile/profile_dashboard";
 import { getCurrentUserInfos, InfoList } from "src/services/user_management/user_state";
+import { getFilterHtml } from "../../../components/selectionMenu";
 
 const LEADERBOARD_THEAD = `
 <thead class="bg-light flex text-variant w-full">
@@ -22,7 +22,9 @@ const LEADERBOARD_THEAD = `
 
 function getLeaderboardPage(maxSeason: number ): string {
 	return `
-		${getDashboardFilterHtml(maxSeason)}
+		<div class='pb-2'>
+			${getFilterHtml(maxSeason)}
+		</div>
 		<div id="season-dates" class=text-left w-full overflow-auto>
 		</div>
 		<table class="text-left w-full overflow-auto">

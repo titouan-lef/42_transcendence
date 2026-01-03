@@ -5,7 +5,7 @@ import { loadSettings } from "./profile_settings";
 import { loadHistory } from "./profile_history";
 import { loadSummary } from "./profile_summary";
 import { DRAWER_HEADER } from "./profile_header";
-import { DRAWER_NAV } from "./profile_navbar";
+import { DRAWER_NAV, setActiveBtn } from "./profile_navbar";
 import { goBack, navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
 import { getCurrentUserInfos, getUserInfos } from "../../../services/user_management/user_state";
@@ -52,10 +52,10 @@ const DRAWER_CONTENT = `
 `;
 
 enum ProfiteTab {
-	SUMMARY,
-	HISTORY,
-	DASHBOARD,
-	SETTINGS
+	SUMMARY = 'summary',
+	HISTORY = 'history',
+	DASHBOARD = 'dashboard',
+	SETTINGS = 'settings'
 }
 
 let currentTab: ProfiteTab = ProfiteTab.SUMMARY;
@@ -88,6 +88,8 @@ async function openProfile(): Promise<void> {
 	drawer.className = DRAWER_BACKDROP_STYLE;
 	drawer.show();
 	drawer.innerHTML = DRAWER_CONTENT;
+
+	setActiveBtn(`btn-${currentTab}`);
 
 	updateFriendList();
 	await getUserInfos();

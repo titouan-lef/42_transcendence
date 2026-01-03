@@ -1,0 +1,40 @@
+import { createParagraphHtml } from "./paragraph.js";
+
+const ARROW_SVG = `
+<svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+	<path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+</svg>
+`;
+
+const FILTER_STYLE = `
+block appearance-none w-full
+bg-dark border border-primary hover:border-light
+px-4 py-2 pr-8 rounded-2xl
+text-secondary cursor-pointer
+`;
+
+function generateSeasonOptions(maxSeason: number): string {
+	let options = `<option value="all">${createParagraphHtml(['all'], 'p-all')}</option>`;
+
+	for (let i: number = maxSeason; i >= 1; i--) {
+		const selected = i === maxSeason ? ' selected' : '';
+		options += `<option value="${i}"${selected}>${i}</option>`;
+	}
+
+	return options;
+}
+
+function getFilterHtml(maxSeason: number): string {
+	return `
+	<div class="relative w-[200px]">
+		<div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-secondary">
+			${ARROW_SVG}
+		</div> 
+		<select id="filter" class="${FILTER_STYLE}">
+		${generateSeasonOptions(maxSeason)}
+		</select>
+	</div>
+`;
+}
+
+export { getFilterHtml };
