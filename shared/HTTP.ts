@@ -33,4 +33,11 @@ interface GameHistoryWithAvatar extends GameHistory {
 	isAvatarSet: Boolean;
 }
 
-export { Friend, UserDashboardInfos, GameHistory, GameHistoryWithAvatar };
+interface LeaderboardInfos {
+	nick: string;
+	elo: number;
+	winrate: number;
+	nbGamePlayed: number;
+}
+
+export { Friend, UserDashboardInfos, GameHistory, GameHistoryWithAvatar, LeaderboardInfos };

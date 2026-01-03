@@ -27,7 +27,7 @@ async function newUser(): Promise<void> {
 
 	const data = {
 		username: userId.value,
-		pseudo: userPseudo.value,
+		nick: userPseudo.value,
 		password: userPassword.value,
 		ppLink: "/pictures/users/avatar.jpg" /** @TODO */
 	};

@@ -26,7 +26,6 @@ scrollbar-none overflow-y-scroll overflow-hidden
 [mask-image:linear-gradient(to_bottom,transparent,black_2%,black_90%,transparent)]
 `;
 
-/** @todo bloquer a 3s eason max voir avec les frontist*/
 function generateSeasonOptions(maxSeason: number): string {
 	let options = `<option value="all">${createParagraphHtml(['all'], 'p-all')}</option>`;
 
@@ -102,14 +101,14 @@ async function loadDashboard(): Promise<void> {
 	const elem = getSafeElement('profile-content', HTMLElement);
 	elem.innerHTML = getDashboardPage(seasonNumber);
 
-	await updateDashboradData();
 	const filter = getSafeElement('filter', HTMLSelectElement);
-	filter.addEventListener('change', updateDashboradData);
+	filter.addEventListener('change', updateDashboardData);
+	await updateDashboardData();
 
 	setActiveBtn('btn-dashboard');
 }
 
-async function updateDashboradData(): Promise<void> {
+async function updateDashboardData(): Promise<void> {
 	const currentUser: InfoList | null = getCurrentUserInfos();
 	if (!currentUser)
 		return;
@@ -130,4 +129,4 @@ async function updateDashboradData(): Promise<void> {
 	createDashboardChart('win_rate_chart', configureChart(data.winrateChart.dateList, data.winrateChart.winrateList));
 }
 
-export { loadDashboard }; 
+export { loadDashboard, getDashboardFilterHtml }; 

@@ -58,6 +58,7 @@ async function seasonManagement(): Promise<void> {
 
 async function initDB(): Promise<void> {
 	if (!databaseExist()) {
+		/** @todo clear elos on blockchain but only in PROD !! */
 		// No foreign key.
 		await createSeasonTable();
 		await initRuleTable();

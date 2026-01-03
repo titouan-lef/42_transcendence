@@ -7,7 +7,7 @@ import { BOX_EDITPROFILE, BOX_SHOWPROFILE, BTN_EDIT, BTN_SAVE } from "../../page
 import { getCurrentUserInfos } from "./user_state.js";
 
 interface UserInfos {
-	pseudo: string,
+	nick: string,
 	password: string,
 	email: string,
 }
@@ -29,7 +29,7 @@ async function updateUser(): Promise<void> {
 		return;
 	}
 	const data: UserInfos = {
-		pseudo: nick.value,
+		nick: nick.value,
 		password: pass.value,
 		email: email.value,
 	};
@@ -84,7 +84,7 @@ function editUserInfos(): void {
 	const nick = getSafeElement('publicID', HTMLInputElement);
 	const email = getSafeElement('user-email', HTMLInputElement);
 
-	nick.value = currentUser.pseudo;
+	nick.value = currentUser.nick;
 	if (currentUser.email)
 		email.value = currentUser.email;
 }
@@ -105,7 +105,7 @@ function showUserInfos(): void {
 	const nick = getSafeElement('show-user-nick', HTMLElement);
 	const email = getSafeElement('show-user-email', HTMLElement);
 
-	nick.innerHTML = currentUser.pseudo;
+	nick.innerHTML = currentUser.nick;
 	email.innerHTML = currentUser.email ? currentUser.email : 'no email set';
 }
 
