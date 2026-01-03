@@ -77,6 +77,7 @@ APP.post<{ Body: UserDashboardInfoBody }>("/api/user/dashboard", { preHandler: v
 APP.post<{ Body: UserBody }>("/api/user/history", { preHandler: verifyAuth }, getHistory);
 APP.get("/api/season", geCurrentSeasonInfo);
 APP.get("/api/season/:id", getSeasonStats);
+
 /**
  * Register plugins like `fastifyCors` or `fastifyCookies` globally, Fastify applies those preHandlers and hooks immediately.
  * For WebSocket routes, this can break the upgrade request, because WS upgrade requests are special HTTP GETs:
