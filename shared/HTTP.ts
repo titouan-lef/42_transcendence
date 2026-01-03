@@ -17,7 +17,6 @@ interface UserDashboardInfos {
 	preferedMap: MapOption;
 	eloChart: EloChart;
 	winrateChart: WinrateChart;
-	goalChart: GoalChart;
 }
 
 export { Friend, UserDashboardInfos };
