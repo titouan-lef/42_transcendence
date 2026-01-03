@@ -17,7 +17,7 @@ import { createPlacementTable } from "./placement.js";
 const DB_FILE = "Database.db";
 const DB_PATH_FILE = "/app/backups/" + DB_FILE;
 
-const SEASON_DURATION = 15 * 60 * 1000; // 15 minutes en ms
+const SEASON_DURATION = 60 * 60 * 1000; // 1 h in ms
 
 async function getDB(): Promise<Database> {
 	return open({
