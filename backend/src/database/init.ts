@@ -13,8 +13,6 @@ import { createEloTable } from "./elo.js";
 import { createGoalTable } from "./goal.js";
 import { createGameRuleTable } from "./game_rule.js";
 import { createPlacementTable } from "./placement.js";
-import { hashString } from "../utils/hash_string.js";
-import { applyQuery } from "./db_utils.js";
 
 const DB_FILE = "Database.db";
 const DB_PATH_FILE = "/app/backups/" + DB_FILE;
