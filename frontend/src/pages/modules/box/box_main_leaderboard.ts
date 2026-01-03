@@ -1,15 +1,12 @@
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { MAIN_BOX_BTN_STYLE } from "../box/box_main_utils";
-import { LEADERBOARD_USERS } from "./box_main_leaderboards_users";
 import { createButtonHtml } from "../../../components/button";
 import { goBack, navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
 import { isRequestSuccessfull, sendGetRequestToBack } from "src/services/api_request";
-import { LeaderboardInfos } from "#shared/HTTP.js";
+import { LeaderboardInfos, Ranking } from "#shared/HTTP.js";
 import { getDashboardFilterHtml } from "../profile/profile_dashboard";
 import { getCurrentUserInfos, InfoList } from "src/services/user_management/user_state";
-
-/** @todo start filter with most recent season */
 
 const LEADERBOARD_THEAD = `
 <thead class="bg-light flex text-variant w-full">
@@ -18,16 +15,16 @@ const LEADERBOARD_THEAD = `
 		<th class="p-4 w-1/5">nickname</th>
 		<th class="p-4 w-1/5">elo</th>
 		<th class="p-4 w-1/5">winrate</th>
-		<th class="p-4 w-1/5">games won</th>
+		<th class="p-4 w-1/5">games played</th>
 	</tr>
 </thead>
 `;
 
 function getLeaderboardPage(maxSeason: number ): string {
-
 	return `
 		${getDashboardFilterHtml(maxSeason)}
-		<p>inserer la date de la saison ici :)</p>
+		<div id="season-dates" class=text-left w-full overflow-auto>
+		</div>
 		<table class="text-left w-full overflow-auto">
 			${LEADERBOARD_THEAD}
 			<tbody id="leaderboard" class="h-[50vh] bg-dark text-primary flex flex-col items-center justify-between overflow-y-scroll w-full">
@@ -37,7 +34,7 @@ function getLeaderboardPage(maxSeason: number ): string {
 		`;
 }
 
-function generateLeaderboardRows(ranking: LeaderboardInfos[]): string {
+function generateLeaderboardRows(ranking: Ranking[]): string {
 	let rows = ``;
 	let rank = 1;
 	ranking.forEach(user => { /** @todo user btn-profile-nick to go to nick's profile page */
@@ -60,14 +57,17 @@ async function updateLeaderboardData(): Promise<void> {
 	const filter = getSafeElement('filter', HTMLSelectElement);
 	let targetSeason = Number(filter.value);
 	if (!targetSeason)
-		targetSeason = -1;
-	const reply = await sendGetRequestToBack(`/api/season/${1}`);
+		targetSeason = 0;
+	const reply = await sendGetRequestToBack(`/api/season/${targetSeason}`);
 	if (!isRequestSuccessfull(reply))
 		return;
-	const ranking: LeaderboardInfos[] = JSON.parse(reply.content);
+	const infos: LeaderboardInfos = JSON.parse(reply.content);
 
-	const elem = getSafeElement('leaderboard', HTMLElement);
-	elem.innerHTML = generateLeaderboardRows(ranking);
+	const leaderboard = getSafeElement('leaderboard', HTMLElement);
+	leaderboard.innerHTML = generateLeaderboardRows(infos.ranking);
+
+	const elem = getSafeElement('season-dates', HTMLElement);
+	elem.innerHTML = `${infos.beginDate} - ${infos.endDate}`;
 }
 
 function leaderboardEvents(): void {

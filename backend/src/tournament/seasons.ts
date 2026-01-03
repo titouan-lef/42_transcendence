@@ -19,7 +19,7 @@ async function getSeasonStats(req: FastifyRequest<{ Params: SeasonParams }>, rep
 		sendReply(reply, Errors.INVALID_SEASON);
 		return;
 	}
-	let leaderboardInfos: LeaderboardInfos[];
+	let leaderboardInfos: LeaderboardInfos;
 	if (season === 0)
 		leaderboardInfos = await getSeasonInfosGlobal();
 	else

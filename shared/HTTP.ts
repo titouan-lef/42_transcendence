@@ -33,11 +33,31 @@ interface GameHistoryWithAvatar extends GameHistory {
 	isAvatarSet: Boolean;
 }
 
-interface LeaderboardInfos {
+interface GameHistory {
+	date: string;
+	duration: number;
+	season: number;
+	opponent: string;
+	elo_variation: number;
+	my_score: number;
+	opponent_score: number;
+}
+
+interface GameHistoryWithAvatar extends GameHistory {
+	isAvatarSet: Boolean;
+}
+
+interface Ranking {
 	nick: string;
 	elo: number;
 	winrate: number;
 	nbGamePlayed: number;
 }
 
-export { Friend, UserDashboardInfos, GameHistory, GameHistoryWithAvatar, LeaderboardInfos };
+interface LeaderboardInfos {
+	ranking: Ranking[];
+	beginDate: string;
+	endDate: string;
+}
+
+export { Friend, UserDashboardInfos, Ranking, GameHistory, GameHistoryWithAvatar, LeaderboardInfos };

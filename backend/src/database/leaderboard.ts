@@ -1,7 +1,8 @@
-import { LeaderboardInfos } from "#shared/HTTP.js";
+import { LeaderboardInfos, Ranking } from "#shared/HTTP.js";
 import { applyQuery } from "./db_utils.js";
 import { getGamesWinsBySeason, getGamesWinsGlobal } from "./fetchGame.js";
-import { getCurrentSeason } from "./season.js";
+import { dateToString } from "./fetchStats.js";
+import { getCurrentSeason, getEndSeason, getSeasonStartedAtById } from "./season.js";
 import { getElo } from "./web3/contract_service.js";
 
 interface LeaderboardQuery {
@@ -11,7 +12,7 @@ interface LeaderboardQuery {
 }
 
 /** @todo get all elo in one blockchains query */
-async function getSeasonInfosGlobal(): Promise<LeaderboardInfos[]> {
+async function getSeasonInfosGlobal(): Promise<LeaderboardInfos> {
 	const users: LeaderboardQuery[] | undefined = await applyQuery(
 		async (db) => await db.all(
 			`SELECT
@@ -26,26 +27,32 @@ async function getSeasonInfosGlobal(): Promise<LeaderboardInfos[]> {
 		), "getSeasonInfosGlobal"
 	);
 
-	if (!users)
-		return [];
+	const season = await getCurrentSeason();
+	const result: LeaderboardInfos = {
+		ranking: [],
+		beginDate: dateToString(await getSeasonStartedAtById(1)),
+		endDate: dateToString(await getEndSeason(season)),
+	};
 
-	const result: LeaderboardInfos[] = [];
+	if (!users)
+		return result;
+
 	for (const user of users) {
-		const elo = await getElo(user.username, await getCurrentSeason());
+		const elo = await getElo(user.username, season);
 		const wins = await getGamesWinsGlobal(user.username);
 
-		result.push({
+		result.ranking.push({
 			nick: user.nick,
 			elo: elo.r,
 			winrate: user.nbGame > 0 ? wins / user.nbGame : 0,
 			nbGamePlayed: user.nbGame
 		});
 	}
-	result.sort((a, b) => b.elo - a.elo);
+	result.ranking.sort((a, b) => b.elo - a.elo);
 	return result;
 }
 
-async function getSeasonInfosBySeason(season: number): Promise<LeaderboardInfos[]> {
+async function getSeasonInfosBySeason(season: number): Promise<LeaderboardInfos> {
 	const users: LeaderboardQuery[] | undefined = await applyQuery(
 		async (db) => await db.all(
 			`SELECT
@@ -62,21 +69,27 @@ async function getSeasonInfosBySeason(season: number): Promise<LeaderboardInfos[
 		), "getSeasonInfosGlobal"
 	);
 
+	const result: LeaderboardInfos = {
+		ranking: [],
+		beginDate: dateToString(await getSeasonStartedAtById(season)),
+		endDate: dateToString(await getEndSeason(season)),
+	};
+
 	if (!users)
-		return [];
-	const result: LeaderboardInfos[] = [];
+		return result;
+
 	for (const user of users) {
 		const elo = await getElo(user.username, season);
 		const wins = await getGamesWinsBySeason(season, user.username);
 
-		result.push({
+		result.ranking.push({
 			nick: user.nick,
 			elo: elo.r,
 			winrate: user.nbGame > 0 ? wins / user.nbGame : 0,
 			nbGamePlayed: user.nbGame
 		});
 	}
-	result.sort((a, b) => b.elo - a.elo);
+	result.ranking.sort((a, b) => b.elo - a.elo);
 	return result;
 }
 
