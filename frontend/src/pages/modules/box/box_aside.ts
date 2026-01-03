@@ -8,7 +8,7 @@ import { loadProfilePage } from "../profile/profile";
 import { isUserConnected, getUserInfos } from "../../../services/user_management/user_state";
 import { onDisconnectEvent } from "../../../services/user_management/disconnect";
 import { updateFriendList } from "./box_aside_friendlist";
-import { setTheme } from "src/assets/themes/theme";
+import { setTheme } from "../../../assets/themes/theme";
 
 const ASIDE_BOX_STYLE = `
 grow
