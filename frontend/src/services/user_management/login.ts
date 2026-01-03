@@ -28,7 +28,7 @@ async function connectUser(): Promise<void> {
 
 	user = userId.value;
 	if (reply.code === Errors.TWOFA_REQUIRED ) {
-		loadDialog2FA();
+		loadDialog2FA(user);
 		return;
 	}
 	if (!isRequestSuccessfull(reply)) {

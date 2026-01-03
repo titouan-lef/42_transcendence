@@ -1,8 +1,8 @@
 import { loadDialog } from "./dialog";
 import { loadDialogGameAiOption, loadDialogGameLocalOption, loadDialogGameRankedOption } from "./dialog_game_options";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
-import { navigateTo } from "src/routes/navigate";
-import { Pages } from "src/routes/navigate_types";
+import { navigateTo } from "../../../routes/navigate";
+import { Pages } from "../../../routes/navigate_types";
 
 /** @todo front */
 const GAME_SELECTOR = `

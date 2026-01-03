@@ -6,9 +6,9 @@ import { generateThemeEvents, SETTINGS_THEME_SELECTOR } from "./profile_settings
 import { uploadProfilePicture } from "../../../services/user_management/avatar";
 import { generateKeybindsButtons, keybindsNavbarEvents, SETTINGS_KEYBINDS_SELECTOR } from "./profile_settings_keybinds";
 import { AI_RANKED_PLAYER_KEYS } from "../../../game/settings/KeySets";
-import { getCurrentUserInfos, isUserConnected } from "src/services/user_management/user_state";
-import { showUserInfos } from "src/services/user_management/update_user";
-import { update2FAButton } from "src/services/security/2FA";
+import { isUserConnected } from "../../../services/user_management/user_state";
+import { showUserInfos } from "../../../services/user_management/update_user";
+import { update2FAButton } from "../../../services/security/2FA";
 
 /** @todo real front with selector to enable / disable 2FA */
 /** @todo ask for email only if 2FA is enable */

@@ -1,12 +1,12 @@
-import { goBack, navigateTo } from "src/routes/navigate";
+import { goBack, navigateTo } from "../../../routes/navigate";
 import { loadDialog } from "./dialog";
 import { createCheckbox } from "../../../assets/svgs/svgs_boxes";
 import { SVG_BALL_DEFAULT, SVG_BALL_INVISIBLE, SVG_BALL_PULSE, SVG_BALL_SNAKE, SVG_BALL_TRICKY, SVG_CANON, SVG_MAP_DEFAULT, SVG_MAP_DESERT, SVG_MAP_SKY, SVG_MAP_VOLCANO, SVG_RULE_DASH, SVG_RULE_PROT, SVG_RULE_SPIN, SVG_RULE_WIND } from "../../../assets/svgs/svgs";
 import { DIALOG_BTN_STYLE, DIALOG_SEPARATOR_STYLE } from "./dialog_style";
-import { GameTypes, Pages } from "src/routes/navigate_types";
-import { getSafeElement } from "src/utils/getSafeElement";
-import { loadCheckboxes } from "src/game/settings/GameRules";
-import { loadLocalGamePage, loadRankedGamePage, loadSoloGamePage } from "src/pages/game_page";
+import { GameTypes, Pages } from "../../../routes/navigate_types";
+import { getSafeElement } from "../../../utils/getSafeElement";
+import { loadCheckboxes } from "../../../game/settings/GameRules";
+import { loadLocalGamePage, loadRankedGamePage, loadSoloGamePage } from "../../../pages/game_page";
 
 /** @todo front */
 const GAME_OPTIONS_MAPS = `

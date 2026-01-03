@@ -1,5 +1,5 @@
-import { applyColor } from "src/utils/applyColor";
-import { getSafeElement } from "src/utils/getSafeElement";
+import { applyColor } from "../../../utils/applyColor";
+import { getSafeElement } from "../../../utils/getSafeElement";
 
 const MAIN_BOX_BTN_STYLE = `
 font-park font-bold

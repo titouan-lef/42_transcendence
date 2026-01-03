@@ -1,13 +1,12 @@
-import { getSafeElement } from "src/utils/getSafeElement";
-import { loadPage } from "src/routes/page";
-import { applyColor } from "src/utils/applyColor";
-import { openDialogGameQuit } from "./modules/dialog/dialog_game_quit";
-import { navigateTo } from "src/routes/navigate";
-import { GameTypes, Pages } from "src/routes/navigate_types";
-import { newGameVsAI, newLocalGame, newRankedGame } from "src/services/launching_game";
-import { registerGameOptions } from "src/game/settings/GameRules";
+import { getSafeElement } from "../utils/getSafeElement";
+import { loadPage } from "./page";
+import { applyColor } from "../utils/applyColor";
+import { navigateTo } from "../routes/navigate";
+import { GameTypes, Pages } from "../routes/navigate_types";
+import { newGameVsAI, newLocalGame } from "../services/launching_game";
+import { registerGameOptions } from "../game/settings/GameRules";
 import { loadDialogWaiting } from "./modules/dialog/dialog_game_waiting";
-import { closeDialogID, exitDialog } from "./modules/dialog/dialog";
+import { gamePageEvents } from "./events/game_page_event";
 
 const GAME_PAGE_STYLE = `
 flex flex-col gap-[10px]
@@ -65,21 +64,9 @@ const GAME_PAGE = `
 
 let gameType: GameTypes | null = null;
 
-function gamePageEvents(): void {
-	const modal = getSafeElement('modal', HTMLDialogElement);
-	const ragequit = getSafeElement('btn-quit', HTMLElement);
-
-	modal.addEventListener('click', (e) => {
-		if (e.target === modal)
-			closeDialogID(`modal`);
-	});
-	ragequit.addEventListener('click', openDialogGameQuit);
-}
-
 function openGamePage(): void {
 	if (!gameType)
 		return ;
-	// closeDialogID('modal'); not usefull I think
 
 	loadPage(GAME_PAGE, () => {});
 
@@ -121,4 +108,4 @@ function loadRankedGamePage(): void {
 	loadGamePage(GameTypes.RANKED);
 }
 
-export { loadLocalGamePage, loadSoloGamePage, loadRankedGamePage, openGamePage, gamePageEvents };
+export { loadLocalGamePage, loadSoloGamePage, loadRankedGamePage, openGamePage };

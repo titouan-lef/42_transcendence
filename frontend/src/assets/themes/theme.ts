@@ -1,6 +1,6 @@
 import { Themes, THEMES_LIST } from "./themes";
 import { sendPostRequestToBack } from "../../services/api_request";
-import { getCurrentUserInfos, isUserConnected } from "src/services/user_management/user_state";
+import { getCurrentUserInfos, isUserConnected } from "../../services/user_management/user_state";
 
 function randomTheme(): void {
 	const randomIndex = Math.floor(Math.random() * THEMES_LIST.length);

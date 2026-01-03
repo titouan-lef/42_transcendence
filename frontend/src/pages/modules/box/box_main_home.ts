@@ -1,13 +1,13 @@
-import { createButtonHtml } from "src/components/button";
-import { getCurrentUserInfos } from "src/services/user_management/user_state";
+import { createButtonHtml } from "../../../components/button";
+import { getCurrentUserInfos } from "../../../services/user_management/user_state";
 import { loadDialogSignIn } from "../dialog/dialog_login";
-import { getSafeElement } from "src/utils/getSafeElement";
+import { getSafeElement } from "../../../utils/getSafeElement";
 import { loadMainBox, MAIN_BOX_BTN_STYLE } from "./box_main_utils";
 import { loadLeaderboard } from "./box_main_leaderboard";
 import { loadDialogGameSelector } from "../dialog/dialog_game_selector";
-import { navigateTo } from "src/routes/navigate";
-import { Pages } from "src/routes/navigate_types";
-import { ELEM } from "src/routes/page";
+import { navigateTo } from "../../../routes/navigate";
+import { Pages } from "../../../routes/navigate_types";
+import { ELEM } from "../../page";
 
 const MAIN_HOME_STYLE = `
 flex flex-col items-center gap-[10px]
