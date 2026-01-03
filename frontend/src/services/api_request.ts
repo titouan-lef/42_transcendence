@@ -38,33 +38,41 @@ function createGetRequest(): RequestInit {
 	};
 }
 
-async function structureReply(reply: Response): Promise<ReplyFromBack> {
-	let replyFromBack: ReplyFromBack;
+async function structureReply(reply: Response | null): Promise<ReplyFromBack> {
+	let replyFromBack: ReplyFromBack = {
+		code: Errors.REQUEST_FAILED,
+		content: ''
+	};
+	if (!reply)
+		return replyFromBack;
 	try {
 		const raw = await reply.text();
 		replyFromBack = JSON.parse(raw);
-	} catch (err) {
-		console.error("Invalid reply:", err); /** @todo remove */
-		replyFromBack = {
-			code: Errors.REQUEST_FAILED,
-			content: ''
-		};
-	}
+	} catch {}
 	return replyFromBack;
 }
 
 async function sendPostRequestToBack(endpoint: string, content: string) : Promise<ReplyFromBack> {
-	const reply = await fetch(endpoint, createPostRequest(content));
+	let reply: Response | null = null;
+	try {
+		reply = await fetch(endpoint, createPostRequest(content));
+	} catch {}
 	return structureReply(reply);
 }
 
 async function sendFile(file: FormData) : Promise<ReplyFromBack> {
-	const reply = await fetch(`/api/user/change_picture`, createFileRequest(file));
+	let reply: Response | null = null;
+	try {
+		reply = await fetch(`/api/user/change_picture`, createFileRequest(file));
+	} catch {}
 	return structureReply(reply);
 }
 
 async function sendGetRequestToBack(endpoint: string) : Promise<ReplyFromBack> {
-	const reply = await fetch(endpoint, createGetRequest());
+	let reply: Response | null = null;
+	try {
+		reply = await fetch(endpoint, createGetRequest());
+	} catch {}
 	return structureReply(reply);
 }
 
