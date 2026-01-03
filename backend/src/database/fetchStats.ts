@@ -162,7 +162,7 @@ async function getEloVariatonGlobal(username: string): Promise<EloHistory[]> {
 			FROM Elo E
 			JOIN Game G ON E.gameId = G.id
 			WHERE E.username = ?
-			ORDER BY G.beganAt ASC;`, [username]
+			ORDER BY G.beganAt DESC;`, [username]
 		), "getAllEloVariaton"
 	);
 	return tab ?? [];
@@ -175,21 +175,14 @@ async function getEloVariatonBySeason(seasonId: number, username: string): Promi
 			FROM Elo E
 			JOIN Game G ON E.gameId = G.id
 			WHERE E.username = ? AND G.seasonId = ?
-			ORDER BY G.beganAt ASC;`,[username, seasonId]
+			ORDER BY G.beganAt DESC;`,[username, seasonId]
 		), "getEloVariatonBySeason"
 	);
 	return tab ?? [];
 }
 
 function dateToString(date: Date): string {
-	return date.toLocaleString("en-GB", {
-		year: "numeric",
-		month: "2-digit",
-		day: "2-digit",
-		hour: "2-digit",
-		minute: "2-digit",
-		second: "2-digit"
-	});
+	return date.toISOString().slice(0, 19).replace("T", " ");
 }
 
 async function getWinrateBySeasonAndDate(seasonId: number, username: string, dates: string[]): Promise<WinrateChart> {
@@ -205,16 +198,16 @@ async function getWinrateBySeasonAndDate(seasonId: number, username: string, dat
 					SELECT G.id
 					FROM Game G
 					JOIN Goal GO ON G.id = GO.gameId
-					WHERE GO.by = ?  AND G.seasonId = ? AND G.beganAt <= ?
+					WHERE GO.by = ? AND G.seasonId = ? AND G.beganAt <= ?
 					GROUP BY G.id
 					HAVING COUNT(GO.id) = 11
-				) AS games;`, [username, seasonId, date,]
+				) AS games;`, [username, seasonId, date]
 			), "getWinrateGlobalAndDate"
 		);
 		const wins = gameWin?.total_wins || 0;
 		const winrate = gamePlayed > 0 ? (wins / gamePlayed) * 100 : 0;
 
-		dateTab.push(dateToString(new Date(date)));
+		dateTab.push(date);
 		winrateTab.push(Math.round(winrate));
 	}
 
@@ -235,8 +228,8 @@ async function getWinrateGlobalAndDate(username: string, dates: string[]): Promi
 				`SELECT COUNT(*) AS total_wins
 				FROM (
 					SELECT G.id
-					FROM Game G
-					JOIN Goal GO ON G.id = GO.gameId
+					FROM Game AS G
+					JOIN Goal AS GO ON G.id = GO.gameId
 					WHERE GO.by = ? AND G.beganAt <= ?
 					GROUP BY G.id
 					HAVING COUNT(GO.id) = 11
@@ -246,8 +239,7 @@ async function getWinrateGlobalAndDate(username: string, dates: string[]): Promi
 
 		const wins = gameWin?.total_wins || 0;
 		const winrate = gamePlayed > 0 ? (wins / gamePlayed) * 100 : 0;
-
-		dateTab.push(dateToString(new Date(date)));
+		dateTab.push(date);
 		winrateTab.push(Math.round(winrate));
 	}
 
@@ -255,9 +247,11 @@ async function getWinrateGlobalAndDate(username: string, dates: string[]): Promi
 	return history;
 }
 
-export { getGoalAverageBySeason, getGoalAverageGlobal,
+export { EloHistory,
+	getGoalAverageBySeason, getGoalAverageGlobal,
 	getGameTimeAverageBySeason, getGameTimeAverageGlobal,
 	getWinrateBySeasonAndDate, getWinrateGlobalAndDate,
 	getPreferedBallBySeason, getPreferedBallGlobal,
 	getPreferedMapBySeason, getPreferedMapGlobal,
-	getEloVariatonGlobal, getEloVariatonBySeason, EloHistory };
+	getEloVariatonGlobal, getEloVariatonBySeason,
+	dateToString };

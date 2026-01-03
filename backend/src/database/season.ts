@@ -61,21 +61,6 @@ async function getFirstSeason(): Promise<number> {
 	return (row.id);
 }
 
-interface SeasonIdRow {
-	id: number;
-}
-
-async function getAllSeasonId(): Promise<number[]> {
-	const rows = await applyQuery(
-		async (db) => await db.all<SeasonIdRow[]>(
-			`SELECT id FROM ${TABLE_NAME} ORDER BY startedAt DESC`
-		), "getAll" + TABLE_NAME + "Id"
-	);
-	if (!rows)
-		return [];
-	return rows.map(row => row.id);
-}
-
 async function getEndSeason(season: number): Promise<Date> {
 	const row = await applyQuery(
 		async (db) => await db.get(
@@ -93,5 +78,4 @@ async function getEndSeason(season: number): Promise<Date> {
 
 export { Season, createSeasonTable, 
 	getCurrentSeason, insertSeason,
-	getAllSeasonId, getSeasonStartedAtById,
-	getFirstSeason, getEndSeason };
+	getSeasonStartedAtById,	getFirstSeason, getEndSeason };

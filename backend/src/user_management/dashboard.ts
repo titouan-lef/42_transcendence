@@ -4,10 +4,10 @@ import { UserDashboardInfos } from "#shared/HTTP.js";
 import { EloChart, GoalChart, WinrateChart } from "#shared/types_dashboard.js";
 import { getGamesLoosesBySeason, getGamesLoosesGlobal, getGamesPlayedCountBySeason, getGamesPlayedCountGlobal, getGamesWinsBySeason, getGamesWinsGlobal } from "../database/fetchGame.js";
 import { sendReply } from "../utils/HTTP.js";
-import { getEloVariatonBySeason, getEloVariatonGlobal, getGameTimeAverageBySeason, getGameTimeAverageGlobal, getGoalAverageBySeason, getGoalAverageGlobal, getPreferedBallBySeason, getPreferedBallGlobal, getPreferedMapBySeason, getPreferedMapGlobal, getWinrateBySeasonAndDate, getWinrateGlobalAndDate } from "../database/fetchStats.js";
+import { dateToString, getEloVariatonBySeason, getEloVariatonGlobal, getGameTimeAverageBySeason, getGameTimeAverageGlobal, getGoalAverageBySeason, getGoalAverageGlobal, getPreferedBallBySeason, getPreferedBallGlobal, getPreferedMapBySeason, getPreferedMapGlobal, getWinrateBySeasonAndDate, getWinrateGlobalAndDate } from "../database/fetchStats.js";
 import { getElo } from "../database/web3/contract_service.js";
 import { Elo } from '../tournament/elo/elo.js';
-import { getAllSeasonId, getCurrentSeason, getEndSeason, getFirstSeason, getSeasonStartedAtById } from "../database/season.js";
+import { getCurrentSeason, getEndSeason, getFirstSeason, getSeasonStartedAtById } from "../database/season.js";
 import { DEFAULT_RATINGS } from "../tournament/elo/elo.js";
 import { getActualDate } from "../database/db_utils.js";
 
@@ -24,25 +24,19 @@ async function getEloChartBySeason(season: number, user: string):Promise <EloCha
 	if (eloVariaton.length === 0)
 		return { dateList: [], eloList: [] };
 
-	const idSeasonTab: number[] = await getAllSeasonId();
-	if (idSeasonTab.length === 0)
-		return { dateList: [], eloList: [] };
-
 	let lastSeasonElo = DEFAULT_RATINGS;
-	for (let i = 1; i < idSeasonTab.length; i++) {
-		const tmpElo: number = await getRatingEloBySeason(user, idSeasonTab[i]);
-		if (tmpElo !== 0) {
-			lastSeasonElo = tmpElo;
-			break;
-		}
-	}
+	const currentElo = await getRatingEloBySeason(user, season);
+	if (currentElo > 0)
+		lastSeasonElo = currentElo;
 
 	const eloChart: EloChart = { dateList: [], eloList: [] };
 	for (const eloHistory of eloVariaton) {
-		lastSeasonElo += eloHistory.variation;
 		eloChart.dateList.push(eloHistory.date);
 		eloChart.eloList.push(lastSeasonElo);
+		lastSeasonElo -= eloHistory.variation;
 	}
+	eloChart.dateList.reverse();
+	eloChart.eloList.reverse();
 
 	return eloChart;
 }
@@ -53,26 +47,20 @@ async function getEloChartGlobal(user: string):Promise <EloChart> {
 	if (eloVariaton.length === 0)
 		return { dateList: [], eloList: [] };
 
-	const idSeasonTab: number[] = await getAllSeasonId();
-	if (idSeasonTab.length === 0)
-		return { dateList: [], eloList: [] };
-
 	let lastSeasonElo = DEFAULT_RATINGS;
-	for (let i = 1; i < idSeasonTab.length; i++) {
-		const tmpElo: number = await getRatingEloBySeason(user, idSeasonTab[i]);
-		if (tmpElo !== 0) {
-			lastSeasonElo = tmpElo;
-			break;
-		}
-	}
+	const season = await getCurrentSeason();
+	const currentElo = await getRatingEloBySeason(user, season);
+	if (currentElo > 0)
+		lastSeasonElo = currentElo;
 
 	const eloChart: EloChart = { dateList: [], eloList: [] };
 	for (const eloHistory of eloVariaton) {
-		lastSeasonElo += eloHistory.variation;
 		eloChart.dateList.push(eloHistory.date);
 		eloChart.eloList.push(lastSeasonElo);
+		lastSeasonElo -= eloHistory.variation;
 	}
-
+	eloChart.dateList.reverse();
+	eloChart.eloList.reverse();
 	return eloChart;
 }
 
@@ -95,7 +83,7 @@ async function getTabDateBySeason(season: number): Promise <string[]> {
 
 	for (let i = 0; i < NB_CHART_POINT; i++) {
 		const pointDate = new Date(beginDateInMs + (intervaleDateInMs * i));
-		dates.push(pointDate.toString());
+		dates.push(dateToString(pointDate));
 	}
 
 	return dates;
@@ -116,7 +104,7 @@ async function getTabDateGlobal(): Promise <string[]> {
 
 	for (let i = 0; i < NB_CHART_POINT; i++) {
 		const pointDate = new Date(beginDateInMs + (intervaleDateInMs * i));
-		dates.push(pointDate.toString());
+		dates.push(dateToString(pointDate));
 	}
 
 	return dates;
@@ -127,14 +115,14 @@ async function getWinrateChartBySeason(season: number, user: string): Promise <W
 	return await getWinrateBySeasonAndDate(season, user, dates);
 }
 
-async function getRatingEloBySeason(user: string, season: number): Promise<number> {
-	const elo: Elo = await getElo(user, season);
-	return elo.r;
-}
-
 async function getWinrateChartGlobal(user: string): Promise <WinrateChart> {
 	const dates: string[] = await getTabDateGlobal();
 	return await getWinrateGlobalAndDate(user, dates);
+}
+
+async function getRatingEloBySeason(user: string, season: number): Promise<number> {
+	const elo: Elo = await getElo(user, season);
+	return elo.r;
 }
 
 async function getRatingLastElo(user: string): Promise<number> {
