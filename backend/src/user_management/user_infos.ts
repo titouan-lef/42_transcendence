@@ -46,4 +46,4 @@ async function getUserInfos(req: FastifyRequest, reply: FastifyReply): Promise<v
 	sendReply(reply, Success.USER_INFOS, JSON.stringify(infoList));
 }
 
-export { getUserInfos };
+export { getUserInfos, fileExists };

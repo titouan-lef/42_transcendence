@@ -1,14 +1,5 @@
 import { applyColor } from "../../../utils/applyColor";
-
-interface GameHistory {
-	date: string,
-	time: number,
-	opponent_avatar: string,
-	opponent_name: string,
-	elo: number,
-	player_score: number,
-	opponent_score: number,
-}
+import { GameHistoryWithAvatar } from "#shared/HTTP";
 
 /** @todo min-h-[xxx] a modifier pcq c'est moche */
 const HISTORY_BOX_STYLE = `
@@ -45,31 +36,35 @@ bg-white
 overflow-hidden
 `;
 
-function createHistoryBox(game: GameHistory): string {
-	const victory = (game.player_score > game.opponent_score) ? 'win': 'lose';
-
+function createHistoryBox(game: GameHistoryWithAvatar): string {
+	const victory = (game.my_score > game.opponent_score) ? 'win': 'lose';
+	let avatar: string;
+	if (!game.isAvatarSet)
+		avatar = "./images/avatar.png";
+	else
+		avatar = `/pictures/${game.opponent}?t=${Date.now()}`;
 	const htmlContent = `
 	<div class="${applyColor(victory)} ${HISTORY_BOX_STYLE}">
 		<div class="${HISTORY_TEXT_BOX_STYLE}">
 			<div id="print-avatar" class="${AVATAR_STYLE}">
-				<img src="${game.opponent_avatar}" alt="Avatar" width="50px" height="50px">
+				<img src="${avatar}" alt="Avatar" width="50px" height="50px">
 			</div>
 			<div class="${HISTORY_GAME_INFO_STYLE}">
 				<div id="print-nickname" class="font-park truncate w-full text-ellipsis">
-					${game.opponent_name}
+					${game.opponent}
 				</div>
 				<div id="print-date" class="text-[15px]">
-					${game.date} - ${~~(game.time / 60)} min ${(game.time % 60)} sec
+					${game.date} - ${~~(game.duration / 60)} min ${(game.duration % 60)} sec
 				</div>
 			</div>
 		</div>
 		<div class="${HISTORY_TEXT_BOX_STYLE}">
 			<div id="print-score" class="${HISTORY_SCORE_STYLE}">
-				${game.player_score} - ${game.opponent_score}
+				${game.my_score} - ${game.opponent_score}
 			</div>
 			<div id="print-elo" class="${HISTORY_ELO_BOX_STYLE}
 			${victory === 'win' ? 'bg-win/50 shadow-win/50' : 'bg-lose/50 shadow-lose/50'}">
-				${game.elo > 0 ? '+' + game.elo.toString() : game.elo.toString()}
+				${game.elo_variationlo > 0 ? '+' + game.elo_variation.toString() : game.elo_variation.toString()}
 			</div>
 		</div>
 	</div>
@@ -78,4 +73,4 @@ function createHistoryBox(game: GameHistory): string {
 	return htmlContent;
 }
 
-export { createHistoryBox, GameHistory };
+export { createHistoryBox };

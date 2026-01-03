@@ -8,9 +8,4 @@ interface WinrateChart {
 	winrateList: number[];
 }
 
-interface GoalChart {
-	dateList: string[];
-	goalList: number[];
-}
-
-export { EloChart, WinrateChart, GoalChart };
+export { EloChart, WinrateChart };

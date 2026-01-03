@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Errors, Success } from "#shared/status_codes.js";
 import { UserDashboardInfos } from "#shared/HTTP.js";
-import { EloChart, GoalChart, WinrateChart } from "#shared/types_dashboard.js";
+import { EloChart, WinrateChart } from "#shared/types_dashboard.js";
 import { getGamesLoosesBySeason, getGamesLoosesGlobal, getGamesPlayedCountBySeason, getGamesPlayedCountGlobal, getGamesWinsBySeason, getGamesWinsGlobal } from "../database/fetchGame.js";
 import { sendReply } from "../utils/HTTP.js";
 import { dateToString, getEloVariatonBySeason, getEloVariatonGlobal, getGameTimeAverageBySeason, getGameTimeAverageGlobal, getGoalAverageBySeason, getGoalAverageGlobal, getPreferedBallBySeason, getPreferedBallGlobal, getPreferedMapBySeason, getPreferedMapGlobal, getWinrateBySeasonAndDate, getWinrateGlobalAndDate } from "../database/fetchStats.js";
@@ -188,4 +188,4 @@ async function geCurrentSeasonInfo(req: FastifyRequest, reply: FastifyReply): Pr
 	sendReply(reply, Success.CURRENT_SEASON, JSON.stringify(numberSeason));
 }
 
-export { WinrateChart, GoalChart, UserDashboardInfoBody, getPlayerStats, getRatingLastElo, geCurrentSeasonInfo };
+export { WinrateChart, UserDashboardInfoBody, getPlayerStats, getRatingLastElo, geCurrentSeasonInfo };
