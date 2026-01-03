@@ -1,11 +1,11 @@
-import { newUser } from "src/services/user_management/create_account";
-import { guestUser } from "src/services/user_management/guest";
-import { connectUser } from "src/services/user_management/login";
+import { newUser } from "../../../services/user_management/create_account";
+import { guestUser } from "../../../services/user_management/guest";
+import { connectUser } from "../../../services/user_management/login";
 import { loadDialog } from "./dialog";
 import { SIGN_IN } from "./dialog_login_sign_in";
 import { SIGN_UP } from "./dialog_login_sign_up";
-import { navigateTo } from "src/routes/navigate";
-import { Modals } from "src/routes/navigate_types";
+import { navigateTo } from "../../../routes/navigate";
+import { Modals } from "../../../routes/navigate_types";
 
 function signUpHandler(modal: HTMLDialogElement): void {
 	const allElements = modal.querySelectorAll('*[id]');

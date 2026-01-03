@@ -1,7 +1,7 @@
-import { navigateTo } from "src/routes/navigate";
+import { navigateTo } from "../../routes/navigate";
 import { isRequestSuccessfull, printReplyInDiv, sendPostRequestToBack } from "../api_request";
 import { guestConnection } from "./user_state";
-import { Pages } from "src/routes/navigate_types";
+import { Pages } from "../../routes/navigate_types";
 
 async function guestUser(): Promise<void> {
 

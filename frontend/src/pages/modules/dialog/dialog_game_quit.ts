@@ -1,8 +1,8 @@
-import { navigateTo } from "src/routes/navigate";
-import { getSafeElement } from "src/utils/getSafeElement";
+import { navigateTo } from "../../../routes/navigate";
+import { getSafeElement } from "../../../utils/getSafeElement";
 import { closeDialogID, loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
-import { Pages } from "src/routes/navigate_types";
+import { Pages } from "../../../routes/navigate_types";
 
 /** @todo front */
 const GAME_QUIT = `

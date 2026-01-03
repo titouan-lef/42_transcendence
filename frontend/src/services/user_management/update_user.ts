@@ -2,8 +2,8 @@ import { getSafeElement } from "../../utils/getSafeElement.js";
 import { isRequestSuccessfull, printReplyInDiv, sendPostRequestToBack } from "../api_request.js";
 import { Errors } from '#shared/status_codes';
 import { getUserInfos } from "./login.js";
-import { loadDialogEmail } from "src/pages/modules/dialog/dialog_2FA.js";
-import { BOX_EDITPROFILE, BOX_SHOWPROFILE, BTN_EDIT, BTN_SAVE } from "src/pages/modules/profile/profile_settings_user_infos.js";
+import { loadDialogEmail } from "../../pages/modules/dialog/dialog_2FA.js";
+import { BOX_EDITPROFILE, BOX_SHOWPROFILE, BTN_EDIT, BTN_SAVE } from "../../pages/modules/profile/profile_settings_user_infos.js";
 import { getCurrentUserInfos } from "./user_state.js";
 
 interface UserInfos {

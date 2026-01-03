@@ -1,8 +1,8 @@
 import { startOrUpdateGame } from "../game/canvas_creation.js";
 import { DataMessage, Status } from "#shared/types_transfert.js";
-import { getReplyMessage, isRequestSuccessfull, sendGetRequestToBack, sendPostRequestToBack } from "./api_request.js";
+import { getReplyMessage, isRequestSuccessfull, sendPostRequestToBack } from "./api_request.js";
 import { getGameOptions } from "../game/settings/GameRules.js";
-import { GameTypes } from "src/routes/navigate_types.js";
+import { GameTypes } from "../routes/navigate_types.js";
 
 //////////////////////////////////////////
 //			Game management				//

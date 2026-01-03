@@ -1,4 +1,4 @@
-import { GoalChart, WinrateChart } from "src/user_management/dashboard.js";
+import { GoalChart, WinrateChart } from "../user_management/dashboard.js";
 import { applyQuery } from "./db_utils.js";
 import { BallOption, MapOption } from "#shared/types_transfert.js";
 

@@ -1,4 +1,4 @@
-import { updateAvatar } from "src/services/user_management/avatar";
+import { updateAvatar } from "../../../services/user_management/avatar";
 import { createButtonHtml } from "../../../components/button";
 import { applyColor } from "../../../utils/applyColor";
 import { getSafeElement } from "../../../utils/getSafeElement";

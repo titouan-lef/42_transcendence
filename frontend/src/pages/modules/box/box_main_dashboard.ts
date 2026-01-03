@@ -1,12 +1,10 @@
-import { getSafeElement } from "src/utils/getSafeElement";
+import { getSafeElement } from "../../../utils/getSafeElement";
 import { GameStats } from "#shared/types_transfert.js";
 import { loadMainBox, MAIN_BOX_BTN_STYLE, MAIN_BOX_SEPARATOR_STYLE } from "../box/box_main_utils";
 import { formatScore, formatTime, getGameStats, setGameStats } from "./box_main_dashboard_utils";
 import { generatePointList, generateRules } from "./box_main_dashboard_generators";
-import { navigateTo } from "src/routes/navigate";
-import { Pages } from "src/routes/navigate_types";
-import { loadHomePage } from "./box_main_home";
-import { loadSoloGamePage } from "src/pages/game_page";
+import { navigateTo } from "../../../routes/navigate";
+import { Pages } from "../../../routes/navigate_types";
 
 const GAME_DASHBOARD_BUTTONS = `
 <div class='flex flex-row gap-3'>
@@ -55,7 +53,7 @@ function gameDashboardEvents(): void {
 				elem.addEventListener('click', () => navigateTo(Pages.GAME));
 				break;
 			case 'btn-home':
-				elem.addEventListener('click', loadHomePage);
+				elem.addEventListener('click', () => navigateTo(Pages.HOME));
 				break;
 			case 'btn-oppo-profile':
 				elem.addEventListener('click', () => console.log('open opponent\'s profile')); /** @todo oppo's profile */

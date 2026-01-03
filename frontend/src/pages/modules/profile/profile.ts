@@ -6,9 +6,9 @@ import { loadHistory } from "./profile_history";
 import { loadSummary } from "./profile_summary";
 import { DRAWER_HEADER } from "./profile_header";
 import { DRAWER_NAV } from "./profile_navbar";
-import { goBack, navigateTo } from "src/routes/navigate";
-import { Pages } from "src/routes/navigate_types";
-import { getCurrentUserInfos, getUserInfos } from "src/services/user_management/user_state";
+import { goBack, navigateTo } from "../../../routes/navigate";
+import { Pages } from "../../../routes/navigate_types";
+import { getCurrentUserInfos, getUserInfos } from "../../../services/user_management/user_state";
 import { updateFriendList } from "../box/box_aside_friendlist";
 
 const DRAWER_MAIN_STYLE = `

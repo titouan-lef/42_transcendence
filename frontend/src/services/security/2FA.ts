@@ -1,8 +1,7 @@
-import { getSafeElement } from "src/utils/getSafeElement";
+import { getSafeElement } from "../../utils/getSafeElement";
 import { SETTINGS_2FA_DISABLE, SETTINGS_2FA_ENABLE } from "../../pages/modules/profile/profile_settings_2fa";
-import { isRequestSuccessfull, printReplyInDiv, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "../api_request";
+import { isRequestSuccessfull, printReplyInDiv, sendGetRequestToBack } from "../api_request";
 import { getCurrentUserInfos, getUserInfos } from "../user_management/user_state";
-import { goBackToCurrentPage } from "src/routes/navigate";
 
 async function enable2FA(): Promise<void> {
 	const reply = await sendGetRequestToBack("/api/user/enable-secure");
@@ -51,31 +50,4 @@ function twoFactorAuthEvents(): void {
 	});
 }
 
-async function sendSecureCode(): Promise<boolean> {
-	const code = getSafeElement('password', HTMLInputElement).value;
-	const container: HTMLElement = getSafeElement("print-content", HTMLElement);
-	if (!code) {
-		container.innerHTML = `<p>Please enter a 4 digit code.</p>`; /**@todo use translate tool */
-		return false;
-	}
-	let reply: ReplyFromBack;
-	const currentUser = getCurrentUserInfos();
-	if (currentUser)
-		reply = await sendPostRequestToBack("/api/user/secure", JSON.stringify({ user: currentUser.username, code: code }));
-	else
-		reply = await sendPostRequestToBack("/api/user/secure", JSON.stringify({ user: user, code: code }));
-
-	if (!isRequestSuccessfull(reply)) {
-		printReplyInDiv(reply, "print-content");
-		return false;
-	}
-	return true;
-}
-
-async function verify2FA(): Promise<void> {
-	if(!await sendSecureCode())
-		return;
-	goBackToCurrentPage();
-}
-
-export { enable2FA, disable2FA, update2FAButton, verify2FA };
+export { enable2FA, disable2FA, update2FAButton };

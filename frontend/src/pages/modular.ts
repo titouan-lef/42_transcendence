@@ -1,5 +1,5 @@
 import { applyColor } from "../utils/applyColor";
-import { loadPage } from "../routes/page";
+import { loadPage } from "./page";
 import { getSafeElement } from "../utils/getSafeElement";
 import { ASIDE_BOX, loadAside } from "./modules/box/box_aside";
 

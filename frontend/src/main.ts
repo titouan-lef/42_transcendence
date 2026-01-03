@@ -1,6 +1,6 @@
-import { setTheme } from "src/assets/themes/theme";
-import { getUserInfos } from "src/services/user_management/user_state";
-import { initPage } from "./routes/navigate";
+import { setTheme } from "./assets/themes/theme";
+import { getUserInfos } from "./services/user_management/user_state";
+import { initPage } from "./routes/navigation";
 import { Pages } from "./routes/navigate_types";
 
 async function init(): Promise<void> {

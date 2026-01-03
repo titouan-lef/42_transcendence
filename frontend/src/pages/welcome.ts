@@ -1,4 +1,4 @@
-import { ELEM, loadPage } from "../routes/page";
+import { ELEM, loadPage } from "./page";
 import { applyColor } from "../utils/applyColor";
 import { loadHomePage } from "./modules/box/box_main_home";
 

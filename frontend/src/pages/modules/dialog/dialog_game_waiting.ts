@@ -1,13 +1,13 @@
-import { newRankedGame } from "src/services/launching_game";
+import { newRankedGame } from "../../../services/launching_game";
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { closeDialogID, loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
-import { goBack, navigateTo, navigationGameFound } from "src/routes/navigate";
-import { Modals, GameTypes } from "src/routes/navigate_types";
-import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "src/services/api_request";
+import { goBack, navigateTo } from "../../../routes/navigate";
+import { Modals, GameTypes } from "../../../routes/navigate_types";
+import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "../../../services/api_request";
 import { Errors } from '#shared/status_codes';
-import { getGameOptions } from "src/game/settings/GameRules";
-import { gamePageEvents } from "src/pages/game_page";
+import { getGameOptions } from "../../../game/settings/GameRules";
+import { gamePageEvents } from "../../../pages/events/game_page_event";
 
 const GIF_STYLE = `
 rounded-2xl
@@ -74,7 +74,6 @@ async function gameWaitingHandler(): Promise<void> {
 		return;
 	}
 	closeDialogID('modal');
-	navigationGameFound();
 	gamePageEvents();
 	newRankedGame(id);
 }
