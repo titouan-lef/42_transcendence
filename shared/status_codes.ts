@@ -1,8 +1,9 @@
 enum Success {
 	// USERS
-	USER_INFOS,
-	USER_DASHBOARD_INFOS,
-	USER_HISTORY_INFOS,
+	USER_INFOS, // object needed
+	USER_DASHBOARD_INFOS, // object needed
+	LEADERBOARD_INFOS, // object needed
+	USER_HISTORY_INFOS, // object needed
 	LOOGED_IN,
 	LOOGED_OUT,
 	AVATAR_UPDATED,
@@ -22,7 +23,6 @@ enum Success {
 	REMOVED_FROM_QUEUE,
 	// SEASON
 	CURRENT_SEASON
-
 }
 
 enum Errors {
@@ -35,6 +35,7 @@ enum Errors {
 	INVALID_USERNAME,
 	INVALID_TOKEN,
 	INVALID_EMAIL,
+	INVALID_SEASON,
 	NO_USER_GIVEN,
 	NO_EMAIL_GIVEN,
 	NO_FILE_GIVEN,

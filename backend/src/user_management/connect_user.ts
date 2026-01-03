@@ -14,7 +14,7 @@ const PUMP = util.promisify(pipeline);
 
 interface NewUserBody {
 	user: string;
-	pseudo: string;
+	nick: string;
 	password: string;
 }
 

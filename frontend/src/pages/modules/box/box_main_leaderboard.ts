@@ -1,19 +1,15 @@
 import { getSafeElement } from "../../../utils/getSafeElement";
-import { loadMainBox, MAIN_BOX_BTN_STYLE } from "../box/box_main_utils";
+import { MAIN_BOX_BTN_STYLE } from "../box/box_main_utils";
 import { LEADERBOARD_USERS } from "./box_main_leaderboards_users";
 import { createButtonHtml } from "../../../components/button";
 import { goBack, navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
+import { isRequestSuccessfull, sendGetRequestToBack } from "src/services/api_request";
+import { LeaderboardInfos } from "#shared/HTTP.js";
+import { getDashboardFilterHtml } from "../profile/profile_dashboard";
+import { getCurrentUserInfos, InfoList } from "src/services/user_management/user_state";
 
 /** @todo start filter with most recent season */
-const LEADERBOARD_FILTER = `
-<select id="filter" class="">
-	<option value="s1">season3</option>
-	<option value="s2">season2</option>
-	<option value="s3">season1</option>
-	<option value="all">all</option>
-</select>
-`;
 
 const LEADERBOARD_THEAD = `
 <thead class="bg-light flex text-variant w-full">
@@ -27,37 +23,51 @@ const LEADERBOARD_THEAD = `
 </thead>
 `;
 
-const LEADERBOARD_TABLE = `
-${LEADERBOARD_FILTER}
-<p>inserer la date de la saison ici :)</p>
-<table class="text-left w-full overflow-auto">
-	${LEADERBOARD_THEAD}
-	<tbody class="h-[50vh] bg-dark text-primary flex flex-col items-center justify-between overflow-y-scroll w-full">
-		${generateLeaderboardRows()}
-	</tbody>
-</table>
-${createButtonHtml(["go_back"], "btn-back-home", { "class": `${MAIN_BOX_BTN_STYLE}` })}
-`;
+function getLeaderboardPage(maxSeason: number ): string {
 
-/** @todo fetch all user info ? */
-function generateLeaderboardRows(): string {
+	return `
+		${getDashboardFilterHtml(maxSeason)}
+		<p>inserer la date de la saison ici :)</p>
+		<table class="text-left w-full overflow-auto">
+			${LEADERBOARD_THEAD}
+			<tbody id="leaderboard" class="h-[50vh] bg-dark text-primary flex flex-col items-center justify-between overflow-y-scroll w-full">
+			</tbody>
+		</table>
+		${createButtonHtml(["go_back"], "btn-back-home", { "class": `${MAIN_BOX_BTN_STYLE}` })}
+		`;
+}
+
+function generateLeaderboardRows(ranking: LeaderboardInfos[]): string {
 	let rows = ``;
-
-	LEADERBOARD_USERS.sort(); /** @todo sort by elo */
-
-	LEADERBOARD_USERS.forEach(user => { /** @todo user btn-profile-nick to go to nick's profile page */
+	let rank = 1;
+	ranking.forEach(user => { /** @todo user btn-profile-nick to go to nick's profile page */
 		rows += `
 		<tr class="flex w-full mb-4">
-			<td class="p-4 w-1/5">1</td>
+			<td class="p-4 w-1/5">${rank}</td>
 			<td id='btn-profile-${user.nick}' class="p-4 w-1/5">${user.nick}</td>
 			<td class="p-4 w-1/5">${user.elo}</td>
 			<td class="p-4 w-1/5">${user.winrate * 100}</td>
-			<td class="p-4 w-1/5">${user.wins}</td>
+			<td class="p-4 w-1/5">${user.nbGamePlayed}</td>
 		</tr>
 		`;
+		rank += 1;
 	});
 
 	return rows;
+}
+
+async function updateLeaderboardData(): Promise<void> {
+	const filter = getSafeElement('filter', HTMLSelectElement);
+	let targetSeason = Number(filter.value);
+	if (!targetSeason)
+		targetSeason = -1;
+	const reply = await sendGetRequestToBack(`/api/season/${1}`);
+	if (!isRequestSuccessfull(reply))
+		return;
+	const ranking: LeaderboardInfos[] = JSON.parse(reply.content);
+
+	const elem = getSafeElement('leaderboard', HTMLElement);
+	elem.innerHTML = generateLeaderboardRows(ranking);
 }
 
 function leaderboardEvents(): void {
@@ -71,10 +81,20 @@ function leaderboardEvents(): void {
 				break;
 		}
 	});
+	const filter = getSafeElement('filter', HTMLSelectElement);
+	filter.addEventListener('change', updateLeaderboardData);
 }
 
-function openLeaderboard(): void {
-	loadMainBox(LEADERBOARD_TABLE, leaderboardEvents);
+async function openLeaderboard(): Promise<void> {
+	const seasonReply = await sendGetRequestToBack('/api/season');
+	if (!isRequestSuccessfull(seasonReply))
+		return;
+	const seasonNumber: number = JSON.parse(seasonReply.content);
+
+	const elem = getSafeElement('main-box', HTMLElement);
+	elem.innerHTML = getLeaderboardPage(seasonNumber);
+	await updateLeaderboardData();
+	leaderboardEvents();
 }
 
 function loadLeaderboard(): void {

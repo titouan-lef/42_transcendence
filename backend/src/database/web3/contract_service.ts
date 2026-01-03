@@ -75,7 +75,7 @@ async function setRatingDeviation(username: string, season: number, ratingDeviat
 	);
 }
 
-async function getElo(username: string, season: number): Promise<Elo> {
+async function getElo(username: string, season: number): Promise<Elo> { /** @todo if no season given get the last one */
 	const [scaleRating, scaledRatingDeviation]: [bigint, bigint] = await CONTRACT.getEloData(username, season);
 	const unscaledRating = Number(scaleRating);
 	const unscaledRatingDeviation = Number(scaledRatingDeviation) / DECIMALS;
