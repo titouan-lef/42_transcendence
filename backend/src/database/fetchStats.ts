@@ -227,7 +227,6 @@ async function getWinrateGlobalAndDate(username: string, dates: string[]): Promi
 	const dateTab: string[] = [];
 	const winrateTab: number[] = [];
 
-
 	for (const date of dates) {
 		const gamePlayed = await getPlayedGameAtDate(username, date);
 
