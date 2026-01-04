@@ -29,7 +29,7 @@ const TRANSLATOR = {
 	// NOUNS
 	user: { en: "user", fr: "utilisateur" },
 	user_name: { en: "username", fr: "nom d'utilisateur" },
-	nickname: { en: "nickname", fr: "nick" },
+	nickname: { en: "nickname", fr: "pseudo" },
 	elo: { en: "elo", fr: "elo" },
 	password: { en: "password", fr: "mot de passe" },
 	email: { en: "email", fr: "email" },

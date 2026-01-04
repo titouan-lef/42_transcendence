@@ -13,27 +13,27 @@ import { Errors, Success } from "#shared/status_codes.js";
 const PUMP = util.promisify(pipeline);
 
 interface NewUserBody {
-	user: string;
-	nick: string;
+	username: string;
+	nickname: string;
 	password: string;
 }
 
 async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
-	const { user, password } = req.body;
+	const { username, password } = req.body;
 
-	const hashPassword: string = await getUserPassword(user);
+	const hashPassword: string = await getUserPassword(username);
 
 	if (!isValidPassword(password, hashPassword)) {
 		await wait(1000); // wait 1 sec against brutforce
 		sendReply(reply, Errors.WRONG_CREDENTIALS);
 		return;
 	}
-	if (await is2FAEnabled(user)) {
-		request2FA(user);
+	if (await is2FAEnabled(username)) {
+		request2FA(username);
 		sendReply(reply, Errors.TWOFA_REQUIRED);
 		return;
 	}
-	addAuthCookies(reply, user);
+	addAuthCookies(reply, username);
 	sendReply(reply, Success.LOOGED_IN);
 }
 

@@ -9,12 +9,12 @@ const GUEST_NAME = 'guest';
 
 interface NewUserBody {
 	username: string;
-	nick: string;
+	nickname: string;
 	password: string;
 }
 
 interface UpdateUserBody {
-	nick: string;
+	nickname: string;
 	password: string;
 	email: string;
 }
@@ -27,7 +27,7 @@ function isValidName(username: string): boolean {
 }
 
 async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
-	const { username, nick, password } = req.body;
+	const { username, nickname, password } = req.body;
 	if (!isValidName(username)) {
 		sendReply(reply, Errors.INVALID_USERNAME);
 		return;
@@ -36,7 +36,7 @@ async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: F
 		sendReply(reply, Errors.USERNAME_TAKEN);
 		return;
 	}
-	await insertUser(username, nick, hashString(password));
+	await insertUser(username, nickname, hashString(password));
 	sendReply(reply, Success.USER_CREATED);
 }
 
@@ -50,10 +50,10 @@ async function updateUserInfos(req: FastifyRequest<{ "Body": UpdateUserBody }>, 
 		return;
 
 	let userModified = false;
-	const { nick, password, email } = req.body;
+	const { nickname, password, email } = req.body;
 
-	if (nick && (nick !== user.nick)) {
-		await updatePseudo(username, nick);
+	if (nickname && (nickname !== user.nickname)) {
+		await updatePseudo(username, nickname);
 		userModified = true;
 	}
 	if (password && !isValidPassword(password, user.hashedPassword)) {

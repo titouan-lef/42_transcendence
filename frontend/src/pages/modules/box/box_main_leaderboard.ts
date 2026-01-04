@@ -39,11 +39,11 @@ function getLeaderboardPage(maxSeason: number ): string {
 function generateLeaderboardRows(ranking: Ranking[]): string {
 	let rows = ``;
 	let rank = 1;
-	ranking.forEach(user => { /** @todo user btn-profile-nick to go to nick's profile page */
+	ranking.forEach(user => { /** @todo user btn-profile-nickname to go to nickname's profile page */
 		rows += `
 		<tr class="flex w-full mb-4">
 			<td class="p-4 w-1/5">${rank}</td>
-			<td id='btn-profile-${user.nick}' class="p-4 w-1/5">${user.nick}</td>
+			<td id='btn-profile-${user.nickname}' class="p-4 w-1/5">${user.nickname}</td>
 			<td class="p-4 w-1/5">${user.elo}</td>
 			<td class="p-4 w-1/5">${user.winrate * 100}</td>
 			<td class="p-4 w-1/5">${user.nbGamePlayed}</td>

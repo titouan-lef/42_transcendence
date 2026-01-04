@@ -7,7 +7,7 @@ import { Success } from "#shared/status_codes.js";
 
 interface InfoList {
 	username: string;
-	nick: string;
+	nickname: string;
 	email: string | null;
 	is2FAEnabled: boolean;
 	isAvatarSet: boolean;
@@ -37,7 +37,7 @@ async function getUserInfos(req: FastifyRequest, reply: FastifyReply): Promise<v
 		theme = await getTheme(user.themeId);
 	const infoList: InfoList = {
 		username: username,
-		nick: user.nick,
+		nickname: user.nickname,
 		email: user.email,
 		is2FAEnabled: await is2FAEnabled(username),
 		isAvatarSet: await fileExists(`/app/backups/pictures/${user.username}`),

@@ -20,7 +20,7 @@ async function connectUser(): Promise<void> {
 	}
 
 	const data = {
-		user: userId.value,
+		username: userId.value,
 		password: userPassword.value,
 	};
 
