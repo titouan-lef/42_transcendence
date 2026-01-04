@@ -3,9 +3,8 @@ import { MAIN_BOX_BTN_STYLE } from "../box/box_main_utils";
 import { createButtonHtml } from "../../../components/button";
 import { goBack, navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
-import { isRequestSuccessfull, sendGetRequestToBack } from "src/services/api_request";
+import { isRequestSuccessfull, sendGetRequestToBack } from "../../../services/api_request";
 import { LeaderboardInfos, Ranking } from "#shared/HTTP.js";
-import { getCurrentUserInfos, InfoList } from "src/services/user_management/user_state";
 import { getFilterHtml } from "../../../components/selectionMenu";
 
 const LEADERBOARD_THEAD = `
