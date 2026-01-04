@@ -4,14 +4,9 @@ import { sendReply } from "../utils/HTTP.js";
 import { doesUserExist, getUserByUsername, insertUser, is2FAEnabled, updateEmail, updatePassword, updatePseudo } from "../database/user.js";
 import { request2FA } from "../security/2FA.js";
 import { Errors, Success } from "#shared/status_codes.js";
+import { NewUserBody } from "#shared/HTTP.js";
 
 const GUEST_NAME = 'guest';
-
-interface NewUserBody {
-	username: string;
-	nickname: string;
-	password: string;
-}
 
 interface UpdateUserBody {
 	nickname: string;

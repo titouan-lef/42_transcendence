@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { COLORS4, TORNADO_COLLISION_RADIUS, TORNADO_HEIGHT } from "../../settings/values.js";
-import { Position } from "../../types_transfert.js";
+import { Position } from "#shared/types_transfert";
 
 class Tornado {
 	private tornado: babylon.Mesh;

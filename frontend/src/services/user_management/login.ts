@@ -6,6 +6,7 @@ import { getUserInfos } from "./user_state.js";
 import { loadDialog2FA } from "../../pages/modules/dialog/dialog_2FA.js";
 import { navigateTo } from "../../routes/navigate.js";
 import { Pages } from "../../routes/navigate_types.js";
+import { NewUserBody } from "#shared/HTTP.js";
 
 let user = "";
 
@@ -19,8 +20,9 @@ async function connectUser(): Promise<void> {
 		return;
 	}
 
-	const data = {
+	const data: NewUserBody = {
 		username: userId.value,
+		nickname: '', //  will not be used
 		password: userPassword.value,
 	};
 

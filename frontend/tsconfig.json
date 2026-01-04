@@ -3,14 +3,14 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "Node",
-    "outDir": "dist",
+    "outDir": "../dist",
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "#shared/*": ["shared/*"]
+      "#shared/*": ["../shared/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "../shared"]
 }

@@ -1,8 +1,7 @@
 import * as babylon from "@babylonjs/core";
-import { BallOption } from "../settings/GameRules.js";
 import { BALL_DIAMETER, BALL_TRAIL_INTERVAL, BALL_TRAIL_ON } from "../settings/values.js";
 import { BallTrail } from "./BallTrail.js";
-import { Position } from "#shared/types_transfert";
+import { Position, BallOption } from "#shared/types_transfert";
 
 class Ball {
 	protected readonly color: babylon.Color3;

@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
-import { EventMessage, Position } from "../types_transfert";
-import { BALL_DIAMETER } from "../settings/values";
+import { EventMessage, Position } from "#shared/types_transfert.js";
+import { BALL_DIAMETER } from "../settings/values.js";
 
 class ParticuleManager {
 	private readonly textures: Record<string, babylon.Texture>;

@@ -174,4 +174,4 @@ interface PlayerControls {
 
 export { Position, PlanePosition, Rotation, DataMessage, PlayerControls, ParticlesType, Status, Object, EmoteChoice, ObjectSpawner };
 export { StartMessage, StopMessage, TimingMessage, RenderMessage, GoalMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage, EmoteMessage, ObjectSpawnerMessage };
-export { BallOption, MapOption, GameStats, Point };
+export { BallOption, MapOption, GameStats, Point, Rules };

@@ -10,7 +10,7 @@ services:
       - transcendence
     volumes: # mount local source code for dev
     - ./shared:/app/shared
-    - ./backend/src:/app/src
+    - ./backend/src:/app/backend/src
     restart: "no"   # dev: fail fast, do not restart
 
   frontend:
@@ -26,8 +26,8 @@ services:
       - transcendence
     volumes: # mount local source code for dev
     - ./shared:/app/shared
-    - ./frontend/src:/app/src
-    - ./frontend/public:/app/public
+    - ./frontend/src:/app/frontend/src
+    - ./frontend/public:/app/frontend/public
     restart: "no"   # dev: fail fast, do not restart
 
   nginx:

@@ -1,8 +1,8 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, W_PARTICLE_NUMBER, W_GLOW_INTENSITY, COLORS4 } from "../settings/values.js";
-import { PlanePosition } from "../types_transfert.js";
 import { planePosToVec3 } from "../utils.js";
+import { PlanePosition } from "#shared/types_transfert";
 
 class DesertMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;

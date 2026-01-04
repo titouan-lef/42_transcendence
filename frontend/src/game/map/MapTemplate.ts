@@ -1,7 +1,6 @@
 import * as babylon from "@babylonjs/core";
-import { MapOption } from "../settings/GameRules.js";
 import { MAP_SIZE, WALL_HEIGHT, WALL_WIDTH, CAMERA_POS_X, SCORE_POS_Y } from "../settings/values.js";
-import { PlanePosition } from "../types_transfert.js";
+import { PlanePosition, MapOption } from "#shared/types_transfert";
 
 abstract class MapTemplate {
 	protected glow: babylon.GlowLayer;
