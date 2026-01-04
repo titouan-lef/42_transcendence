@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { MAP_SIZE, SUN_DIAMETER, WALL_WIDTH, D_PARTICLE_NUMBER, COLORS3, COLORS4, D_GLOW_INTENSITY } from "../settings/values.js";
-import { PlanePosition } from "../types_transfert.js";
+import { PlanePosition } from "#shared/types_transfert";
 
 class DefaultMap extends MapTemplate {
 	private readonly bars: babylon.Mesh[];

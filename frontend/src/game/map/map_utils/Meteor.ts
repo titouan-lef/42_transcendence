@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { MAP_SIZE, METEOR_DIAMETER, METEOR_COLLISION_RADIUS, COLORS3, COLORS4 } from "../../settings/values.js";
-import { Position } from "../../types_transfert.js";
+import { Position } from "#shared/types_transfert";
 
 class Meteor {
 	private readonly sceneObservable: babylon.Observable<babylon.Scene>;

@@ -87,7 +87,7 @@ async function updateFriendList(): Promise<void> {
 
 function closeAllDetails(): void {
 	FRIENDLIST.forEach(friend => {
-		const elem = getSafeElement(friend, HTMLDetailsElement);
+		const elem = getSafeElement(friend.username, HTMLDetailsElement);
 		if (elem.open)
 			elem.open = false;
 	});

@@ -9,14 +9,9 @@ import { request2FA } from "../security/2FA.js";
 import { addAuthCookies, removeAuthCookies } from "../security/JWT.js";
 import { wait } from "../utils/time.js";
 import { Errors, Success } from "#shared/status_codes.js";
+import { NewUserBody } from "#shared/HTTP.js";
 
 const PUMP = util.promisify(pipeline);
-
-interface NewUserBody {
-	username: string;
-	nickname: string;
-	password: string;
-}
 
 async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
 	const { username, password } = req.body;

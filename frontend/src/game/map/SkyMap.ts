@@ -1,8 +1,8 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, R_PARTICLE_NUMBER, R_GLOW_INTENSITY } from "../settings/values.js";
-import { PlanePosition } from "../types_transfert.js";
 import { planePosToVec3 } from "../utils.js";
+import { PlanePosition } from "#shared/types_transfert";
 
 class SkyMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;

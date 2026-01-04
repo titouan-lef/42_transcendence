@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MapTemplate } from "./MapTemplate.js";
 import { MAP_SIZE, SUN_DIAMETER, COLORS3, COLORS4, V_PARTICLE_NUMBER, V_GLOW_INTENSITY } from "../settings/values.js";
-import { PlanePosition } from "../types_transfert.js";
+import { PlanePosition } from "#shared/types_transfert";
 
 class VolcanoMap extends MapTemplate {
 	private readonly particles: babylon.ParticleSystem;

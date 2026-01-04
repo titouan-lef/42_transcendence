@@ -1,5 +1,5 @@
 import * as babylon from "@babylonjs/core";
-import { ObjectSpawnerMessage, Position, Rotation } from "../../types_transfert.js";
+import { ObjectSpawnerMessage, Position, Rotation } from "#shared/types_transfert";
 import { COLORS3, CANON_DIMENSION } from "../../settings/values.js";
 
 class Canon {

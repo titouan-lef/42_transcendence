@@ -1,6 +1,15 @@
 import { BallOption, MapOption } from "./types_transfert";
 import { EloChart, WinrateChart } from "./types_dashboard";
 
+// FRONT to BACK
+
+interface NewUserBody {
+	username: string;
+	nickname: string;
+	password: string;
+}
+
+// BACK to FRONT
 interface Friend {
 	username: string,
 	onlineStatus: boolean
@@ -60,4 +69,5 @@ interface LeaderboardInfos {
 	endDate: string;
 }
 
+export { NewUserBody };
 export { Friend, UserDashboardInfos, Ranking, GameHistory, GameHistoryWithAvatar, LeaderboardInfos };
