@@ -64,7 +64,7 @@ function createHistoryBox(game: GameHistoryWithAvatar): string {
 			</div>
 			<div id="print-elo" class="${HISTORY_ELO_BOX_STYLE}
 			${victory === 'win' ? 'bg-win/50 shadow-win/50' : 'bg-lose/50 shadow-lose/50'}">
-				${game.elo_variationlo > 0 ? '+' + game.elo_variation.toString() : game.elo_variation.toString()}
+				${game.elo_variation > 0 ? '+' + game.elo_variation.toString() : game.elo_variation.toString()}
 			</div>
 		</div>
 	</div>

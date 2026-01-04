@@ -24,7 +24,7 @@ function generateHistory(history: GameHistoryWithAvatar[], numberDisplay: number
 	let histBoxes = ``;
 	const size = history.length;
 
-	for(let i =0; i < size && i < numberDisplay; i++)
+	for(let i = 0; i < size && i < numberDisplay; i++)
 		histBoxes += createHistoryBox(history[i]);
 	return histBoxes;
 }
