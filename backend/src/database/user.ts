@@ -3,7 +3,7 @@ import { applyQuery, fetchAll } from "./db_utils.js";
 
 interface User {
 	username: string;
-	nick: string;
+	nickname: string;
 	createdAt: string;
 	hashedPassword: string;
 	is2FAEnabled: boolean;
@@ -19,7 +19,7 @@ async function createUserTable(): Promise<void> {
 		async (db) => await db.exec(
 			`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
 			username TEXT PRIMARY KEY,
-			nick TEXT NOT NULL,
+			nickname TEXT NOT NULL,
 			createdAt DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
 			hashedPassword TEXT NOT NULL,
 			is2FAEnabled BOOLEAN NOT NULL,
@@ -29,11 +29,11 @@ async function createUserTable(): Promise<void> {
 	);
 }
 
-async function insertUser(username: string, nick: string, hashedPassword: string): Promise<void> {
+async function insertUser(username: string, nickname: string, hashedPassword: string): Promise<void> {
 	await applyQuery(
 		async (db) => await db.run(
-			`INSERT INTO ${TABLE_NAME} (username, nick, hashedPassword, is2FAEnabled, themeId) VALUES (?, ?, ?, ?, ?)`,
-			[username, nick, hashedPassword, false, null]
+			`INSERT INTO ${TABLE_NAME} (username, nickname, hashedPassword, is2FAEnabled, themeId) VALUES (?, ?, ?, ?, ?)`,
+			[username, nickname, hashedPassword, false, null]
 		), "insert" + TABLE_NAME
 	);
 }
@@ -136,13 +136,13 @@ async function deleteUser(username: string): Promise<void> {
 }
 
 /** @todo will be used, but must be modified */
-async function updatePseudo(username: string, nick: string): Promise<void> {
+async function updatePseudo(username: string, nickname: string): Promise<void> {
 	await applyQuery(async (db) => {
 		await db.run(`
 			UPDATE ${TABLE_NAME}
-			SET nick = ?
+			SET nickname = ?
 			WHERE username = ?
-			`,[nick, username]);
+			`,[nickname, username]);
 	}, "update" + TABLE_NAME + "Pseudo");
 }
 

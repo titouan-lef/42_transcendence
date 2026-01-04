@@ -7,7 +7,7 @@ import { getElo } from "./web3/contract_service.js";
 
 interface LeaderboardQuery {
 	username: string;
-	nick: string;
+	nickname: string;
 	nbGame: number;
 }
 
@@ -17,12 +17,12 @@ async function getSeasonInfosGlobal(): Promise<LeaderboardInfos> {
 		async (db) => await db.all(
 			`SELECT
 				U.username,
-				U.nick,
+				U.nickname,
 				COUNT(DISTINCT E.gameId) AS nbGame
 			FROM User AS U
 			JOIN Elo AS E ON E.username = U.username
 			JOIN Game AS G ON E.gameId = G.id
-			GROUP BY U.username, U.nick
+			GROUP BY U.username, U.nickname
 			HAVING nbGame > 0;`,
 		), "getSeasonInfosGlobal"
 	);
@@ -42,7 +42,7 @@ async function getSeasonInfosGlobal(): Promise<LeaderboardInfos> {
 		const wins = await getGamesWinsGlobal(user.username);
 
 		result.ranking.push({
-			nick: user.nick,
+			nickname: user.nickname,
 			elo: elo.r,
 			winrate: user.nbGame > 0 ? wins / user.nbGame : 0,
 			nbGamePlayed: user.nbGame
@@ -57,13 +57,13 @@ async function getSeasonInfosBySeason(season: number): Promise<LeaderboardInfos>
 		async (db) => await db.all(
 			`SELECT
 				U.username,
-				U.nick,
+				U.nickname,
 				COUNT(DISTINCT E.gameId) AS nbGame
 			FROM User AS U
 			JOIN Elo AS E ON E.username = U.username
 			JOIN Game AS G ON E.gameId = G.id
 			WHERE G.seasonId = ?
-			GROUP BY U.username, U.nick
+			GROUP BY U.username, U.nickname
 			HAVING nbGame > 0;`,
 			[season]
 		), "getSeasonInfosGlobal"
@@ -83,7 +83,7 @@ async function getSeasonInfosBySeason(season: number): Promise<LeaderboardInfos>
 		const wins = await getGamesWinsBySeason(season, user.username);
 
 		result.ranking.push({
-			nick: user.nick,
+			nickname: user.nickname,
 			elo: elo.r,
 			winrate: user.nbGame > 0 ? wins / user.nbGame : 0,
 			nbGamePlayed: user.nbGame

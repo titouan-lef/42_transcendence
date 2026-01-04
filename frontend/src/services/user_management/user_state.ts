@@ -5,7 +5,7 @@ let ws: WebSocket | null = null;
 
 interface InfoList {
 	username: string;
-	nick: string;
+	nickname: string;
 	email: string | null;
 	is2FAEnabled: boolean;
 	isAvatarSet: boolean;
@@ -21,7 +21,7 @@ function getCurrentUserInfos(): InfoList | null {
 function guestConnection(): void {
 	currentUser = {
 		username: 'guest',
-		nick: 'guest',
+		nickname: 'guest',
 		email: null,
 		is2FAEnabled: false,
 		isAvatarSet: false,
@@ -50,7 +50,7 @@ async function getUserInfos(): Promise<void> {
 	const data: InfoList = JSON.parse(reply.content); /** @todo verify if try/ctach needed */
 	currentUser = {
 		username: data.username,
-		nick: data.nick,
+		nickname: data.nickname,
 		email: data.email,
 		is2FAEnabled: data.is2FAEnabled,
 		isAvatarSet: data.isAvatarSet,

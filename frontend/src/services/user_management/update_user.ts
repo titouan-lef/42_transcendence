@@ -7,13 +7,13 @@ import { BOX_EDITPROFILE, BOX_SHOWPROFILE, BTN_EDIT, BTN_SAVE } from "../../page
 import { getCurrentUserInfos } from "./user_state.js";
 
 interface UserInfos {
-	nick: string,
+	nickname: string,
 	password: string,
 	email: string,
 }
 
 async function updateUser(): Promise<void> {
-	const nick = getSafeElement('publicID', HTMLInputElement);
+	const nickname = getSafeElement('publicID', HTMLInputElement);
 	const pass = getSafeElement('newPassword', HTMLInputElement);
 	const confirmPass = getSafeElement('confirmPassword', HTMLInputElement);
 	/** @todo make email empty possible! we can't erase our mail right now */
@@ -29,7 +29,7 @@ async function updateUser(): Promise<void> {
 		return;
 	}
 	const data: UserInfos = {
-		nick: nick.value,
+		nickname: nickname.value,
 		password: pass.value,
 		email: email.value,
 	};
@@ -81,10 +81,10 @@ function editUserInfos(): void {
 
 	userInformationsBtnEvents();
 
-	const nick = getSafeElement('publicID', HTMLInputElement);
+	const nickname = getSafeElement('publicID', HTMLInputElement);
 	const email = getSafeElement('user-email', HTMLInputElement);
 
-	nick.value = currentUser.nick;
+	nickname.value = currentUser.nickname;
 	if (currentUser.email)
 		email.value = currentUser.email;
 }
@@ -102,10 +102,10 @@ function showUserInfos(): void {
 
 	userInformationsBtnEvents();
 
-	const nick = getSafeElement('show-user-nick', HTMLElement);
+	const nickname = getSafeElement('show-user-nickname', HTMLElement);
 	const email = getSafeElement('show-user-email', HTMLElement);
 
-	nick.innerHTML = currentUser.nick;
+	nickname.innerHTML = currentUser.nickname;
 	email.innerHTML = currentUser.email ? currentUser.email : 'no email set';
 }
 

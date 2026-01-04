@@ -24,7 +24,7 @@ const BOX_EDITPROFILE = `
 
 const BOX_SHOWPROFILE = `
 <div class="flex flex-col gap-4">
-	<div id="show-user-nick"></div>
+	<div id="show-user-nickname"></div>
 	<div>password: ******</div>
 	<div id="show-user-email"></div>
 </div>
