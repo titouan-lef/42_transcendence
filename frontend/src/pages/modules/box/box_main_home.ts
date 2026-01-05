@@ -54,7 +54,6 @@ function openMainHome(): void {
 }
 
 function loadHomePage(): void {
-	ELEM.removeEventListener('click', loadHomePage);
 	navigateTo(Pages.HOME);
 }
 

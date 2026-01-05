@@ -28,7 +28,7 @@ interface UserDashboardInfoBody {
 
 // BACK to FRONT
 interface Friend {
-	username: string,
+	username: string, /** @toto add nickname for front */
 	onlineStatus: boolean
 }
 
