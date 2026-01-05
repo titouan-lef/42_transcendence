@@ -8,8 +8,6 @@ const ARROW_SVG = `
 
 const FILTER_STYLE = `
 block appearance-none w-full
-bg-dark border border-primary hover:border-light
-px-4 py-2 pr-8 rounded-2xl
 text-secondary cursor-pointer
 `;
 
@@ -26,13 +24,14 @@ function generateSeasonOptions(maxSeason: number): string {
 
 function getFilterHtml(maxSeason: number): string {
 	return `
-	<div class="relative w-[200px]">
-		<div class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-secondary">
-			${ARROW_SVG}
-		</div> 
+	<div class="w-[200px] flex flex-row justify-between bg-dark border border-primary hover:border-light
+	px-4 py-2 rounded-2xl">
 		<select id="filter" class="${FILTER_STYLE}">
-		${generateSeasonOptions(maxSeason)}
+			${generateSeasonOptions(maxSeason)}
 		</select>
+		<div class="pointer-events-none flex items-center text-secondary">
+			${ARROW_SVG}
+		</div>
 	</div>
 `;
 }
