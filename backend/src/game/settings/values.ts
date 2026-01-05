@@ -19,7 +19,7 @@ export const SHOW_DISPOSE_LOGS = false;
 /**GAMEPLAY GENERAL SETTINGS */
 export const POINTS_TO_WIN = 11;
 export const START_TIMEOUT = 4; // in seconds
-const FPS_MULTIPLICATOR = 2;
+const FPS_MULTIPLICATOR = 2.4;
 const PSPS_MULTIPLICATOR = 4;
 const FRAME_PER_SECOND = 60 * FPS_MULTIPLICATOR;
 const PHYSIC_STEP_PER_SEC = 60 * PSPS_MULTIPLICATOR;
@@ -72,12 +72,11 @@ export const PLAYER_STUN_DURATION = 150 * FPS_MULTIPLICATOR;
 
 /** BALL SETTINGS */
 export const BALL_DIAMETER = 2; //has to be smaller than the player //BACK + FRONT
-export const MAX_SPEED = 40;
-export const MIN_SPEED = 15;
+export const MAX_SPEED = 60;
+export const MIN_SPEED = 30;
 export const BUFF_SPEED_INTERVAL = 30 * FPS_MULTIPLICATOR;
-export const INCREASE_GENERAL_SPEED_FACTOR = 1 / 100;
-export const NERF_SPEED_FACTOR = MAX_SPEED / 4;
-export const BALL_ANGULAR_FORCE = 0.6 / FPS_MULTIPLICATOR;
+export const INCREASE_GENERAL_SPEED_INTERVAL = 300 * FPS_MULTIPLICATOR;
+export const BALL_ANGULAR_FORCE = 0.7 / FPS_MULTIPLICATOR;
 export const BALL_ANGULAR_INTERVAL = 45 * FPS_MULTIPLICATOR; /** Angular interval is the number of step it will take to reach max/min value */
 export const UNSTUCK_TIMER = 420 * FPS_MULTIPLICATOR;
 
@@ -90,5 +89,5 @@ export const TRICKY_BALL_FORWARD_ONLY = true;
 
 export const PULSE_BALL_EFFECT_INTERVAL = 100 * FPS_MULTIPLICATOR;
 
-export const SNAKE_BALL_ANGULAR_FORCE = 150 / FPS_MULTIPLICATOR;
-export const SNAKE_BALL_ANGULAR_INTERVAL = 5 * FPS_MULTIPLICATOR; /** Angular interval is the number of step it will take to reach max/min value */
+export const SNAKE_BALL_ANGULAR_FORCE = 4 / FPS_MULTIPLICATOR;
+export const SNAKE_BALL_ANGULAR_INTERVAL = 20 * FPS_MULTIPLICATOR; /** Angular interval is the number of step it will take to reach max/min value */
