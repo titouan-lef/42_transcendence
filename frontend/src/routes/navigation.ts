@@ -13,7 +13,6 @@ import { openDialogWaiting } from "../pages/modules/dialog/dialog_game_waiting.j
 import { getCurrentUserInfos, isGuest } from "../services/user_management/user_state.js";
 import { openDialog2FA, openDialogEmail } from "../pages/modules/dialog/dialog_2FA.js";
 import { openDialogGameQuit } from "../pages/modules/dialog/dialog_game_quit.js";
-import { isRequestSuccessfull, sendGetRequestToBack } from "../services/api_request.js";
 import { loadHomePage, openMainHome } from "../pages/modules/box/box_main_home.js";
 import { openMainDashboard } from "../pages/modules/box/box_main_dashboard.js";
 import { NavigateEvent } from "./navigate.js";
@@ -21,15 +20,6 @@ import { ELEM } from "../pages/page.js";
 
 let currentPage: Pages | null = null;
 let currentNav: Navigation | null = null;
-
-async function sendCancelQueue(): Promise<void> {
-	const reply = await sendGetRequestToBack("/api/game/cancel_queue");
-	if (!isRequestSuccessfull(reply)) {
-		console.log("Error:", reply.content);
-		return;
-	}
-	return;
-}
 
 function manageParticularPages(page: Pages): void {
 	if (currentPage !== Pages.HOME && (page === Pages.GAME_OPTIONS || page === Pages.GAME_SELECTION)) // Assure GAME_OPTIONS and GAME_SELECTION got HOME in the back
@@ -43,8 +33,6 @@ function navigationSelector(nav: Navigation, user?: string): boolean {
 		return false;
 	if (isGuest() && needToRejectGuest(nav))
 		return false;
-	if (currentNav === Modals.WAITING)
-		sendCancelQueue();
 	if (currentNav === Pages.WELCOME && nav !== Pages.WELCOME)
 		ELEM.removeEventListener('click', loadHomePage);
 	if (isPage(nav)) {
