@@ -6,7 +6,7 @@ import fastifyMultipart from '@fastify/multipart';
 import fastifyStatic from "@fastify/static";
 import { initDB } from "./database/init.js";
 import { addNewUser, UpdateUserBody, updateUserInfos } from "./user_management/create_account.js";
-import { connectUser, disconnectUser, changePicture, UserBody, changeTheme, ThemeBody } from "./user_management/connect_user.js";
+import { connectUser, disconnectUser, changePicture, changeTheme } from "./user_management/connect_user.js";
 import { isGameFound, newAIGame, newGame, newLocalGame } from "./game/web_sockets/connection.js";
 import { addPlayerToMatchmakingSystem, removePlayerFromMatchmakingSystem } from "./tournament/matchmaking.js";
 import { getFriendList, newFriend, removeFriend } from "./user_management/friends.js";
@@ -18,6 +18,7 @@ import { geCurrentSeasonInfo, getPlayerStats, UserDashboardInfoBody } from "./us
 import { manageOnlineStatus } from "./user_management/online_status.js";
 import { getHistory } from "./user_management/history.js";
 import { getSeasonStats } from "./tournament/seasons.js";
+import { ThemeBody, UserBody } from "#shared/HTTP.js";
 
 const APP = fastify();
 

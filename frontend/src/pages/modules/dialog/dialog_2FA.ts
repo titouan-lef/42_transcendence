@@ -7,6 +7,7 @@ import { Modals } from "../../../routes/navigate_types";
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { isRequestSuccessfull, printReplyInDiv, ReplyFromBack, sendPostRequestToBack } from "../../../services/api_request";
 import { getCurrentUserInfos } from "../../../services/user_management/user_state";
+import { Content2FA } from "#shared/HTTP";
 
 /** @todo make print-content great. again? */
 /** @todo change `password` into `verification code` */
@@ -43,12 +44,13 @@ async function sendSecureCode(): Promise<boolean> {
 		container.innerHTML = `<p>Please enter a 4 digit code.</p>`; /**@todo use translate tool */
 		return false;
 	}
-	let reply: ReplyFromBack;
+	let body : Content2FA;
 	const currentUser = getCurrentUserInfos();
 	if (currentUser)
-		reply = await sendPostRequestToBack("/api/user/secure", JSON.stringify({ user: currentUser.username, code: code }));
+		body = { user: currentUser.username, code: Number(code) };
 	else
-		reply = await sendPostRequestToBack("/api/user/secure", JSON.stringify({ user: username, code: code }));
+		body = { user: username, code: Number(code) };
+	const reply = await sendPostRequestToBack("/api/user/secure", JSON.stringify(body));
 
 	if (!isRequestSuccessfull(reply)) {
 		printReplyInDiv(reply, "print-content");

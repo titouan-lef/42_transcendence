@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Errors, Success } from "#shared/status_codes.js";
-import { UserDashboardInfos } from "#shared/HTTP.js";
+import { UserDashboardInfoBody, UserDashboardInfos } from "#shared/HTTP.js";
 import { EloChart, WinrateChart } from "#shared/types_dashboard.js";
 import { getGamesLoosesBySeason, getGamesLoosesGlobal, getGamesPlayedCountBySeason, getGamesPlayedCountGlobal, getGamesWinsBySeason, getGamesWinsGlobal } from "../database/fetchGame.js";
 import { sendReply } from "../utils/HTTP.js";
@@ -10,11 +10,6 @@ import { Elo } from '../tournament/elo/elo.js';
 import { getCurrentSeason, getEndSeason, getFirstSeason, getSeasonStartedAtById } from "../database/season.js";
 import { DEFAULT_RATINGS } from "../tournament/elo/elo.js";
 import { getActualDate } from "../database/db_utils.js";
-
-interface UserDashboardInfoBody {
-	user: string;
-	season: number;
-}
 
 const NB_CHART_POINT = 7;
 

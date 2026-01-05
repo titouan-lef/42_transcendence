@@ -7,6 +7,7 @@ import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_FORM_STYLE } from "./dialo
 import { loadDialog } from "./dialog.js";
 import { goBackToCurrentPage, navigateTo } from "../../../routes/navigate.js";
 import { Modals } from "../../../routes/navigate_types.js";
+import { UserBody } from "#shared/HTTP.js";
 
 /** @todo better front style for add friend */
 const ADD_FRIEND = `
@@ -22,7 +23,8 @@ function addFriendHandler(modal: HTMLDialogElement): void {
 	const newFriendElem = getSafeElement('find-friend', HTMLInputElement);
 
 	addFriendElem.addEventListener('click', async () => {
-		const reply = await sendPostRequestToBack('/api/friends/add', JSON.stringify({ user: newFriendElem.value }));
+		const body: UserBody = { user: newFriendElem.value };
+		const reply = await sendPostRequestToBack('/api/friends/add', JSON.stringify(body));
 		if (reply.code === Errors.AUTH_REQUIRED) {
 			/** @todo go to login page */
 			return;
