@@ -20,7 +20,7 @@ function getDashboardPage(maxSeason: number ): string {
 	return ( `
 	<div class="px-4 flex flex-col h-full w-full">
 		<div class='pb-2'>
-			${getFilterHtml(maxSeason)}
+			${getFilterHtml(maxSeason, true)}
 		</div>
 		<div id="dashboard" class="${DASHBOARD_BOX_STYLE}">
 		</div>
