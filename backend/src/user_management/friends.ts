@@ -20,8 +20,9 @@ async function getFriendList(req: FastifyRequest<{ "Body": UserBody }>, reply: F
 	const list: Friend[] = [];
 	firendList?.forEach((friend) => {
 		list.push({
-			username: friend,
-			onlineStatus: isUserConnected(friend)
+			username: friend.username,
+			nickname: friend.nickname,
+			onlineStatus: isUserConnected(friend.username)
 		});
 	});
 	sendReply(reply, Success.FRIEND_LIST, JSON.stringify(list));
