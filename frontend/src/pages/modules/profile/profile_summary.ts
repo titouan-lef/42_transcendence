@@ -2,9 +2,9 @@ import { getCurrentUserInfos, InfoList } from "../../../services/user_management
 import { createButtonHtml } from "../../../components/button";
 import { createParagraphHtml } from "../../../components/paragraph";
 import { getSafeElement } from "../../../utils/getSafeElement";
-import { loadDashboard } from "./profile_dashboard";
+import { getDashboardData, loadDashboard } from "./profile_dashboard";
 import { createDashboardCard } from "./profile_dashboard_card";
-import { generateHistory, loadHistory } from "./profile_history";
+import { generateHistory, getHistoryData, loadHistory } from "./profile_history";
 import { setActiveBtn } from "./profile_navbar";
 import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
 import { GameHistoryWithAvatar, UserBody, UserDashboardInfoBody, UserDashboardInfos } from "#shared/HTTP";
@@ -55,18 +55,8 @@ async function loadSummary(): Promise<void> {
 
 	setActiveBtn('btn-summary');
 
-	const historyBody: UserBody = { user: currentUser.username };
-	const replyHist = await sendPostRequestToBack('/api/user/history', JSON.stringify(historyBody));
-	if (!isRequestSuccessfull(replyHist))
-		return;
-
-	const dataHist: GameHistoryWithAvatar[] = JSON.parse(replyHist.content);
-	const dashboardBody: UserDashboardInfoBody = { user: currentUser.username, season: -1 };
-	const replyDash = await sendPostRequestToBack('/api/user/dashboard', JSON.stringify(dashboardBody));
-	if (!isRequestSuccessfull(replyDash))
-		return;
-
-	const dataDash: UserDashboardInfos = JSON.parse(replyDash.content);
+	const dataHist = await getHistoryData();
+	const dataDash = await getDashboardData();
 	const element = getSafeElement('profile-content', HTMLElement);
 
 	element.innerHTML = getSummaryTable(dataHist, dataDash);
@@ -74,8 +64,8 @@ async function loadSummary(): Promise<void> {
 	const dashboardButton = getSafeElement('btn-sum-dashboard', HTMLButtonElement);
 	const historyButton = getSafeElement('btn-sum-history', HTMLButtonElement);
 
-	dashboardButton.addEventListener('click', loadDashboard);
-	historyButton.addEventListener('click', loadHistory);
+	dashboardButton.addEventListener('click', () => document.dispatchEvent(new Event('dashboard')));
+	historyButton.addEventListener('click', () => document.dispatchEvent(new Event('history')));
 }
 
 export { loadSummary };

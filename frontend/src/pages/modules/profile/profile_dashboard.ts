@@ -14,6 +14,8 @@ scrollbar-none overflow-y-scroll overflow-hidden
 [mask-image:linear-gradient(to_bottom,transparent,black_2%,black_90%,transparent)]
 `;
 
+let dashboardData: UserDashboardInfos;
+
 /** @todo better select/option with divs ? menue is not personnalisable at this time */
 function getDashboardPage(maxSeason: number ): string {
 
@@ -53,29 +55,38 @@ function getDashboardTable(data: UserDashboardInfos): string {
 	`);
 }
 
-async function updateDashboardData(): Promise<void> {
-	const currentUser: InfoList | null = getCurrentUserInfos();
-	if (!currentUser)
-		return;
-
-	const filter = getSafeElement('filter', HTMLSelectElement);
-	let targetSeason = Number(filter.value);
-	if (!targetSeason)
-		targetSeason = -1;
-	const body: UserDashboardInfoBody = { user: currentUser.username, season: targetSeason };
+async function fetchDashboardData(user: string): Promise<void> {
+	let targetSeason = -1;
+	try {
+		const filter = getSafeElement('filter', HTMLSelectElement);
+		targetSeason = Number(filter.value);
+	} catch {}
+	const body: UserDashboardInfoBody = { user: user, season: targetSeason };
 	const reply = await sendPostRequestToBack('/api/user/dashboard', JSON.stringify(body));
 	if (!isRequestSuccessfull(reply))
 		return;
 
-	const data: UserDashboardInfos = JSON.parse(reply.content);
-	const elem = getSafeElement('dashboard', HTMLElement);
-	elem.innerHTML = getDashboardTable(data);
-
-	createDashboardChart('elo_chart', configureChart(data.eloChart.dateList, data.eloChart.eloList));
-	createDashboardChart('win_rate_chart', configureChart(data.winrateChart.dateList, data.winrateChart.winrateList));
+	dashboardData = JSON.parse(reply.content);
 }
 
-async function loadDashboard(): Promise<void> {
+async function getDashboardData(): Promise<UserDashboardInfos> {
+	return dashboardData;
+}
+
+async function loadDashboardData(): Promise<void> {
+	const elem = getSafeElement('dashboard', HTMLElement);
+	elem.innerHTML = getDashboardTable(dashboardData);
+
+	createDashboardChart('elo_chart', configureChart(dashboardData.eloChart.dateList, dashboardData.eloChart.eloList));
+	createDashboardChart('win_rate_chart', configureChart(dashboardData.winrateChart.dateList, dashboardData.winrateChart.winrateList));
+}
+
+async function updateDashboardData(user: string): Promise<void> {
+	await fetchDashboardData(user);
+	await loadDashboardData();
+}
+
+async function loadDashboard(user: string): Promise<void> {
 	setActiveBtn('btn-dashboard');
 
 	const currentUser: InfoList | null = getCurrentUserInfos();
@@ -90,9 +101,9 @@ async function loadDashboard(): Promise<void> {
 	elem.innerHTML = getDashboardPage(seasonNumber);
 
 	const filter = getSafeElement('filter', HTMLSelectElement);
-	filter.addEventListener('change', updateDashboardData);
-	await updateDashboardData();
+	filter.addEventListener('change', () => updateDashboardData(user));
+	loadDashboardData();
 
 }
 
-export { loadDashboard }; 
+export { loadDashboard, fetchDashboardData, getDashboardData };
