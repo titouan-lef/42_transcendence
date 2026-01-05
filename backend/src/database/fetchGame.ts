@@ -70,24 +70,4 @@ async function getGamesWinsGlobal(username: string): Promise<number> {
 	return row.gamesWinCount;
 }
 
-async function getGamesLoosesBySeason(seasonId: number, username: string): Promise<number> {
-	const playedCount = await getGamesPlayedCountBySeason(seasonId, username);
-	if (!playedCount)
-		return 0;
-	const winCount = await getGamesWinsBySeason(seasonId, username);
-	if (!winCount)
-		return 0;
-	return (playedCount - winCount);
-}
-
-async function getGamesLoosesGlobal(username: string): Promise<number> {
-	const playedCount = await getGamesPlayedCountGlobal(username);
-	if (!playedCount)
-		return 0;
-	const winCount = await getGamesWinsGlobal(username);
-	if (!winCount)
-		return 0;
-	return (playedCount - winCount);
-}
-
-export { getGamesWinsBySeason, getGamesWinsGlobal, getGamesLoosesBySeason, getGamesLoosesGlobal, getGamesPlayedCountBySeason, getGamesPlayedCountGlobal };
+export { getGamesWinsBySeason, getGamesWinsGlobal, getGamesPlayedCountBySeason, getGamesPlayedCountGlobal };

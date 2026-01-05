@@ -34,18 +34,4 @@ async function insertGoal(mapId: number, ballId: number, username: string, timer
 	);
 }
 
-async function getPlayerGamesBySeason(seasonId: number, username: string): Promise<number> {
-	const row = await applyQuery(
-		async (db) => await db.get(
-			`SELECT COUNT(GOAL.gameId) AS gamesPlayedCount
-			FROM ${TABLE_NAME} AS GOAL INNER JOIN Game AS GAME ON GOAL.gameId = GAME.id
-			WHERE GAME.seasonId = ? AND GOAL.by = ?;`,
-			[seasonId, username]
-		), "getGamesPlayedCount"
-	);
-	if (!row)
-		return 0;
-	return row.gamesPlayedCount;
-}
-
-export { Goal, createGoalTable, insertGoal, getPlayerGamesBySeason };
+export { Goal, createGoalTable, insertGoal };
