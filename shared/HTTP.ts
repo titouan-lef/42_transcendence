@@ -2,11 +2,28 @@ import { BallOption, MapOption } from "./types_transfert";
 import { EloChart, WinrateChart } from "./types_dashboard";
 
 // FRONT to BACK
+interface UserBody {
+	user?: string;
+}
+
+interface ThemeBody {
+	theme: string;
+}
 
 interface NewUserBody {
 	username: string;
 	nickname: string;
 	password: string;
+}
+
+interface Content2FA {
+	user: string;
+	code: number;
+};
+
+interface UserDashboardInfoBody {
+	user: string;
+	season: number;
 }
 
 // BACK to FRONT
@@ -69,5 +86,5 @@ interface LeaderboardInfos {
 	endDate: string;
 }
 
-export { NewUserBody };
+export { UserBody, ThemeBody, NewUserBody, Content2FA, UserDashboardInfoBody };
 export { Friend, UserDashboardInfos, Ranking, GameHistory, GameHistoryWithAvatar, LeaderboardInfos };
