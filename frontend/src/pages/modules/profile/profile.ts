@@ -4,9 +4,9 @@ import { fetchDashboardData, loadDashboard } from "./profile_dashboard";
 import { loadSettings } from "./profile_settings";
 import { fetchHistoryData, loadHistory } from "./profile_history";
 import { loadSummary } from "./profile_summary";
-import { DRAWER_HEADER } from "./profile_header";
+import { getDrawerHeader } from "./profile_header";
 import { getDrawerNav, setActiveBtn } from "./profile_navbar";
-import { goBack, navigateTo } from "../../../routes/navigate";
+import { navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
 import { getCurrentUserInfos, getUserInfos, isUserConnected } from "../../../services/user_management/user_state";
 import { updateFriendList } from "../box/box_aside_friendlist";
@@ -38,11 +38,11 @@ h-full w-full py-[25px] pl-10 pr-[190px]
 flex flex-row justify-start items-center
 `;
 
-function getDrawerContent(withSettings: boolean): string {
+async function getDrawerContent(withSettings: boolean): Promise<string> {
 	return `
 	<div class='${DRAWER_MAIN_STYLE}'>
 		<div class='${DRAWER_BOX_STYLE}'>
-			${DRAWER_HEADER}
+			${await getDrawerHeader(withSettings, userProfile)}
 			<div class='${DRAWER_BODY_STYLE}'>
 				${getDrawerNav(withSettings)}
 				<div id='profile-content' class='h-full w-full'>
@@ -96,11 +96,11 @@ async function openProfile(user: string): Promise<void> {
 	drawer.className = DRAWER_BACKDROP_STYLE;
 	drawer.show();
 	if (getCurrentUserInfos()?.username === userProfile) {
-		drawer.innerHTML = getDrawerContent(true);
 		setActiveBtn(`btn-${currentTab}`);
+		drawer.innerHTML = await getDrawerContent(true);
 	} else {
-		drawer.innerHTML = getDrawerContent(false);
 		setActiveBtn(`btn-summary`);
+		drawer.innerHTML = await getDrawerContent(false);
 	}
 
 	await fetchDashboardData(userProfile);

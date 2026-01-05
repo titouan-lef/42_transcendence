@@ -13,7 +13,7 @@ import { getFriendList, newFriend, removeFriend } from "./user_management/friend
 import { disable2FA, enable2FA, verify2FA } from "./security/2FA.js";
 import { rejectGuest, verifyAuth } from "./security/JWT.js";
 import { GameOptions } from "./game/settings/GameSettings.js";
-import { getUserInfos } from "./user_management/user_infos.js";
+import { getUserInfos, getUserNick } from "./user_management/user_infos.js";
 import { geCurrentSeasonInfo, getPlayerStats, UserDashboardInfoBody } from "./user_management/dashboard.js";
 import { manageOnlineStatus } from "./user_management/online_status.js";
 import { getHistory } from "./user_management/history.js";
@@ -51,6 +51,7 @@ APP.register(fastifyStatic, {
 APP.post("/api/user/new_user", addNewUser);
 APP.post<{ "Body": UpdateUserBody }>("/api/user/update_user", { preHandler: [verifyAuth, rejectGuest] }, updateUserInfos);
 APP.get("/api/user/get_user", { preHandler: verifyAuth }, getUserInfos);
+APP.post<{ Body: UserBody }>("/api/user/get_nick", getUserNick);
 APP.post("/api/user/login", connectUser);
 APP.get("/api/user/logout", { preHandler: [verifyAuth, rejectGuest] }, disconnectUser);
 APP.post("/api/user/change_picture", { preHandler: [verifyAuth, rejectGuest] }, changePicture);

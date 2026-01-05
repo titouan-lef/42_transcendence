@@ -1,5 +1,7 @@
+import { InfoList } from "src/services/user_management/user_state";
 import { capitalizeElementValueHTML } from "../../../components/component_utils";
 import { createParagraph } from "../../../components/paragraph";
+import { isRequestSuccessfull, sendGetRequestToBack, sendPostRequestToBack } from "src/services/api_request";
 
 const TITLE_STYLE = `
 grow font-bold text-[48px]
@@ -26,13 +28,30 @@ const RETURN_BTN_SVG = `
 </svg>
 `;
 
-const DRAWER_HEADER = `
-<div class='${DRAWER_HEADER_STYLE}'>
-	${capitalizeElementValueHTML(createParagraph(['profile'], 'p-profile', { 'class' : `${TITLE_STYLE}` }))}
-	<div class='${RETURN_BTN_DIV_STYLE}'>
-		${RETURN_BTN_SVG}
-	</div>
-</div>
-`;
+interface UserBody { /** @todo take the one in shared */
+	user?: string;
+}
 
-export { DRAWER_HEADER };
+/** @todo use translation tool */
+/** @todo pretty front */
+async function getDrawerHeader(ownProfile: boolean, user: string): Promise<string> {
+	const body: UserBody = { user: user };
+	const reply = await sendPostRequestToBack("/api/user/get_nick", JSON.stringify(body));
+	let nickname = "";
+	if (isRequestSuccessfull(reply))
+		nickname = reply.content;
+
+	return `
+	<div class='${DRAWER_HEADER_STYLE}'>
+		${ownProfile? "Your": user+"'s"}
+		${capitalizeElementValueHTML(createParagraph(['profile'], 'p-profile', { 'class' : `${TITLE_STYLE}` }))}
+		${nickname}
+		<div class='${RETURN_BTN_DIV_STYLE}'>
+			${RETURN_BTN_SVG}
+		</div>
+	</div>
+	`;
+}
+
+
+export { getDrawerHeader };

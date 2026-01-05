@@ -4,6 +4,7 @@ import { sendReply } from "../utils/HTTP.js";
 import { getTheme } from "../database/theme.js";
 import { promises as fs } from "fs";
 import { Success } from "#shared/status_codes.js";
+import { UserBody } from "./connect_user.js";
 
 interface InfoList {
 	username: string;
@@ -21,6 +22,18 @@ async function fileExists(path: string): Promise<boolean> {
 	} catch {
 		return false;
 	}
+}
+
+async function getUserNick(req: FastifyRequest<{ "Body": UserBody }>, reply: FastifyReply): Promise<void> {
+	const username = req.body?.user;
+	if (!username)
+		return;
+
+	const user = await getUserByUsername(username);
+	if (!user)
+		return;
+
+	sendReply(reply, Success.USER_INFOS, user.nickname);
 }
 
 async function getUserInfos(req: FastifyRequest, reply: FastifyReply): Promise<void> {
@@ -46,4 +59,4 @@ async function getUserInfos(req: FastifyRequest, reply: FastifyReply): Promise<v
 	sendReply(reply, Success.USER_INFOS, JSON.stringify(infoList));
 }
 
-export { getUserInfos, fileExists };
+export { getUserInfos, getUserNick, fileExists };
