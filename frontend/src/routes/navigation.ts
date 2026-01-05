@@ -29,12 +29,8 @@ async function sendCancelQueue(): Promise<void> {
 	return;
 }
 
-function manageParticularPages(page: Pages): void { 
+function manageParticularPages(page: Pages): void {
 	if (currentPage !== Pages.HOME && (page === Pages.GAME_OPTIONS || page === Pages.GAME_SELECTION)) { // Assure GAME_OPTIONS and GAME_SELECTION got HOME in the back
-		pageSelector(Pages.HOME);
-	}
-	/** @todo Remove and fix the season selector of leaderboard over the profile modal */
-	if (currentPage !== Pages.HOME && page === Pages.PROFILE) { // Assure PROFILE got HOME in the back 
 		pageSelector(Pages.HOME);
 	}
 }

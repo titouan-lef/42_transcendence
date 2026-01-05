@@ -40,7 +40,7 @@ const TRANSLATOR = {
 	map: { en: "map", fr: "map" },
 	ball: { en: "ball", fr: "balle" },
 	nothing: { en: "nothing", fr: "rien" },
-	leaderboard: { en: "leaderbord", fr: "classement" },
+	leaderboard: { en: "leaderboard", fr: "classement" },
 
 	// STATES | ADJECTIVES
 	logged_in: { en: "logged in", fr: "connecté" },
@@ -174,7 +174,7 @@ const TRANSLATOR = {
 		fr: "{email} {invalid}"
 	},
 	please_disable_2FA: {
-		en : "Please desactivate {twofa} before clearing your {email}", 
+		en : "Please desactivate {twofa} before clearing your {email}",
 		fr : "Desactivatez la {twofa} avant d'effacer votre {email}"
 	}
 } as const satisfies Record<string, Expression>;
