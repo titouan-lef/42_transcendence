@@ -3,7 +3,7 @@ import { getUserByUsername, is2FAEnabled } from "../database/user.js";
 import { sendReply } from "../utils/HTTP.js";
 import { getTheme } from "../database/theme.js";
 import { promises as fs } from "fs";
-import { Success } from "#shared/status_codes.js";
+import { Errors, Success } from "#shared/status_codes.js";
 import { UserBody } from "./connect_user.js";
 
 interface InfoList {
@@ -26,12 +26,16 @@ async function fileExists(path: string): Promise<boolean> {
 
 async function getUserNick(req: FastifyRequest<{ "Body": UserBody }>, reply: FastifyReply): Promise<void> {
 	const username = req.body?.user;
-	if (!username)
+	if (!username) {
+		sendReply(reply, Errors.NO_USER_GIVEN);
 		return;
+	}
 
 	const user = await getUserByUsername(username);
-	if (!user)
+	if (!user) {
+		sendReply(reply, Errors.NO_USER_GIVEN);
 		return;
+	}
 
 	sendReply(reply, Success.USER_INFOS, user.nickname);
 }
@@ -42,8 +46,10 @@ async function getUserInfos(req: FastifyRequest, reply: FastifyReply): Promise<v
 		return;
 
 	const user = await getUserByUsername(username);
-	if (!user)
+	if (!user) {
+		sendReply(reply, Errors.NO_SUCH_USER);
 		return;
+	}
 
 	let theme: string | null = null;
 	if (user.themeId !== null)
