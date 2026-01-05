@@ -51,27 +51,27 @@ const DRAWER_CONTENT = `
 </div>
 `;
 
-enum ProfiteTab {
+enum ProfileTab {
 	SUMMARY = 'summary',
 	HISTORY = 'history',
 	DASHBOARD = 'dashboard',
 	SETTINGS = 'settings'
 }
 
-let currentTab: ProfiteTab = ProfiteTab.SUMMARY;
+let currentTab: ProfileTab = ProfileTab.SUMMARY;
 
 function loadTab(): void {
 	switch (currentTab) {
-		case (ProfiteTab.SUMMARY):
+		case (ProfileTab.SUMMARY):
 			loadSummary();
 			break;
-		case (ProfiteTab.HISTORY):
+		case (ProfileTab.HISTORY):
 			loadHistory();
 			break;
-		case (ProfiteTab.DASHBOARD):
+		case (ProfileTab.DASHBOARD):
 			loadDashboard();
 			break;
-		case (ProfiteTab.SETTINGS):
+		case (ProfileTab.SETTINGS):
 			loadSettings();
 			break;
 		default:
@@ -97,7 +97,7 @@ async function openProfile(): Promise<void> {
 	initProfileEvents();
 }
 
-function changeTab(tab: ProfiteTab): void {
+function changeTab(tab: ProfileTab): void {
 	currentTab = tab;
 	loadTab();
 }
@@ -111,16 +111,16 @@ function initProfileEvents(): void {
 				elem.addEventListener('click', goBack); /** @todo fix back after addfriend */
 				break;
 			case 'btn-summary':
-				elem.addEventListener('click', () => changeTab(ProfiteTab.SUMMARY));
+				elem.addEventListener('click', () => changeTab(ProfileTab.SUMMARY));
 				break;
 			case 'btn-history':
-				elem.addEventListener('click', () => changeTab(ProfiteTab.HISTORY));
+				elem.addEventListener('click', () => changeTab(ProfileTab.HISTORY));
 				break;
 			case 'btn-dashboard':
-				elem.addEventListener('click', () => changeTab(ProfiteTab.DASHBOARD));
+				elem.addEventListener('click', () => changeTab(ProfileTab.DASHBOARD));
 				break;
 			case 'btn-settings':
-				elem.addEventListener('click', () => changeTab(ProfiteTab.SETTINGS));
+				elem.addEventListener('click', () => changeTab(ProfileTab.SETTINGS));
 				break;
 			default:
 				break;
