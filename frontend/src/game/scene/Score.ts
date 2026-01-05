@@ -5,12 +5,12 @@ class Score {
 	private readonly score: babylon.Mesh;
 	private readonly scoreTexture: babylon.DynamicTexture;
 
-	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera) {
+	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera, local: boolean) {
 		this.scoreTexture = new babylon.DynamicTexture("scoreTexture", { width: SCORE_CANVAS_SIZE.x, height: SCORE_CANVAS_SIZE.y }, scene, false);
 		this.score = babylon.MeshBuilder.CreatePlane("scorePlane", { width: MAP_SIZE.z * 0.4, height: MAP_SIZE.z * 0.2 }, scene);
 		this.score.billboardMode = 7;
 		this.score.material = this.setMaterial(scene, this.scoreTexture);
-		this.placeScore(camera);
+		this.placeScore(camera, local);
 		this.changeScore([0, 0]);
 	}
 	
@@ -23,12 +23,18 @@ class Score {
 		return material;
 	}
 
-	private placeScore(camera: babylon.ArcRotateCamera): void {
-		const direction = camera.target.subtract(camera.position);
-		direction.y = 0;
-		direction.normalize();
-		const planePosition = camera.position.add(direction.scale(CAMERA_POS_X + (MAP_SIZE.x * 0.6)));
-		this.score.position = new babylon.Vector3(planePosition.x, SCORE_POS_Y, planePosition.z);
+	private placeScore(camera: babylon.ArcRotateCamera, local: boolean): void {
+		let position: babylon.Vector3;
+		if (local) {
+			position = new babylon.Vector3(0, 0, -MAP_SIZE.z / 2 * 1.5);
+		} else {
+			const direction = camera.target.subtract(camera.position);
+			direction.y = 0;
+			direction.normalize();
+			const planePosition = camera.position.add(direction.scale(CAMERA_POS_X + (MAP_SIZE.x * 0.6)));
+			position = new babylon.Vector3(planePosition.x, SCORE_POS_Y, planePosition.z);
+		}
+		this.score.position = position;
 	}
 
 	changeScore(newText: number[]): void {
