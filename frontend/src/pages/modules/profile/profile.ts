@@ -1,14 +1,14 @@
 import { applyColor } from "../../../utils/applyColor";
 import { getSafeElement } from "../../../utils/getSafeElement";
-import { loadDashboard } from "./profile_dashboard";
+import { fetchDashboardData, loadDashboard } from "./profile_dashboard";
 import { loadSettings } from "./profile_settings";
-import { loadHistory } from "./profile_history";
+import { fetchHistoryData, loadHistory } from "./profile_history";
 import { loadSummary } from "./profile_summary";
 import { DRAWER_HEADER } from "./profile_header";
-import { DRAWER_NAV, setActiveBtn } from "./profile_navbar";
+import { getDrawerNav, setActiveBtn } from "./profile_navbar";
 import { goBack, navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
-import { getCurrentUserInfos, getUserInfos } from "../../../services/user_management/user_state";
+import { getCurrentUserInfos, getUserInfos, isUserConnected } from "../../../services/user_management/user_state";
 import { updateFriendList } from "../box/box_aside_friendlist";
 
 const DRAWER_MAIN_STYLE = `
@@ -38,18 +38,20 @@ h-full w-full py-[25px] pl-10 pr-[190px]
 flex flex-row justify-start items-center
 `;
 
-const DRAWER_CONTENT = `
-<div class='${DRAWER_MAIN_STYLE}'>
-	<div class='${DRAWER_BOX_STYLE}'>
-		${DRAWER_HEADER}
-		<div class='${DRAWER_BODY_STYLE}'>
-			${DRAWER_NAV}
-			<div id='profile-content' class='h-full w-full'>
+function getDrawerContent(withSettings: boolean): string {
+	return `
+	<div class='${DRAWER_MAIN_STYLE}'>
+		<div class='${DRAWER_BOX_STYLE}'>
+			${DRAWER_HEADER}
+			<div class='${DRAWER_BODY_STYLE}'>
+				${getDrawerNav(withSettings)}
+				<div id='profile-content' class='h-full w-full'>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-`;
+	`;
+}
 
 enum ProfileTab {
 	SUMMARY = 'summary',
@@ -59,6 +61,7 @@ enum ProfileTab {
 }
 
 let currentTab: ProfileTab = ProfileTab.SUMMARY;
+let userProfile: string;
 
 function loadTab(): void {
 	switch (currentTab) {
@@ -69,30 +72,43 @@ function loadTab(): void {
 			loadHistory();
 			break;
 		case (ProfileTab.DASHBOARD):
-			loadDashboard();
+			loadDashboard(userProfile);
 			break;
 		case (ProfileTab.SETTINGS):
-			loadSettings();
+			if (isUserConnected())
+				loadSettings();
 			break;
 		default:
 			throw new Error("No such profile tab");
 	}
 }
 
-async function openProfile(): Promise<void> {
-	if (!getCurrentUserInfos())
-		return;
+async function openProfile(user?: string): Promise<void> {
 	const drawer = getSafeElement("modal", HTMLDialogElement);
 	drawer.close();
 
+	if (!user)
+		user = getCurrentUserInfos()?.username;
+	if (!user || user === 'guest')
+		return;
+
+	userProfile = user;
 	drawer.className = DRAWER_BACKDROP_STYLE;
 	drawer.show();
-	drawer.innerHTML = DRAWER_CONTENT;
+	if (getCurrentUserInfos()?.username === userProfile)
+		drawer.innerHTML = getDrawerContent(true);
+	else
+		drawer.innerHTML = getDrawerContent(false);
 
 	setActiveBtn(`btn-${currentTab}`);
 
-	updateFriendList();
-	await getUserInfos();
+	await fetchDashboardData(userProfile);
+	await fetchHistoryData(userProfile);
+
+	if (isUserConnected()) {
+		updateFriendList();
+		await getUserInfos();
+	}
 	loadTab();
 	initProfileEvents();
 }
@@ -103,12 +119,12 @@ function changeTab(tab: ProfileTab): void {
 }
 
 function initProfileEvents(): void {
-	const drawer = getSafeElement("modal", HTMLDialogElement); /** @todo use another id `profile` to enable modal on top of profile */
+	const drawer = getSafeElement("modal", HTMLDialogElement);
 
 	drawer.querySelectorAll('*[id]').forEach(elem => {
 		switch (elem.id) {
 			case 'btn-return':
-				elem.addEventListener('click', goBack); /** @todo fix back after addfriend */
+				elem.addEventListener('click', goBack);
 				break;
 			case 'btn-summary':
 				elem.addEventListener('click', () => changeTab(ProfileTab.SUMMARY));
@@ -125,6 +141,13 @@ function initProfileEvents(): void {
 			default:
 				break;
 		}
+	});
+
+	document.addEventListener("dashboard", () => {
+		changeTab(ProfileTab.DASHBOARD);
+	});
+	document.addEventListener("history", () => {
+		changeTab(ProfileTab.HISTORY);
 	});
 }
 

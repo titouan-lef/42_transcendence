@@ -35,7 +35,7 @@ function manageParticularPages(page: Pages): void {
 	}
 }
 
-function navigationSelector(nav: Navigation): boolean {
+function navigationSelector(nav: Navigation, user?: string): boolean {
 	if (needToBeConnected(nav) && !getCurrentUserInfos())
 		return false;
 	if (isGuest() && needToRejectGuest(nav))
@@ -47,7 +47,7 @@ function navigationSelector(nav: Navigation): boolean {
 
 	if (isPage(nav)) {
 		manageParticularPages(nav);
-		pageSelector(nav);
+		pageSelector(nav, user);
 		return true;
 	}
 	if (!isModal(nav))
@@ -60,7 +60,7 @@ function navigationSelector(nav: Navigation): boolean {
 	return true;
 }
 
-function pageSelector(page: Pages): void {
+function pageSelector(page: Pages, user?: string): void {
 	if (currentPage === Pages.GAME && page !== Pages.GAME)
 		closeGame();
 	if (isModularPage(page)) /** @todo donot reload modular if already open (carefull with the backawrd from a modal)*/
@@ -80,7 +80,7 @@ function pageSelector(page: Pages): void {
 			openMainDashboard();
 			break;
 		case Pages.PROFILE:
-			openProfile();
+			openProfile(user);
 			break;
 		case Pages.GAME_SELECTION:
 			openDialogGameSelector();
@@ -127,24 +127,23 @@ function modalSelector(page: Modals): void {
 	}
 }
 
-function manageHistoryPushing(nav: Navigation): void {
+function manageHistoryPushing(nav: Navigation, user?: string): void {
 	const currentNav: Navigation = history.state?.nav;
 	if(isModal(nav) && getAssociatedPage(nav) === Pages.GAME) // do not add game modals to hisotry
 		return;
 	if (isModal(currentNav)) {
-		history.replaceState({ nav: nav }, ""); // if last nav is a modal, replace in hiroty instead of add it
+		history.replaceState({ nav: nav, user: user }, ""); // if last nav is a modal, replace in hiroty instead of add it
 		return;
 	}
 	if (currentNav === nav)
 		return;
-	history.pushState({ nav: nav }, "");
+	history.pushState({ nav: nav, user: user }, "");
 }
 
-function navigation(nav: Navigation): void {
-	const navigationSuccessful = navigationSelector(nav);
-	if (navigationSuccessful) {
-		manageHistoryPushing(nav);
-	}
+function navigation(nav: Navigation, user?: string): void {
+	const navigationSuccessful = navigationSelector(nav, user);
+	if (navigationSuccessful)
+		manageHistoryPushing(nav, user);
 }
 
 document.addEventListener("currentPage", (event: Event) => {
@@ -157,8 +156,9 @@ document.addEventListener("navigate", (event: Event) => {
 	if (!(event instanceof NavigateEvent))
 		return;
 	const nav = event.nav;
+	const user = event.user;
 
-	navigation(nav);
+	navigation(nav, user);
 });
 
 document.addEventListener("logout", () => {

@@ -34,9 +34,9 @@ enum Modals {
 const PAGES_MODALS: Record<Pages, readonly Modals[]> = {
 	[Pages.WELCOME]: [],
 	[Pages.HOME]: [Modals.SIGN_UP, Modals.SIGN_IN, Modals.TWO_FA, Modals.ADD_FRIEND],
-	[Pages.LEADERBOARD]: [Modals.ADD_FRIEND],
-	[Pages.DASHBOARD]: [Modals.ADD_FRIEND],
-	[Pages.PROFILE]: [Modals.ADD_FRIEND, Modals.EMAIL_CONF],
+	[Pages.LEADERBOARD]: [Modals.SIGN_UP, Modals.SIGN_IN, Modals.TWO_FA, Modals.ADD_FRIEND],
+	[Pages.DASHBOARD]: [Modals.SIGN_UP, Modals.SIGN_IN, Modals.TWO_FA, Modals.ADD_FRIEND],
+	[Pages.PROFILE]: [Modals.SIGN_UP, Modals.SIGN_IN, Modals.TWO_FA, Modals.ADD_FRIEND, Modals.EMAIL_CONF],
 	[Pages.GAME_SELECTION]: [],
 	[Pages.GAME_OPTIONS]: [],
 	[Pages.GAME]: [Modals.WAITING, Modals.GAME_QUIT],
@@ -69,7 +69,7 @@ function getAssociatedPage(modal: Modals): Pages {
 }
 
 function needToBeConnected(nav: Navigation): boolean {
-	if (isPage(nav) && nav >= Pages.DASHBOARD)
+	if (isPage(nav) && nav >= Pages.PROFILE)
 		return true;
 	if (isModal(nav) && nav >= Modals.EMAIL_CONF)
 		return true;

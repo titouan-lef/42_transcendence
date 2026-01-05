@@ -1,3 +1,4 @@
+import { isUserConnected } from "src/services/user_management/user_state";
 import { createButtonHtml } from "../../../components/button";
 
 const DRAWER_NAV_STYLE = `
@@ -13,14 +14,25 @@ data-[active=true]:bg-variant
 data-[active=true]:text-dark
 `;
 
-const DRAWER_NAV = `
-<nav class='${DRAWER_NAV_STYLE}'>
-	${createButtonHtml(['summary'], 'btn-summary', { 'class': `${NAV_BTN_STYLE}`, 'data-active': 'true' })}
-	${createButtonHtml(['history'], 'btn-history', { 'class': `${NAV_BTN_STYLE}` })}
-	${createButtonHtml(['dashboard'], 'btn-dashboard', { 'class': `${NAV_BTN_STYLE}` })}
-	${createButtonHtml(['settings'], 'btn-settings', { 'class': `${NAV_BTN_STYLE}` })}
-</nav>
-`;
+function getDrawerNav(withSettings: boolean): string {
+	if (withSettings) {
+		return `
+		<nav class='${DRAWER_NAV_STYLE}'>
+			${createButtonHtml(['summary'], 'btn-summary', { 'class': `${NAV_BTN_STYLE}`, 'data-active': 'true' })}
+			${createButtonHtml(['history'], 'btn-history', { 'class': `${NAV_BTN_STYLE}` })}
+			${createButtonHtml(['dashboard'], 'btn-dashboard', { 'class': `${NAV_BTN_STYLE}` })}
+			${createButtonHtml(['settings'], 'btn-settings', { 'class': `${NAV_BTN_STYLE}` })}
+		</nav>
+		`;
+	}
+	return `
+	<nav class='${DRAWER_NAV_STYLE}'>
+		${createButtonHtml(['summary'], 'btn-summary', { 'class': `${NAV_BTN_STYLE}`, 'data-active': 'true' })}
+		${createButtonHtml(['history'], 'btn-history', { 'class': `${NAV_BTN_STYLE}` })}
+		${createButtonHtml(['dashboard'], 'btn-dashboard', { 'class': `${NAV_BTN_STYLE}` })}
+	</nav>
+	`;
+}
 
 function setActiveBtn(id: string): void {
 	document.querySelectorAll('*[id]').forEach(elem => {
@@ -32,4 +44,4 @@ function setActiveBtn(id: string): void {
 	});
 }
 
-export { DRAWER_NAV, setActiveBtn };
+export { getDrawerNav, setActiveBtn };

@@ -5,6 +5,8 @@ import { setActiveBtn } from "./profile_navbar";
 import { getCurrentUserInfos, InfoList } from "../../../services/user_management/user_state";
 import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
 
+let hisotryData: GameHistoryWithAvatar[];
+
 const HISTORY_STYLE = `
 flex flex-col justify-start items-center gap-4
 h-full w-full px-4 py-10 pr-[190px]
@@ -18,6 +20,19 @@ function getHistoryTable(history: GameHistoryWithAvatar[]): string {
 		${generateHistory(history, history.length)}
 	</div>
 	`);
+}
+
+async function fetchHistoryData(user: string): Promise<void> {
+	const body: UserBody = { user: user };
+	const reply = await sendPostRequestToBack('/api/user/history', JSON.stringify(body));
+	if (!isRequestSuccessfull(reply))
+		return;
+
+	hisotryData = JSON.parse(reply.content);
+}
+
+async function getHistoryData(): Promise<GameHistoryWithAvatar[]> {
+	return hisotryData;
 }
 
 function generateHistory(history: GameHistoryWithAvatar[], numberDisplay: number): string {
@@ -36,16 +51,9 @@ async function loadHistory(): Promise<void> {
 
 	setActiveBtn('btn-history');
 
-	const body: UserBody = { user: currentUser.username };
-	const reply = await sendPostRequestToBack('/api/user/history', JSON.stringify(body));
-	if (!isRequestSuccessfull(reply))
-		return;
-
-	const data: GameHistoryWithAvatar[] = JSON.parse(reply.content);
-
 	const elem = getSafeElement('profile-content', HTMLElement);
-	elem.innerHTML = getHistoryTable(data);
+	elem.innerHTML = getHistoryTable(hisotryData);
 
 }
 
-export { loadHistory, generateHistory };
+export { loadHistory, generateHistory, fetchHistoryData, getHistoryData };
