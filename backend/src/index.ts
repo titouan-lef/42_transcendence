@@ -18,6 +18,7 @@ import { manageOnlineStatus } from "./user_management/online_status.js";
 import { getHistory } from "./user_management/history.js";
 import { getSeasonStats } from "./tournament/seasons.js";
 import { ThemeBody, UserBody } from "#shared/HTTP.js";
+import { matchmaking } from "./tournament/matchmaking/matchmaking.js";
 
 const APP = fastify();
 
@@ -93,6 +94,7 @@ APP.register(() => {
 async function start(): Promise<void> {
 	try {
 		console.log(`Backend running !`);
+		matchmaking();
 		await initDB(); // initialize DB before server
 		await APP.listen({ port: 3000, host: "0.0.0.0" });
 	} catch (err) {

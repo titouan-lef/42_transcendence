@@ -2,13 +2,13 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { WebSocket } from "ws";
 import { doesUserExist } from "../../database/user.js";
 import { identifyUser, UserIdentity } from "../../security/JWT.js";
-import { addPlayerToMatchmakingSystem, askMatchmakingSystem, isUserWaiting, removePlayerFromMatchmakingSystem } from "../../tournament/matchmaking.js";
+import { addPlayerToMatchmakingSystem, searchPlayerMatch, isUserWaiting, removePlayerFromMatchmakingSystem } from "../../tournament/matchmaking/matchmaking.js";
 import { sendReply } from "../../utils/HTTP.js";
-import { wait } from "../../utils/time.js";
 import { GameOptions } from "../settings/GameSettings.js";
 import { GameType, getGameOptions, identifyGame, registerGameOptions } from "../game_manager.js";
-import { Errors, Success } from "#shared/status_codes.js";
+import { Success } from "#shared/status_codes.js";
 import { GUEST_NAME } from "../../user_management/create_account.js";
+import { wait } from "../../utils/time.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -50,17 +50,17 @@ interface GameParams {
 }
 
 async function waitForGame(socket: WebSocket, req: FastifyRequest): Promise<void> {
-	const id = await verifyAuthWS(socket, req);
-	if (!id) {
+	const playerId = await verifyAuthWS(socket, req);
+	if (!playerId) {
 		socket.close(1003, "You are not connected");
 		return;
 	}
-	if (isUserWaiting(id)) {
+	if (isUserWaiting(playerId)) {
 		socket.close(1003, "You are already looking for a game");
 		return;
 	}
-	console.log(`${id} is wating for a game`);
-	socket.on("message", (message: Buffer) => {
+	console.log(`${playerId} is wating for a game`);
+	socket.on("message", async (message: Buffer) => {
 		let options: GameOptions;
 		try {
 			options = JSON.parse(message.toString());
@@ -68,14 +68,17 @@ async function waitForGame(socket: WebSocket, req: FastifyRequest): Promise<void
 			socket.close(1003, "Invalid game options");
 			return;
 		}
-		addPlayerToMatchmakingSystem(id, options); // might change with you maktchmaking
-		/** @todo keep the socket in memory and once a game is found
-		 * -> socket.send(JSON.stringify({ id: id })); avec id l'id de la game trouvé
-		 * -> socket.close(1000, "Game found"));
-		 */
+		addPlayerToMatchmakingSystem(playerId, options);
+		let gameId = -1;
+		while (gameId < 0) {
+			gameId = searchPlayerMatch(playerId);
+			await wait(1000); /** @todo adapt 1000 with good value (or add a if when match find) */
+		}
+		socket.send(JSON.stringify({ id: gameId }));
+		socket.close(1000, "Game found");
 	});
 	startHeartbeat(socket);
-	socket.on("close", () => removePlayerFromMatchmakingSystem(id)); // function might change with you maktchmaking
+	socket.on("close", () => removePlayerFromMatchmakingSystem(playerId));
 }
 
 async function verifyAuthWS(socket: WebSocket, req: FastifyRequest): Promise<string | null> {
