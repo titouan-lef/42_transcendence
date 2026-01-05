@@ -28,7 +28,7 @@ class SceneManager {
 
 	constructor(scene: babylon.Scene, camera: babylon.ArcRotateCamera, settings: PointSettings) {
 		this.scene = scene;
-		this.score = new Score(scene, camera);
+		this.score = new Score(scene, camera, settings.player2.socket ? true : false);
 		this.environnementManager = new EnvironmentManager();
 		this.createTextures(scene);
 		this.particleManager = new ParticleManager(this.textures);
