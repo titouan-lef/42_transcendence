@@ -49,10 +49,6 @@ function getSummaryTable(history: GameHistoryWithAvatar[], data: UserDashboardIn
 }
 
 async function loadSummary(): Promise<void> {
-	const currentUser: InfoList | null = getCurrentUserInfos();
-	if (!currentUser)
-		return;
-
 	setActiveBtn('btn-summary');
 
 	const dataHist = await getHistoryData();

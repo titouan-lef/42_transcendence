@@ -24,8 +24,4 @@ function goBackToCurrentPage(): void {
 	document.dispatchEvent(new Event('currentPage'));
 }
 
-function goBackToHomeAfterLogOut(): void {
-	document.dispatchEvent(new Event('logout'));
-}
-
-export { NavigateEvent, navigateTo, goBack, goBackToCurrentPage, goBackToHomeAfterLogOut };
+export { NavigateEvent, navigateTo, goBack, goBackToCurrentPage };

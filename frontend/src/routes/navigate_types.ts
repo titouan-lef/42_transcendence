@@ -69,7 +69,7 @@ function getAssociatedPage(modal: Modals): Pages {
 }
 
 function needToBeConnected(nav: Navigation): boolean {
-	if (isPage(nav) && nav >= Pages.PROFILE)
+	if (isPage(nav) && nav > Pages.PROFILE)
 		return true;
 	if (isModal(nav) && nav >= Modals.EMAIL_CONF)
 		return true;
@@ -77,8 +77,6 @@ function needToBeConnected(nav: Navigation): boolean {
 }
 
 function needToRejectGuest(nav: Navigation): boolean {
-	if (nav === Pages.PROFILE)
-		return true;
 	if (nav === Modals.EMAIL_CONF || nav === Modals.ADD_FRIEND)
 		return true;
 	return false;
