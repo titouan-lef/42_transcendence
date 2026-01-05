@@ -56,9 +56,11 @@ function generateLeaderboardRows(ranking: Ranking[]): string {
 
 async function updateLeaderboardData(): Promise<void> {
 	const filter = getSafeElement('filter', HTMLSelectElement);
+
 	let targetSeason = Number(filter.value);
 	if (!targetSeason)
 		targetSeason = 0;
+
 	const reply = await sendGetRequestToBack(`/api/season/${targetSeason}`);
 	if (!isRequestSuccessfull(reply))
 		return;

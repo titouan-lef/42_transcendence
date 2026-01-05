@@ -2,6 +2,7 @@ import { parseUnits, Contract, JsonRpcProvider, Wallet, TransactionResponse } fr
 import { ABI } from "./EloStorageAbi.js";
 import * as dotenv from 'dotenv';
 import { Elo } from '../../tournament/elo/elo.js';
+import { getSeasonLastGame } from '../game.js';
 
 dotenv.config();
 
@@ -52,6 +53,14 @@ async function sendTransactionSafe(contractCall: (...args: unknown[]) => Promise
 	await transactionLock; 
 }
 
+async function resetEloStorage(): Promise<void> {
+	await sendTransactionSafe(
+		CONTRACT.resetAll.bind(CONTRACT),
+		[]
+	);
+}
+
+
 async function setElo(username: string, season: number, elo: Elo): Promise<void> {
 	const scaledRatingDeviation = parseUnits(elo.rd.toString(), DECIMALS_COUNT);
 	await sendTransactionSafe(
@@ -75,7 +84,12 @@ async function setRatingDeviation(username: string, season: number, ratingDeviat
 	);
 }
 
-async function getElo(username: string, season: number): Promise<Elo> { /** @todo if no season given get the last one */
+async function getElo(username: string, season?: number): Promise<Elo> {
+	if (!season) {
+		season = await getSeasonLastGame(username);
+		if (!season)
+			return ({ r: 0, rd: 0 });
+	}
 	const [scaleRating, scaledRatingDeviation]: [bigint, bigint] = await CONTRACT.getEloData(username, season);
 	const unscaledRating = Number(scaleRating);
 	const unscaledRatingDeviation = Number(scaledRatingDeviation) / DECIMALS;
@@ -86,8 +100,17 @@ async function getElo(username: string, season: number): Promise<Elo> { /** @tod
 	return elo;
 }
 
+async function getAllEloBySeason(usernames: string[], season: number): Promise<number[]> {
+	const allElo: bigint[] = await CONTRACT.getAllEloDataBySeason(usernames, season);
+	const allEloInNumber: number[] = [];
+	for(const elo of allElo) {
+		allEloInNumber.push(Number(elo));
+	}
+	return (allEloInNumber);
+}
+
 function eloIsDefine(elo: Elo): boolean {
 	return (elo.r >= 1);
 }
 
-export { setElo, setRating, setRatingDeviation, getElo, eloIsDefine };
+export { setElo, setRating, setRatingDeviation, getElo, eloIsDefine, resetEloStorage, getAllEloBySeason };

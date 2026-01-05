@@ -13,6 +13,7 @@ import { createEloTable } from "./elo.js";
 import { createGoalTable } from "./goal.js";
 import { createGameRuleTable } from "./game_rule.js";
 import { createPlacementTable } from "./placement.js";
+import { resetEloStorage } from "./web3/contract_service.js";
 
 const DB_FILE = "Database.db";
 const DB_PATH_FILE = "/app/backups/" + DB_FILE;
@@ -58,7 +59,9 @@ async function seasonManagement(): Promise<void> {
 
 async function initDB(): Promise<void> {
 	if (!databaseExist()) {
-		/** @todo clear elos on blockchain but only in PROD !! */
+		// Clear DB on chain.
+		if (process.env.MODE === "prod")
+			await resetEloStorage();
 		// No foreign key.
 		await createSeasonTable();
 		await initRuleTable();

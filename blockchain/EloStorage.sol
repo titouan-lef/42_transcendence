@@ -3,6 +3,8 @@ pragma solidity 0.8.30;
 
 contract EloStorage {
 	address public owner;
+
+	uint256 public currentVersion = 1;
 	
 	constructor() {
 		owner = msg.sender;
@@ -18,6 +20,9 @@ contract EloStorage {
 		uint256 rd;
 	}
 
+	//Map: Version => Player => Season => EloData
+	mapping(uint256 => mapping(uint256 => mapping(uint256 => EloData))) private playerEloBySeason;
+
 	event EloUpdated(
 		uint256 indexed playerId,
 		uint256 indexed season,
@@ -25,17 +30,19 @@ contract EloStorage {
 		uint256 newRatingDeviation
 	);
 
-	mapping(uint256 => mapping(uint256 => EloData)) private playerEloBySeason;
-
 	function usernameToId(string memory username) internal pure returns (uint256) {
 		return uint256(keccak256(abi.encodePacked(username)));
+	}
+
+	function resetAll() public onlyOwner {
+		currentVersion++;
 	}
 
 	function setEloData(string memory username, uint256 season, uint256 rating, uint256 ratingDeviation) public onlyOwner {
 
 		uint256 IdPlayer = usernameToId(username);
 
-		EloData storage eloPlayer = playerEloBySeason[IdPlayer][season];
+		EloData storage eloPlayer = playerEloBySeason[currentVersion][IdPlayer][season];
 		eloPlayer.r = rating;
 		eloPlayer.rd = ratingDeviation;
 
@@ -46,9 +53,9 @@ contract EloStorage {
 
 		uint256 IdPlayer = usernameToId(username);
 
-		(playerEloBySeason[IdPlayer][season]).rd = ratingDeviation;
+		(playerEloBySeason[currentVersion][IdPlayer][season]).rd = ratingDeviation;
 
-		EloData storage eloPlayer = playerEloBySeason[IdPlayer][season];
+		EloData storage eloPlayer = playerEloBySeason[currentVersion][IdPlayer][season];
 
 		emit EloUpdated(IdPlayer, season, eloPlayer.r, eloPlayer.rd);
 	}
@@ -56,9 +63,9 @@ contract EloStorage {
 	function setRating(string memory username, uint256 season, uint256 rating) public onlyOwner {
 		uint256 IdPlayer = usernameToId(username);
 
-		(playerEloBySeason[IdPlayer][season]).r = rating;
+		(playerEloBySeason[currentVersion][IdPlayer][season]).r = rating;
 
-		EloData storage eloPlayer = playerEloBySeason[IdPlayer][season];
+		EloData storage eloPlayer = playerEloBySeason[currentVersion][IdPlayer][season];
 
 		emit EloUpdated(IdPlayer, season, eloPlayer.r, eloPlayer.rd);
 	}
@@ -67,8 +74,20 @@ contract EloStorage {
 
 		uint256 IdPlayer = usernameToId(username);
 
-		EloData storage eloPlayer = playerEloBySeason[IdPlayer][season];
+		EloData storage eloPlayer = playerEloBySeason[currentVersion][IdPlayer][season];
 
 		return (eloPlayer.r, eloPlayer.rd);
+	}
+
+	function getAllEloDataBySeason(string[] memory usernames, uint256 season) public view returns (uint256[] memory) {
+
+		uint256[] memory elos = new uint256[](usernames.length);
+
+		for (uint256 i = 0; i < usernames.length; i++) {
+			uint256 id = usernameToId(usernames[i]);
+			elos[i]= (playerEloBySeason[currentVersion][id][season]).r;
+		}
+
+		return (elos);
 	}
 }
