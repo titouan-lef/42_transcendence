@@ -63,28 +63,6 @@ enum ProfileTab {
 let currentTab: ProfileTab = ProfileTab.SUMMARY;
 let userProfile: string;
 
-function loadTab(tab?: ProfileTab): void {
-	if (!tab)
-		tab = currentTab;
-	switch (tab) {
-		case (ProfileTab.SUMMARY):
-			loadSummary();
-			break;
-		case (ProfileTab.HISTORY):
-			loadHistory();
-			break;
-		case (ProfileTab.DASHBOARD):
-			loadDashboard(userProfile);
-			break;
-		case (ProfileTab.SETTINGS):
-			if (isUserConnected())
-				loadSettings();
-			break;
-		default:
-			throw new Error("No such profile tab");
-	}
-}
-
 async function openProfile(user: string): Promise<void> {
 	const drawer = getSafeElement("modal", HTMLDialogElement);
 	drawer.close();
@@ -115,10 +93,26 @@ async function openProfile(user: string): Promise<void> {
 	initProfileEvents();
 }
 
-function changeTab(tab: ProfileTab): void {
-	if (getCurrentUserInfos()?.username === userProfile) // save the tab only for my profile
-		currentTab = tab;
-	loadTab(tab);
+function loadTab(tab?: ProfileTab): void {
+	if (!tab)
+		tab = currentTab;
+	switch (tab) {
+		case (ProfileTab.SUMMARY):
+			loadSummary();
+			break;
+		case (ProfileTab.HISTORY):
+			loadHistory();
+			break;
+		case (ProfileTab.DASHBOARD):
+			loadDashboard(userProfile);
+			break;
+		case (ProfileTab.SETTINGS):
+			if (isUserConnected())
+				loadSettings();
+			break;
+		default:
+			throw new Error("No such profile tab");
+	}
 }
 
 function initProfileEvents(): void {
@@ -152,6 +146,12 @@ function initProfileEvents(): void {
 	document.addEventListener("history", () => {
 		changeTab(ProfileTab.HISTORY);
 	});
+}
+
+function changeTab(tab: ProfileTab): void {
+	if (getCurrentUserInfos()?.username === userProfile) // save the tab only for my profile
+		currentTab = tab;
+	loadTab(tab);
 }
 
 function loadProfilePage(): void {

@@ -5,6 +5,11 @@ interface Friendship {
 	friendName: string;
 }
 
+interface FriendWithNickname {
+	username: string;
+	nickname: string;
+}
+
 const TABLE_NAME = "Friendship";
 
 async function createFriendshipTable(): Promise<void> {
@@ -44,11 +49,6 @@ async function getAllFriendship(): Promise<Friendship[] | undefined> {
 	return await fetchAll(TABLE_NAME);
 }
 
-interface FriendWithNickname {
-	username: string;
-	nickname: string;
-}
-
 async function getFriendships(username: string): Promise<FriendWithNickname[]> {
 	const rows = await applyQuery(
 		async (db) =>
@@ -69,7 +69,6 @@ async function getFriendships(username: string): Promise<FriendWithNickname[]> {
 		return [];
 	return rows;
 }
-
 
 async function removeFriendship(username: string, friendName: string): Promise<void> {
 	await applyQuery(
