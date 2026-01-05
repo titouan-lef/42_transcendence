@@ -34,7 +34,7 @@ async function sendCancelQueue(): Promise<void> {
 function manageParticularPages(page: Pages): void {
 	if (currentPage !== Pages.HOME && (page === Pages.GAME_OPTIONS || page === Pages.GAME_SELECTION)) // Assure GAME_OPTIONS and GAME_SELECTION got HOME in the back
 		pageSelector(Pages.HOME);
-	if (page === Pages.PROFILE && currentPage && !isModularPage(currentPage) && currentPage !== Pages.PROFILE)
+	if (page === Pages.PROFILE && currentPage && !isModularPage(currentPage) && currentPage !== Pages.PROFILE) // Assure PROFILE got modular page in the back (does not reload HOME if current page is already PROFILE)
 		pageSelector(Pages.HOME);
 }
 

@@ -52,5 +52,4 @@ async function getDrawerHeader(ownProfile: boolean, user: string): Promise<strin
 	`;
 }
 
-
 export { getDrawerHeader };
