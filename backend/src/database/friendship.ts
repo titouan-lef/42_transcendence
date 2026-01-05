@@ -44,20 +44,32 @@ async function getAllFriendship(): Promise<Friendship[] | undefined> {
 	return await fetchAll(TABLE_NAME);
 }
 
-async function getFriendships(username: string): Promise<string[] | undefined> {
+interface FriendWithNickname {
+	username: string;
+	nickname: string;
+}
+
+async function getFriendships(username: string): Promise<FriendWithNickname[]> {
 	const rows = await applyQuery(
-		async (db) => await db.all(
-			`SELECT friendName
-			FROM ${TABLE_NAME}
-			WHERE username = ?
-			ORDER BY friendName ASC`,
-			[username]
-		), "get" + TABLE_NAME
+		async (db) =>
+			db.all<FriendWithNickname[]>(
+				`SELECT
+					f.friendName AS username,
+					u.nickname
+				FROM ${TABLE_NAME} AS f
+				JOIN User AS u
+					ON u.username = f.friendName
+				WHERE f.username = ?
+				ORDER BY f.friendName ASC`,
+				[username]
+			),
+		"get" + TABLE_NAME
 	);
 	if (!rows)
-		return undefined;
-	return rows.map(row => row.friendName);
+		return [];
+	return rows;
 }
+
 
 async function removeFriendship(username: string, friendName: string): Promise<void> {
 	await applyQuery(
@@ -70,4 +82,4 @@ async function removeFriendship(username: string, friendName: string): Promise<v
 	);
 }
 
-export { Friendship, createFriendshipTable, getFriendships, isFriendWith, addFriendship, removeFriendship };
+export { Friendship, FriendWithNickname, createFriendshipTable, getFriendships, isFriendWith, addFriendship, removeFriendship };
