@@ -10,7 +10,7 @@ services:
       - transcendence
     volumes:
     - ./shared:/app/shared
-    - ./backups:/app/backend/backups
+    - ./backups:/app/backups
     restart: "on-failure"
 
   frontend:
