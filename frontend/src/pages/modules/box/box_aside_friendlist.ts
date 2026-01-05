@@ -4,6 +4,8 @@ import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/a
 import { applyColor } from "../../../utils/applyColor";
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { Friend, UserBody } from "#shared/HTTP";
+import { navigateTo } from "src/routes/navigate";
+import { Pages } from "src/routes/navigate_types";
 
 const FRIENDLIST = new Set<Friend>(); ;
 
@@ -83,7 +85,6 @@ async function updateFriendList(): Promise<void> {
 				</summary>
 				<div class="${DEPLOYED_STYLE}">
 					${createButtonHtml(["profile"], `btn-profile-${friend.username}`, { "class": `${BTN_STYLE}` })}
-					${createButtonHtml(["invite"], `btn-invite-${friend.username}`, { "class": `${BTN_STYLE}` })}
 					<hr class="${SEPARATOR_STYLE}">
 					${createButtonHtml(["delete"], `btn-delete-${friend.username}`, { "class": `${BTN_DELETE_STYLE}` })}
 				</div>
@@ -99,14 +100,6 @@ function closeAllDetails(): void {
 		if (elem.open)
 			elem.open = false;
 	});
-}
-
-function openProfile(): void {
-	console.log('profile openned');
-}
-
-function inviteFriend(): void { /** @todo we might not do it */
-	console.log('friend invited');
 }
 
 async function deleteFriend(friend: string): Promise<void> {
@@ -125,10 +118,7 @@ function friendsHandler(): void {
 					elem.addEventListener('click', closeAllDetails);
 					break;
 				case `btn-profile-${friend.username}`:
-					elem.addEventListener('click', openProfile);
-					break;
-				case `btn-invite-${friend.username}`:
-					elem.addEventListener('click', inviteFriend);
+					elem.addEventListener('click', () => navigateTo(Pages.PROFILE, friend.username));
 					break;
 				case `btn-delete-${friend.username}`:
 					elem.addEventListener('click', () => deleteFriend(friend.username));

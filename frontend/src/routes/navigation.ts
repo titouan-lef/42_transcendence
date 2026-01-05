@@ -14,11 +14,13 @@ import { getCurrentUserInfos, isGuest } from "../services/user_management/user_s
 import { openDialog2FA, openDialogEmail } from "../pages/modules/dialog/dialog_2FA.js";
 import { openDialogGameQuit } from "../pages/modules/dialog/dialog_game_quit.js";
 import { isRequestSuccessfull, sendGetRequestToBack } from "../services/api_request.js";
-import { openMainHome } from "../pages/modules/box/box_main_home.js";
+import { loadHomePage, openMainHome } from "../pages/modules/box/box_main_home.js";
 import { openMainDashboard } from "../pages/modules/box/box_main_dashboard.js";
 import { NavigateEvent } from "./navigate.js";
+import { ELEM } from "src/pages/page.js";
 
 let currentPage: Pages | null = null;
+let currentNav: Navigation | null = null;
 
 async function sendCancelQueue(): Promise<void> {
 	const reply = await sendGetRequestToBack("/api/game/cancel_queue");
@@ -40,11 +42,10 @@ function navigationSelector(nav: Navigation, user?: string): boolean {
 		return false;
 	if (isGuest() && needToRejectGuest(nav))
 		return false;
-
-	const currentNav: Navigation = history.state?.nav;
 	if (currentNav === Modals.WAITING)
 		sendCancelQueue();
-
+	if (currentNav === Pages.WELCOME && nav !== Pages.WELCOME)
+		ELEM.removeEventListener('click', loadHomePage); // beurk
 	if (isPage(nav)) {
 		manageParticularPages(nav);
 		pageSelector(nav, user);
@@ -63,7 +64,7 @@ function navigationSelector(nav: Navigation, user?: string): boolean {
 function pageSelector(page: Pages, user?: string): void {
 	if (currentPage === Pages.GAME && page !== Pages.GAME)
 		closeGame();
-	if (isModularPage(page)) /** @todo donot reload modular if already open (carefull with the backawrd from a modal)*/
+	if (isModularPage(page)) /** @todo do not reload modular if already open (carefull with the backawrd from a modal)*/
 		openModularPage();
 	currentPage = page;
 	switch(page) {
@@ -96,8 +97,8 @@ function pageSelector(page: Pages, user?: string): void {
 	}
 }
 
-function modalSelector(page: Modals): void {
-	switch(page) {
+function modalSelector(modal: Modals): void {
+	switch(modal) {
 		// Home
 		case Modals.SIGN_IN:
 			openDialogSignIn();
@@ -128,15 +129,18 @@ function modalSelector(page: Modals): void {
 }
 
 function manageHistoryPushing(nav: Navigation, user?: string): void {
-	const currentNav: Navigation = history.state?.nav;
+	if (currentNav === null)
+		return;
 	if(isModal(nav) && getAssociatedPage(nav) === Pages.GAME) // do not add game modals to hisotry
 		return;
 	if (isModal(currentNav)) {
+		currentNav = nav;
 		history.replaceState({ nav: nav, user: user }, ""); // if last nav is a modal, replace in hiroty instead of add it
 		return;
 	}
-	if (currentNav === nav)
+	if (currentNav === nav && nav !== Pages.PROFILE)
 		return;
+	currentNav = nav;
 	history.pushState({ nav: nav, user: user }, "");
 }
 
@@ -167,6 +171,7 @@ document.addEventListener("logout", () => {
 });
 
 function initPage(nav: Navigation): void {
+	currentNav = nav;
 	history.replaceState({ nav: nav }, ""); // Clears statement to setup back and forward button
 	navigationSelector(nav);
 }
@@ -175,8 +180,12 @@ function initPage(nav: Navigation): void {
  * manage navigation for back and forward button
  */
 window.addEventListener("popstate", (event: PopStateEvent) => {
-	if (event.state?.nav !== undefined)
-		navigationSelector(event.state.nav);
+	const nav = event.state?.nav;
+	const user = event.state?.user;
+
+	if (nav !== undefined)
+		if (navigationSelector(nav, user))
+			currentNav = nav;
 });
 
 export { initPage };

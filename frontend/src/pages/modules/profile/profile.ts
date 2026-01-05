@@ -63,8 +63,10 @@ enum ProfileTab {
 let currentTab: ProfileTab = ProfileTab.SUMMARY;
 let userProfile: string;
 
-function loadTab(): void {
-	switch (currentTab) {
+function loadTab(tab?: ProfileTab): void {
+	if (!tab)
+		tab = currentTab;
+	switch (tab) {
 		case (ProfileTab.SUMMARY):
 			loadSummary();
 			break;
@@ -95,27 +97,30 @@ async function openProfile(user?: string): Promise<void> {
 	userProfile = user;
 	drawer.className = DRAWER_BACKDROP_STYLE;
 	drawer.show();
-	if (getCurrentUserInfos()?.username === userProfile)
+	if (getCurrentUserInfos()?.username === userProfile) {
 		drawer.innerHTML = getDrawerContent(true);
-	else
+		setActiveBtn(`btn-${currentTab}`);
+	} else {
 		drawer.innerHTML = getDrawerContent(false);
-
-	setActiveBtn(`btn-${currentTab}`);
+		setActiveBtn(`btn-summary`);
+	}
 
 	await fetchDashboardData(userProfile);
 	await fetchHistoryData(userProfile);
 
-	if (isUserConnected()) {
+	if (getCurrentUserInfos()?.username === userProfile) {
 		updateFriendList();
 		await getUserInfos();
-	}
-	loadTab();
+		loadTab();
+	} else
+		loadTab(ProfileTab.SUMMARY);
 	initProfileEvents();
 }
 
 function changeTab(tab: ProfileTab): void {
-	currentTab = tab;
-	loadTab();
+	if (getCurrentUserInfos()?.username === userProfile) // save the tab only for my profile
+		currentTab = tab;
+	loadTab(tab);
 }
 
 function initProfileEvents(): void {
@@ -124,7 +129,7 @@ function initProfileEvents(): void {
 	drawer.querySelectorAll('*[id]').forEach(elem => {
 		switch (elem.id) {
 			case 'btn-return':
-				elem.addEventListener('click', goBack);
+				elem.addEventListener('click', () => navigateTo(Pages.HOME)); /** @todo even from leaderboard ?? */
 				break;
 			case 'btn-summary':
 				elem.addEventListener('click', () => changeTab(ProfileTab.SUMMARY));
