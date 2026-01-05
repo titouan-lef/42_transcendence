@@ -11,8 +11,11 @@ block appearance-none w-full
 text-secondary cursor-pointer
 `;
 
-function generateSeasonOptions(maxSeason: number): string {
-	let options = `<option value="all">${createParagraphHtml(['all'], 'p-all')}</option>`;
+function generateSeasonOptions(maxSeason: number, allOption: boolean): string {
+
+	let options = "";
+	if (allOption)
+		options += `<option value="all">${createParagraphHtml(['all'], 'p-all')}</option>`;
 
 	for (let i: number = maxSeason; i >= 1; i--) {
 		const selected = i === maxSeason ? ' selected' : '';
@@ -22,12 +25,12 @@ function generateSeasonOptions(maxSeason: number): string {
 	return options;
 }
 
-function getFilterHtml(maxSeason: number): string {
+function getFilterHtml(maxSeason: number, allOption = false): string {
 	return `
 	<div class="w-[200px] flex flex-row justify-between bg-dark border border-primary hover:border-light
 	px-4 py-2 rounded-2xl">
 		<select id="filter" class="${FILTER_STYLE}">
-			${generateSeasonOptions(maxSeason)}
+		${generateSeasonOptions(maxSeason, allOption)}
 		</select>
 		<div class="pointer-events-none flex items-center text-secondary">
 			${ARROW_SVG}
