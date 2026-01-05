@@ -3,9 +3,7 @@ import { getSafeElement } from "../../../utils/getSafeElement";
 import { closeDialogID, loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
 import { goBack, navigateTo } from "../../../routes/navigate";
-import { Modals, GameTypes } from "../../../routes/navigate_types";
-import { getReplyMessage, isRequestSuccessfull, ReplyFromBack, sendGetRequestToBack, sendPostRequestToBack } from "../../../services/api_request";
-import { Errors } from '#shared/status_codes';
+import { Modals, GameTypes, Pages } from "../../../routes/navigate_types";
 import { getGameOptions } from "../../../game/settings/GameRules";
 import { gamePageEvents } from "../../../pages/events/game_page_event";
 
@@ -18,15 +16,17 @@ overflow-hidden
 `;
 
 /** @todo front */
-const GAME_WAITING = `
-<div class='flex flex-col gap-4'>
-	<p>Waiting for a game...</p>
-	<div class='${GIF_STYLE}'>
-		<img src='${getRandomGifPath()}' alt='waiting GIF' class='w-full h-full object-cover'/>
+function getGameWaiting(): string {
+	return `
+	<div class='flex flex-col gap-4'>
+		<p>Waiting for a game...</p>
+		<div class='${GIF_STYLE}'>
+			<img src='${getRandomGifPath()}' alt='waiting GIF' class='w-full h-full object-cover'/>
+		</div>
+		<button id='btn-cancel' class='${DIALOG_BTN_STYLE}'>cancel</button>
 	</div>
-	<button id='btn-cancel' class='${DIALOG_BTN_STYLE}'>cancel</button>
-</div>
-`;
+	`;
+}
 
 function randomInt(min: number, max: number): number {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -37,48 +37,56 @@ function getRandomGifPath(): string {
 	return path;
 }
 
-async function waitForGame(): Promise<number | null> {
-	let id = -1;
-	let reply: ReplyFromBack;
-	do {
-		reply = await sendGetRequestToBack("/api/game/waiting");
-		if (isRequestSuccessfull(reply))
-			id = Number(reply.content);
-	} while (id < 0 && reply.code !== Errors.NOT_IN_QUEUE);
-	if (id >= 0)
-		return id;
-	return null;
-}
-
-async function askForGame(): Promise<boolean> {
-	const options = getGameOptions(GameTypes.RANKED);
-	const reply = await sendPostRequestToBack("/api/game/ranked_game", JSON.stringify(options));
-	const message = getReplyMessage(reply);
-	if (!isRequestSuccessfull(reply)) {
-		console.log("Error:", message);
-		return false;
-	}
-	return true;
-}
-
 async function gameWaitingHandler(): Promise<void> {
 	const elem = getSafeElement('btn-cancel', HTMLElement);
 	elem.addEventListener('click', goBack);
 
-	if (!await askForGame())
-		return;
-	const id = await waitForGame();
-	if (id === null) { // => queue got canceled
-		/**@todo will pop even if we click outside of the modal, but its fine tbh*/
-		return;
-	}
+	waitForGame();
+}
+
+interface GameFound {
+	id: number;
+}
+
+async function waitForGame(): Promise<void> {
+
+	const ws = new WebSocket(`/api/game/waiting`);
+
+	const options = getGameOptions(GameTypes.RANKED);
+
+	ws.onopen = (): void => {
+		console.log("Looking for a game");
+		ws.send(JSON.stringify(options));
+	};
+
+	ws.onmessage = (event): void => {
+		try {
+			const game: GameFound = JSON.parse(event.data); /** @todo check number ?? */
+			launchGame(game.id);
+		} catch {
+			goBack();
+		} finally {
+			ws.close();
+		}
+	};
+
+	ws.onerror = (err): void => {
+		console.error("WebSocket error:", err);
+	};
+
+	ws.onclose = (event): void => {
+		console.log("Closed:", event.code, event.reason);
+	};
+}
+
+function launchGame(id: number): void {
 	closeDialogID('modal');
 	gamePageEvents();
 	newRankedGame(id);
 }
 
 function openDialogWaiting(): void {
-	loadDialog(GAME_WAITING, gameWaitingHandler);
+	loadDialog(getGameWaiting(), gameWaitingHandler);
 }
 
 function loadDialogWaiting(): void {
