@@ -1,4 +1,3 @@
-import { isUserConnected } from "src/services/user_management/user_state";
 import { createButtonHtml } from "../../../components/button";
 
 const DRAWER_NAV_STYLE = `

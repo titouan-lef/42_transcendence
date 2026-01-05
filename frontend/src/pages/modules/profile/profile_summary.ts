@@ -1,13 +1,11 @@
-import { getCurrentUserInfos, InfoList } from "../../../services/user_management/user_state";
 import { createButtonHtml } from "../../../components/button";
 import { createParagraphHtml } from "../../../components/paragraph";
 import { getSafeElement } from "../../../utils/getSafeElement";
-import { getDashboardData, loadDashboard } from "./profile_dashboard";
+import { getDashboardData } from "./profile_dashboard";
 import { createDashboardCard } from "./profile_dashboard_card";
-import { generateHistory, getHistoryData, loadHistory } from "./profile_history";
+import { generateHistory, getHistoryData } from "./profile_history";
 import { setActiveBtn } from "./profile_navbar";
-import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
-import { GameHistoryWithAvatar, UserBody, UserDashboardInfoBody, UserDashboardInfos } from "#shared/HTTP";
+import { GameHistoryWithAvatar, UserDashboardInfos } from "#shared/HTTP";
 
 const SEE_MORE_BTN_STYLE = `
 w-9/10 h-[30px] bg-dark/30 text-[20px] text-variant bg-grad-l-300 from-primary
@@ -25,7 +23,6 @@ text-[26px] font-bold text-center
 
 /** @todo fetch elo, calculate max of wins for balls and maps */
 function getSummaryTable(history: GameHistoryWithAvatar[], data: UserDashboardInfos): string {
-	console.log(data);
 	return (`
 	<div class="flex flex-col gap-1 h-full pr-[190px]">
 		<div id='sum-dashboard' class="${SECTION_STYLE}">
