@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { GameSettings } from "../settings/GameSettings.js";
-import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, NERF_SPEED_FACTOR, MAX_SPEED, UNSTUCK_TIMER, COLORS3, PLAYER_STUN_DURATION, MIN_SPEED, BUFF_SPEED_INTERVAL, INCREASE_GENERAL_SPEED_FACTOR } from "../settings/values.js";
+import { BALL_DIAMETER, BALL_ANGULAR_FORCE, BALL_ANGULAR_INTERVAL, MAX_SPEED, UNSTUCK_TIMER, COLORS3, PLAYER_STUN_DURATION, MIN_SPEED, BUFF_SPEED_INTERVAL, INCREASE_GENERAL_SPEED_INTERVAL } from "../settings/values.js";
 import { BallOption, EventMessage, ParticlesType, Position, Status } from "#shared/types_transfert.js";
 import { WebSocket } from "ws";
 import { vec3ToPos } from "../utils.js";
@@ -35,7 +35,7 @@ abstract class BallTemplate {
 	protected maxSpeed;
 	private minSpeed;
 	private increaseMaxMinSpeedTimer = 0;
-	protected speedIncreaseFactor = INCREASE_GENERAL_SPEED_FACTOR;
+	protected speedIncreaseFactor = 1;
 
 	constructor(scene: babylon.Scene, type: BallOption, sockets: WebSocket[], settings: GameSettings) {
 		this.mesh = babylon.MeshBuilder.CreateSphere(type + "ball", { diameter: BALL_DIAMETER, segments: 32 }, scene);
@@ -88,12 +88,14 @@ abstract class BallTemplate {
 			this.mesh.position.y = BALL_DIAMETER / 2; // resets ball position.y (only visual but will be sent to front)
 			if (this.gameStopped)
 				return;
-			const growth = scene.metadata.gameSpeed * this.speedIncreaseFactor;
-			this.minSpeed += growth;
-			this.maxSpeed += growth;
+			this.increaseMaxMinSpeedTimer += scene.metadata.gameSpeed * 2;
+			if (this.increaseMaxMinSpeedTimer >= INCREASE_GENERAL_SPEED_INTERVAL) {
+				this.increaseMaxMinSpeedTimer -= INCREASE_GENERAL_SPEED_INTERVAL;
+				this.maxSpeed += this.speedIncreaseFactor;
+				this.minSpeed += this.speedIncreaseFactor;
+			}
 			if (this.particleCooldown > 0)
 				this.particleCooldown--;
-			console.log(`min: ${this.minSpeed},max: ${this.maxSpeed}`);
 			this.unstuckTimer += scene.metadata.gameSpeed;
 			this.applyMovementChanges(scene);
 			this.effectInterval += scene.metadata.gameSpeed;
@@ -241,7 +243,6 @@ abstract class BallTemplate {
 		if (speed > this.maxSpeed) {
 			const clamped = velocity.normalize().scale(this.maxSpeed);
 			body.setLinearVelocity(clamped);
-			body.setLinearDamping(0);
 			return;
 		}
 
@@ -257,8 +258,6 @@ abstract class BallTemplate {
 			}
 			return;
 		}
-
-		body.setLinearDamping(0);
 	}
 
 
