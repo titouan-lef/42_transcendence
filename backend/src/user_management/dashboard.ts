@@ -132,10 +132,12 @@ async function getRatingLastElo(user: string): Promise<number> {
 }
 
 async function getUserDashboardInfosBySeason(user: string, season: number): Promise<UserDashboardInfos> {
+	const nbGamePlayed = await getGamesPlayedCountBySeason(season, user);
+	const nbGamesWins = await getGamesWinsBySeason(season, user);
 	const userInfos: UserDashboardInfos = {
-		gamesPlayed: await getGamesPlayedCountBySeason(season, user),
-		gamesWins: await getGamesWinsBySeason(season, user),
-		gamesLooses: await getGamesLoosesBySeason(season, user),
+		gamesPlayed: nbGamePlayed,
+		gamesWins: nbGamesWins,
+		gamesLooses: nbGamePlayed - nbGamesWins,
 		elo: await getRatingEloBySeason(user, season),
 		goalAverage: await getGoalAverageBySeason(season, user),
 		durationAverage: await getGameTimeAverageBySeason(season, user) ,
@@ -148,10 +150,12 @@ async function getUserDashboardInfosBySeason(user: string, season: number): Prom
 }
 
 async function getUserDashboardInfosGlobal(user: string): Promise<UserDashboardInfos> {
+	const nbGamePlayed = await getGamesPlayedCountGlobal(user);
+	const nbGamesWins = await getGamesWinsGlobal(user);
 	const userInfos: UserDashboardInfos = {
-		gamesPlayed: await getGamesPlayedCountGlobal(user),
-		gamesWins: await getGamesWinsGlobal(user),
-		gamesLooses: await getGamesLoosesGlobal(user),
+		gamesPlayed: nbGamePlayed,
+		gamesWins: nbGamesWins,
+		gamesLooses: nbGamePlayed - nbGamesWins,
 		elo: await getRatingLastElo(user),
 		goalAverage: await getGoalAverageGlobal(user),
 		durationAverage: await getGameTimeAverageGlobal(user) ,
