@@ -89,9 +89,6 @@ async function updateDashboardData(user: string): Promise<void> {
 async function loadDashboard(user: string): Promise<void> {
 	setActiveBtn('btn-dashboard');
 
-	const currentUser: InfoList | null = getCurrentUserInfos();
-	if (!currentUser)
-		return;
 	const reply = await sendGetRequestToBack('/api/season');
 	if (!isRequestSuccessfull(reply))
 		return;
@@ -103,7 +100,6 @@ async function loadDashboard(user: string): Promise<void> {
 	const filter = getSafeElement('filter', HTMLSelectElement);
 	filter.addEventListener('change', () => updateDashboardData(user));
 	loadDashboardData();
-
 }
 
 export { loadDashboard, fetchDashboardData, getDashboardData };

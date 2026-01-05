@@ -32,9 +32,10 @@ async function sendCancelQueue(): Promise<void> {
 }
 
 function manageParticularPages(page: Pages): void {
-	if (currentPage !== Pages.HOME && (page === Pages.GAME_OPTIONS || page === Pages.GAME_SELECTION)) { // Assure GAME_OPTIONS and GAME_SELECTION got HOME in the back
+	if (currentPage !== Pages.HOME && (page === Pages.GAME_OPTIONS || page === Pages.GAME_SELECTION)) // Assure GAME_OPTIONS and GAME_SELECTION got HOME in the back
 		pageSelector(Pages.HOME);
-	}
+	if (page === Pages.PROFILE && currentPage && !isModularPage(currentPage))
+		pageSelector(Pages.HOME);
 }
 
 function navigationSelector(nav: Navigation, user?: string): boolean {
@@ -81,7 +82,8 @@ function pageSelector(page: Pages, user?: string): void {
 			openMainDashboard();
 			break;
 		case Pages.PROFILE:
-			openProfile(user);
+			if (user)
+				openProfile(user);
 			break;
 		case Pages.GAME_SELECTION:
 			openDialogGameSelector();
@@ -165,11 +167,6 @@ document.addEventListener("navigate", (event: Event) => {
 	navigation(nav, user);
 });
 
-document.addEventListener("logout", () => {
-	history.replaceState({}, ""); // prevent any forward in history
-	navigation(Pages.HOME);
-});
-
 function initPage(nav: Navigation): void {
 	currentNav = nav;
 	history.replaceState({ nav: nav }, ""); // Clears statement to setup back and forward button
@@ -183,6 +180,7 @@ window.addEventListener("popstate", (event: PopStateEvent) => {
 	const nav = event.state?.nav;
 	const user = event.state?.user;
 
+	console.log("pop", nav, user);
 	if (nav !== undefined)
 		if (navigationSelector(nav, user))
 			currentNav = nav;

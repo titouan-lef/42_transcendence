@@ -45,15 +45,10 @@ function generateHistory(history: GameHistoryWithAvatar[], numberDisplay: number
 }
 
 async function loadHistory(): Promise<void> {
-	const currentUser: InfoList | null = getCurrentUserInfos();
-	if (!currentUser)
-		return;
-
 	setActiveBtn('btn-history');
 
 	const elem = getSafeElement('profile-content', HTMLElement);
 	elem.innerHTML = getHistoryTable(hisotryData);
-
 }
 
 export { loadHistory, generateHistory, fetchHistoryData, getHistoryData };

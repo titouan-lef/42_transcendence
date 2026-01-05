@@ -85,13 +85,11 @@ function loadTab(tab?: ProfileTab): void {
 	}
 }
 
-async function openProfile(user?: string): Promise<void> {
+async function openProfile(user: string): Promise<void> {
 	const drawer = getSafeElement("modal", HTMLDialogElement);
 	drawer.close();
 
-	if (!user)
-		user = getCurrentUserInfos()?.username;
-	if (!user || user === 'guest')
+	if (user === 'guest')
 		return;
 
 	userProfile = user;
@@ -157,7 +155,10 @@ function initProfileEvents(): void {
 }
 
 function loadProfilePage(): void {
-	navigateTo(Pages.PROFILE);
+	const user = getCurrentUserInfos()?.username;
+	if (!user)
+		return;
+	navigateTo(Pages.PROFILE, user);
 }
 
 export { loadProfilePage, openProfile };
