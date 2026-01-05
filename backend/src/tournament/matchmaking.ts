@@ -13,43 +13,12 @@ function isUserWaiting(user: string) : boolean {
 	return WAITING_PLAYERS.has(user) || MATCHS.has(user);
 }
 
-async function addPlayerToMatchmakingSystem(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
-	const user = req.user;
-	const options: GameOptions = req.body;
-	if (!user || !options)
-		return;
-
-	let id: string = user;
-	if (user === GUEST_NAME)
-		id = String(req.guestId);
-	if (!id)
-		return;
-
-	if (isUserWaiting(id)) {
-		sendReply(reply, Errors.ALREADY_IN_QUEUE);
-		return;
-	}
+function addPlayerToMatchmakingSystem(id: string, options: GameOptions): void {
 	WAITING_PLAYERS.set(id, options);
-	sendReply(reply, Success.ADDED_TO_QUEUE);
 }
 
-async function removePlayerFromMatchmakingSystem(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-	const user = req.user;
-	if (!user)
-		return;
-
-	let id: string = user;
-	if (user === GUEST_NAME)
-		id = String(req.guestId);
-	if (!id)
-		return;
-
-	if (!isUserWaiting(id)) {
-		sendReply(reply, Errors.NOT_IN_QUEUE);
-		return;
-	}
+function removePlayerFromMatchmakingSystem(id: string): void {
 	WAITING_PLAYERS.delete(id);
-	sendReply(reply, Success.REMOVED_FROM_QUEUE);
 }
 
 function getRandomOptions(player1Options: GameOptions, player2Options: GameOptions): GameOptions {

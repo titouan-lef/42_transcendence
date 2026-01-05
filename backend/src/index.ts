@@ -7,8 +7,7 @@ import fastifyStatic from "@fastify/static";
 import { initDB } from "./database/init.js";
 import { addNewUser, UpdateUserBody, updateUserInfos } from "./user_management/create_account.js";
 import { connectUser, disconnectUser, changePicture, changeTheme } from "./user_management/connect_user.js";
-import { isGameFound, newAIGame, newGame, newLocalGame } from "./game/web_sockets/connection.js";
-import { addPlayerToMatchmakingSystem, removePlayerFromMatchmakingSystem } from "./tournament/matchmaking.js";
+import { newAIGame, newGame, newLocalGame, waitForGame } from "./game/web_sockets/connection.js";
 import { getFriendList, newFriend, removeFriend } from "./user_management/friends.js";
 import { disable2FA, enable2FA, verify2FA } from "./security/2FA.js";
 import { rejectGuest, verifyAuth } from "./security/JWT.js";
@@ -70,9 +69,6 @@ APP.post<{ Body: UserBody }>("/api/friends/remove", { preHandler: [verifyAuth, r
 // --- Games ---
 APP.post<{ Body: GameOptions }>("/api/game/local_game", { preHandler: verifyAuth }, newLocalGame);
 APP.post<{ Body: GameOptions }>("/api/game/ai_game", { preHandler: verifyAuth }, newAIGame);
-APP.post<{ Body: GameOptions }>("/api/game/ranked_game", { preHandler: verifyAuth }, addPlayerToMatchmakingSystem);
-APP.get("/api/game/waiting", { preHandler: verifyAuth }, isGameFound);
-APP.get("/api/game/cancel_queue", { preHandler: verifyAuth }, removePlayerFromMatchmakingSystem);
 
 // --- Dashboards ---
 APP.post<{ Body: UserDashboardInfoBody }>("/api/user/dashboard", { preHandler: verifyAuth }, getPlayerStats);
@@ -88,6 +84,7 @@ APP.get("/api/season/:id", getSeasonStats);
  */
 // --- Web Socket route handlers ---
 APP.register(() => {
+	APP.get("/api/game/waiting", { websocket: true }, waitForGame);
 	APP.get('/ws/:id', { websocket: true }, newGame);
 	APP.get('/ws/online', { websocket: true }, manageOnlineStatus);
 });
