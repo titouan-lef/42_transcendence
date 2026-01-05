@@ -1,10 +1,9 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Errors, Success } from "#shared/status_codes.js";
-import { GameHistory, GameHistoryWithAvatar } from "#shared/HTTP.js";
+import { GameHistory, GameHistoryWithAvatar, UserBody } from "#shared/HTTP.js";
 import { sendReply } from "../utils/HTTP.js";
 import { applyQuery } from "../database/db_utils.js";
 import { fileExists } from "./user_infos.js";
-import { UserBody } from "./connect_user.js";
 
 async function getUserHistoryInfos(username: string): Promise<GameHistory[]> {
 	const history: GameHistory[] | undefined = await applyQuery(

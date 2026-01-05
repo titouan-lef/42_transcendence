@@ -7,7 +7,7 @@ import { createDashboardCard } from "./profile_dashboard_card";
 import { generateHistory, loadHistory } from "./profile_history";
 import { setActiveBtn } from "./profile_navbar";
 import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
-import { GameHistoryWithAvatar, UserDashboardInfos } from "#shared/HTTP";
+import { GameHistoryWithAvatar, UserBody, UserDashboardInfoBody, UserDashboardInfos } from "#shared/HTTP";
 
 const SEE_MORE_BTN_STYLE = `
 w-full h-[30px] bg-dark/30 text-[20px] text-variant bg-grad-l-300 from-primary
@@ -55,12 +55,14 @@ async function loadSummary(): Promise<void> {
 
 	setActiveBtn('btn-summary');
 
-	const replyHist = await sendPostRequestToBack('/api/user/history', JSON.stringify({ user: currentUser.username }));
+	const historyBody: UserBody = { user: currentUser.username };
+	const replyHist = await sendPostRequestToBack('/api/user/history', JSON.stringify(historyBody));
 	if (!isRequestSuccessfull(replyHist))
 		return;
 
 	const dataHist: GameHistoryWithAvatar[] = JSON.parse(replyHist.content);
-	const replyDash = await sendPostRequestToBack('/api/user/dashboard', JSON.stringify({ user: currentUser.username, season: -1 }));
+	const dashboardBody: UserDashboardInfoBody = { user: currentUser.username, season: -1 };
+	const replyDash = await sendPostRequestToBack('/api/user/dashboard', JSON.stringify(dashboardBody));
 	if (!isRequestSuccessfull(replyDash))
 		return;
 

@@ -1,4 +1,4 @@
-import { applyQuery, fetchAll } from "./db_utils.js";
+import { applyQuery } from "./db_utils.js";
 
 interface Theme {
 	id: number;

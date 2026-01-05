@@ -1,15 +1,15 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { sendReply } from "../utils/HTTP.js";
-import { isValidPassword } from "../utils/hash_string.js";
-import { getUserPassword, is2FAEnabled, updateTheme } from "../database/user.js";
 import fs from "fs";
 import util from 'util';
 import { pipeline } from 'stream';
+import { sendReply } from "../utils/HTTP.js";
+import { isValidPassword } from "../utils/hash_string.js";
+import { getUserPassword, is2FAEnabled, updateTheme } from "../database/user.js";
 import { request2FA } from "../security/2FA.js";
 import { addAuthCookies, removeAuthCookies } from "../security/JWT.js";
 import { wait } from "../utils/time.js";
 import { Errors, Success } from "#shared/status_codes.js";
-import { NewUserBody } from "#shared/HTTP.js";
+import { NewUserBody, ThemeBody } from "#shared/HTTP.js";
 
 const PUMP = util.promisify(pipeline);
 
@@ -37,10 +37,6 @@ async function disconnectUser(req: FastifyRequest, reply: FastifyReply): Promise
 	sendReply(reply, Success.LOOGED_OUT);
 }
 
-interface UserBody {
-	user?: string;
-}
-
 async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<void> {
 	const user = req.user;
 	if (!user)
@@ -53,10 +49,6 @@ async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<
 	const path = `/app/backups/pictures/${user}`;
 	await PUMP(part.file, fs.createWriteStream(path));
 	sendReply(reply, Success.AVATAR_UPDATED);
-}
-
-interface ThemeBody {
-	theme: string;
 }
 
 async function changeTheme(req: FastifyRequest<{ Body:ThemeBody }>, reply: FastifyReply): Promise<void> {
@@ -72,4 +64,4 @@ async function changeTheme(req: FastifyRequest<{ Body:ThemeBody }>, reply: Fasti
 	sendReply(reply, Success.USER_UPDATED);
 }
 
-export { UserBody, ThemeBody, connectUser, disconnectUser, changePicture, changeTheme };
+export { connectUser, disconnectUser, changePicture, changeTheme };

@@ -6,6 +6,7 @@ import { disabled2FA, enabled2FA, getUserEmail, is2FAEnabled, isEmailDefined, up
 import { addAuthCookies } from "./JWT.js";
 import { wait } from "../utils/time.js";
 import { Errors, Success } from "#shared/status_codes.js";
+import { Content2FA } from "#shared/HTTP.js";
 
 /** https://dev.to/veektor_v/send-emails-using-nodemailer-typescript-4763 */
 
@@ -71,11 +72,6 @@ async function request2FA(user: string, email?: string): Promise<boolean> {
 	}, 10 * 60 * 1000);
 	return true;
 }
-
-interface Content2FA {
-	user: string;
-	code: number;
-};
 
 async function verify2FA(req: FastifyRequest<{ "Body": Content2FA }>, reply: FastifyReply): Promise<void> {
 	const { user, code } = req.body;

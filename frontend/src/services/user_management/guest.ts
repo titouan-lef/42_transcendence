@@ -2,18 +2,13 @@ import { navigateTo } from "../../routes/navigate";
 import { isRequestSuccessfull, printReplyInDiv, sendPostRequestToBack } from "../api_request";
 import { guestConnection } from "./user_state";
 import { Pages } from "../../routes/navigate_types";
-
-interface NewUserBody {
-	username: string;
-	nickname: string;
-	password: string;
-}
+import { NewUserBody } from "#shared/HTTP";
 
 async function guestUser(): Promise<void> {
 
 	const data: NewUserBody = {
 		username: 'guest',
-		nickname: '', // not used
+		nickname: '', //  will not be used
 		password: ''
 	};
 

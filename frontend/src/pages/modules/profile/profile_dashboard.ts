@@ -3,10 +3,10 @@ import { getSafeElement } from "../../../utils/getSafeElement";
 import { setActiveBtn } from "./profile_navbar";
 import { createDashboardCard } from "./profile_dashboard_card";
 import { configureChart, createDashboardChart, createDashboardChartBox } from "./profile_dashboard_chart";
-import { UserDashboardInfos } from "#shared/HTTP";
 import { isRequestSuccessfull, sendGetRequestToBack, sendPostRequestToBack } from "../../../services/api_request";
 import { getCurrentUserInfos, InfoList } from "../../../services/user_management/user_state";
 import { getFilterHtml } from "../../../components/selectionMenu";
+import { UserDashboardInfoBody, UserDashboardInfos } from "#shared/HTTP";
 
 const DASHBOARD_BOX_STYLE = `
 flex flex-col h-full w-full pb-10 pt-4 gap-4
@@ -62,7 +62,8 @@ async function updateDashboardData(): Promise<void> {
 	let targetSeason = Number(filter.value);
 	if (!targetSeason)
 		targetSeason = -1;
-	const reply = await sendPostRequestToBack('/api/user/dashboard', JSON.stringify({ user: currentUser.username, season: targetSeason }));
+	const body: UserDashboardInfoBody = { user: currentUser.username, season: targetSeason };
+	const reply = await sendPostRequestToBack('/api/user/dashboard', JSON.stringify(body));
 	if (!isRequestSuccessfull(reply))
 		return;
 

@@ -1,6 +1,6 @@
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { createHistoryBox } from "./profile_history_box";
-import { GameHistoryWithAvatar } from "#shared/HTTP";
+import { GameHistoryWithAvatar, UserBody } from "#shared/HTTP";
 import { setActiveBtn } from "./profile_navbar";
 import { getCurrentUserInfos, InfoList } from "../../../services/user_management/user_state";
 import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
@@ -36,7 +36,8 @@ async function loadHistory(): Promise<void> {
 
 	setActiveBtn('btn-history');
 
-	const reply = await sendPostRequestToBack('/api/user/history', JSON.stringify({ user: currentUser.username }));
+	const body: UserBody = { user: currentUser.username };
+	const reply = await sendPostRequestToBack('/api/user/history', JSON.stringify(body));
 	if (!isRequestSuccessfull(reply))
 		return;
 

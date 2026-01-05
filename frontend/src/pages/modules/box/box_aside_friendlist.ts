@@ -3,7 +3,7 @@ import { createButtonHtml } from "../../../components/button";
 import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
 import { applyColor } from "../../../utils/applyColor";
 import { getSafeElement } from "../../../utils/getSafeElement";
-import { Friend } from "#shared/HTTP";
+import { Friend, UserBody } from "#shared/HTTP";
 
 const FRIENDLIST = new Set<Friend>(); ;
 
@@ -50,7 +50,8 @@ async function getFriendList(): Promise<void> {
 	if (!currentUser)
 		return;
 	FRIENDLIST.clear();
-	const reply = await sendPostRequestToBack("/api/friends/list", JSON.stringify({ user: currentUser.username }));
+	const body: UserBody = { user: currentUser.username };
+	const reply = await sendPostRequestToBack("/api/friends/list", JSON.stringify(body));
 	if (!isRequestSuccessfull(reply))
 		return;
 	const friendList: Friend[] = JSON.parse(reply.content);
@@ -102,7 +103,8 @@ function inviteFriend(): void { /** @todo we might not do it */
 }
 
 async function deleteFriend(friend: string): Promise<void> {
-	await sendPostRequestToBack('/api/friends/remove', JSON.stringify({ user: friend }));
+	const body: UserBody = { user: friend };
+	await sendPostRequestToBack('/api/friends/remove', JSON.stringify(body));
 	updateFriendList();
 }
 

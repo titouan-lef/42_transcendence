@@ -31,11 +31,6 @@ async function newGameVsAI(): Promise<void> {
 async function newGameSolo(id: number): Promise<void> {
 	const ws = new WebSocket(`ws/${id}`);
 
-	ws.onopen = (): void => {
-		console.log("Connected");
-		ws.send(JSON.stringify({ id: id }));
-	};
-
 	ws.onmessage = (event): void => {
 		const message : DataMessage = JSON.parse(event.data);
 		switch (message.status) {
@@ -71,15 +66,6 @@ async function newLocalGame(): Promise<void> {
 
 	const player1 = new WebSocket(`ws/${id}`);
 	const player2 = new WebSocket(`ws/${id}`);
-
-	player1.onopen = (): void => {
-		console.log("Player 1 connected"); /** @todo remove */
-		player1.send(JSON.stringify({ id: id }));
-	};
-	player2.onopen = (): void => {
-		console.log("Player 2 connected"); /** @todo remove */
-		player2.send(JSON.stringify({ id: id }));
-	};
 
 	player1.onmessage = (event): void => {
 		const message : DataMessage = JSON.parse(event.data);
