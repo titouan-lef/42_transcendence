@@ -77,32 +77,6 @@ async function waitForGame(socket: WebSocket, req: FastifyRequest): Promise<void
 	socket.on("close", () => removePlayerFromMatchmakingSystem(id)); // function might change with you maktchmaking
 }
 
-async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-	let user = req.user;
-	if (user === GUEST_NAME)
-		user = String(req.guestId);
-	if (!user)
-		return;
-	let waited = 0;
-	let id = -1;
-	while (id < 0) {
-		if (waited >= TIMEOUT) {
-			sendReply(reply, Errors.GAME_NOT_FOUND_YET);
-			return;
-		}
-		if (!isUserWaiting(user)) {
-			sendReply(reply, Errors.NOT_IN_QUEUE);
-			return;
-		}
-		id = await askMatchmakingSystem(user);
-		if (id < 0) {
-			await wait(SCAN_DELAY);
-			waited += SCAN_DELAY;
-		}
-	}
-	sendReply(reply, Success.GAME_FOUND, id.toString());
-}
-
 async function verifyAuthWS(socket: WebSocket, req: FastifyRequest): Promise<string | null> {
 	const token = req.cookies?.token;
 	if (!token) {
