@@ -2,13 +2,15 @@ import { getDB } from "./init.js";
 import { Database } from "sqlite";
 
 async function applyQuery<T>(queryFunc: (db: Database) => Promise<T>, errorMsg: string ): Promise<T | undefined> {
-	const db = await getDB();
+	let db: Database | null = null;
 	try {
+		db = await getDB();
 		return await queryFunc(db);
 	} catch (err) {
 		console.error(`Error Database when ${errorMsg} : `, err);
 	} finally {
-		await db.close();
+		if (db)
+			await db.close();
 	}
 }
 

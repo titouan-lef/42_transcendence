@@ -3,7 +3,7 @@
 # ======================
 FROM node:24 AS base
 WORKDIR /app
-RUN mkdir -p ./backend/src
+RUN mkdir -p /app/backups/pictures && chmod -R 775 /app/backups
 COPY package.json eslint.config.js check_and_build.sh check_and_build.dev.sh .
 COPY tsconfig.json ./backend/
 RUN npm install
@@ -13,7 +13,6 @@ COPY src ./backend/src
 # Development
 # ======================
 FROM base AS dev
-RUN mkdir -p ./backups/pictures
 COPY check_and_build.dev.sh .
 ENTRYPOINT ["/app/check_and_build.dev.sh"]
 CMD ["npm", "start"]
