@@ -34,7 +34,7 @@ async function sendCancelQueue(): Promise<void> {
 function manageParticularPages(page: Pages): void {
 	if (currentPage !== Pages.HOME && (page === Pages.GAME_OPTIONS || page === Pages.GAME_SELECTION)) // Assure GAME_OPTIONS and GAME_SELECTION got HOME in the back
 		pageSelector(Pages.HOME);
-	if (page === Pages.PROFILE && currentPage && !isModularPage(currentPage))
+	if (page === Pages.PROFILE && currentPage && !isModularPage(currentPage) && currentPage !== Pages.PROFILE)
 		pageSelector(Pages.HOME);
 }
 
@@ -46,7 +46,7 @@ function navigationSelector(nav: Navigation, user?: string): boolean {
 	if (currentNav === Modals.WAITING)
 		sendCancelQueue();
 	if (currentNav === Pages.WELCOME && nav !== Pages.WELCOME)
-		ELEM.removeEventListener('click', loadHomePage); // beurk
+		ELEM.removeEventListener('click', loadHomePage);
 	if (isPage(nav)) {
 		manageParticularPages(nav);
 		pageSelector(nav, user);

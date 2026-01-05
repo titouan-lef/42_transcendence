@@ -1,7 +1,6 @@
-import { InfoList } from "src/services/user_management/user_state";
 import { capitalizeElementValueHTML } from "../../../components/component_utils";
 import { createParagraph } from "../../../components/paragraph";
-import { isRequestSuccessfull, sendGetRequestToBack, sendPostRequestToBack } from "src/services/api_request";
+import { isRequestSuccessfull, sendPostRequestToBack } from "src/services/api_request";
 
 const TITLE_STYLE = `
 grow font-bold text-[48px]

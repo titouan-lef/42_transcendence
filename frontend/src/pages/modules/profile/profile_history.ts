@@ -2,7 +2,6 @@ import { getSafeElement } from "../../../utils/getSafeElement";
 import { createHistoryBox } from "./profile_history_box";
 import { GameHistoryWithAvatar, UserBody } from "#shared/HTTP";
 import { setActiveBtn } from "./profile_navbar";
-import { getCurrentUserInfos, InfoList } from "../../../services/user_management/user_state";
 import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
 
 let hisotryData: GameHistoryWithAvatar[];

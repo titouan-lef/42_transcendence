@@ -1,10 +1,8 @@
-import { createParagraphHtml } from "../../../components/paragraph";
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { setActiveBtn } from "./profile_navbar";
 import { createDashboardCard } from "./profile_dashboard_card";
 import { configureChart, createDashboardChart, createDashboardChartBox } from "./profile_dashboard_chart";
 import { isRequestSuccessfull, sendGetRequestToBack, sendPostRequestToBack } from "../../../services/api_request";
-import { getCurrentUserInfos, InfoList } from "../../../services/user_management/user_state";
 import { getFilterHtml } from "../../../components/selectionMenu";
 import { UserDashboardInfoBody, UserDashboardInfos } from "#shared/HTTP";
 
