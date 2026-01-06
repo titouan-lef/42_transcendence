@@ -17,7 +17,7 @@ grid grid-rows-1 grid-cols-2 justify-start items-center gap-4 h-full w-full p-4
 `;
 
 const SETTINGS_COL_STYLE = `
-grow w-full h-full flex flex-col justify-between items-start gap-4
+h-full flex flex-col justify-between items-start gap-4 w-full flex-1 min-w-0 overflow-auto scrollbar-none
 `;
 
 const SETTINGS_AVATAR = `
@@ -41,10 +41,8 @@ const SETTINGS = `
 <div class="${SETTINGS_MAIN_STYLE}">
 	<dialog id='modal-settings'></dialog>
 	<div class="${SETTINGS_COL_STYLE}">
-		<div>
-			${SETTINGS_USER_INFOS}
-			${SETTINGS_OPTIONS}
-		</div>
+		${SETTINGS_USER_INFOS}
+		${SETTINGS_OPTIONS}
 	</div>
 	<div class="${SETTINGS_COL_STYLE}">
 		${SETTINGS_THEME_SELECTOR}
