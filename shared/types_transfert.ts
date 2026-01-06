@@ -38,7 +38,9 @@ enum Status {
 interface StartMessage {
 	status: Status.START,
 	playerName: string,
-	enemyName: string
+	playerRating: number,
+	enemyName: string,
+	enemyRating: number
 }
 
 interface Point {

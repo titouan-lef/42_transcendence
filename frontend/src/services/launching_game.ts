@@ -1,8 +1,9 @@
 import { startOrUpdateGame } from "../game/canvas_creation.js";
-import { DataMessage, Status } from "#shared/types_transfert.js";
+import { DataMessage, StartMessage, Status } from "#shared/types_transfert.js";
 import { getReplyMessage, isRequestSuccessfull, sendPostRequestToBack } from "./api_request.js";
 import { getGameOptions } from "../game/settings/GameRules.js";
 import { GameTypes } from "../routes/navigate_types.js";
+import { getSafeElement } from "../utils/getSafeElement.js";
 
 //////////////////////////////////////////
 //			Game management				//
@@ -36,6 +37,9 @@ async function newGameSolo(id: number): Promise<void> {
 		switch (message.status) {
 			case (Status.OPTIONS):
 				startOrUpdateGame(message, ws);
+				break;
+			case (Status.START):
+				loadGameHeader(message);
 				break;
 			default:
 				return;
@@ -73,6 +77,9 @@ async function newLocalGame(): Promise<void> {
 			case (Status.OPTIONS):
 				startOrUpdateGame(message, player1, player2);
 				break;
+			case (Status.START):
+				loadGameHeader(message);
+				break;
 			default:
 				return;
 		}
@@ -91,6 +98,48 @@ async function newLocalGame(): Promise<void> {
 	player2.onclose = (event): void => {
 		console.log("Player 2 closed:", event.code, event.reason);
 	};
+}
+
+
+const GAME_INFOS_STYLE = `
+flex-1 min-w-0
+truncate
+`;
+
+/** @todo get my nickname, opponent's nickname, my elo, oppo elo from back*/
+function loadGameHeader(infos: StartMessage): void {
+
+	const gameType = getSafeElement('game-type', HTMLElement).innerHTML;
+
+	const elem = getSafeElement(`players-infos`, HTMLElement);
+	switch (gameType) {
+		case (GameTypes.LOCAL):
+			elem.innerHTML = `
+			<div class='${GAME_INFOS_STYLE}'>Player 1</div>
+			<div class='${GAME_INFOS_STYLE}'>-</div>
+			<div class='${GAME_INFOS_STYLE}'>Player 2</div>
+			`;
+			break;
+		case (GameTypes.AI):
+			elem.innerHTML = `
+			<div class='${GAME_INFOS_STYLE}'>${infos.playerName}</div>
+			<div class='${GAME_INFOS_STYLE}'>${infos.playerRating}</div>
+			<div class='${GAME_INFOS_STYLE}'>-</div>
+			<div class='${GAME_INFOS_STYLE}'>IA</div>
+			`;
+			break;
+		case (GameTypes.RANKED):
+			elem.innerHTML = `
+			<div class='${GAME_INFOS_STYLE}'>${infos.playerName}</div>
+			<div class='${GAME_INFOS_STYLE}'>${infos.playerRating}</div>
+			<div class='${GAME_INFOS_STYLE}'>-</div>
+			<div class='${GAME_INFOS_STYLE}'>${infos.enemyName}</div>
+			<div class='${GAME_INFOS_STYLE}'>${infos.enemyRating}</div>
+			`;
+			break;
+		default:
+			throw new Error("No such game type.");
+	}	
 }
 
 export { newRankedGame, newLocalGame, newGameVsAI };
