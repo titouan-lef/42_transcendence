@@ -2,7 +2,7 @@ import { applyColor } from "../../../utils/applyColor";
 import { GameHistoryWithAvatar } from "#shared/HTTP";
 
 const HISTORY_BOX_STYLE = `
-flex-1 h-[170px]
+flex-1 min-h-[120px] max-h-[120px]
 p-4 w-full rounded-2xl
 flex flex-row gap-4 justify-between
 font-jbm text-3xl text-variant
