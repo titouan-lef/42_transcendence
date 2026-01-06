@@ -15,6 +15,8 @@ h-[150px]
 overflow-hidden
 `;
 
+let ws: WebSocket | null = null;
+
 /** @todo front */
 function getGameWaiting(): string {
 	return `
@@ -48,15 +50,20 @@ interface GameFound {
 	id: number;
 }
 
+async function cancelQueue(): Promise<void> {
+	ws?.close();
+	ws = null;
+}
+
 async function waitForGame(): Promise<void> {
 
-	const ws = new WebSocket(`/api/game/waiting`);
+	ws = new WebSocket(`/ws/waiting`);
 
 	const options = getGameOptions(GameTypes.RANKED);
 
 	ws.onopen = (): void => {
 		console.log("Looking for a game");
-		ws.send(JSON.stringify(options));
+		ws?.send(JSON.stringify(options));
 	};
 
 	ws.onmessage = (event): void => {
@@ -66,7 +73,7 @@ async function waitForGame(): Promise<void> {
 		} catch {
 			goBack();
 		} finally {
-			ws.close();
+			ws?.close();
 		}
 	};
 
@@ -93,4 +100,4 @@ function loadDialogWaiting(): void {
 	navigateTo(Modals.WAITING);
 }
 
-export { openDialogWaiting, loadDialogWaiting };
+export { openDialogWaiting, loadDialogWaiting, cancelQueue };
