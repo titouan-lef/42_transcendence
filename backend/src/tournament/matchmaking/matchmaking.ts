@@ -1,17 +1,15 @@
 import { Elo, getRatings } from "../elo/elo.js";
 import { updateDataAllPlayer, defineEloDistance } from "./update_player_data.js";
 import { getMatchingPairTab } from "./pair_managment.js";
-import { fillMatchMap } from "./match_managment.js";
+import { findMatch } from "./match_managment.js";
 import { GameOptions } from "../../game/settings/GameSettings.js";
 import { getElo } from "../../database/web3/contract_service.js";
 import { getCurrentSeason } from "../../database/season.js";
 import { wait } from "../../utils/time.js";
-import { FastifyRequest, FastifyReply } from "fastify";
-import { sendReply } from "../../utils/HTTP.js";
-import { Success, Errors } from "#shared/status_codes.js";
-import { GUEST_NAME } from "../../user_management/create_account.js";
+import { WebSocket } from "ws";
 
 interface PlayerData {
+	socket: WebSocket;
 	username: string;
 	elo: Elo;
 	option: GameOptions;
@@ -41,26 +39,11 @@ interface Pair {
 	matchingScore: number;
 };
 
-interface Match {
-	usernameP1: string;
-	usernameP2: string;
-	playerConnected: number;
-};
-
 /** List of players who are not yet in the queue. */
 const NEW_PLAYER_LIST: PlayerData[] = [];
 
 /** List of players in the queue. */
 const WAITING_PLAYER_LIST: WaitingPlayer[] = [];
-
-/** List of match ready to start. */
-const MATCH_MAP = new Map<number, Match>();
-
-/** 
- * @todo
- * gérer le cas ou le joueur refresh la page et se réinscris à la file du matchmaking
- * ou s'il refresh et attend sur une autre page.
- */
 
 /**
  * Manage matchmaking.
@@ -70,9 +53,10 @@ async function matchmaking(): Promise<void> {
 	while (true) {
 		transferNewPlayersInQueue();
 		updateDataAllPlayer(WAITING_PLAYER_LIST);
+		removeDisconnectedPlayer();
 		sortWaitingPlayerByRatings();
 		const matchingPairTab: Pair[] = getMatchingPairTab(WAITING_PLAYER_LIST);
-		fillMatchMap(WAITING_PLAYER_LIST, MATCH_MAP, matchingPairTab);
+		findMatch(WAITING_PLAYER_LIST, matchingPairTab);
 		await wait(100);/** @todo adapt the 100 */
 		//console.log(NEW_PLAYER_LIST);
 		//console.log(WAITING_PLAYER_LIST);
@@ -92,38 +76,27 @@ function transferNewPlayersInQueue(): void {
 	}
 }
 
+function removeDisconnectedPlayer(): void {
+	for (let i = WAITING_PLAYER_LIST.length - 1; i >= 0; --i) {
+		if (WAITING_PLAYER_LIST[i].player.socket.readyState === WebSocket.CLOSED) {
+			console.log(`${WAITING_PLAYER_LIST[i].player.username} removed of waiting list`);
+			WAITING_PLAYER_LIST.splice(i, 1);
+		}
+	}
+}
+
 function sortWaitingPlayerByRatings(): void {
 	WAITING_PLAYER_LIST.sort((playerA, playerB) => playerA.player.elo.r - playerB.player.elo.r);
 }
 
-async function addPlayerToMatchmakingSystem(username: string, option: GameOptions): Promise<void> {
-	await addNewPlayerInMatchmaking(username, option);
-}
-
-function isUserWaiting(username: string) : boolean {
-	const findPlayerData = NEW_PLAYER_LIST.find((playerData) => playerData.username === username);
-	if (findPlayerData)
-		return true;
-	const findWaitingPlayer = WAITING_PLAYER_LIST.find((waitingPlayer) => waitingPlayer.player.username === username);
-	if (findWaitingPlayer)
-		return true;
-	let findMatch = false;
-	MATCH_MAP.forEach((match) => {
-		if (match.usernameP1 === username || match.usernameP2 === username) {
-			findMatch = true;
-			return;
-		}
-	});
-	return findMatch;
-}
-
-async function addNewPlayerInMatchmaking(username: string, option: GameOptions): Promise<void> {
+async function addPlayerToMatchmakingSystem(socket: WebSocket, username: string, option: GameOptions): Promise<void> {
 	const currentSeasonId = await getCurrentSeason();
 	if (!currentSeasonId)
 		throw new Error("Error to get current season");
 	const elo = await getElo(username, currentSeasonId);
 	elo.r = getRatings(elo);
 	const player: PlayerData = {
+		socket: socket,
 		username: username,
 		elo: elo,
 		option: option
@@ -131,57 +104,22 @@ async function addNewPlayerInMatchmaking(username: string, option: GameOptions):
 	NEW_PLAYER_LIST.push(player);
 }
 
-/**
- * Search the game id of the player match.
- * @returns -1 if player is in the queue and game id if player found a match.
- */
-function searchPlayerMatch(username: string): number {
-	let id = -1;
-	let playerConnected = 0;
-	MATCH_MAP.forEach((match, key) => {
-		if (match.usernameP1 === username || match.usernameP2 === username) {
-			id = key;
-			++match.playerConnected;
-			playerConnected = match.playerConnected;
-			return;
+function isUserWaiting(username: string) : boolean {
+	const findPlayerData = NEW_PLAYER_LIST.find((playerData) => playerData.username === username);
+	if (findPlayerData)
+		return true;
+	const findWaitingPlayer = WAITING_PLAYER_LIST.find((waitingPlayer) => waitingPlayer.player.username === username);
+	return (findWaitingPlayer !== undefined);
+}
+
+function removePlayerFromMatchmakingSystem(username: string): void {
+	for (let i = NEW_PLAYER_LIST.length - 1; i >= 0; --i) {
+		if (NEW_PLAYER_LIST[i].username === username) {
+			NEW_PLAYER_LIST.splice(i, 1);
+			console.log(`${username} removed of waiting list`);
 		}
-	});
-	console.log("id", id);
-	if (id !== -1 && playerConnected >= 2)
-		MATCH_MAP.delete(id);
-	return id;
+	}
 }
 
-/** @todo Old version : must be removed. */
-//function addPlayerToMatchmakingSystem(id: string, options: GameOptions): void {
-//	if (WAITING_PLAYERS.set(id, options))
-//		console.log(`${id} added to waiting list`);
-//}
-
-function removePlayerFromMatchmakingSystem(id: string): void {
-	//if (WAITING_PLAYERS.delete(id))
-	console.log(`${id} removed of waiting list`);
-}
-
-/** @todo Old old version : must be removed. */
-//async function removePlayerFromMatchmakingSystem(req: FastifyRequest, reply: FastifyReply): Promise<void> {
-//	const user = req.user;
-//	if (!user)
-//		return;
-
-//	let id: string = user;
-//	if (user === GUEST_NAME)
-//		id = String(req.guestId);
-//	if (!id)
-//		return;
-
-//	if (!isUserWaiting(id)) {
-//		sendReply(reply, Errors.NOT_IN_QUEUE);
-//		return;
-//	}
-//	/** @todo manage old line : WAITING_PLAYERS.delete(id); */
-//	sendReply(reply, Success.REMOVED_FROM_QUEUE);
-//}
-
-export { WaitingPlayer, Pair, Match };
-export { addPlayerToMatchmakingSystem, isUserWaiting, searchPlayerMatch, matchmaking, removePlayerFromMatchmakingSystem };
+export { WaitingPlayer, Pair };
+export { addPlayerToMatchmakingSystem, isUserWaiting, matchmaking, removePlayerFromMatchmakingSystem };

@@ -2,13 +2,12 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { WebSocket } from "ws";
 import { doesUserExist } from "../../database/user.js";
 import { identifyUser, UserIdentity } from "../../security/JWT.js";
-import { addPlayerToMatchmakingSystem, searchPlayerMatch, isUserWaiting, removePlayerFromMatchmakingSystem } from "../../tournament/matchmaking/matchmaking.js";
+import { addPlayerToMatchmakingSystem, isUserWaiting, removePlayerFromMatchmakingSystem } from "../../tournament/matchmaking/matchmaking.js";
 import { sendReply } from "../../utils/HTTP.js";
 import { GameOptions } from "../settings/GameSettings.js";
 import { GameType, getGameOptions, identifyGame, registerGameOptions } from "../game_manager.js";
 import { Success } from "#shared/status_codes.js";
 import { GUEST_NAME } from "../../user_management/create_account.js";
-import { wait } from "../../utils/time.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -19,9 +18,6 @@ declare module 'fastify' {
 //////////////////////////////////////////
 //			HTTP routes handeling		//
 //////////////////////////////////////////
-
-const TIMEOUT = 10000; // in ms
-const SCAN_DELAY = 1000; // in ms
 
 async function newLocalGame(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
 	const user = req.user;
@@ -68,14 +64,7 @@ async function waitForGame(socket: WebSocket, req: FastifyRequest): Promise<void
 			socket.close(1003, "Invalid game options");
 			return;
 		}
-		addPlayerToMatchmakingSystem(playerId, options);
-		let gameId = -1;
-		while (gameId < 0) {
-			gameId = searchPlayerMatch(playerId);
-			await wait(1000); /** @todo adapt 1000 with good value (or add a if when match find) */
-		}
-		socket.send(JSON.stringify({ id: gameId }));
-		socket.close(1000, "Game found");
+		addPlayerToMatchmakingSystem(socket, playerId, options);
 	});
 	startHeartbeat(socket);
 	socket.on("close", () => removePlayerFromMatchmakingSystem(playerId));
