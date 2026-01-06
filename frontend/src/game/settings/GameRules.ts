@@ -12,35 +12,19 @@ interface GameOptions {
 	canonCount: number;
 }
 
-const LOCAL_RULES: GameOptions = {
-	map: ["default", "sky", "volcano"],
-	ball: ["default", "snake", "tricky", "invisible", "pulse"],
-	rotatingPlayer: true,
-	spin: true,
-	windAffectsBall: true,
-	dashingPlayer: true,
-	canonCount: 1
-};
-
-const AI_RULES: GameOptions = {
-	map: ["sky"],
-	ball: ["default", "tricky", "invisible", "pulse"],
+const DEFAULT_RULES: GameOptions = {
+	map: ["default"],
+	ball: ["default"],
 	rotatingPlayer: false,
-	spin: true,
-	windAffectsBall: true,
-	dashingPlayer: true,
-	canonCount: 2
+	spin: false,
+	windAffectsBall: false,
+	dashingPlayer: false,
+	canonCount: 0
 };
 
-const RANKED_RULES: GameOptions = {
-	map: ["default", "sky", "volcano", "desert"],
-	ball: ["default", "snake", "tricky", "invisible", "pulse"],
-	rotatingPlayer: true,
-	spin: true,
-	windAffectsBall: true,
-	dashingPlayer: true,
-	canonCount: 1
-};
+const LOCAL_RULES: GameOptions = DEFAULT_RULES;
+const AI_RULES: GameOptions = DEFAULT_RULES;
+const RANKED_RULES: GameOptions = DEFAULT_RULES;
 
 function getGameOptions(gameType: GameTypes): GameOptions {
 	switch (gameType) {
@@ -73,9 +57,9 @@ function registerGameOptions(gameType: GameTypes): void {
 		}
 	});
 	if (maps.length === 0)
-		maps.push('default'); /** @todo do not allow to unselect all options */
+		throw new Error("Empty maps options");
 	if (balls.length === 0)
-		balls.push('default');
+		throw new Error("Empty balls options");
 
 	const rules = getGameOptions(gameType);
 	rules.map = maps;
