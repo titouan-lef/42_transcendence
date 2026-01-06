@@ -2,9 +2,9 @@ import { insertEloVariation } from "../../database/elo.js";
 import { getDateLastGame, getPlayerGameCountBySeason } from "../../database/game.js";
 import { getPlacementGames, insertPlacementGame, Placement } from "../../database/placement.js";
 import { getCurrentSeason } from "../../database/season.js";
-import { eloIsDefine, getElo, setElo, setRatingDeviation } from "../../database/web3/contract_service.js";
+import { getElo, setElo, setRatingDeviation } from "../../database/web3/contract_service.js";
 import { nbDayBetween } from "../../utils/time.js";
-import { applyTimeOnRd, DEFAULT_RATINGS, Elo, MAX_RD, NB_PLACEMENT_GAME, updateEloAfterGame, updateEloAfterGamePlacement } from "./elo.js";
+import { MAX_RD, NB_PLACEMENT_GAME, Elo, applyTimeOnRd, eloIsDefine, updateEloAfterGame, updateEloAfterGamePlacement } from "./elo.js";
 
 interface EloData {
 	username: string;
@@ -54,7 +54,6 @@ async function createEloData(username: string, seasonId: number, outcome: number
 async function getEloAfterInactivity(username: string, nbGame: number, elo: Elo, seasonId: number): Promise<Elo | null> {
 	if (eloIsDefine(elo))
 		return await updateRdPlayer(username, nbGame, elo, seasonId);
-	elo.r = DEFAULT_RATINGS;
 	elo.rd = MAX_RD;
 	return elo;
 }

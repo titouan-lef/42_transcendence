@@ -51,6 +51,17 @@ function calculateOutcome(scoreP1: number, scoreP2: number): number {
 	return (scoreP1 - scoreP2 + POINTS_TO_WIN) / (2 * POINTS_TO_WIN);
 }
 
+function getRatings(elo: Elo): number {
+	if (eloIsDefine(elo))
+		return elo.r;
+	else
+		return DEFAULT_RATINGS;
+}
+
+function eloIsDefine(elo: Elo): boolean {
+	return (elo.rd > 0);
+}
+
 function applyTimeOnRd(rd: number, t: number = SEASON_DURATION): number {
 	const rdUpdated = Math.sqrt(rd * rd + C_SQ * t);
 	const rdUpdatedRound = Math.round(rdUpdated * Math.pow(10, 6)) / Math.pow(10, 6); /** @todo round 6 decimal --> function define branch ai not curently rebase */
@@ -165,4 +176,4 @@ function rdCalculation(newRdSq: number): number {
 }
 
 export { Elo, DEFAULT_RATINGS, MAX_RD, NB_PLACEMENT_GAME };
-export { calculateOutcome, applyTimeOnRd, updateEloAfterGame, updateEloAfterGamePlacement };
+export { calculateOutcome, getRatings, eloIsDefine, applyTimeOnRd, updateEloAfterGame, updateEloAfterGamePlacement };

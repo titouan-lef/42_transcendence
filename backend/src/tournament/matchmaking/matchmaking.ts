@@ -1,4 +1,4 @@
-import { Elo } from "../elo/elo.js";
+import { Elo, getRatings } from "../elo/elo.js";
 import { updateDataAllPlayer, defineEloDistance } from "./update_player_data.js";
 import { getMatchingPairTab } from "./pair_managment.js";
 import { fillMatchMap } from "./match_managment.js";
@@ -122,10 +122,7 @@ async function addNewPlayerInMatchmaking(username: string, option: GameOptions):
 	if (!currentSeasonId)
 		throw new Error("Error to get current season");
 	const elo = await getElo(username, currentSeasonId);
-	if (elo.r === 0) { /** @todo use function of elo (or create new function for that) */
-		elo.r = 1500;
-		elo.rd = 350;
-	}
+	elo.r = getRatings(elo);
 	const player: PlayerData = {
 		username: username,
 		elo: elo,
