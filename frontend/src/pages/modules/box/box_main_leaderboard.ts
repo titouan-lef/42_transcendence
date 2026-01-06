@@ -21,18 +21,20 @@ const LEADERBOARD_THEAD = `
 
 function getLeaderboardPage(maxSeason: number ): string {
 	return `
+	<div class='flex flex-col justify-center items-center w-full h-full p-4'>
 		<div class='pb-2'>
 			${getFilterHtml(maxSeason)}
 		</div>
-		<div id="season-dates" class=text-left w-full overflow-auto>
+		<div id="season-dates" class=''>
 		</div>
-		<table class="text-left w-full overflow-auto">
+		<table class="text-left w-full h-full flex-1 min-h-0">
 			${LEADERBOARD_THEAD}
-			<tbody id="leaderboard" class="h-[50vh] bg-dark text-primary flex flex-col items-center justify-between overflow-y-scroll w-full">
+			<tbody id="leaderboard" class="h-[50vh] bg-dark text-primary flex flex-col items-center justify-start scrollbar-none overflow-auto w-full">
 			</tbody>
 		</table>
 		${createButtonHtml(["go_back"], "btn-back-home", { "class": `${MAIN_BOX_BTN_STYLE}` })}
-		`;
+	</div>
+	`;
 }
 
 function generateLeaderboardRows(ranking: Ranking[]): string {
@@ -40,7 +42,7 @@ function generateLeaderboardRows(ranking: Ranking[]): string {
 	let rank = 1;
 	ranking.forEach(user => { /** @todo user btn-profile-nickname to go to nickname's profile page */
 		rows += `
-		<tr class="flex w-full mb-4">
+		<tr class="flex w-full mb-1 h-[70px]">
 			<td class="p-4 w-1/5">${rank}</td>
 			<td id='btn-profile-${user.nickname}' class="p-4 w-1/5">${user.nickname}</td>
 			<td class="p-4 w-1/5">${user.rating}</td>
