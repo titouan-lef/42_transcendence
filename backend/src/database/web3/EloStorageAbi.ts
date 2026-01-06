@@ -62,7 +62,7 @@ const ABI = [
           "type": "uint256"
         }
       ],
-      "name": "getAllEloDataBySeason",
+      "name": "getAllRatingBySeason",
       "outputs": [
         {
           "internalType": "uint256[]",

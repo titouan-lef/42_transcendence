@@ -49,12 +49,12 @@ async function getSeasonInfosBySeason(season: number): Promise<LeaderboardInfos>
 
 		result.ranking.push({
 			nickname: users[i].nickname,
-			elo: usersElo[i],
+			rating: usersElo[i],
 			winrate: users[i].nbGame > 0 ? wins / users[i].nbGame : 0,
 			nbGamePlayed: users[i].nbGame
 		});
 	}
-	result.ranking.sort((a, b) => b.elo - a.elo);
+	result.ranking.sort((a, b) => b.rating - a.rating);
 	return result;
 }
 

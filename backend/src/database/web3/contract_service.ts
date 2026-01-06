@@ -60,7 +60,6 @@ async function resetEloStorage(): Promise<void> {
 	);
 }
 
-
 async function setElo(username: string, season: number, elo: Elo): Promise<void> {
 	const scaledRatingDeviation = parseUnits(elo.rd.toString(), DECIMALS_COUNT);
 	await sendTransactionSafe(
@@ -101,7 +100,7 @@ async function getElo(username: string, season?: number): Promise<Elo> {
 }
 
 async function getAllEloBySeason(usernames: string[], season: number): Promise<number[]> {
-	const allElo: bigint[] = await CONTRACT.getAllEloDataBySeason(usernames, season);
+	const allElo: bigint[] = await CONTRACT.getAllRatingBySeason(usernames, season);
 	const allEloInNumber: number[] = [];
 	for(const elo of allElo) {
 		allEloInNumber.push(Number(elo));
