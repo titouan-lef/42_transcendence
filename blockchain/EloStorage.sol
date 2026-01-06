@@ -79,15 +79,15 @@ contract EloStorage {
 		return (eloPlayer.r, eloPlayer.rd);
 	}
 
-	function getAllEloDataBySeason(string[] memory usernames, uint256 season) public view returns (uint256[] memory) {
+	function getAllRatingBySeason(string[] memory usernames, uint256 season) public view returns (uint256[] memory) {
 
-		uint256[] memory elos = new uint256[](usernames.length);
+		uint256[] memory ratings = new uint256[](usernames.length);
 
 		for (uint256 i = 0; i < usernames.length; i++) {
 			uint256 id = usernameToId(usernames[i]);
-			elos[i]= (playerEloBySeason[currentVersion][id][season]).r;
+			ratings[i]= (playerEloBySeason[currentVersion][id][season]).r;
 		}
 
-		return (elos);
+		return (ratings);
 	}
 }

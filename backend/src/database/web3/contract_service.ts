@@ -100,12 +100,12 @@ async function getElo(username: string, season?: number): Promise<Elo> {
 }
 
 async function getAllRatingBySeason(usernames: string[], season: number): Promise<number[]> {
-	const allElo: bigint[] = await CONTRACT.getAllRatingBySeason(usernames, season);
-	const allEloInNumber: number[] = [];
-	for(const elo of allElo) {
-		allEloInNumber.push(Number(elo));
+	const allRating: bigint[] = await CONTRACT.getAllRatingBySeason(usernames, season);
+	const allRatingInNumber: number[] = [];
+	for(const rating of allRating) {
+		allRatingInNumber.push(Number(rating));
 	}
-	return (allEloInNumber);
+	return (allRatingInNumber);
 }
 
 function eloIsDefine(elo: Elo): boolean {
