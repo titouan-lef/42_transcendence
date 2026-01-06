@@ -3,7 +3,7 @@ import { getSafeElement } from "../../../utils/getSafeElement.js";
 
 const DIALOG_MAIN_STYLE = `
 	m-auto p-0 rounded-2xl
-	w-full max-w-[500px] h-1/2
+	w-full max-w-[500px] h-full max-h-[500px] overflow-hidden
 	backdrop:bg-white/25 backdrop:backdrop-blur-sm bg-transparent
 	shadow-[0_0_25px_0] shadow-shadow
 `;
