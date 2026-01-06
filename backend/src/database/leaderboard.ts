@@ -3,7 +3,7 @@ import { applyQuery } from "./db_utils.js";
 import { getGamesWinsBySeason } from "./fetchGame.js";
 import { dateToString } from "./fetchStats.js";
 import { getEndSeason, getSeasonStartedAtById } from "./season.js";
-import { getAllEloBySeason } from "./web3/contract_service.js";
+import { getAllRatingBySeason } from "./web3/contract_service.js";
 
 interface LeaderboardQuery {
 	username: string;
@@ -42,7 +42,7 @@ async function getSeasonInfosBySeason(season: number): Promise<LeaderboardInfos>
 		userTab.push(user.username);
 	}
 
-	const usersElo: number[] = await getAllEloBySeason(userTab, season);
+	const usersElo: number[] = await getAllRatingBySeason(userTab, season);
 
 	for (let i = 0; i < users.length; i++) {
 		const wins = await getGamesWinsBySeason(season, users[i].username);
