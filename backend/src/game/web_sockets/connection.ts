@@ -59,6 +59,7 @@ async function waitForGame(socket: WebSocket, req: FastifyRequest): Promise<void
 		socket.close(1003, "You are already looking for a game");
 		return;
 	}
+	console.log(`${id} is wating for a game`);
 	socket.on("message", (message: Buffer) => {
 		let options: GameOptions;
 		try {

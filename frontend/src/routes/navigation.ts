@@ -9,7 +9,7 @@ import { openDialogGameSelector } from "../pages/modules/dialog/dialog_game_sele
 import { openDialogGameOption } from "../pages/modules/dialog/dialog_game_options.js";
 import { openLeaderboard } from "../pages/modules/box/box_main_leaderboard.js";
 import { closeGame } from "../game/canvas_creation.js";
-import { openDialogWaiting } from "../pages/modules/dialog/dialog_game_waiting.js";
+import { cancelQueue, openDialogWaiting } from "../pages/modules/dialog/dialog_game_waiting.js";
 import { getCurrentUserInfos, isGuest } from "../services/user_management/user_state.js";
 import { openDialog2FA, openDialogEmail } from "../pages/modules/dialog/dialog_2FA.js";
 import { openDialogGameQuit } from "../pages/modules/dialog/dialog_game_quit.js";
@@ -35,6 +35,8 @@ function navigationSelector(nav: Navigation, user?: string): boolean {
 		return false;
 	if (currentNav === Pages.WELCOME && nav !== Pages.WELCOME)
 		ELEM.removeEventListener('click', loadHomePage);
+	if (nav !== Modals.WAITING)
+		cancelQueue();
 	if (isPage(nav)) {
 		manageParticularPages(nav);
 		pageSelector(nav, user);

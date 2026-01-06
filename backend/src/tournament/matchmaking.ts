@@ -14,11 +14,13 @@ function isUserWaiting(user: string) : boolean {
 }
 
 function addPlayerToMatchmakingSystem(id: string, options: GameOptions): void {
-	WAITING_PLAYERS.set(id, options);
+	if (WAITING_PLAYERS.set(id, options))
+		console.log(`${id} added to waiting list`);
 }
 
 function removePlayerFromMatchmakingSystem(id: string): void {
-	WAITING_PLAYERS.delete(id);
+	if (WAITING_PLAYERS.delete(id))
+		console.log(`${id} removed of waiting list`);
 }
 
 function getRandomOptions(player1Options: GameOptions, player2Options: GameOptions): GameOptions {

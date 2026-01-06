@@ -84,7 +84,7 @@ APP.get("/api/season/:id", getSeasonStats);
  */
 // --- Web Socket route handlers ---
 APP.register(() => {
-	APP.get("/api/game/waiting", { websocket: true }, waitForGame);
+	APP.get("/ws/waiting", { websocket: true }, waitForGame);
 	APP.get('/ws/:id', { websocket: true }, newGame);
 	APP.get('/ws/online', { websocket: true }, manageOnlineStatus);
 });
