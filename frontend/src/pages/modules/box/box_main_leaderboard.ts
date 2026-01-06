@@ -43,7 +43,7 @@ function generateLeaderboardRows(ranking: Ranking[]): string {
 		<tr class="flex w-full mb-4">
 			<td class="p-4 w-1/5">${rank}</td>
 			<td id='btn-profile-${user.nickname}' class="p-4 w-1/5">${user.nickname}</td>
-			<td class="p-4 w-1/5">${user.elo}</td>
+			<td class="p-4 w-1/5">${user.rating}</td>
 			<td class="p-4 w-1/5">${user.winrate * 100}</td>
 			<td class="p-4 w-1/5">${user.nbGamePlayed}</td>
 		</tr>
