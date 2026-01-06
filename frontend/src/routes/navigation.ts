@@ -133,7 +133,7 @@ function modalSelector(modal: Modals): void {
 function manageHistoryPushing(nav: Navigation, user?: string): void {
 	if (currentNav === null)
 		return;
-	if(isModal(nav) && getAssociatedPage(nav) === Pages.GAME) // do not add game modals to hisotry
+	if(isModal(nav) && getAssociatedPage(nav) === Pages.GAME) // do not add game modals to history
 		return;
 	if (isModal(currentNav)) {
 		currentNav = nav;

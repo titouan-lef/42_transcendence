@@ -4,7 +4,7 @@ import { GameHistoryWithAvatar, UserBody } from "#shared/HTTP";
 import { setActiveBtn } from "./profile_navbar";
 import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
 
-let hisotryData: GameHistoryWithAvatar[];
+let historyData: GameHistoryWithAvatar[];
 
 const HISTORY_STYLE = `
 flex flex-col justify-start items-center gap-4
@@ -27,11 +27,11 @@ async function fetchHistoryData(user: string): Promise<void> {
 	if (!isRequestSuccessfull(reply))
 		return;
 
-	hisotryData = JSON.parse(reply.content);
+	historyData = JSON.parse(reply.content);
 }
 
 async function getHistoryData(): Promise<GameHistoryWithAvatar[]> {
-	return hisotryData;
+	return historyData;
 }
 
 function generateHistory(history: GameHistoryWithAvatar[], numberDisplay: number): string {
@@ -47,7 +47,7 @@ async function loadHistory(): Promise<void> {
 	setActiveBtn('btn-history');
 
 	const elem = getSafeElement('profile-content', HTMLElement);
-	elem.innerHTML = getHistoryTable(hisotryData);
+	elem.innerHTML = getHistoryTable(historyData);
 }
 
 export { loadHistory, generateHistory, fetchHistoryData, getHistoryData };
