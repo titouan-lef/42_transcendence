@@ -26,7 +26,7 @@ bg-white/25 backdrop-blur-sm bg-transparent
 const DRAWER_BOX_STYLE = `
 flex flex-col
 m-auto p-6 rounded-l-2xl
-h-full w-full
+h-full w-full overflow-hidden
 ${applyColor('alt')}
 bg-grad-l-215 from-dark
 flex-1 min-h-0
