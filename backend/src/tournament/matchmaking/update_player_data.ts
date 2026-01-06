@@ -1,11 +1,11 @@
 
 import { WaitingPlayer } from "./matchmaking.js";
 
-const OFFSET_H = 195;			// Offset height (number).
-const OFFSET_W = 400;			// Offset width (number).
-const GROWTH_RATE = 0.01;		// Growth rate of the function (number >= 0).
-const CARRYING_CAPACITY = 400;	// Maximum of the function, without the offset height and the overgrowth coefficient (integer > 0).
-const OVERGROWTH_COEFF = 4;		// Overgrowth coefficient, to rise continually (number >= 0).
+const OFFSET_H = 18;			// Offset height (number).
+const OFFSET_W = 120;			// Offset width (number).
+const GROWTH_RATE = 0.02;		// Growth rate of the function (number >= 0).
+const CARRYING_CAPACITY = 380;	// Maximum of the function, without the offset height and the overgrowth coefficient (integer > 0).
+const OVERGROWTH_COEFF = 50;	// Overgrowth coefficient, to rise continually (number >= 0).
 
 const OVERGROWTH_RATE = OVERGROWTH_COEFF / CARRYING_CAPACITY;
 
@@ -17,7 +17,7 @@ let time = Date.now();
  */
 function updateDataAllPlayer(waitingPlayerList: WaitingPlayer[]): void {
 	const currentTime = Date.now();
-	const elapsedTime = currentTime - time;
+	const elapsedTime = (currentTime - time) / 100.0;
 	time = currentTime;
 	waitingPlayerList.forEach(player => {
 		player.waitingTime += elapsedTime;
