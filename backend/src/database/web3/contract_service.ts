@@ -110,8 +110,4 @@ async function getAllRatingBySeason(usernames: string[], season: number): Promis
 	return (allRatingInNumber);
 }
 
-function eloIsDefine(elo: Elo): boolean {
-	return (elo.r >= 1);
-}
-
-export { setElo, setRating, setRatingDeviation, getElo, eloIsDefine, resetEloStorage, getAllRatingBySeason };
+export { setElo, setRating, setRatingDeviation, getElo, resetEloStorage, getAllRatingBySeason };
