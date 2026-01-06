@@ -4,8 +4,8 @@ import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/a
 import { applyColor } from "../../../utils/applyColor";
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { Friend, UserBody } from "#shared/HTTP";
-import { navigateTo } from "src/routes/navigate";
-import { Pages } from "src/routes/navigate_types";
+import { navigateTo } from "../../../routes/navigate";
+import { Pages } from "../../../routes/navigate_types";
 
 const FRIENDLIST = new Set<Friend>(); ;
 
