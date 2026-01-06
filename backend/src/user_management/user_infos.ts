@@ -4,7 +4,7 @@ import { sendReply } from "../utils/HTTP.js";
 import { getTheme } from "../database/theme.js";
 import { promises as fs } from "fs";
 import { Errors, Success } from "#shared/status_codes.js";
-import { UserBody } from "./connect_user.js";
+import { UserBody } from "#shared/HTTP.js";
 
 interface InfoList {
 	username: string;
