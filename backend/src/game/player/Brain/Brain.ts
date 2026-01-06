@@ -16,6 +16,7 @@ interface Movement {
 interface ActionAi {
 	mov_left: boolean;
 	mov_right: boolean;
+	dash: boolean;
 	atk_left: boolean;
 	atk_right: boolean;
 }
@@ -33,13 +34,15 @@ abstract class Brain {
 	protected atkDirection: AttackAi;
 	private destination: DestinationAi;
 	private ballZPredict: number;
+	private dashOptionEnable: boolean;
 
 	protected abstract intersectionTop(movement: Movement): number;
 
-	constructor() {
+	constructor(dashIsEnable: boolean) {
 		this.destination = DestinationAi.REACHING;
 		this.atkDirection = AttackAi.WAIT;
 		this.ballZPredict = 0;
+		this.dashOptionEnable = dashIsEnable;
 	}
 
 	refreshView(ball: BallTemplate | null): void {
@@ -65,27 +68,31 @@ abstract class Brain {
 	}
 
 	getAction(aiPosZ: number): ActionAi {
-		this.defineDestination(aiPosZ);
-		return this.applyAction();
+		const distDest = this.defineDestination(aiPosZ);
+		return this.applyAction(distDest);
 	}
 
-	private defineDestination(aiPosZ: number): void {
-		const distanceDestination = Math.abs(this.ballZPredict - aiPosZ);
-		if (distanceDestination < PLAYER_DIMENSION.z / 4) {
+	private defineDestination(aiPosZ: number): number {
+		const distDest = Math.abs(this.ballZPredict - aiPosZ);
+		if (distDest < PLAYER_DIMENSION.z / 4)
 			this.destination = DestinationAi.REACHING;
-			return;
-		}
-		this.destination = (this.ballZPredict < aiPosZ) ? DestinationAi.RIGHT : DestinationAi.LEFT;
+		else if (this.ballZPredict < aiPosZ)
+			this.destination = DestinationAi.RIGHT;
+		else
+			this.destination = DestinationAi.LEFT;
+		return distDest;
 	}
 
-	private applyAction(): ActionAi {
+	private applyAction(distDest: number): ActionAi {
 		const action = this.getDefaultAction();
 		switch (this.destination) {
 			case DestinationAi.LEFT:
 				action.mov_left = true;
+				this.manageDash(distDest, action);
 				break;
 			case DestinationAi.RIGHT:
 				action.mov_right = true;
+				this.manageDash(distDest, action);
 				break;
 			case DestinationAi.REACHING:
 				this.applyActionDestReaching(action);
@@ -100,9 +107,15 @@ abstract class Brain {
 		return {
 			mov_left: false,
 			mov_right: false,
+			dash: false,
 			atk_left: false,
 			atk_right: false,
 		};
+	}
+
+	private manageDash(distDest: number, action: ActionAi): void {
+		if (this.dashOptionEnable && distDest > 2 * PLAYER_DIMENSION.z)
+			action.dash = true;
 	}
 
 	private applyActionDestReaching(action: ActionAi): void {
