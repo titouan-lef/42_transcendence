@@ -1,4 +1,4 @@
-import { Pages } from "src/routes/navigate_types";
+import { Pages } from "../../routes/navigate_types";
 import { navigateTo } from "../../routes/navigate";
 import { sendGetRequestToBack } from "../api_request";
 import { clearUserInfos } from "./user_state";

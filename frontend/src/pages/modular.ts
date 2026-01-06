@@ -2,7 +2,7 @@ import { applyColor } from "../utils/applyColor";
 import { loadPage } from "./page";
 import { getSafeElement } from "../utils/getSafeElement";
 import { ASIDE_BOX, loadAside } from "./modules/box/box_aside";
-import { goBack } from "src/routes/navigate";
+import { goBack } from "../routes/navigate";
 
 const ROW_STYLE = `
 flex flex-row gap-[10px]

@@ -17,7 +17,7 @@ import { isRequestSuccessfull, sendGetRequestToBack } from "../services/api_requ
 import { loadHomePage, openMainHome } from "../pages/modules/box/box_main_home.js";
 import { openMainDashboard } from "../pages/modules/box/box_main_dashboard.js";
 import { NavigateEvent } from "./navigate.js";
-import { ELEM } from "src/pages/page.js";
+import { ELEM } from "../pages/page.js";
 
 let currentPage: Pages | null = null;
 let currentNav: Navigation | null = null;

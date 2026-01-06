@@ -1,6 +1,6 @@
 import { capitalizeElementValueHTML } from "../../../components/component_utils";
 import { createParagraph } from "../../../components/paragraph";
-import { isRequestSuccessfull, sendPostRequestToBack } from "src/services/api_request";
+import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
 
 const TITLE_STYLE = `
 grow font-bold text-[48px]
