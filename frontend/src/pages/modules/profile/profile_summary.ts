@@ -10,7 +10,7 @@ import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/a
 import { GameHistoryWithAvatar, UserDashboardInfos } from "#shared/HTTP";
 
 const SEE_MORE_BTN_STYLE = `
-w-full h-[30px] bg-dark/30 text-[20px] text-variant bg-grad-l-300 from-primary
+w-9/10 h-[30px] bg-dark/30 text-[20px] text-variant bg-grad-l-300 from-primary
 `;
 
 const SECTION_STYLE = `
@@ -27,24 +27,24 @@ text-[26px] font-bold text-center
 function getSummaryTable(history: GameHistoryWithAvatar[], data: UserDashboardInfos): string {
 	console.log(data);
 	return (`
-	<div class="flex flex-col gap-1 h-full">
+	<div class="flex flex-col gap-1 h-full pr-[190px]">
 		<div id='sum-dashboard' class="${SECTION_STYLE}">
 			${createParagraphHtml(['dashboard'], 'p-dashboard', { 'class': `${SECTION_TITLE_STYLE}` })}
-		<div class="p-4 flex h-[150px] w-full gap-4">
-			${createDashboardCard('win_rate', data.gamesPlayed ? data.gamesWins / data.gamesPlayed * 100 : 0)}
-			${createDashboardCard('games_played', data.gamesPlayed)}
-			${createDashboardCard('elo', data.elo)}
+			<div class="p-4 flex h-[150px] w-full gap-4">
+				${createDashboardCard('win_rate', data.gamesPlayed ? data.gamesWins / data.gamesPlayed * 100 : 0)}
+				${createDashboardCard('games_played', data.gamesPlayed)}
+				${createDashboardCard('elo', data.elo)}
+			</div>
 		</div>
-	</div>
 		${createButtonHtml(['see_more'], 'btn-sum-dashboard', { 'class': `${SEE_MORE_BTN_STYLE}` })}
-	<div id='sum-history' class="${SECTION_STYLE} h-full">
-		${createParagraphHtml(['last_games'], 'p-last-games', { 'class': `${SECTION_TITLE_STYLE}` })}
-	<div class="flex flex-col justify-start items-center gap-4 h-full w-full p-4">
-		${generateHistory(history, 3)}
+		<div id='sum-history' class="${SECTION_STYLE} h-full flex-1 min-h-0">
+			${createParagraphHtml(['last_games'], 'p-last-games', { 'class': `${SECTION_TITLE_STYLE}` })}
+			<div class="flex flex-col justify-start items-center gap-4 h-full w-full p-4 flex-1 min-h-0 scrollbar-none overflow-y-scroll overflow-hidden">
+				${generateHistory(history, 3)}
+			</div>
+		</div>
+		${createButtonHtml(['see_more'], 'btn-sum-history', { 'class': `${SEE_MORE_BTN_STYLE}` })}
 	</div>
-		</div>
-			${createButtonHtml(['see_more'], 'btn-sum-history', { 'class': `${SEE_MORE_BTN_STYLE}` })}
-		</div>
 	`);
 }
 
