@@ -17,7 +17,7 @@ class AI extends Player {
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, options: GameOptions) {
 		super(scene, position, options, 2, "AI");
-		this.brain = new DefaultBrain();
+		this.brain = new DefaultBrain(options.dashingPlayer);
 		this.controls = this.getInitControl();
 		this.makeActionIntervalId = this.makeActionInterval();
 		this.updateIntervalId = setInterval(() => this.update(), 1000);
@@ -70,6 +70,7 @@ class AI extends Player {
 	private applyAction(action: ActionAi): void {
 		this.controls.mov_left = action.mov_left;
 		this.controls.mov_right = action.mov_right;
+		this.controls.dash = action.dash;
 		if (!action.atk_left && !action.atk_right) {
 			this.shootAnimationFrame = 0;
 			this.controls.normalMode = true;
