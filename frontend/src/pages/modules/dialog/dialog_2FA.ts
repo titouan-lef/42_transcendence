@@ -10,16 +10,14 @@ import { getCurrentUserInfos } from "../../../services/user_management/user_stat
 import { Content2FA } from "#shared/HTTP";
 
 /** @todo make print-content great. again? */
-/** @todo change `password` into `verification code` */
-/** @todo change `sign_up` into `send code` ot `confrim` */
 /** @todo use TRANSLATOR */
-/** @todo resend button ? backward button ? */
 const TWOFA = `
 	<p> 2FA required </p>
 	<form name="Register" class="${DIALOG_FORM_STYLE}">
-		${createInputHtml(["password"], "password", "password", { "class": `${DIALOG_INPUT_STYLE}` })}
+		${createInputHtml(["code"], "password", "password", { "class": `${DIALOG_INPUT_STYLE}` })}
 	</form>
-	${createButtonHtml(["sign_up"], `btn-sign-up`, { "class": `${DIALOG_BTN_STYLE}` })}
+	${createButtonHtml(["cancel"], `btn-cancel`, { "class": `${DIALOG_BTN_STYLE}` })}
+	${createButtonHtml(["confirm"], `btn-confirm`, { "class": `${DIALOG_BTN_STYLE}` })}
 	<hr class="${DIALOG_SEPARATOR_STYLE}">
 	<p id="print-content"></p>
 `;
@@ -30,6 +28,7 @@ const EMAIL_CONFIRMATION = `
 	<form name="Register" class="${DIALOG_FORM_STYLE}">
 		${createInputHtml(["password"], "password", "password", { "class": `${DIALOG_INPUT_STYLE}` })}
 	</form>
+	${createButtonHtml(["cancel"], `btn-cancel`, { "class": `${DIALOG_BTN_STYLE}` })}
 	${createButtonHtml(["refify_email"], `btn-verify-email`, { "class": `${DIALOG_BTN_STYLE}` })}
 	<hr class="${DIALOG_SEPARATOR_STYLE}">
 	<p id="print-content"></p>
@@ -69,8 +68,10 @@ function twoFAHandler(modal: HTMLDialogElement): void {
 	const allElements = modal.querySelectorAll('*[id]');
 	allElements.forEach(elem => {
 		switch (elem.id) {
-			/** @todo add cancel button, resend button */
-			case 'btn-sign-up':
+			case 'btn-cancel':
+				elem.addEventListener('click', goBack);
+				break;
+			case 'btn-confirm':
 				elem.addEventListener('click', verify2FA);
 				break;
 			case 'btn-verify-email':

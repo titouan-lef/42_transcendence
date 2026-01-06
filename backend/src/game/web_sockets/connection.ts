@@ -52,7 +52,7 @@ async function isGameFound(req: FastifyRequest, reply: FastifyReply): Promise<vo
 async function newLocalGame(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
 	const user = req.user;
 	if (!user)
-		return; /**@todo oblige d etre register pour faire une game ? */
+		return;
 	const options: GameOptions = req.body;
 	const id = registerGameOptions(options, GameType.LOCAL, [user, "player2"]);
 	sendReply(reply, Success.GAME_FOUND, id.toString());
@@ -61,7 +61,7 @@ async function newLocalGame(req: FastifyRequest<{ Body: GameOptions }>, reply: F
 async function newAIGame(req: FastifyRequest<{ Body: GameOptions }>, reply: FastifyReply): Promise<void> {
 	const user = req.user;
 	if (!user)
-		return; /**@todo oblige d etre register pour faire une game ? */
+		return;
 	const options: GameOptions = req.body;
 	const id = registerGameOptions(options, GameType.AI, [user, "AI"]);
 	sendReply(reply, Success.GAME_FOUND, id.toString());

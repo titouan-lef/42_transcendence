@@ -135,7 +135,6 @@ async function deleteUser(username: string): Promise<void> {
 	);
 }
 
-/** @todo will be used, but must be modified */
 async function updatePseudo(username: string, nickname: string): Promise<void> {
 	await applyQuery(async (db) => {
 		await db.run(`
