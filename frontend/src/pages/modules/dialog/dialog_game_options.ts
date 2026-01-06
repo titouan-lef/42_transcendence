@@ -76,6 +76,8 @@ const GAME_OPTIONS = `
 	<button id='btn-go' class='${DIALOG_BTN_STYLE}'>GO</button>
 `;
 
+let currentGameType: GameTypes = GameTypes.RANKED;
+
 function optionSelectorHandler(modal: HTMLDialogElement,  startGame: () => void): void {
 	const allElements = modal.querySelectorAll('*[id]');
 	allElements.forEach(elem => {
@@ -90,9 +92,27 @@ function optionSelectorHandler(modal: HTMLDialogElement,  startGame: () => void)
 				break;
 		}
 	});
+	lockLastCheckbox("chk-map");
+	lockLastCheckbox("chk-ball");
 }
 
-let currentGameType: GameTypes = GameTypes.RANKED; /** @todo ranked by default ? in case of error */
+function lockLastCheckbox(containerId: string): void {
+	const container = getSafeElement(containerId, HTMLElement);
+
+	const checkboxes = Array.from(
+		container.querySelectorAll<HTMLInputElement>("input[type='checkbox']")
+	);
+
+	checkboxes.forEach(cb => {
+		cb.addEventListener("change", () => {
+			const checked = checkboxes.filter(cb => cb.checked);
+
+			checkboxes.forEach(cb => {
+				cb.disabled = checked.length === 1 && cb.checked;
+			});
+		});
+	});
+}
 
 /** @todo better? cound not get a function with two args to loadDialog */
 function openDialogGameOption(): void {
