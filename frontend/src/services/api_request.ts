@@ -8,10 +8,15 @@ interface ReplyFromBack {
 	content: string
 }
 
+/**
+ * Inside a try/catch in case the div is not more present in the page
+ */
 async function printReplyInDiv(reply: ReplyFromBack, targetDivId: string): Promise<void> {
-	const message = getReplyMessage(reply);
-	const container = getSafeElement(targetDivId, HTMLElement);
-	container.innerHTML = `<p>${message}</p>`;
+	try {
+		const message = getReplyMessage(reply);
+		const container = getSafeElement(targetDivId, HTMLElement);
+		container.innerHTML = `<p>${message}</p>`;
+	} catch {};
 }
 
 function createPostRequest(content: string): RequestInit {
