@@ -18,6 +18,7 @@ import { insertGameRule } from "../database/game_rule.js";
 import { getRuleId } from "../database/rule.js";
 import { calculateOutcome } from "../tournament/elo/elo.js";
 import { updateElo } from "../tournament/elo/elo_update.js";
+import { getAllRatingBySeason, getElo } from "../database/web3/contract_service.js";
 
 class Game {
 	private readonly id: number;
@@ -226,19 +227,30 @@ class Game {
 			player2.send(positionP2);
 	}
 
-	private sendStart(player1: Player, player2: Player) : void {
-		const startP1: StartMessage = {
-			status: Status.START,
-			playerName: player1.getName(),
-			enemyName: player2.getName()
-		};
-		player1.send(startP1);
-		const startP2: StartMessage = {
-			status: Status.START,
-			playerName: player2.getName(),
-			enemyName: player1.getName()
-		};
-		player2.send(startP2);
+	private async sendStart(player1: Player, player2: Player) : Promise<void> {
+		try {
+			const season = await getCurrentSeason();
+			const [rating1, rating2] = await getAllRatingBySeason([player1.getName(), player2.getName()], season);
+
+			const startP1: StartMessage = {
+				status: Status.START,
+				playerName: player1.getName(),
+				playerRating: rating1,
+				enemyName: player2.getName(),
+				enemyRating: rating2
+			};
+			player1.send(startP1);
+			const startP2: StartMessage = {
+				status: Status.START,
+				playerName: player2.getName(),
+				playerRating: rating2,
+				enemyName: player1.getName(),
+				enemyRating: rating1
+			};
+			player2.send(startP2);
+		} catch (error) {
+			console.error("Failed to send start messages:", error);
+		}
 	}
 
 	private sendStop(player1: Player, player2: Player) : void {
