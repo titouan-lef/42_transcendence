@@ -6,6 +6,10 @@ import { generatePointList, generateRules } from "./box_main_dashboard_generator
 import { navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
 
+const COLUMNS_STYLE = `
+flex flex-col flex-1 gap-4 h-full min-w-0
+`;
+
 const GAME_DASHBOARD_BUTTONS = `
 <div class='flex flex-row gap-3'>
 	<button id='btn-replay' class='${MAIN_BOX_BTN_STYLE}'>replay</button>
@@ -17,31 +21,35 @@ function generateGameDashboard(): string {
 	const stats = getGameStats();
 
 	return `
-		<div class='flex flex-row gap-4'>
-			<div class='flex flex-col gap-4'>
-				<div class='flex flex-row'>
-					<div>Game duration :</div>
-					<div>${formatTime(stats.gameTimer)}</div>
+		<div class='flex flex-col h-full max-h-screen w-full justify-center items-center'>
+			<div class='flex flex-row gap-4 w-full p-4 pb-2 flex-1 min-h-0'>
+				<div class='${COLUMNS_STYLE}'>
+					<div class='flex flex-row'>
+						<div>Game duration :</div>
+						<div>${formatTime(stats.gameTimer)}</div>
+					</div>
+					<div class='flex flex-row'>
+						<div>Score :</div>
+						<div>${formatScore(stats)}</div>
+					</div>
+					<div class='flex flex-row'>
+						<p>Opponent :</p>
+						<div class='overflow-hidden text-ellipsis'>${stats.player2.name}</div>
+						<button id='btn-oppo-profile' class='${MAIN_BOX_BTN_STYLE}'>show his profile</button>
+					</div>
 				</div>
-				<div class='flex flex-row'>
-					<div>Score :</div>
-					<div>${formatScore(stats)}</div>
-				</div>
-				<div class='flex flex-row'>
-					<p>Opponent :</p>
-					<div>${stats.player2.name}</div>
-					<button id='btn-oppo-profile' class='${MAIN_BOX_BTN_STYLE}'>show his profile</button>
+				<div class='${COLUMNS_STYLE}'>
+					<p class=''>points details :</p>
+					${generatePointList()}
+					<hr class="${MAIN_BOX_SEPARATOR_STYLE}">
+					${generateRules()}
 				</div>
 			</div>
-			<div class='flex flex-col gap-4'>
-				<p>points details :</p>
-				${generatePointList()}
+			<div class='shrink-0 h-fit w-full p-4 pt-2'>
 				<hr class="${MAIN_BOX_SEPARATOR_STYLE}">
-				${generateRules()}
+				${GAME_DASHBOARD_BUTTONS}
 			</div>
 		</div>
-		<hr class="${MAIN_BOX_SEPARATOR_STYLE}">
-		${GAME_DASHBOARD_BUTTONS}
 	`;
 }
 

@@ -3,14 +3,19 @@ import { SVG_RULE_DASH, SVG_RULE_PROT, SVG_RULE_SPIN, SVG_RULE_WIND } from "../.
 import { createSvgBox, createSvgBoxByBall, createSvgBoxByMap } from "../../../assets/svgs/svgs_boxes";
 import { formatPoint, getGameStats } from "./box_main_dashboard_utils";
 
+const POINT_BOX_STYLE = `
+flex flex-col justify-start items-center gap-1 flex-1 min-h-0 bg-dark rounded-2xl scrollbar-none overflow-scroll
+`;
+
 const POINT_STYLE = `
+flex flex-row gap-1
 `;
 
 function generatePointList(): string {
 	const stats = getGameStats();
 	const points = stats.points;
 
-	let pointList = `<div class='flex flex-col'>`;
+	let pointList = `<div class='${POINT_BOX_STYLE}'>`;
 
 	points.forEach(point => {
 		pointList += `
