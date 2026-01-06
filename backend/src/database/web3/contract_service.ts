@@ -99,7 +99,7 @@ async function getElo(username: string, season?: number): Promise<Elo> {
 	return elo;
 }
 
-async function getAllEloBySeason(usernames: string[], season: number): Promise<number[]> {
+async function getAllRatingBySeason(usernames: string[], season: number): Promise<number[]> {
 	const allElo: bigint[] = await CONTRACT.getAllRatingBySeason(usernames, season);
 	const allEloInNumber: number[] = [];
 	for(const elo of allElo) {
@@ -112,4 +112,4 @@ function eloIsDefine(elo: Elo): boolean {
 	return (elo.r >= 1);
 }
 
-export { setElo, setRating, setRatingDeviation, getElo, eloIsDefine, resetEloStorage, getAllEloBySeason };
+export { setElo, setRating, setRatingDeviation, getElo, eloIsDefine, resetEloStorage, getAllRatingBySeason };

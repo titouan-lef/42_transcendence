@@ -30,7 +30,7 @@ function getFilterHtml(maxSeason: number, allOption = false): string {
 	<div class="w-[200px] flex flex-row justify-between bg-dark border border-primary hover:border-light
 	px-4 py-2 rounded-2xl">
 		<select id="filter" class="${FILTER_STYLE}">
-		${generateSeasonOptions(maxSeason, allOption)}
+			${generateSeasonOptions(maxSeason, allOption)}
 		</select>
 		<div class="pointer-events-none flex items-center text-secondary">
 			${ARROW_SVG}
