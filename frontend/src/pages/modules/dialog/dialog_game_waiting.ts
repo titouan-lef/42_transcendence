@@ -10,8 +10,8 @@ import { gamePageEvents } from "../../../pages/events/game_page_event";
 const GIF_STYLE = `
 rounded-2xl
 bg-white
-w-[250px]
-h-[150px]
+w-9/10
+h-7/10
 overflow-hidden
 `;
 
@@ -20,8 +20,8 @@ let ws: WebSocket | null = null;
 /** @todo front */
 function getGameWaiting(): string {
 	return `
-	<div class='flex flex-col gap-4'>
-		<p>Waiting for a game...</p>
+	<div class='flex flex-col gap-4 justify-center items-center w-full h-full'>
+		<p class='text-[20px]'>Waiting for a game...</p>
 		<div class='${GIF_STYLE}'>
 			<img src='${getRandomGifPath()}' alt='waiting GIF' class='w-full h-full object-cover'/>
 		</div>
