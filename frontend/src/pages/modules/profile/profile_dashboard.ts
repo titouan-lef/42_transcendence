@@ -83,13 +83,17 @@ async function updateDashboardData(user: string): Promise<void> {
 	await loadDashboardData();
 }
 
-async function loadDashboard(user: string): Promise<void> {
-	setActiveBtn('btn-dashboard');
+let seasonNumber: number;
 
+async function fetchSeasonData(): Promise<void> {
 	const reply = await sendGetRequestToBack('/api/season');
 	if (!isRequestSuccessfull(reply))
 		return;
-	const seasonNumber: number = JSON.parse(reply.content);
+	seasonNumber = JSON.parse(reply.content);
+}
+
+async function loadDashboard(user: string): Promise<void> {
+	setActiveBtn('btn-dashboard');
 
 	const elem = getSafeElement('profile-content', HTMLElement);
 	elem.innerHTML = getDashboardPage(seasonNumber);
@@ -99,4 +103,4 @@ async function loadDashboard(user: string): Promise<void> {
 	loadDashboardData();
 }
 
-export { loadDashboard, fetchDashboardData, getDashboardData };
+export { loadDashboard, fetchDashboardData, getDashboardData, fetchSeasonData };
