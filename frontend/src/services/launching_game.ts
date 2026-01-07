@@ -120,7 +120,7 @@ function loadGameHeader(infos: StartMessage): void {
 			break;
 		case (GameTypes.AI):
 			elem.innerHTML = `
-			<div class='${GAME_INFOS_STYLE}'>${infos.playerName}</div>
+			<div class='${GAME_INFOS_STYLE}'>${infos.playerNickname}</div>
 			<div class='${GAME_INFOS_STYLE}'>${infos.playerRating}</div>
 			<div class='${GAME_INFOS_STYLE}'>-</div>
 			<div class='${GAME_INFOS_STYLE}'>IA</div>
@@ -128,16 +128,16 @@ function loadGameHeader(infos: StartMessage): void {
 			break;
 		case (GameTypes.RANKED):
 			elem.innerHTML = `
-			<div class='${GAME_INFOS_STYLE}'>${infos.playerName}</div>
+			<div class='${GAME_INFOS_STYLE}'>${infos.playerNickname}</div>
 			<div class='${GAME_INFOS_STYLE}'>${infos.playerRating}</div>
 			<div class='${GAME_INFOS_STYLE}'>-</div>
-			<div class='${GAME_INFOS_STYLE}'>${infos.enemyName}</div>
+			<div class='${GAME_INFOS_STYLE}'>${infos.enemyNickname}</div>
 			<div class='${GAME_INFOS_STYLE}'>${infos.enemyRating}</div>
 			`;
 			break;
 		default:
 			throw new Error("No such game type.");
-	}	
+	}
 }
 
 export { newRankedGame, newLocalGame, newGameVsAI };
