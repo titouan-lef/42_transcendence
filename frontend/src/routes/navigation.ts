@@ -19,6 +19,7 @@ import { openMainDashboard } from "../pages/modules/box/box_main_dashboard.js";
 import { NavigateEvent } from "./navigate.js";
 import { ELEM } from "../pages/page.js";
 
+let lastPage: Pages | null = null;
 let currentPage: Pages | null = null;
 let currentNav: Navigation | null = null;
 
@@ -67,6 +68,8 @@ function pageSelector(page: Pages, user?: string): void {
 		closeGame();
 	if (isModularPage(page)) /** @todo do not reload modular if already open (carefull with the backawrd from a modal)*/
 		openModularPage();
+	if (page !== currentPage)
+		lastPage = currentPage;
 	currentPage = page;
 	switch(page) {
 		case Pages.WELCOME:
@@ -152,10 +155,10 @@ function navigation(nav: Navigation, user?: string): void {
 		manageHistoryPushing(nav, user);
 }
 
-document.addEventListener("currentPage", (event: Event) => {
-	if (!currentPage)
+document.addEventListener("lastPage", (event: Event) => {
+	if (!lastPage)
 		return;
-	navigation(currentPage);
+	navigation(lastPage);
 });
 
 document.addEventListener("navigate", (event: Event) => {

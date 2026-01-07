@@ -20,8 +20,8 @@ function goBack(): void {
 	history.back();
 }
 
-function goBackToCurrentPage(): void {
-	document.dispatchEvent(new Event('currentPage'));
+function goToLastPage(): void {
+	document.dispatchEvent(new Event('lastPage'));
 }
 
-export { NavigateEvent, navigateTo, goBack, goBackToCurrentPage };
+export { NavigateEvent, navigateTo, goBack, goToLastPage };

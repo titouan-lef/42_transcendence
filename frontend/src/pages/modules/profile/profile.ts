@@ -6,7 +6,7 @@ import { fetchHistoryData, loadHistory } from "./profile_history";
 import { loadSummary } from "./profile_summary";
 import { getDrawerHeader } from "./profile_header";
 import { getDrawerNav, setActiveBtn } from "./profile_navbar";
-import { navigateTo } from "../../../routes/navigate";
+import { goToLastPage, navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
 import { getCurrentUserInfos, getUserInfos, isUserConnected } from "../../../services/user_management/user_state";
 import { updateFriendList } from "../box/box_aside_friendlist";
@@ -122,7 +122,7 @@ function initProfileEvents(): void {
 	drawer.querySelectorAll('*[id]').forEach(elem => {
 		switch (elem.id) {
 			case 'btn-return':
-				elem.addEventListener('click', () => navigateTo(Pages.HOME));
+				elem.addEventListener('click', goToLastPage);
 				break;
 			case 'btn-summary':
 				elem.addEventListener('click', () => changeTab(ProfileTab.SUMMARY));
