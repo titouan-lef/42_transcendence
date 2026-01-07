@@ -9,8 +9,9 @@ import { goBackToCurrentPage, navigateTo } from "../../../routes/navigate.js";
 import { Modals } from "../../../routes/navigate_types.js";
 import { UserBody } from "#shared/HTTP.js";
 
-/** @todo better front style for add friend */
+/** @todo better print-content */
 const ADD_FRIEND = `
+	<p class='text-[18px] font-bold'>find your friend</p>
 	<form name="Login" class="${DIALOG_FORM_STYLE}">
 		${createInputHtml(["user_name"], "text", "find-friend", { "autofocus": "true", "class": `${DIALOG_INPUT_STYLE}` })}
 	</form>
