@@ -30,10 +30,12 @@ if (!CONTRACT_ADDRESS)
 
 /**
  * @brief Instantiate the SmartContract for acces to :
- * @function setEloData(string memory username, uint256 season, uint256 rating, uint256 ratingDeviation)
- * @function setRatingDeviation(string memory username, uint256 season, uint256 ratingDeviation)
- * @function setRating(string memory username, uint256 season, uint256 rating)
- * @function getEloData(string memory username, uint256 season) returns (uint256 rating, uint256 ratingDeviation)
+ * @function resetAll() public onlyOwner;
+ * @function setEloData(string memory username, uint256 season, uint256 rating, uint256 ratingDeviation) public onlyOwner;
+ * @function setRatingDeviation(string memory username, uint256 season, uint256 ratingDeviation) public onlyOwner;
+ * @function setRating(string memory username, uint256 season, uint256 rating) public onlyOwner;
+ * @function getEloData(string memory username, uint256 season) public view returns (uint256 rating, uint256 ratingDeviation);
+ * @function getAllRatingBySeason(string[] memory usernames, uint256 season) public view returns (uint256[] memory);
  */
 const CONTRACT = new Contract(CONTRACT_ADDRESS, ABI, signer);
 

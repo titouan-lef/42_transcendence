@@ -33,4 +33,4 @@ async function getActualDate(): Promise<Date> {
 	return new Date(date.CURRENT_TIMESTAMP);
 }
 
-export { applyQuery, fetchAll, getActualDate };
+export { applyQuery, getActualDate };

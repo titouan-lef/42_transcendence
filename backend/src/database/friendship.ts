@@ -1,4 +1,4 @@
-import { applyQuery, fetchAll } from "./db_utils.js";
+import { applyQuery } from "./db_utils.js";
 
 interface Friendship {
 	username: string;
@@ -43,10 +43,6 @@ async function addFriendship(user: string, friend: string): Promise<void> {
 			[user, friend]
 		), "create" + TABLE_NAME
 	);
-}
-
-async function getAllFriendship(): Promise<Friendship[] | undefined> {
-	return await fetchAll(TABLE_NAME);
 }
 
 async function getFriendships(username: string): Promise<FriendWithNickname[]> {

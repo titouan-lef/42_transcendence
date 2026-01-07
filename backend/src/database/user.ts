@@ -1,5 +1,5 @@
 import { hashString } from "../utils/hash_string.js";
-import { applyQuery, fetchAll } from "./db_utils.js";
+import { applyQuery } from "./db_utils.js";
 
 interface User {
 	username: string;
@@ -40,10 +40,6 @@ async function insertUser(username: string, nickname: string, hashedPassword: st
 
 async function insertGuest(): Promise<void> {
 	await insertUser('guest', 'guest', hashString(''));
-}
-
-async function getAllUser(): Promise<User[] | undefined> {
-	return await fetchAll(TABLE_NAME);
 }
 
 async function getUserByUsername(username: string): Promise<User | undefined> {
