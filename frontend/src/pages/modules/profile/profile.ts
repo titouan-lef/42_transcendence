@@ -1,6 +1,6 @@
 import { applyColor } from "../../../utils/applyColor";
 import { getSafeElement } from "../../../utils/getSafeElement";
-import { fetchDashboardData, loadDashboard } from "./profile_dashboard";
+import { fetchDashboardData, fetchSeasonData, loadDashboard } from "./profile_dashboard";
 import { loadSettings } from "./profile_settings";
 import { fetchHistoryData, loadHistory } from "./profile_history";
 import { loadSummary } from "./profile_summary";
@@ -81,6 +81,7 @@ async function openProfile(user: string): Promise<void> {
 		drawer.innerHTML = await getDrawerContent(false);
 	}
 
+	await fetchSeasonData();
 	await fetchDashboardData(userProfile);
 	await fetchHistoryData(userProfile);
 
@@ -121,7 +122,7 @@ function initProfileEvents(): void {
 	drawer.querySelectorAll('*[id]').forEach(elem => {
 		switch (elem.id) {
 			case 'btn-return':
-				elem.addEventListener('click', () => navigateTo(Pages.HOME)); /** @todo even from leaderboard ?? */
+				elem.addEventListener('click', () => navigateTo(Pages.HOME));
 				break;
 			case 'btn-summary':
 				elem.addEventListener('click', () => changeTab(ProfileTab.SUMMARY));
