@@ -1,3 +1,4 @@
+import { Elo } from "src/tournament/elo/elo.js";
 import { Game } from "./Game.js";
 import { GameOptions, GameSettings } from "./settings/GameSettings.js";
 import { WebSocket } from "ws";
@@ -49,6 +50,7 @@ interface GameData {
 	type: GameType;
 	options: GameOptions;
 	players: string[];
+	elos: Elo[];
 };
 
 const GAME_SETTINGS = new Map<number, GameData>();
@@ -60,9 +62,9 @@ function getGameOptions(gameId: number): GameData | undefined {
 	return GAME_SETTINGS.get(gameId);
 }
 
-function registerGameOptions(options: GameOptions , type: GameType, players: string[]): number {
+function registerGameOptions(options: GameOptions , type: GameType, players: string[], elos: Elo[] = []): number {
 	const id = getNewGameId();
-	GAME_SETTINGS.set(id, { type: type, options: options, players: players });
+	GAME_SETTINGS.set(id, { type: type, options: options, players: players, elos: elos });
 	return id;
 }
 
@@ -76,13 +78,13 @@ async function localGame(socket: WebSocket, gameId: number, gameData: GameData):
 	const player2 = socket;
 	GAME_SETTINGS.delete(gameId);
 	LOCAL_GAMES.delete(gameId);
-	const settings = new GameSettings(false, gameData.options, player1, gameData.players[0], player2, "Player 2");
+	const settings = new GameSettings(false, gameData.options, player1, gameData.players[0], undefined, player2, "Player 2", undefined);
 	startGame(gameId, settings);
 }
 
 async function aiGame(socket: WebSocket, gameId: number, gameData: GameData): Promise<void> {
 	GAME_SETTINGS.delete(gameId);
-	const settings = new GameSettings(false, gameData.options, socket, gameData.players[0]);
+	const settings = new GameSettings(false, gameData.options, socket, gameData.players[0], undefined);
 	startGame(gameId, settings);
 	console.log("New local game vs AI");
 }
@@ -95,7 +97,7 @@ async function rankedGame(socket: WebSocket, gameId: number, gameData: GameData)
 	GAME_SETTINGS.delete(gameId);
 	const player2 = RANKED_WAITING.get(gameId);
 	RANKED_WAITING.delete(gameId);
-	const settings = new GameSettings(true, gameData.options, socket, gameData.players[0], player2, gameData.players[1]);
+	const settings = new GameSettings(true, gameData.options, socket, gameData.players[0], gameData.elos[0], player2, gameData.players[1], gameData.elos[1]);
 	startGame(gameId, settings);
 	console.log("New ranked game");
 }

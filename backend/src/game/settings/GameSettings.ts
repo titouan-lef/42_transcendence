@@ -1,10 +1,12 @@
 import { WebSocket } from "ws";
 import { BallOption, MapOption } from "#shared/types_transfert.js";
+import { Elo } from "src/tournament/elo/elo";
 
 interface PlayerSettings {
 	readonly playerId: 1 | 2 ;
 	readonly socket: WebSocket;
 	readonly username: string;
+	readonly elo?: Elo
 }
 
 interface GameOptions {
@@ -24,23 +26,24 @@ class GameSettings {
 	readonly player1: PlayerSettings;
 	readonly player2?: PlayerSettings;
 
-	constructor(isRanked: boolean, options: GameOptions, player1: WebSocket, playerName1: string, player2?: WebSocket, playerName2?: string) {
+	constructor(isRanked: boolean, options: GameOptions, player1: WebSocket, playerName1: string, eloPlayer1?: Elo, player2?: WebSocket, playerName2?: string, eloPlayer2?: Elo) {
 		this.isRanked = isRanked;
 		this.options = options;
 		this.player1 = {
 			playerId: 1,
 			socket: player1,
-			username: playerName1
+			username: playerName1,
+			elo: eloPlayer1
 		};
-		if (player2 && playerName2) {
+		if (player2 && playerName2 && eloPlayer2) {
 			this.player2 = {
 				playerId: 2,
 				socket: player2,
-				username: playerName2
+				username: playerName2,
+				elo: eloPlayer2
 			};
 		}
 	}
 }
 
 export { PlayerSettings, GameSettings, GameOptions };
-
