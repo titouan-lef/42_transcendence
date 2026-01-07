@@ -3,7 +3,7 @@ import { SceneManager } from "./scene/SceneManager.js";
 import { GameSettings } from "./settings/GameSettings.js";
 import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
-import { GAME_STEP_INTERVAL, PHYSIC_STEP_INTERVAL, POINTS_TO_WIN, SHOW_DISPOSE_LOGS } from "./settings/values.js";
+import { GAME_STEP_INTERVAL, PHYSIC_STEP_INTERVAL, POINTS_TO_WIN } from "./settings/values.js";
 import fs from "fs";
 import { BallOption, MapOption, Status, PositionsMessage, StartMessage, StopMessage, OptionMessage, GoalMessage, GameStats, Point } from "#shared/types_transfert.js";
 import { Player } from "./player/Player.js";
@@ -18,7 +18,7 @@ import { insertGameRule } from "../database/game_rule.js";
 import { getRuleId } from "../database/rule.js";
 import { calculateOutcome } from "../tournament/elo/elo.js";
 import { updateElo } from "../tournament/elo/elo_update.js";
-import { getAllRatingBySeason, getElo } from "../database/web3/contract_service.js";
+import { getAllRatingBySeason } from "../database/web3/contract_service.js";
 
 class Game {
 	private readonly id: number;
@@ -100,7 +100,7 @@ class Game {
 	}
 
 	async stop(): Promise<void> {
-		if (this.gameStopped) /**@todo si vous voulez trouver mieux, MAIS C PAS MOI QUI LE FERAIS */
+		if (this.gameStopped)
 			return ;
 		this.gameStopped = true;
 		if (this.settings.isRanked) {
@@ -115,8 +115,6 @@ class Game {
 		this.sceneManager.destroyScene();
 		this.scene.onAfterRenderObservable.clear();
 		this.camera.dispose();
-		if (SHOW_DISPOSE_LOGS)
-			this.sceneManager.showDisposeLogs(this.scene);
 		this.scene.dispose();
 		this.engine.dispose();
 	}
@@ -180,8 +178,6 @@ class Game {
 			} else {
 				this.inAnimation = false;
 				this.sceneManager.destroyEnvironnement();
-				if (SHOW_DISPOSE_LOGS)
-					this.sceneManager.showDisposeLogs(this.scene);
 				this.sceneManager.setEnvironnement(this.scene, this.settings);
 				const player1 = this.sceneManager.getPlayer(1);
 				const player2 = this.sceneManager.getPlayer(2);

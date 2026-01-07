@@ -95,7 +95,7 @@ async function rankedGame(socket: WebSocket, gameId: number, gameData: GameData)
 	GAME_SETTINGS.delete(gameId);
 	const player2 = RANKED_WAITING.get(gameId);
 	RANKED_WAITING.delete(gameId);
-	const settings = new GameSettings(true, gameData.options, socket, gameData.players[0], player2, gameData.players[1]); /** @todo get real player usernames */
+	const settings = new GameSettings(true, gameData.options, socket, gameData.players[0], player2, gameData.players[1]);
 	startGame(gameId, settings);
 	console.log("New ranked game");
 }

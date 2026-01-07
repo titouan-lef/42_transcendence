@@ -1,6 +1,5 @@
 import { PlayerKeys } from "./PointSettings";
 
-/** @todo spinMode switching not working */
 const LOCAL_PLAYER1_KEYS: PlayerKeys = {
 	mov_right: "KeyS",
 	mov_left: "KeyW",
@@ -15,7 +14,6 @@ const LOCAL_PLAYER1_KEYS: PlayerKeys = {
 	dash: "Space"
 };
 
-/** @todo spinMode switching not working */
 const LOCAL_PLAYER2_KEYS: PlayerKeys = {
 	mov_right: "ArrowUp",
 	mov_left: "ArrowDown",
@@ -30,7 +28,6 @@ const LOCAL_PLAYER2_KEYS: PlayerKeys = {
 	dash: undefined
 };
 
-/** @todo spinMode switching not working */
 const AI_RANKED_PLAYER_KEYS: PlayerKeys = {
 	mov_right: "KeyD",
 	mov_left: "KeyA",
