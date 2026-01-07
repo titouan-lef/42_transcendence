@@ -19,6 +19,7 @@ import { getRuleId } from "../database/rule.js";
 import { calculateOutcome } from "../tournament/elo/elo.js";
 import { updateElo } from "../tournament/elo/elo_update.js";
 import { getAllRatingBySeason } from "../database/web3/contract_service.js";
+import { getUserByUsername } from "../database/user.js";
 
 class Game {
 	private readonly id: number;
@@ -228,21 +229,26 @@ class Game {
 	private async sendStart(player1: Player, player2: Player) : Promise<void> {
 		try {
 			const season = await getCurrentSeason();
-			const [rating1, rating2] = await getAllRatingBySeason([player1.getName(), player2.getName()], season);
+			const player1Name: string = player1.getName();
+			const player2Name: string = player2.getName();
+			const user1 = await getUserByUsername(player1Name);
+			const user2 = await getUserByUsername(player2Name);
+
+			const [rating1, rating2] = await getAllRatingBySeason([player1Name, player2Name], season);
 
 			const startP1: StartMessage = {
 				status: Status.START,
-				playerName: player1.getName(),
+				playerNickname: user1 ? user1.nickname : "",
 				playerRating: rating1,
-				enemyName: player2.getName(),
+				enemyNickname: user2 ? user2.nickname : "",
 				enemyRating: rating2
 			};
 			player1.send(startP1);
 			const startP2: StartMessage = {
 				status: Status.START,
-				playerName: player2.getName(),
+				enemyNickname: user2 ? user2.nickname : "",
 				playerRating: rating2,
-				enemyName: player1.getName(),
+				playerNickname: user1 ? user1.nickname : "",
 				enemyRating: rating1
 			};
 			player2.send(startP2);
