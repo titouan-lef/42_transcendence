@@ -29,7 +29,6 @@ function getDashboardPage(maxSeason: number ): string {
 }
 
 function getDashboardTable(data: UserDashboardInfos): string {
-
 	return ( `
 	<div class="grid grid-cols-3 grid-rows-1 gap-4 h-full w-full">
 		${createDashboardCard('wins', data.gamesWins)}
@@ -40,11 +39,11 @@ function getDashboardTable(data: UserDashboardInfos): string {
 		${createDashboardChartBox('win_rate_chart')}
 	</div>
 	<div class="grid grid-cols-3 grid-rows-2 gap-4 h-full w-full">
-		${createDashboardCard('elo', data.elo)}	
-		${createDashboardCard('games_played', data.gamesPlayed)}	
-		${createDashboardCard('goals_avg', data.goalAverage)}	
-		${createDashboardCard('games_time', data.durationAverage)}	
-		${createDashboardCard('prefered_ball', data.preferedBall)}	
+		${data.elo > 0 ? createDashboardCard('elo', data.elo) : createDashboardCard('elo', '-')}
+		${createDashboardCard('games_played', data.gamesPlayed)}
+		${createDashboardCard('goals_avg', data.goalAverage)}
+		${createDashboardCard('games_time', data.durationAverage)}
+		${createDashboardCard('prefered_ball', data.preferedBall)}
 		${createDashboardCard('prefered_map', data.preferedMap)}
 	</div>
 	<div class="">

@@ -21,7 +21,6 @@ const SECTION_TITLE_STYLE = `
 text-[26px] font-bold text-center
 `;
 
-/** @todo fetch elo, calculate max of wins for balls and maps */
 function getSummaryTable(history: GameHistoryWithAvatar[], data: UserDashboardInfos): string {
 	return (`
 	<div class="flex flex-col gap-1 h-full pr-[190px]">
@@ -30,7 +29,7 @@ function getSummaryTable(history: GameHistoryWithAvatar[], data: UserDashboardIn
 			<div class="p-4 flex h-[150px] w-full gap-4">
 				${createDashboardCard('win_rate', data.gamesPlayed ? data.gamesWins / data.gamesPlayed * 100 : 0)}
 				${createDashboardCard('games_played', data.gamesPlayed)}
-				${createDashboardCard('elo', data.elo)}
+				${data.elo > 0 ? createDashboardCard('elo', data.elo) : createDashboardCard('elo', '-')}
 			</div>
 		</div>
 		${createButtonHtml(['see_more'], 'btn-sum-dashboard', { 'class': `${SEE_MORE_BTN_STYLE}` })}
