@@ -8,7 +8,7 @@ let historyData: GameHistoryWithAvatar[];
 
 const HISTORY_STYLE = `
 flex flex-col justify-start items-center gap-4
-h-full w-full px-4 py-10 pr-[190px]
+h-full w-full px-4 py-10
 scrollbar-none overflow-y-scroll overflow-hidden
 [mask-image:linear-gradient(to_bottom,transparent,black_5%,black_90%,transparent)]
 `;

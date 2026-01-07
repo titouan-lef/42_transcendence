@@ -3,16 +3,16 @@ import { updateTheme } from "../../../assets/themes/theme.js";
 import { getSafeElement } from "../../../utils/getSafeElement.js";
 
 const SETTINGS_THEME_SELECTOR = `
-<div>
+<div class='flex flex-col h-full w-full bg-light/10 rounded-2xl p-2'>
 	<div class="p-8 text-[20px] font-bold">themes selector</div>
-	<div>${generateThemeButtons()}</div>
+	${generateThemeButtons()}
 </div>
 `;
 
 function generateThemeButtons(): string {
 	const style = `rounded-2xl border-4 border-light bg-primary w-[50px] h-[50px] flex flex-col justify-end items-end gap-[2px]`;
 
-	let selectButtons = `<div class="grid grid-cols-6 grid-rows-2 gap-4 justify-center items-center">`;
+	let selectButtons = `<div class="grid grid-cols-6 grid-rows-2 gap-4 h-full w-full">`;
 
 	THEMES_LIST.forEach(theme => {
 		selectButtons += `<div data-theme="${theme}" id="btn-${theme}" class="${style}">

@@ -19,8 +19,8 @@ data-[active=true]:text-variant
 
 /** @todo translation :) */
 const SETTINGS_KEYBINDS_SELECTOR = `
-<div class='text-[14px] w-full h-full'>
-	<div class="p-8 text-[20px] font-bold">keybinds selector</div>
+<div class='text-[14px] w-full h-full bg-light/10 rounded-2xl'>
+	<div class="p-8 pl-10 text-[20px] font-bold">keybinds selector</div>
 	<div id='btn-navbar-keybinds' class="${TABS_CONTAINER_STYLE}">
 		<button id='btn-ai-ranked-keys' class='${TAB_BTN}' data-active='true'>ai ranked</button>
 		<button id='btn-local-player1-keys' class='${TAB_BTN}'>local player 1</button>
