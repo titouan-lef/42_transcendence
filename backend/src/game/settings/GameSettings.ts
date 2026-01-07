@@ -1,6 +1,6 @@
 import { WebSocket } from "ws";
 import { BallOption, MapOption } from "#shared/types_transfert.js";
-import { Elo } from "src/tournament/elo/elo";
+import { Elo } from "../../tournament/elo/elo";
 
 interface PlayerSettings {
 	readonly playerId: 1 | 2 ;
