@@ -7,10 +7,16 @@ import { Friend, UserBody } from "#shared/HTTP";
 
 const FRIENDLIST = new Set<Friend>(); ;
 
-const DETAILS_STYLE = `
+const ONLINE_STYLE = `
 	rounded-2xl
 	w-full
-	${applyColor()}
+	${applyColor('online')}
+`;
+
+const OFFLINE_STYLE = `
+	rounded-2xl
+	w-full
+	${applyColor('offline')}
 `;
 
 const SUM_STYLE = `
@@ -68,11 +74,12 @@ async function updateFriendList(): Promise<void> {
 
 	/** @todo red or green dot for online status */
 	FRIENDLIST.forEach(friend => {
-		const connected = friend.onlineStatus ? "conected": "not connected";
+		const style = friend.onlineStatus ? ONLINE_STYLE: OFFLINE_STYLE;
+
 		elem.innerHTML += `
-			<details id="${friend.username}" class="${DETAILS_STYLE}">
+			<details id="${friend.username}" class="${style}">
 				<summary class="${SUM_STYLE}">
-					<p class="${FRIEND_STYLE}" title="${friend.username}">${friend.username}-${connected}</p> 
+					<p class="${FRIEND_STYLE}" title="${friend.username}">${friend.username}</p>
 				</summary>
 				<div class="${DEPLOYED_STYLE}">
 					${createButtonHtml(["profile"], `btn-profile-${friend.username}`, { "class": `${BTN_STYLE}` })}
