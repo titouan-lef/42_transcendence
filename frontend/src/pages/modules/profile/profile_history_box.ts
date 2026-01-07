@@ -37,12 +37,12 @@ shrink-0
 `;
 
 function createHistoryBox(game: GameHistoryWithAvatar): string {
-	const victory = (game.my_score > game.opponent_score) ? 'win': 'lose';
+	const victory = (game.myScore > game.opponentScore) ? 'win': 'lose';
 	let avatar: string;
 	if (!game.isAvatarSet)
 		avatar = "./images/avatar.png";
 	else
-		avatar = `/pictures/${game.opponent}?t=${Date.now()}`;
+		avatar = `/pictures/${game.opponentUsername}?t=${Date.now()}`;
 	const htmlContent = `
 	<div class="${applyColor(victory)} ${HISTORY_BOX_STYLE}">
 		<div class="${HISTORY_TEXT_BOX_STYLE} justify-start">
@@ -50,8 +50,8 @@ function createHistoryBox(game: GameHistoryWithAvatar): string {
 				<img src="${avatar}" alt="Avatar" width="50px" height="50px">
 			</div>
 			<div class="${HISTORY_GAME_INFO_STYLE}">
-				<div id="print-nickname" class="font-park truncate w-full text-ellipsis">
-					${game.opponent}
+				<div id="${game.opponentUsername}-nickname" class="font-park truncate w-full text-ellipsis">
+					${game.opponentNickname}
 				</div>
 				<div id="print-date" class="text-[15px] truncate">
 					Season ${game.season} - ${game.date} - duration : ${~~(game.duration / 60)} min ${(game.duration % 60)} sec
@@ -60,11 +60,11 @@ function createHistoryBox(game: GameHistoryWithAvatar): string {
 		</div>
 		<div class="${HISTORY_TEXT_BOX_STYLE} justify-end">
 			<div id="print-score" class="${HISTORY_SCORE_STYLE}">
-				${game.my_score} - ${game.opponent_score}
+				${game.myScore} - ${game.opponentScore}
 			</div>
 			<div id="print-elo" class="${HISTORY_ELO_BOX_STYLE}
 			${victory === 'win' ? 'bg-win/50 shadow-win/50' : 'bg-lose/50 shadow-lose/50'}">
-				${game.elo_variation > 0 ? '+' + game.elo_variation.toString() : game.elo_variation.toString()}
+				${game.eloVariation > 0 ? '+' + game.eloVariation.toString() : game.eloVariation.toString()}
 			</div>
 		</div>
 	</div>
