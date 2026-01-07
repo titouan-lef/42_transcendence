@@ -4,7 +4,7 @@ import { MapOption, BallOption } from "#shared/types_transfert.js";
 const SVG_SELECTED_STYLE = `
 hidden peer-checked:flex
 absolute -top-2 -right-2 z-10
-w-6 h-6 rounded-full
+w-4 h-4 rounded-full
 bg-[var(--color-variant)] text-dark
 items-center justify-center shadow-md
 `;
@@ -16,6 +16,7 @@ const SVG_SELECTED = `
 `;
 
 const SVG_BOX_STYLE = `
+shrink-0
 w-full h-full rounded-2xl
 bg-dark border-2 border-darker text-darker
 flex items-center justify-center
@@ -28,7 +29,7 @@ peer-checked:shadow-lg peer-checked:shadow-variant/20
 
 function createCheckbox(id: string, svg: string, value?: string): string {
 	return `
-	<label class="relative group w-[50px] h-[50px] select-none">
+	<label class="relative group w-10 h-10 select-none">
 		<input id='${id}' type="checkbox" value='${value ?? ''}' class="peer sr-only"/>
 		<div class="${SVG_BOX_STYLE}">
 			${svg}
@@ -44,7 +45,7 @@ function createCheckbox(id: string, svg: string, value?: string): string {
 function createSvgBox(svg: string): string {
 	const svgBoxStyle = `
 	w-6 h-6 rounded-2xl
-	bg-dark border-2 border-darker text-darker
+	bg-dark border-2 border-variant text-variant
 	flex items-center justify-center
 	`;
 

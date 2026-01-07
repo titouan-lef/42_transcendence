@@ -10,8 +10,12 @@
  * see all details here : > https://www.w3schools.com/graphics/svg_intro.asp <
  */
 
+const SVG_STYLE = `
+w-8 h-8 fill-current
+`;
+
 const SVG_MAP_DEFAULT = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="fill-current w-8 h-8">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="${SVG_STYLE}">
 	<g transform="matrix(0.933601,0,0,0.856452,4.85492,3.74975)">
 		<path
 			class="opacity-60"
@@ -30,7 +34,7 @@ const SVG_MAP_DEFAULT = `
 `;
 
 const SVG_MAP_VOLCANO = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="fill-current w-8 h-8">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="${SVG_STYLE}">
 	<g transform="matrix(1.12548,0,0,1.18537,-2.5321,-4.19871)">
 		<path
 			class="opacity-50"
@@ -62,7 +66,7 @@ const SVG_MAP_VOLCANO = `
 `;
 
 const SVG_MAP_SKY = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="w-8 h-8 fill-current" fill-rule="evenodd" clip-rule="evenodd">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="${SVG_STYLE}" fill-rule="evenodd" clip-rule="evenodd">
 	<g transform="matrix(1.08436,0,0,0.972996,2.87535,9.34877)">
 		<path
 			class="opacity-60"
@@ -117,7 +121,7 @@ const SVG_MAP_DESERT = `
 `;
 
 const SVG_BALL_DEFAULT = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="w-8 h-8 fill-current" fill-rule="evenodd" clip-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="${SVG_STYLE}" fill-rule="evenodd" clip-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
 	<g transform="matrix(0.949099,0,0,0.949099,-12.1831,-14.3536)">
 		<circle
 			cx="97.927"
@@ -144,7 +148,7 @@ const SVG_BALL_DEFAULT = `
 `;
 
 const SVG_BALL_TRICKY = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="w-8 h-8 fill-current" fill-rule="evenodd" clip-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="${SVG_STYLE}" fill-rule="evenodd" clip-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
 	<g transform="matrix(0.610055,0,0,0.610055,31.2692,-3.39162)">
 		<circle
 			cx="97.927"
@@ -171,7 +175,7 @@ const SVG_BALL_TRICKY = `
 `;
 
 const SVG_BALL_SNAKE = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="w-8 h-8 fill-current" fill-rule="evenodd" clip-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="${SVG_STYLE}" fill-rule="evenodd" clip-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
 	<g transform="matrix(0.610055,0,0,0.610055,31.2692,-3.39162)">
 		<circle
 			cx="97.927"
@@ -198,7 +202,7 @@ const SVG_BALL_SNAKE = `
 `;
 
 const SVG_BALL_INVISIBLE = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="w-8 h-8 fill-current" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="${SVG_STYLE}" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
 	<g transform="matrix(0.949099,0,0,0.949099,-12.1831,-14.3536)">
 		<circle
 			cx="97.927"
@@ -219,7 +223,7 @@ const SVG_BALL_INVISIBLE = `
 `;
 
 const SVG_BALL_PULSE = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="w-8 h-8 fill-current" fill-rule="evenodd" clip-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="${SVG_STYLE}" fill-rule="evenodd" clip-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
 	<g transform="matrix(0.610055,0,0,0.610055,31.2692,-3.39162)">
 		<circle
 			cx="97.927"
@@ -256,7 +260,7 @@ const SVG_BALL_PULSE = `
 `;
 
 const SVG_RULE_PROT = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="w-8 h-8 fill-current" fill-rule="evenodd" clip-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="${SVG_STYLE}" fill-rule="evenodd" clip-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
 	<g transform="matrix(0.712832,0.166487,-0.176737,0.75672,31.5459,5.59709)">
 		<path
 			d="M109.55,56.101L109.55,67.434C109.55,70.562 106.855,73.101 103.535,73.101L12.539,73.101C9.219,73.101 6.524,70.562 6.524,67.434L6.524,56.101C6.524,52.973 9.219,50.434 12.539,50.434L103.535,50.434C106.855,50.434 109.55,52.973 109.55,56.101Z"
@@ -296,7 +300,7 @@ const SVG_RULE_PROT = `
 `;
 
 const SVG_RULE_SPIN = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="w-8 h-8 fill-current" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="${SVG_STYLE}" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
 	<g transform="matrix(0.838069,0,0,0.889668,13.361,49.1289)">
 		<path
 			d="M109.55,56.101L109.55,67.434C109.55,70.562 106.855,73.101 103.535,73.101L12.539,73.101C9.219,73.101 6.524,70.562 6.524,67.434L6.524,56.101C6.524,52.973 9.219,50.434 12.539,50.434L103.535,50.434C106.855,50.434 109.55,52.973 109.55,56.101Z"
@@ -316,7 +320,7 @@ const SVG_RULE_SPIN = `
 `;
 
 const SVG_RULE_WIND = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="w-8 h-8 fill-current" fill-rule="evenodd" clip-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="${SVG_STYLE}" fill-rule="evenodd" clip-rule="evenodd" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="1.5">
 	<g transform="matrix(1.11787,0,0,1.11787,-15.3443,-46.0581)">
 		<circle
 			cx="32.909"
@@ -367,7 +371,7 @@ const SVG_RULE_WIND = `
 `;
 
 const SVG_RULE_DASH = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="w-full h-full fill-current" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="${SVG_STYLE} h-full w-full" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
 	<g transform="matrix(0.409278,0,0,0.761814,67.1193,14.9447)">
 		<path
 			d="M109.55,56.101L109.55,67.434C109.55,70.562 106.855,73.101 103.535,73.101L12.539,73.101C9.219,73.101 6.524,70.562 6.524,67.434L6.524,56.101C6.524,52.973 9.219,50.434 12.539,50.434L103.535,50.434C106.855,50.434 109.55,52.973 109.55,56.101Z"
@@ -397,7 +401,7 @@ const SVG_RULE_DASH = `
 `;
 
 const SVG_CANON = `
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="w-8 h-8 fill-current" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 124" class="${SVG_STYLE}" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
 	<path
 		d="M47.513,87.517C38.972,91.42 31.486,94.143 27.423,94.02C13.618,93.603 4.613,71.929 14.184,62C23.755,52.071 87.23,38.668 87.23,38.668C90.438,37.451 89.853,37.157 92.696,33.632C92.696,33.632 98.322,28.937 101.153,31.656L111.057,58.013C110.998,61.469 103.312,62 103.312,62C100.751,62.007 100.005,60.101 95.402,62C95.402,62 91.108,64.098 85.738,67.219C84.243,68.088 82.6,69.036 80.841,70.04C81.199,71.513 81.389,73.052 81.389,74.635C81.389,85.336 72.701,94.024 62,94.024C56.241,94.024 51.066,91.508 47.513,87.517Z"
 		class="opacity-60"
