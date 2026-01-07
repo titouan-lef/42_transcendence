@@ -5,6 +5,11 @@ import { getGameOptions } from "../game/settings/GameRules.js";
 import { GameTypes } from "../routes/navigate_types.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 
+const GAME_INFOS_STYLE = `
+flex-1 min-w-0
+truncate
+`;
+
 //////////////////////////////////////////
 //			Game management				//
 //////////////////////////////////////////
@@ -114,13 +119,6 @@ async function newLocalGame(): Promise<void> {
 	};
 }
 
-
-const GAME_INFOS_STYLE = `
-flex-1 min-w-0
-truncate
-`;
-
-/** @todo get my nickname, opponent's nickname, my elo, oppo elo from back*/
 function loadGameHeader(infos: StartMessage): void {
 
 	const gameType = getSafeElement('game-type', HTMLElement).innerHTML;
