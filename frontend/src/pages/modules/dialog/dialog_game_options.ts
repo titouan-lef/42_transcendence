@@ -103,15 +103,19 @@ function lockLastCheckbox(containerId: string): void {
 		container.querySelectorAll<HTMLInputElement>("input[type='checkbox']")
 	);
 
-	checkboxes.forEach(cb => {
-		cb.addEventListener("change", () => {
-			const checked = checkboxes.filter(cb => cb.checked);
+	function updateState(): void {
+		const checked = checkboxes.filter(cb => cb.checked);
 
-			checkboxes.forEach(cb => {
-				cb.disabled = checked.length === 1 && cb.checked;
-			});
+		checkboxes.forEach(cb => {
+			cb.disabled = checked.length === 1 && cb.checked;
 		});
+	};
+
+	checkboxes.forEach(cb => {
+		cb.addEventListener("change", updateState);
 	});
+
+	updateState();
 }
 
 /** @todo better? cound not get a function with two args to loadDialog */
