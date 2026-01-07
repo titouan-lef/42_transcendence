@@ -14,15 +14,6 @@ async function applyQuery<T>(queryFunc: (db: Database) => Promise<T>, errorMsg: 
 	}
 }
 
-async function fetchAll<T>(tableName: string): Promise<T | undefined> {
-	return await applyQuery(
-		async (db) => await db.all(
-			`SELECT *
-			FROM ${tableName}`
-		), "getAll" + tableName
-	);
-}
-
 async function getActualDate(): Promise<Date> {
 	const date = await applyQuery(
 		async (db) => await db.get(
