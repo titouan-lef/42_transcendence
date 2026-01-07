@@ -35,7 +35,7 @@ function createMatch(waitingPlayerList: WaitingPlayer[], index: number, matching
 		return;
 	removeTwoPlayersInQueue(waitingPlayerList, usernameP1, usernameP2);
 	const option = getRandomOptions(p1.option, p2.option);
-	const id = registerGameOptions(option, GameType.RANKED, [usernameP1, usernameP2]);
+	const id = registerGameOptions(option, GameType.RANKED, [usernameP1, usernameP2], [p1.elo, p2.elo]);
 	manageSocketValidation(p1.socket, id);
 	manageSocketValidation(p2.socket, id);
 }

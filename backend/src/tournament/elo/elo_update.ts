@@ -2,7 +2,7 @@ import { insertEloVariation } from "../../database/elo.js";
 import { getDateLastGame, getPlayerGameCountBySeason } from "../../database/game.js";
 import { getPlacementGames, insertPlacementGame, Placement } from "../../database/placement.js";
 import { getCurrentSeason } from "../../database/season.js";
-import { getElo, setElo, setRatingDeviation } from "../../database/web3/contract_service.js";
+import { setElo, setRatingDeviation } from "../../database/web3/contract_service.js";
 import { nbDayBetween } from "../../utils/time.js";
 import { MAX_RD, NB_PLACEMENT_GAME, Elo, applyTimeOnRd, eloIsDefine, updateEloAfterGame, updateEloAfterGamePlacement } from "./elo.js";
 
@@ -14,15 +14,15 @@ interface EloData {
 	outcome: number;
 };
 
-async function updateElo(usernameP1: string, usernameP2: string, outcome: number, gameId: number): Promise<void> {
+async function updateElo(usernameP1: string, eloP1: Elo, usernameP2: string, eloP2: Elo, outcome: number, gameId: number): Promise<void> {
 	const currentSeasonId = await getCurrentSeason();
 	if (!currentSeasonId)
 		throw new Error("Error to get current season");
 
-	const eloDataP1 = await createEloData(usernameP1, currentSeasonId, outcome);
+	const eloDataP1 = await createEloData(usernameP1, eloP1, currentSeasonId, outcome);
 	if (!eloDataP1)
 		throw new Error("Error to create elo data of player 1");
-	const eloDataP2 = await createEloData(usernameP2, currentSeasonId, 1 - outcome);
+	const eloDataP2 = await createEloData(usernameP2, eloP2, currentSeasonId, 1 - outcome);
 	if (!eloDataP2)
 		throw new Error("Error to create elo data of player 2");
 
@@ -33,12 +33,11 @@ async function updateElo(usernameP1: string, usernameP2: string, outcome: number
 	await saveElo(eloDataP2, eloDataP1.oldElo, gameId, currentSeasonId);
 }
 
-async function createEloData(username: string, seasonId: number, outcome: number): Promise<EloData | null> {
+async function createEloData(username: string, eloBeforeInactivity: Elo, seasonId: number, outcome: number): Promise<EloData | null> {
 	const nbGameInDb = await getPlayerGameCountBySeason(username, seasonId);
 	if (nbGameInDb === undefined)
 		return null;
 	const nbGame = nbGameInDb + 1;// Games in database + current game.
-	const eloBeforeInactivity = await getElo(username, seasonId);
 	const elo = await getEloAfterInactivity(username, nbGame, eloBeforeInactivity, seasonId);
 	if (!elo)
 		return null;
@@ -69,7 +68,8 @@ async function updateRdPlayer(username: string, nbGame: number, elo: Elo, season
 		const t = nbDayBetween(new Date(), dateLastGame);// Time elapsed since the last game (in day).
 		elo.rd = applyTimeOnRd(elo.rd, t);
 	}
-	await setRatingDeviation(username, seasonId, elo.rd);
+	if (nbGame < NB_PLACEMENT_GAME) // If (nbGame >= NB_PLACEMENT_GAME), rd is update with ratings.
+		setRatingDeviation(username, seasonId, elo.rd); /** @warning Not await for perf */
 	return elo;
 }
 
@@ -86,7 +86,7 @@ async function saveElo(eloData: EloData, eloOpp: Elo, gameId: number, seasonId: 
 		return;
 	}
 	await manageUpdateElo(eloData, eloOpp, seasonId);
-	await setElo(eloData.username, seasonId, eloData.elo);
+	setElo(eloData.username, seasonId, eloData.elo); /** @warning Not await for perf */
 	await insertEloVariation(eloData.username, gameId, eloData.elo.r - eloData.oldElo.r);
 }
 

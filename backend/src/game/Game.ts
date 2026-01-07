@@ -122,10 +122,12 @@ class Game {
 	private async updateElos(): Promise<void> {
 		const player1 = this.sceneManager.getPlayer(1)?.getName();
 		const player2 = this.sceneManager.getPlayer(2)?.getName();
+		const eloP1 = this.settings.player1.elo;
+		const eloP2 = this.settings.player2?.elo;
 		const outcome = calculateOutcome(this.score.x, this.score.y);
-		if (!player1 || !player2 || !this.gameIdDb)
+		if (!player1 || !player2 || !this.gameIdDb || !eloP1 || !eloP2)
 			return;
-		updateElo(player1, player2, outcome, this.gameIdDb);
+		updateElo(player1, eloP1, player2, eloP2, outcome, this.gameIdDb);
 	}
 
 	private setScene(): void {
