@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { MAP_SIZE, PLAYER_DIMENSION, WALL_WIDTH } from "../../settings/values.js";
 import { BallTemplate } from "../../ball/BallTemplate.js";
-import { round } from "../../../utils/math.js";
+import { randomInt, round } from "../../../utils/math.js";
 
 enum DestinationAi { LEFT, RIGHT, REACHING };
 enum AttackAi { LEFT, RIGHT, WAIT };
@@ -19,6 +19,7 @@ interface ActionAi {
 	dash: boolean;
 	atk_left: boolean;
 	atk_right: boolean;
+	changeMode: boolean;
 }
 
 abstract class Brain {
@@ -35,14 +36,18 @@ abstract class Brain {
 	private destination: DestinationAi;
 	private ballZPredict: number;
 	private dashOptionEnable: boolean;
+	private spinOptionEnable: boolean;
+	private changeMode: boolean;
 
 	protected abstract intersectionTop(movement: Movement): number;
 
-	constructor(dashIsEnable: boolean) {
+	constructor(dashIsEnable: boolean, spinIsEnable: boolean) {
 		this.destination = DestinationAi.REACHING;
 		this.atkDirection = AttackAi.WAIT;
 		this.ballZPredict = 0;
 		this.dashOptionEnable = dashIsEnable;
+		this.spinOptionEnable = spinIsEnable;
+		this.changeMode = false;
 	}
 
 	refreshView(ball: BallTemplate | null): void {
@@ -54,6 +59,8 @@ abstract class Brain {
 		const mouvement = this.getBallMovement(ball);
 		const zPos = this.intersectionTop(mouvement);
 		this.ballZPredict = round(zPos, 1);
+		if (this.spinOptionEnable && randomInt(1, 5) <= 1)
+			this.changeMode = true;
 	}
 
 	private getBallMovement(ball: BallTemplate): Movement {
@@ -110,6 +117,7 @@ abstract class Brain {
 			dash: false,
 			atk_left: false,
 			atk_right: false,
+			changeMode: false
 		};
 	}
 
@@ -119,6 +127,10 @@ abstract class Brain {
 	}
 
 	private applyActionDestReaching(action: ActionAi): void {
+		if (this.changeMode) {
+			this.changeMode = false;
+			action.changeMode = true;
+		}
 		switch (this.atkDirection) {
 			case AttackAi.LEFT:
 				action.atk_left = true;

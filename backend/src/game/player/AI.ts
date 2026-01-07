@@ -6,6 +6,8 @@ import { BallTemplate } from "../ball/BallTemplate.js";
 import { ActionAi, Brain } from "./Brain/Brain.js";
 import { DefaultBrain } from "./Brain/concrete_brain/DefaultBrain.js";
 
+const REFRESH_VIEW = 1000;
+
 class AI extends Player {
 	private readonly updateIntervalId: ReturnType<typeof setInterval>;
 	private readonly makeActionIntervalId: ReturnType<typeof setInterval>;
@@ -14,14 +16,16 @@ class AI extends Player {
 	private isEndingShoot = false;
 	private shootAnimationFrame = 0;
 	private ballToWatch: BallTemplate | null;
+	private isInNormalMode;
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, options: GameOptions) {
 		super(scene, position, options, 2, "AI");
-		this.brain = new DefaultBrain(options.dashingPlayer);
+		this.brain = new DefaultBrain(options.dashingPlayer, options.spin);
 		this.controls = this.getInitControl();
 		this.makeActionIntervalId = this.makeActionInterval();
-		this.updateIntervalId = setInterval(() => this.update(), 1000);
+		this.updateIntervalId = setInterval(() => this.update(), REFRESH_VIEW);
 		this.ballToWatch = null;
+		this.isInNormalMode = true;
 	}
 
 	private makeActionInterval(): ReturnType<typeof setInterval> {
@@ -47,7 +51,7 @@ class AI extends Player {
 			return;
 		this.isEndingShoot = false;
 		this.shootAnimationFrame = 0;
-		this.controls.normalMode = true;
+		this.resetRotation();
 		this.controls.emoteAngry = true;
 	}
 
@@ -68,12 +72,16 @@ class AI extends Player {
 	}
 
 	private applyAction(action: ActionAi): void {
+		if (action.changeMode) {
+			this.isInNormalMode = (!this.isInNormalMode);
+			this.resetRotation();
+		}
 		this.controls.mov_left = action.mov_left;
 		this.controls.mov_right = action.mov_right;
 		this.controls.dash = action.dash;
 		if (!action.atk_left && !action.atk_right) {
 			this.shootAnimationFrame = 0;
-			this.controls.normalMode = true;
+			this.resetRotation();
 		} else
 			this.manageShootAnimation(action);
 	}
@@ -89,6 +97,13 @@ class AI extends Player {
 				this.controls.rot_left = true;
 		} else// Reset.
 			this.isEndingShoot = true;
+	}
+
+	private resetRotation(): void {
+		if (this.isInNormalMode)
+			this.controls.normalMode = true;
+		else
+			this.controls.spinMode = true;
 	}
 
 	setBallToWatch(ball: BallTemplate): void {
