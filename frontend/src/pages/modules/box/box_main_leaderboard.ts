@@ -6,6 +6,7 @@ import { Pages } from "../../../routes/navigate_types";
 import { isRequestSuccessfull, sendGetRequestToBack } from "../../../services/api_request";
 import { LeaderboardInfos, Ranking } from "#shared/HTTP.js";
 import { getFilterHtml } from "../../../components/selectionMenu";
+import { FRIENDLIST } from "./box_aside_friendlist";
 
 const LEADERBOARD_THEAD = `
 <thead class="bg-light flex text-variant w-full">
@@ -37,23 +38,26 @@ function getLeaderboardPage(maxSeason: number ): string {
 	`;
 }
 
-function generateLeaderboardRows(ranking: Ranking[]): string {
-	let rows = ``;
+function generateLeaderboardRows(ranking: Ranking[]): void {
+	const leaderboard = getSafeElement('leaderboard', HTMLElement);
 	let rank = 1;
-	ranking.forEach(user => { /** @todo user btn-profile-nickname to go to nickname's profile page */
-		rows += `
-		<tr class="flex w-full mb-1 h-[70px]">
-			<td class="p-4 w-1/5">${rank}</td>
-			<td id='btn-profile-${user.nickname}' class="p-4 w-1/5">${user.nickname}</td>
-			<td class="p-4 w-1/5">${user.rating}</td>
-			<td class="p-4 w-1/5">${user.winrate * 100}</td>
-			<td class="p-4 w-1/5">${user.nbGamePlayed}</td>
-		</tr>
-		`;
+	ranking.forEach(user => {
+		leaderboard.insertAdjacentHTML('beforeend',`
+			<tr class="flex w-full mb-1 h-[70px]">
+				<td class="p-4 w-1/5">${rank}</td>
+				<td id="btn-profile-${user.username}" class="p-4 w-1/5 cursor-pointer">
+					${user.nickname}
+				</td>
+				<td class="p-4 w-1/5">${user.rating}</td>
+				<td class="p-4 w-1/5">${user.winrate * 100}</td>
+				<td class="p-4 w-1/5">${user.nbGamePlayed}</td>
+			</tr>
+			`
+		);
+		const elem = getSafeElement(`btn-profile-${user.username}`, HTMLElement);
+		elem.addEventListener('click', () => navigateTo(Pages.PROFILE, user.username));
 		rank += 1;
 	});
-
-	return rows;
 }
 
 async function updateLeaderboardData(): Promise<void> {
@@ -64,8 +68,7 @@ async function updateLeaderboardData(): Promise<void> {
 		return;
 	const infos: LeaderboardInfos = JSON.parse(reply.content);
 
-	const leaderboard = getSafeElement('leaderboard', HTMLElement);
-	leaderboard.innerHTML = generateLeaderboardRows(infos.ranking);
+	generateLeaderboardRows(infos.ranking);
 
 	const elem = getSafeElement('season-dates', HTMLElement);
 	elem.innerHTML = `${infos.beginDate} - ${infos.endDate}`;
