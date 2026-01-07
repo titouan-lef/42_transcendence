@@ -6,6 +6,8 @@ import { createDashboardCard } from "./profile_dashboard_card";
 import { generateHistory, getHistoryData } from "./profile_history";
 import { setActiveBtn } from "./profile_navbar";
 import { GameHistoryWithAvatar, UserDashboardInfos } from "#shared/HTTP";
+import { navigateTo } from "src/routes/navigate";
+import { Pages } from "src/routes/navigate_types";
 
 const SEE_MORE_BTN_STYLE = `
 w-9/10 h-[30px] bg-dark/30 text-[20px] text-variant bg-grad-l-300 from-primary
@@ -20,6 +22,8 @@ flex flex-col justify-start items-centers
 const SECTION_TITLE_STYLE = `
 text-[26px] font-bold text-center
 `;
+
+const HISTORY_DEEP = 3;
 
 function getSummaryTable(history: GameHistoryWithAvatar[], data: UserDashboardInfos): string {
 	return (`
@@ -36,7 +40,7 @@ function getSummaryTable(history: GameHistoryWithAvatar[], data: UserDashboardIn
 		<div id='sum-history' class="${SECTION_STYLE} h-full flex-1 min-h-0">
 			${createParagraphHtml(['last_games'], 'p-last-games', { 'class': `${SECTION_TITLE_STYLE}` })}
 			<div class="flex flex-col justify-start items-center gap-4 h-full w-full p-4 flex-1 min-h-0 scrollbar-none overflow-y-scroll overflow-hidden">
-				${generateHistory(history, 3)}
+				${generateHistory(history, HISTORY_DEEP)}
 			</div>
 		</div>
 		${createButtonHtml(['see_more'], 'btn-sum-history', { 'class': `${SEE_MORE_BTN_STYLE}` })}
@@ -52,6 +56,10 @@ async function loadSummary(): Promise<void> {
 	const element = getSafeElement('profile-content', HTMLElement);
 
 	element.innerHTML = getSummaryTable(dataHist, dataDash);
+	dataHist.slice(0, HISTORY_DEEP).forEach((game) => {
+		const element = getSafeElement(`${game.opponentUsername}-nickname`, HTMLElement);
+		element.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
+	});
 
 	const dashboardButton = getSafeElement('btn-sum-dashboard', HTMLButtonElement);
 	const historyButton = getSafeElement('btn-sum-history', HTMLButtonElement);

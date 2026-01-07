@@ -50,24 +50,11 @@ interface GameHistory {
 	date: string;
 	duration: number;
 	season: number;
-	opponent: string;
-	elo_variation: number;
-	my_score: number;
-	opponent_score: number;
-}
-
-interface GameHistoryWithAvatar extends GameHistory {
-	isAvatarSet: Boolean;
-}
-
-interface GameHistory {
-	date: string;
-	duration: number;
-	season: number;
-	opponent: string;
-	elo_variation: number;
-	my_score: number;
-	opponent_score: number;
+	opponentUsername: string;
+	opponentNickname: string;
+	eloVariation: number;
+	myScore: number;
+	opponentScore: number;
 }
 
 interface GameHistoryWithAvatar extends GameHistory {

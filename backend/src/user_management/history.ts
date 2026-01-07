@@ -12,10 +12,11 @@ async function getUserHistoryInfos(username: string): Promise<GameHistory[]> {
 				Game.beganAt AS date,
 				Game.duration AS duration,
 				Game.seasonId AS season,
-				E2.username AS opponent,
-				(SELECT COUNT(*) FROM Goal WHERE gameId = Game.id AND by = E1.username) AS my_score,
-				(SELECT COUNT(*) FROM Goal WHERE gameId = Game.id AND by = E2.username) AS opponent_score,
-				E1.variation AS elo_variation
+				E2.username AS opponentUsername,
+				(SELECT U.nickname FROM User As U WHERE U.username = E2.username) AS opponentNickname,
+				(SELECT COUNT(*) FROM Goal WHERE gameId = Game.id AND by = E1.username) AS myScore,
+				(SELECT COUNT(*) FROM Goal WHERE gameId = Game.id AND by = E2.username) AS opponentScore,
+				E1.variation AS eloVariation
 			FROM Game
 				JOIN Elo AS E1 ON Game.id = E1.gameId
 				JOIN Elo AS E2 ON Game.id = E2.gameId
@@ -39,7 +40,7 @@ async function getHistory(req: FastifyRequest<{ Body: UserBody }>, reply: Fastif
 	const historyWithAvatar: GameHistoryWithAvatar[] = await Promise.all(
 		history.map(async (game) => ({
 			...game,
-			isAvatarSet: await fileExists(`/app/backups/pictures/${game.opponent}`),
+			isAvatarSet: await fileExists(`/app/backups/pictures/${game.opponentUsername}`),
 		}))
 	);
 	sendReply(reply, Success.USER_HISTORY_INFOS, JSON.stringify(historyWithAvatar));

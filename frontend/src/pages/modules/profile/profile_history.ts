@@ -3,6 +3,8 @@ import { createHistoryBox } from "./profile_history_box";
 import { GameHistoryWithAvatar, UserBody } from "#shared/HTTP";
 import { setActiveBtn } from "./profile_navbar";
 import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
+import { navigateTo } from "src/routes/navigate";
+import { Pages } from "src/routes/navigate_types";
 
 let historyData: GameHistoryWithAvatar[];
 
@@ -38,7 +40,7 @@ function generateHistory(history: GameHistoryWithAvatar[], numberDisplay: number
 	let histBoxes = ``;
 	const size = history.length;
 
-	for(let i = 0; i < size && i < numberDisplay; i++)
+	for (let i = 0; i < size && i < numberDisplay; i++)
 		histBoxes += createHistoryBox(history[i]);
 	return histBoxes;
 }
@@ -48,6 +50,11 @@ async function loadHistory(): Promise<void> {
 
 	const elem = getSafeElement('profile-content', HTMLElement);
 	elem.innerHTML = getHistoryTable(historyData);
+
+	historyData.forEach((game) => {
+		const element = getSafeElement(`${game.opponentUsername}-nickname`, HTMLElement);
+		element.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
+	});
 }
 
 export { loadHistory, generateHistory, fetchHistoryData, getHistoryData };
