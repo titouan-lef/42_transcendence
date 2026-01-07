@@ -23,7 +23,7 @@ text-[26px] font-bold text-center
 
 function getSummaryTable(history: GameHistoryWithAvatar[], data: UserDashboardInfos): string {
 	return (`
-	<div class="flex flex-col gap-1 h-full pr-[190px]">
+	<div class="flex flex-col gap-1 h-full">
 		<div id='sum-dashboard' class="${SECTION_STYLE}">
 			${createParagraphHtml(['dashboard'], 'p-dashboard', { 'class': `${SECTION_TITLE_STYLE}` })}
 			<div class="p-4 flex h-[150px] w-full gap-4">

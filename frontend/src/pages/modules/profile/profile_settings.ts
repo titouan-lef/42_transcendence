@@ -26,14 +26,16 @@ const SETTINGS_AVATAR = `
 `;
 
 const SETTINGS_OPTIONS = `
-<div class="p-8 flex flex-col">
-	${createParagraphHtml(['options'], 'p-option', { 'class': `text-[20px] font-bold` })}
-</div>
-<div>
-	<div>
-		${SETTINGS_AVATAR}
+<div class='flex flex-col w-full flex-1 min-h-0 bg-light/10 rounded-2xl p-2'>
+	<div class="p-8 flex flex-col">
+		${createParagraphHtml(['options'], 'p-option', { 'class': `text-[20px] font-bold` })}
 	</div>
-	<div id='switch-2fa'></div>
+	<div>
+		<div>
+			${SETTINGS_AVATAR}
+		</div>
+		<div id='switch-2fa'></div>
+	</div>
 </div>
 `;
 
