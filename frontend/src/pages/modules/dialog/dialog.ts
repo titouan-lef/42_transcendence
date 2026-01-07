@@ -17,7 +17,7 @@ const DIALOG_BOX_STYLE = `
 
 const DIALOG_INNER_STYLE = `
 	flex flex-col justify-center items-center gap-4
-	min-w-[100px] max-w-[250px]
+	h-full w-full
 `;
 
 function loadDialog(content: string, handler: (modal: HTMLDialogElement) => void): void {

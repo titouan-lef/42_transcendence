@@ -2,7 +2,7 @@ import { applyColor } from "../../../utils/applyColor";
 
 const DIALOG_BTN_STYLE = `
 	p-[5px] rounded-xl
-	w-full
+	w-1/2
 	align-center text-center font-bold
 	${applyColor()}
 `;
