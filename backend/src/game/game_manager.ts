@@ -1,4 +1,4 @@
-import { Elo } from "src/tournament/elo/elo.js";
+import { Elo } from "../tournament/elo/elo.js";
 import { Game } from "./Game.js";
 import { GameOptions, GameSettings } from "./settings/GameSettings.js";
 import { WebSocket } from "ws";

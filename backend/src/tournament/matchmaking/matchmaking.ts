@@ -60,7 +60,6 @@ async function matchmaking(): Promise<void> {
 		await wait(100);/** @todo adapt the 100 */
 		//console.log(NEW_PLAYER_LIST);
 		//console.log(WAITING_PLAYER_LIST);
-		//console.log(MATCH_MAP);
 	}
 }
 
