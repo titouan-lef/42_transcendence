@@ -40,9 +40,6 @@ async function newUser(): Promise<void> {
 	}
 
 	connectUser();
-
-	/** @todo set user theme to currentTheme ? */
-
 }
 
 export { newUser };

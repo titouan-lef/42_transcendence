@@ -15,7 +15,6 @@ const INPUT_EDITPROFILE_STYLE = `
 w-full min-w-0 truncate
 `;
 
-/** @todo use print content to show fail (password error, forbidden nickname, mail not a mail ?) */
 const BOX_EDITPROFILE = `
 <div class="flex flex-col justify-start gap-4 w-full">
 	${createInputHtml(["nickname"], "text", "publicID", { "class": `${INPUT_EDITPROFILE_STYLE}` })}
