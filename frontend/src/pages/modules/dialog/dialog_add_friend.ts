@@ -5,9 +5,10 @@ import { Errors } from '#shared/status_codes';
 import { getSafeElement } from "../../../utils/getSafeElement.js";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_FORM_STYLE } from "./dialog_style.js";
 import { loadDialog } from "./dialog.js";
-import { goBackToCurrentPage, navigateTo } from "../../../routes/navigate.js";
+import { goBack, navigateTo } from "../../../routes/navigate.js";
 import { Modals } from "../../../routes/navigate_types.js";
 import { UserBody } from "#shared/HTTP.js";
+import { updateFriendList } from "../box/box_aside_friendlist.js";
 
 /** @todo better print-content */
 const ADD_FRIEND = `
@@ -33,7 +34,8 @@ function addFriendHandler(modal: HTMLDialogElement): void {
 			printReplyInDiv(reply, "print-content");
 			return;
 		}
-		goBackToCurrentPage();
+		goBack();
+		updateFriendList();
 	});
 }
 
