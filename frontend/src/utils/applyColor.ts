@@ -1,6 +1,6 @@
 import { getCSSVariable } from "./getCSSVariable";
 
-type Color = 'base' | 'alt' | 'var' | 'warning' | 'input' | 'win' | 'lose';
+type Color = 'base' | 'alt' | 'var' | 'warning' | 'input' | 'win' | 'lose' | 'online' | 'offline';
 
 interface ThemeColors {
 	primary: string,
@@ -16,6 +16,8 @@ interface ThemeColors {
 	shadow: string,
 	win: string,
 	lose: string,
+	online: string,
+	offline: string,
 };
 
 const VARIANTS = {
@@ -25,7 +27,9 @@ const VARIANTS = {
 	'warning': 'bg-primary text-warning',
 	'input' : 'bg-lighter text-variant focus:outline-2 focus:text-dark',
 	'win' : 'bg-win text-light',
-	'lose' : 'bg-lose text-light'
+	'lose' : 'bg-lose text-light',
+	'online' : 'bg-online',
+	'offline' : 'bg-offline',
 };
 
 function applyColor(variant: Color = 'base'): string {
@@ -47,6 +51,8 @@ function loadThemeColors(): ThemeColors {
 		shadow: getCSSVariable('--color-shadow'),
 		win: getCSSVariable('--color-win'),
 		lose: getCSSVariable('--color-lose'),
+		online: getCSSVariable('--color-online'),
+		offline: getCSSVariable('--color-offline'),
 	};
 
 	return themeColors;
