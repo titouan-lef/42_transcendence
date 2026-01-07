@@ -65,8 +65,6 @@ async function getGameTimeAverageGlobal(username: string): Promise<number> {
 			[username]
 		), "getGameTimeAverageGlobal"
 	);
-
-
 	if (!nbTime)
 		return 0;
 	if (nbGame === 0)
