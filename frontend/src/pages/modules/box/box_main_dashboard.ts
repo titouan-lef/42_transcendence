@@ -35,7 +35,7 @@ function generateGameDashboard(): string {
 					<div class='flex flex-row'>
 						<p>Opponent :</p>
 						<div class='overflow-hidden text-ellipsis'>${stats.player2.name}</div>
-						<button id='btn-oppo-profile' class='${MAIN_BOX_BTN_STYLE}'>show his profile</button>
+						${stats.player2.name !== 'guest'? `<button id='btn-oppo-profile' class='${MAIN_BOX_BTN_STYLE}'>show his profile</button>`:""}
 					</div>
 				</div>
 				<div class='${COLUMNS_STYLE}'>
@@ -64,7 +64,7 @@ function gameDashboardEvents(): void {
 				elem.addEventListener('click', () => navigateTo(Pages.HOME));
 				break;
 			case 'btn-oppo-profile':
-				elem.addEventListener('click', () => console.log('open opponent\'s profile')); /** @todo oppo's profile */
+				elem.addEventListener('click', () => navigateTo(Pages.PROFILE, getGameStats().player2.name));
 				break;
 			default:
 				break;
