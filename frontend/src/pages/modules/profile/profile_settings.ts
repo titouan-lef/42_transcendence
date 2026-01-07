@@ -20,9 +20,29 @@ const SETTINGS_COL_STYLE = `
 h-full flex flex-col justify-between items-start gap-4 w-full flex-1 min-w-0 overflow-auto scrollbar-none
 `;
 
+const BROWSE_BOX_STYLE = `
+flex flex-col w-full
+`;
+
+const FILE_INPUT_STYLE = `
+w-full text-[12px] text-dark truncate
+file:py-1 file:px-4 file:mr-4
+file:rounded-xl file:border-0
+file:text-[14px] file:font-bold
+file:bg-dark file:text-variant
+cursor-pointer
+`;
+
+/** @todo print content */
+const FEEDBACK_STYLE = `
+`;
+
 const SETTINGS_AVATAR = `
-<input type="file" id="change-avatar" accept="image/*">
-<p id='print-avatar-reply'></p>
+<div class="flex flex-row w-full items-start">
+	<label class="w-fit mr-2 font-bold">avatar: </label>
+	<input type="file" id="change-avatar" accept="image/*" class="${FILE_INPUT_STYLE}"/>
+	<p id='print-avatar-reply' class="${FEEDBACK_STYLE}"></p>
+</div>
 `;
 
 const SETTINGS_OPTIONS = `
@@ -31,7 +51,7 @@ const SETTINGS_OPTIONS = `
 		${createParagraphHtml(['options'], 'p-option', { 'class': `text-[20px] font-bold` })}
 	</div>
 	<div>
-		<div>
+		<div class='${BROWSE_BOX_STYLE}'>
 			${SETTINGS_AVATAR}
 		</div>
 		<div id='switch-2fa'></div>
