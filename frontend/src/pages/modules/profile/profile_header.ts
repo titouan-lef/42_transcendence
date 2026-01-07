@@ -1,9 +1,7 @@
-import { capitalizeElementValueHTML } from "../../../components/component_utils";
-import { createParagraph } from "../../../components/paragraph";
 import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
 
 const TITLE_STYLE = `
-grow font-bold text-[48px]
+font-bold text-[48px]
 `;
 
 const DRAWER_HEADER_STYLE = `
@@ -32,7 +30,7 @@ interface UserBody { /** @todo take the one in shared */
 }
 
 /** @todo use translation tool */
-/** @todo pretty front */
+/** @todo nickname ne se met pas a jour quand je le change dans settings, il faut reload la page */
 async function getDrawerHeader(ownProfile: boolean, user: string): Promise<string> {
 	const body: UserBody = { user: user };
 	const reply = await sendPostRequestToBack("/api/user/get_nick", JSON.stringify(body));
@@ -42,9 +40,12 @@ async function getDrawerHeader(ownProfile: boolean, user: string): Promise<strin
 
 	return `
 	<div class='${DRAWER_HEADER_STYLE}'>
-		${ownProfile? "Your": user+"'s"}
-		${capitalizeElementValueHTML(createParagraph(['profile'], 'p-profile', { 'class' : `${TITLE_STYLE}` }))}
-		${nickname}
+		<div class='flex flex-col flex-1 min-w-0 truncate'>
+			<p title='${ownProfile ? "" : user + "'s"}' class='${TITLE_STYLE}'>
+				${ownProfile ? "Your" : user + "'s"} profile
+			</p>
+			<p title='${nickname}' class='text-[12px]'>nickname : ${nickname}</p>
+		</div>
 		<div class='${RETURN_BTN_DIV_STYLE}'>
 			${RETURN_BTN_SVG}
 		</div>
