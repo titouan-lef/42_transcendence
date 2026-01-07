@@ -87,3 +87,25 @@
 		transparent
 	);
 }
+
+/*
+	input range personnalisation bypassing default range style
+	only working on mozilla!
+	chrome, brave... will use default input range style
+*/
+@layer base {
+	@supports (-moz-appearance: none) {
+		input[type="range"] {
+			@apply appearance-none bg-transparent cursor-pointer w-full;
+		}
+		input[type="range"]::-moz-range-track {
+			@apply h-2 w-full rounded-lg bg-dark;
+		}
+		input[type="range"]::-moz-range-progress {
+			@apply h-2 rounded-lg bg-variant;
+		}
+		input[type="range"]::-moz-range-thumb {
+		@apply h-4 w-4 rounded-full border-none bg-variant transition-colors;
+		}
+	}
+}
