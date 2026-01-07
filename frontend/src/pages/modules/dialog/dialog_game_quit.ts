@@ -4,13 +4,16 @@ import { closeDialogID, loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
 import { Pages } from "../../../routes/navigate_types";
 
-/** @todo front */
 const GAME_QUIT = `
-<div class='flex flex-col gap-4'>
-	<div class='text-20'>Are you sure you want to quit ?</div>
-	<div class='text-warning text-10'>this will count as a defeat</div>
-	<button id='btn-yes' class='${DIALOG_BTN_STYLE}'>yes, I want to quit</button>
-	<button id='btn-cancel' class='${DIALOG_BTN_STYLE}'>no, go back to game</button>
+<div class='flex flex-col gap-4 justify-around w-full h-full'>
+	<div class='flex flex-col gap-4 w-full h-fit justify-center items-center'>
+		<div class='text-[20px]'>Are you sure you want to quit ?</div>
+		<div class='text-warning text-[14px]'>this will count as a defeat</div>
+	</div>
+	<div class='flex flex-col gap-4 w-full h-fit justify-center items-center'>
+		<button id='btn-yes' class='${DIALOG_BTN_STYLE}'>yes, I want to quit</button>
+		<button id='btn-cancel' class='${DIALOG_BTN_STYLE}'>no, go back to game</button>
+	</div>
 </div>
 `;
 
