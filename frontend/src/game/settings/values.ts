@@ -107,7 +107,6 @@ export const COLORS4 = {
 
 /**DEBUG FUNCTION */
 export const MOVE_CAMERA_ONCLICK = false; // should be false
-export const SHOW_DISPOSE_LOGS = false; //BACK + FRONT - should be false
 
 /**MAP GENERAL SETTINGS */
 export const MAP_SIZE: babylon.Vector3 = new babylon.Vector3(100, 100, 100); //BACK + FRONT

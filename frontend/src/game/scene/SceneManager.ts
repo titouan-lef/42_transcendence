@@ -164,7 +164,6 @@ class SceneManager {
 		this.ball?.setVisibility(message.ballVisibility);
 	}
 
-	/**@todo Clarify Id in the front VS playerId back */
 	private sendEmote(settings: PointSettings, scene: babylon.Scene, message: EmoteMessage): void {
 		this.players.forEach(player => {
 			if (settings.player1.playerId === 1) {
@@ -190,21 +189,6 @@ class SceneManager {
 		this.destroyMap();
 		if (score)
 			this.score.changeScore([score.x, score.y]);
-	}
-
-	/** debug function */
-	showDisposeLogs(scene: babylon.Scene): void {
-		console.log("meshes : " + scene.meshes);
-		console.log("materials : " + scene.materials);
-		scene.materials.forEach(mat => {
-			console.log("mat name : " + mat.name);
-		});
-		console.log("textures : " + scene.textures);
-		scene.textures.forEach(texture => {
-			console.log("texture name : " + texture.name);
-		});
-		console.log("lights : " + scene.lights);
-		console.log("particle system: " + scene.particleSystems);
 	}
 
 	clearObjects():void {

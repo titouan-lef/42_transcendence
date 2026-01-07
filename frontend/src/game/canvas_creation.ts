@@ -5,7 +5,6 @@ import { OptionMessage } from "#shared/types_transfert.js";
 
 let game: Game | null = null;
 
-/**@todo get the player keys from the player settings in DB*/
 async function startOrUpdateGame(options: OptionMessage, player1: WebSocket, player2?: WebSocket): Promise<void> {
 	let settings;
 	if (player2) {

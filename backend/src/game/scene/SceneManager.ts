@@ -271,18 +271,6 @@ class SceneManager {
 		this.destroyMap();
 	}
 
-	/** debug function */
-	showDisposeLogs(scene: babylon.Scene): void {
-		console.log("meshes : " + scene.meshes);
-		console.log("materials : " + scene.materials);
-		scene.materials.forEach(mat =>
-			console.log("mat name : " + mat.name)
-		);
-		console.log("textures : " + scene.textures);
-		console.log("lights : " + scene.lights);
-		console.log("particle system: " + scene.particleSystems);
-	}
-
 	private destroyBall(): void {
 		this.ball?.destroy();
 		this.ball = null;

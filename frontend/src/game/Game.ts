@@ -1,7 +1,7 @@
 import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
 import { PointSettings } from "./settings/PointSettings.js";
-import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK, SHOW_DISPOSE_LOGS } from "./settings/values.js";
+import { CAMERA_POS_X,  MOVE_CAMERA_ONCLICK } from "./settings/values.js";
 import { DataMessage, OptionMessage, Status } from "#shared/types_transfert.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 import { loadMainDashboard } from "../pages/modules/box/box_main_dashboard.js";
@@ -27,7 +27,7 @@ class Game {
 		window.addEventListener("resize", () => this.engine.resize());
 		this.setScene();
 
-		settings.player1.socket?.addEventListener("message", (event) => { /** @todo check if removeEventListener is necesseray and the end of the game */
+		settings.player1.socket?.addEventListener("message", (event) => {
 			const message : DataMessage = JSON.parse(event.data);
 			switch (message.status) {
 				case (Status.STOP):
@@ -81,8 +81,6 @@ class Game {
 	closeGame(): void {
 		this.sceneManager.destroyScene();
 		this.camera.dispose();
-		if (SHOW_DISPOSE_LOGS)
-			this.sceneManager.showDisposeLogs(this.scene);
 		this.scene.dispose();
 		this.engine.dispose();
 		this.canvas.remove();
