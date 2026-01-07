@@ -16,9 +16,7 @@ function createDashboardCard(title: TranslationKey, print: number | string): str
 	const dashboardCard = `
 	<div class="${DASHBOARD_CARD_STYLE}">
 		${createParagraphHtml([title], 'p-' + title.toString(), { 'class': `${DASHBOARD_CARD_TITLE_STYLE}` })}
-		<div class="w-full h-full items-center text-[48px] text-center truncate text-ellipsis">
-			${print}
-		</div>
+		<div class="w-full h-full items-center text-[48px] text-center truncate text-ellipsis">${print}</div>
 	</div>
 	`;
 
