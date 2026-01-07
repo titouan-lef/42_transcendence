@@ -35,7 +35,7 @@ class GameSettings {
 			username: playerName1,
 			elo: eloPlayer1
 		};
-		if (player2 && playerName2 && eloPlayer2) {
+		if (player2 && playerName2) {
 			this.player2 = {
 				playerId: 2,
 				socket: player2,
