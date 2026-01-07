@@ -2,16 +2,31 @@ import { getSafeElement } from "../../../utils/getSafeElement.js";
 import { PlayerKeys } from "../../../game/settings/PointSettings.js";
 import { AI_RANKED_PLAYER_KEYS, changeKey, LOCAL_PLAYER1_KEYS, LOCAL_PLAYER2_KEYS } from "../../../game/settings/KeySets.js";
 
+const TABS_CONTAINER_STYLE = `
+bg-dark/70 rounded-t-2xl
+flex flex-row gap-6 w-full px-4 pt-2
+`;
+
+const TAB_BTN = `
+flex-1 min-w-0
+text-[14px] font-bold tracking-wider uppercase
+border-b-2 -mb-[2px]
+border-transparent
+text-darker
+data-[active=true]:border-variant
+data-[active=true]:text-variant
+`;
+
 /** @todo translation :) */
 const SETTINGS_KEYBINDS_SELECTOR = `
-<div>
-	<div class="p-8 text-[20px] font-bold">Keybinds selector</div>
-	<div id='btn-navbar-keybinds' class="flex flex-row gap-4">
-		<button id='btn-local-player1-keys'>local player 1</button>
-		<button id='btn-local-player2-keys'>local player 2</button>
-		<button id='btn-ai-ranked-keys'>ai ranked</button>
+<div class='text-[14px] w-full h-full'>
+	<div class="p-8 text-[20px] font-bold">keybinds selector</div>
+	<div id='btn-navbar-keybinds' class="${TABS_CONTAINER_STYLE}">
+		<button id='btn-ai-ranked-keys' class='${TAB_BTN}' data-active='true'>ai ranked</button>
+		<button id='btn-local-player1-keys' class='${TAB_BTN}'>local player 1</button>
+		<button id='btn-local-player2-keys' class='${TAB_BTN}'>local player 2</button>
 	</div>
-	<div id='keybind-buttons' class="grid grid-rows-3 grid-cols-4 gap-4">
+	<div id='keybind-buttons' class="grid grid-rows-6 grid-cols-2 border-2 border-b-8 rounded-b-2xl border-dark bg-dark/15 h">
 	</div>
 </div>
 `;
@@ -22,16 +37,35 @@ function keybindsNavbarEvents(): void {
 	navbar.querySelectorAll('*[id]').forEach(elem => {
 		switch (elem.id) {
 			case 'btn-local-player1-keys':
-				elem.addEventListener('click', () => generateKeybindsButtons(LOCAL_PLAYER1_KEYS));
+				elem.addEventListener('click', () => {
+					setActiveTab(elem.id);
+					generateKeybindsButtons(LOCAL_PLAYER1_KEYS);
+				});
 				break;
 			case 'btn-local-player2-keys':
-				elem.addEventListener('click', () => generateKeybindsButtons(LOCAL_PLAYER2_KEYS));
+				elem.addEventListener('click', () => {
+					setActiveTab(elem.id);
+					generateKeybindsButtons(LOCAL_PLAYER2_KEYS);
+				});
 				break;
 			case 'btn-ai-ranked-keys':
-				elem.addEventListener('click', () => generateKeybindsButtons(AI_RANKED_PLAYER_KEYS));
-				break;			
+				elem.addEventListener('click', () => {
+					setActiveTab(elem.id);
+					generateKeybindsButtons(AI_RANKED_PLAYER_KEYS);
+				});
+				break;
 			default:
 				break;
+		}
+	});
+}
+
+function setActiveTab(id: string): void {
+	getSafeElement('btn-navbar-keybinds', HTMLElement).querySelectorAll('*[id]').forEach(elem => {
+		if (elem.id === id) {
+			elem.setAttribute('data-active', 'true');
+		} else {
+			elem.removeAttribute('data-active');
 		}
 	});
 }
@@ -42,8 +76,9 @@ function generateKeybindsButtons(keys: PlayerKeys): void {
 
 	for (const [keyName, keyCode] of Object.entries(keys)) {
 		keybindButtons.innerHTML += `
-				${changeName(keyName)} :
-				<button id='btn-${keyName}'>${keyCode}</button>
+			<p id='btn-${keyName}' title='${keyCode ? keyCode : 'no key bind'}' class='align-middle text-left flex-1 m-2 truncate'>
+				${changeName(keyName)} : ${keyCode ? keyCode : ''}
+			</p>
 			`;
 	}
 
@@ -53,17 +88,17 @@ function generateKeybindsButtons(keys: PlayerKeys): void {
 function changeName(name: string): string {
 	switch (name) {
 		case "mov_right":
-			return "Movement Right";
+			return "Move right";
 		case "mov_left":
-			return "Movement Left";
+			return "Move left";
 		case "rot_right":
-			return "Rotate ClockWise";
+			return "Rotate right";
 		case "rot_left":
-			return "Rotate CounterClockWise";
+			return "Rotate left";
 		case "normalMode":
-			return "Switch to NormalMode";
+			return "Switch straight";
 		case "spinMode":
-			return "Switch to SpinMode";
+			return "Switch spin";
 		case "emoteStrong":
 			return "Emote Strong";
 		case "emoteSad":
