@@ -25,7 +25,7 @@ const TRANSLATOR = {
 	cancel: { en: "cancel", fr: "annuler" },
 	update: { en: "update", fr: "mettre à jour" },
 	verify: { en: "verify", fr: "verifier" },
-	
+
 	// NOUNS
 	user: { en: "user", fr: "utilisateur" },
 	user_name: { en: "username", fr: "nom d'utilisateur" },
