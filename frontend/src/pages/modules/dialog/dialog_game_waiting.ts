@@ -34,7 +34,6 @@ function randomInt(min: number, max: number): number {
 
 function getRandomGifPath(): string {
 	const path = './images/waiting_screen/waiting_' + randomInt(1, 8) + '.gif';
-
 	return path;
 }
 

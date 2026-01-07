@@ -75,6 +75,7 @@ interface GameHistoryWithAvatar extends GameHistory {
 }
 
 interface Ranking {
+	username: string;
 	nickname: string;
 	rating: number;
 	winrate: number;

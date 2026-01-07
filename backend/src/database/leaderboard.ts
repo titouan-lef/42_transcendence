@@ -48,6 +48,7 @@ async function getSeasonInfosBySeason(season: number): Promise<LeaderboardInfos>
 		const wins = await getGamesWinsBySeason(season, users[i].username);
 
 		result.ranking.push({
+			username: users[i].username,
 			nickname: users[i].nickname,
 			rating: usersElo[i],
 			winrate: users[i].nbGame > 0 ? wins / users[i].nbGame : 0,
