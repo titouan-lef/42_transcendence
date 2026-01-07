@@ -3,17 +3,14 @@ import { sendPostRequestToBack } from "../../services/api_request";
 import { getCurrentUserInfos, isUserConnected } from "../../services/user_management/user_state";
 import { ThemeBody } from "#shared/HTTP.js";
 
-function randomTheme(): void {
-	const randomIndex = Math.floor(Math.random() * THEMES_LIST.length);
-	document.body.dataset.theme = THEMES_LIST[randomIndex];
-}
+const RANDOM_THEME = Math.floor(Math.random() * THEMES_LIST.length);
 
 function setTheme(): void {
 	const currentUser = getCurrentUserInfos();
 	if (currentUser?.theme)
 		document.body.dataset.theme = currentUser.theme;
 	else
-		randomTheme();
+		document.body.dataset.theme = THEMES_LIST[RANDOM_THEME];
 }
 
 function updateTheme(theme: Themes): void {
