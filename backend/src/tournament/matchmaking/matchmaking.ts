@@ -58,7 +58,7 @@ async function matchmaking(): Promise<void> {
 		sortWaitingPlayerByRatings();
 		const matchingPairTab: Pair[] = getMatchingPairTab(WAITING_PLAYER_LIST);
 		findMatch(WAITING_PLAYER_LIST, matchingPairTab);
-		await wait(100);/** @todo adapt the 100 */
+		await wait(100);
 	}
 }
 

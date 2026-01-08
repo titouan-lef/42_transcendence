@@ -7,7 +7,7 @@
  */
 
 import { POINTS_TO_WIN } from "../../game/settings/values.js";
-import { clamp } from "../../utils/math.js";
+import { clamp, round } from "../../utils/math.js";
 
 /**
  * @param r - Ratings (public value of the Elo).
@@ -64,7 +64,7 @@ function eloIsDefine(elo: Elo): boolean {
 
 function applyTimeOnRd(rd: number, t: number = SEASON_DURATION): number {
 	const rdUpdated = Math.sqrt(rd * rd + C_SQ * t);
-	const rdUpdatedRound = Math.round(rdUpdated * Math.pow(10, 6)) / Math.pow(10, 6); /** @todo round 6 decimal --> function define branch ai not curently rebase */
+	const rdUpdatedRound = round(rdUpdated, 6);
 	return Math.min(rdUpdatedRound, MAX_RD);
 }
 
@@ -171,7 +171,7 @@ function rCalculation(r: number, sumDeviation: number, newRdSq: number): number 
 
 function rdCalculation(newRdSq: number): number {
 	const newRd = Math.sqrt(newRdSq);
-	const newRdRound = Math.round(newRd * Math.pow(10, 6)) / Math.pow(10, 6); /** @todo round 6 decimal --> function define branch ai not curently rebase */
+	const newRdRound = round(newRd, 6);
 	return clamp(newRdRound, MIN_RD, MAX_RD);
 }
 

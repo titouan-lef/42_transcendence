@@ -22,7 +22,6 @@ async function startGame(id: number, settings: GameSettings): Promise<number> {
 			id = getNewGameId();
 		const game = await Game.create(id, settings);
 		GAMES.set(id, game);
-		console.log('New game:', id);
 		game.start();
 
 		return id;
@@ -86,7 +85,6 @@ async function aiGame(socket: WebSocket, gameId: number, gameData: GameData): Pr
 	GAME_SETTINGS.delete(gameId);
 	const settings = new GameSettings(false, gameData.options, socket, gameData.players[0], undefined);
 	startGame(gameId, settings);
-	console.log("New local game vs AI");
 }
 
 async function rankedGame(socket: WebSocket, gameId: number, gameData: GameData): Promise<void> {
@@ -99,7 +97,6 @@ async function rankedGame(socket: WebSocket, gameId: number, gameData: GameData)
 	RANKED_WAITING.delete(gameId);
 	const settings = new GameSettings(true, gameData.options, socket, gameData.players[0], gameData.elos[0], player2, gameData.players[1], gameData.elos[1]);
 	startGame(gameId, settings);
-	console.log("New ranked game");
 }
 
 async function identifyGame(socket: WebSocket, gameId: number, gameData: GameData): Promise<void> {
