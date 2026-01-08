@@ -6,35 +6,56 @@ import { Pages } from "../../../routes/navigate_types";
 import { isRequestSuccessfull, sendGetRequestToBack } from "../../../services/api_request";
 import { LeaderboardInfos, Ranking } from "#shared/HTTP.js";
 import { getFilterHtml } from "../../../components/selectionMenu";
-import { FRIENDLIST } from "./box_aside_friendlist";
+
+const TABLE_HEAD_CELL_STYLE = `
+p-4 max-w-0 uppercase
+`;
 
 const LEADERBOARD_THEAD = `
-<thead class="bg-light flex text-variant w-full">
-	<tr class="flex w-full my-4">
-		<th class="p-4 w-1/5">#</th>
-		<th class="p-4 w-1/5">nickname</th>
-		<th class="p-4 w-1/5">elo</th>
-		<th class="p-4 w-1/5">winrate</th>
-		<th class="p-4 w-1/5">games played</th>
+<thead class="bg-light text-variant w-full">
+	<tr class="w-full">
+		<th class="${TABLE_HEAD_CELL_STYLE}">#</th>
+		<th class="${TABLE_HEAD_CELL_STYLE}">nickname</th>
+		<th class="${TABLE_HEAD_CELL_STYLE}">elo</th>
+		<th class="${TABLE_HEAD_CELL_STYLE}">winrate</th>
+		<th class="${TABLE_HEAD_CELL_STYLE}">games played</th>
 	</tr>
 </thead>
+`;
+
+const TABLE_DATA_STYLE = `
+even:bg-primary/10 bg-dark/30 w-full h-[50px] text-light
+`;
+
+const TABLE_DATA_CELL_STYLE = `
+p-4 max-w-0 truncate
+`;
+
+const SEASON_DATES_STYLE = `
+text-[20px] mb-4
 `;
 
 const SELECT_NAME = `leaderbord-filter`;
 
 function getLeaderboardPage(maxSeason: number ): string {
 	return `
-	<div class='flex flex-col justify-center items-center w-full h-full p-4'>
+	<div class='flex flex-col justify-center items-center w-full h-full p-4 flex-1'>
 		<div class='pb-2'>
 			${getFilterHtml(SELECT_NAME, maxSeason)}
 		</div>
-		<div id="season-dates" class=''>
+		<div id="season-dates" class='${SEASON_DATES_STYLE}'>
 		</div>
-		<table class="text-left w-full h-full flex-1 min-h-0">
-			${LEADERBOARD_THEAD}
-			<tbody id="leaderboard" class="h-[50vh] bg-dark text-primary flex flex-col items-center justify-start scrollbar-none overflow-auto w-full">
-			</tbody>
-		</table>
+		<div class='w-full scrollbar-none overflow-y-auto min-h-0 rounded-t-xl'>
+			<table class="w-full text-center border-collapse ">
+				${LEADERBOARD_THEAD}
+			</table>
+		</div>
+		<div class='flex-1 w-full scrollbar-none overflow-y-auto min-h-0 rounded-b-xl m-4 mt-0 bg-dark/50'>
+			<table class="w-full text-center border-collapse ">
+				<tbody id="leaderboard" class="rounded-xl h-full bg-dark text-primary items-center justify-start w-full">
+				</tbody>
+			</table>
+		</div>
 		${createButtonHtml(["go_back"], "btn-back-home", { "class": `${MAIN_BOX_BTN_STYLE}` })}
 	</div>
 	`;
@@ -45,14 +66,14 @@ function generateLeaderboardRows(ranking: Ranking[]): void {
 	let rank = 1;
 	ranking.forEach(user => {
 		leaderboard.insertAdjacentHTML('beforeend',`
-			<tr class="flex w-full mb-1 h-[70px]">
-				<td class="p-4 w-1/5">${rank}</td>
-				<td id="btn-profile-${user.username}" class="p-4 w-1/5 cursor-pointer">
+			<tr class="${TABLE_DATA_STYLE}">
+				<td class="${TABLE_DATA_CELL_STYLE}">${rank}</td>
+				<td id="btn-profile-${user.username}" class="${TABLE_DATA_CELL_STYLE} cursor-pointer" title='${user.nickname}'>
 					${user.nickname}
 				</td>
-				<td class="p-4 w-1/5">${user.rating}</td>
-				<td class="p-4 w-1/5">${user.winrate * 100}</td>
-				<td class="p-4 w-1/5">${user.nbGamePlayed}</td>
+				<td class="${TABLE_DATA_CELL_STYLE}">${user.rating}</td>
+				<td class="${TABLE_DATA_CELL_STYLE}">${user.winrate * 100}</td>
+				<td class="${TABLE_DATA_CELL_STYLE}">${user.nbGamePlayed}</td>
 			</tr>
 			`
 		);
@@ -60,6 +81,28 @@ function generateLeaderboardRows(ranking: Ranking[]): void {
 		elem.addEventListener('click', () => navigateTo(Pages.PROFILE, user.username));
 		rank += 1;
 	});
+	leaderboard.insertAdjacentHTML('beforeend', `
+		<tr class="${TABLE_DATA_STYLE}">
+			<td class="${TABLE_DATA_CELL_STYLE}">2</td>
+			<td id="btn-profile-x" class="${TABLE_DATA_CELL_STYLE} cursor-pointer" title='test'>
+				test
+			</td>
+			<td class="${TABLE_DATA_CELL_STYLE}">1954</td>
+			<td class="${TABLE_DATA_CELL_STYLE}">98</td>
+			<td class="${TABLE_DATA_CELL_STYLE}">12</td>
+		</tr>
+	`);
+	leaderboard.insertAdjacentHTML('beforeend', `
+		<tr class="${TABLE_DATA_STYLE}">
+			<td class="${TABLE_DATA_CELL_STYLE}">2</td>
+			<td id="btn-profile-x" class="${TABLE_DATA_CELL_STYLE} cursor-pointer" title='test'>
+				test
+			</td>
+			<td class="${TABLE_DATA_CELL_STYLE}">1954</td>
+			<td class="${TABLE_DATA_CELL_STYLE}">98</td>
+			<td class="${TABLE_DATA_CELL_STYLE}">12</td>
+		</tr>
+	`);
 }
 
 async function updateLeaderboardData(): Promise<void> {
@@ -73,7 +116,7 @@ async function updateLeaderboardData(): Promise<void> {
 	generateLeaderboardRows(infos.ranking);
 
 	const elem = getSafeElement('season-dates', HTMLElement);
-	elem.innerHTML = `${infos.beginDate} - ${infos.endDate}`;
+	elem.innerHTML = `season date : ${infos.beginDate} to ${infos.endDate}`;
 }
 
 function leaderboardEvents(): void {
