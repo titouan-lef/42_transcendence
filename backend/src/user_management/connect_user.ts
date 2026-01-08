@@ -1,4 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
+import path from "path";
 import fs from "fs";
 import util from 'util';
 import { pipeline } from 'stream';
@@ -12,6 +13,8 @@ import { Errors, Success } from "#shared/status_codes.js";
 import { NewUserBody, ThemeBody } from "#shared/HTTP.js";
 
 const PUMP = util.promisify(pipeline);
+
+const ALLOWED_EXTENTIONS = [".png", ".jpg", ".jpeg", ".webp", ".gif"];
 
 async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
 	const { username, password } = req.body;
@@ -46,8 +49,13 @@ async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<
 		sendReply(reply, Errors.NO_FILE_GIVEN);
 		return;
 	}
-	const path = `/app/backups/pictures/${user}`;
-	await PUMP(part.file, fs.createWriteStream(path));
+	const extention = path.extname(part.filename).toLowerCase();
+	if (!ALLOWED_EXTENTIONS.includes(extention)) {
+		sendReply(reply, Errors.INVALID_FILE_TYPE);
+		return;
+	}
+	const fullPath = `/app/backups/pictures/${user}`;
+	await PUMP(part.file, fs.createWriteStream(fullPath));
 	sendReply(reply, Success.AVATAR_UPDATED);
 }
 

@@ -20,7 +20,9 @@ import { getSeasonStats } from "./tournament/seasons.js";
 import { ThemeBody, UserBody } from "#shared/HTTP.js";
 import { matchmaking } from "./tournament/matchmaking/matchmaking.js";
 
-const APP = fastify();
+const APP = fastify({
+	bodyLimit: 2 * 1024 * 1024 // 2 MB
+});
 
 /**
 * Cross-Origin Resource Sharing, is a security mechanism implemented by web browsers
@@ -37,7 +39,11 @@ APP.register(fastifyCors, {
 });
 APP.register(fastifyCookies);
 APP.register(fastifyWebsocket);
-APP.register(fastifyMultipart);
+APP.register(fastifyMultipart, {
+	limits: {
+		fileSize: 2 * 1024 * 1024 // 2 MB
+	}
+});
 APP.register(fastifyStatic, {
 	root: "/app/backups/pictures/",
 	prefix: "/pictures/"
