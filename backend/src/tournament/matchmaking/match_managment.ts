@@ -59,10 +59,8 @@ function removePairObsolete(matchingPairTab: Pair[], index: number, usernameP1: 
 function playerDisconnection(waitingPlayerList: WaitingPlayer[], username: string, socketPlayerIsClosed: boolean, socketOpponentIsClosed: boolean): boolean {
 	if (!socketPlayerIsClosed)
 		return false;
-	if (!socketOpponentIsClosed) {
+	if (!socketOpponentIsClosed)
 		removeOnePlayerInQueue(waitingPlayerList, username);
-		console.log(`${username} removed of waiting list`);
-	}
 	return true;
 }
 

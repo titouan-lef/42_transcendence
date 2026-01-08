@@ -6,6 +6,7 @@ import { goBack, navigateTo } from "../../../routes/navigate";
 import { Modals, GameTypes, Pages } from "../../../routes/navigate_types";
 import { getGameOptions } from "../../../game/settings/GameRules";
 import { gamePageEvents } from "../../../pages/events/game_page_event";
+import { wait } from "../../../utils/time";
 
 const GIF_STYLE = `
 rounded-2xl
@@ -63,6 +64,7 @@ async function waitForGame(): Promise<void> {
 
 	ws.onopen = (): void => {
 		console.log("Looking for a game");
+		wait(100);
 		ws?.send(JSON.stringify(options));
 	};
 
