@@ -59,8 +59,6 @@ async function matchmaking(): Promise<void> {
 		const matchingPairTab: Pair[] = getMatchingPairTab(WAITING_PLAYER_LIST);
 		findMatch(WAITING_PLAYER_LIST, matchingPairTab);
 		await wait(100);/** @todo adapt the 100 */
-		//console.log(NEW_PLAYER_LIST);
-		//console.log(WAITING_PLAYER_LIST);
 	}
 }
 
@@ -78,10 +76,8 @@ function transferNewPlayersInQueue(): void {
 
 function removeDisconnectedPlayer(): void {
 	for (let i = WAITING_PLAYER_LIST.length - 1; i >= 0; --i) {
-		if (WAITING_PLAYER_LIST[i].player.socket.readyState === WebSocket.CLOSED) {
-			console.log(`${WAITING_PLAYER_LIST[i].player.username} removed of waiting list`);
+		if (WAITING_PLAYER_LIST[i].player.socket.readyState === WebSocket.CLOSED)
 			WAITING_PLAYER_LIST.splice(i, 1);
-		}
 	}
 }
 
@@ -90,6 +86,7 @@ function sortWaitingPlayerByRatings(): void {
 }
 
 async function addPlayerToMatchmakingSystem(socket: WebSocket, username: string, option: GameOptions): Promise<void> {
+	console.log("Player", username, "is in the queue");
 	const currentSeasonId = await getCurrentSeason();
 	if (!currentSeasonId)
 		throw new Error("Error to get current season");
@@ -119,10 +116,8 @@ function isUserWaiting(username: string) : boolean {
 
 function removePlayerFromMatchmakingSystem(username: string): void {
 	for (let i = NEW_PLAYER_LIST.length - 1; i >= 0; --i) {
-		if (NEW_PLAYER_LIST[i].username === username) {
+		if (NEW_PLAYER_LIST[i].username === username)
 			NEW_PLAYER_LIST.splice(i, 1);
-			console.log(`${username} removed of waiting list`);
-		}
 	}
 }
 
