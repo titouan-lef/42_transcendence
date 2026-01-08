@@ -10,9 +10,9 @@ const SETTINGS_THEME_SELECTOR = `
 `;
 
 function generateThemeButtons(): string {
-	const style = `rounded-2xl border-4 border-light bg-primary w-[50px] h-[50px] flex flex-col justify-end items-end gap-[2px]`;
+	const style = `rounded-2xl border-4 border-light bg-primary size-12 flex flex-col justify-end items-end gap-[2px]`;
 
-	let selectButtons = `<div class="grid grid-cols-6 grid-rows-2 gap-4 h-full w-full">`;
+	let selectButtons = `<div class="grid grid-cols-6 grid-rows-2 place-items-center gap-4 flex-1 min-w-0">`;
 
 	THEMES_LIST.forEach(theme => {
 		selectButtons += `<div data-theme="${theme}" id="btn-${theme}" class="${style}">
