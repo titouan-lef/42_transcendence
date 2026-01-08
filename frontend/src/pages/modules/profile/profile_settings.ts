@@ -28,18 +28,18 @@ const FILE_INPUT_STYLE = `
 w-full text-[12px] text-dark truncate
 file:py-1 file:px-4 file:mr-4
 file:rounded-xl file:border-0
-file:text-[14px] file:font-bold
+file:text-[14px] file:font-bold file:font-jbm
 file:bg-dark file:text-variant
 cursor-pointer
 `;
 
-/** @todo print content */
+/** @todo print content -- is this reply possible ? seems like input type file already handle bad files */
 const FEEDBACK_STYLE = `
 `;
 
 const SETTINGS_AVATAR = `
 <div class="flex flex-row w-full items-start">
-	<label class="w-fit mr-2 font-bold">avatar: </label>
+	<label class="mr-2 font-bold w-[70px]">avatar: </label>
 	<input type="file" id="change-avatar" accept="image/*" class="${FILE_INPUT_STYLE}"/>
 	<p id='print-avatar-reply' class="${FEEDBACK_STYLE}"></p>
 </div>
