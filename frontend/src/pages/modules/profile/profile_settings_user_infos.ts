@@ -22,7 +22,7 @@ focus:outline-2 focus:outline-light focus:font-bold
 `;
 
 const SHOW_USERINFORMATION_STYLE = `
-rounded-xl p-2
+rounded-xl
 w-full min-w-0 max-w-9/10 truncate
 `;
 
