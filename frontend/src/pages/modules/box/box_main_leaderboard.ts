@@ -102,7 +102,7 @@ function leaderboardEvents(): void {
 	allElements.forEach(elem => {
 		switch (elem.id) {
 			case 'btn-back-home':
-				elem.addEventListener('click', goBack);
+				elem.addEventListener('click', () => navigateTo(Pages.HOME));
 				break;
 			default:
 				break;
