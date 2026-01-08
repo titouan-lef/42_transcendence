@@ -6,8 +6,8 @@ import { createDashboardCard } from "./profile_dashboard_card";
 import { generateHistory, getHistoryData } from "./profile_history";
 import { setActiveBtn } from "./profile_navbar";
 import { GameHistoryWithAvatar, UserDashboardInfos } from "#shared/HTTP";
-import { navigateTo } from "src/routes/navigate";
-import { Pages } from "src/routes/navigate_types";
+import { navigateTo } from "../../../routes/navigate";
+import { Pages } from "../../../routes/navigate_types";
 
 const SEE_MORE_BTN_STYLE = `
 w-9/10 h-[30px] bg-dark/30 text-[20px] text-variant bg-grad-l-300 from-primary

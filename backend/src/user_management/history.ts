@@ -13,16 +13,17 @@ async function getUserHistoryInfos(username: string): Promise<GameHistory[]> {
 				Game.duration AS duration,
 				Game.seasonId AS season,
 				E2.username AS opponentUsername,
-				(SELECT U.nickname FROM User As U WHERE U.username = E2.username) AS opponentNickname,
+				U.nickname AS opponentNickname,
 				(SELECT COUNT(*) FROM Goal WHERE gameId = Game.id AND by = E1.username) AS myScore,
 				(SELECT COUNT(*) FROM Goal WHERE gameId = Game.id AND by = E2.username) AS opponentScore,
 				E1.variation AS eloVariation
 			FROM Game
 				JOIN Elo AS E1 ON Game.id = E1.gameId
 				JOIN Elo AS E2 ON Game.id = E2.gameId
-			WHERE E1.username = ? AND E2.username != ?
+				JOIN User AS U ON U.username = E2.username
+			WHERE E1.username = ? AND E2.username != E1.username 
 			ORDER BY Game.beganAt DESC
-			`, [username, username]
+			`, [username]
 		), "getUserHistoryInfos"
 	);
 	if (!history)

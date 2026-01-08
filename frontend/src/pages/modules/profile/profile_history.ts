@@ -3,8 +3,8 @@ import { createHistoryBox } from "./profile_history_box";
 import { GameHistoryWithAvatar, UserBody } from "#shared/HTTP";
 import { setActiveBtn } from "./profile_navbar";
 import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
-import { navigateTo } from "src/routes/navigate";
-import { Pages } from "src/routes/navigate_types";
+import { navigateTo } from "../../../routes/navigate";
+import { Pages } from "../../../routes/navigate_types";
 
 let historyData: GameHistoryWithAvatar[];
 
