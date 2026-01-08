@@ -11,9 +11,9 @@ CYAN			:=	\e[36m
 
 #===================== RULE =====================#
 
-all		: prod
+all: prod
 
-env		:
+env:
 		touch .frontend_env .backend_env
 		echo "Checking required variables in .backend_env..."
 		grep -q "EMAIL=" .backend_env || (echo "❌ Missing EMAIL in .backend_env" && exit 1)
@@ -25,7 +25,7 @@ env		:
 		# @todo Add everything necessary
 		echo "✅Env files are valid"
 
-prod		: env
+prod: env
 		@if grep -q "MODE=dev" .backend_env 2>/dev/null; then \
 			echo "⚠️ Switching from DEV → PROD, removing images"; \
 			make clean; \
@@ -36,7 +36,7 @@ prod		: env
 		docker compose -f docker-compose.yml up -d
 		echo "You can access the website through:\n https://$$(hostname -I | awk '{print $$1}'):8888"
 
-dev		: env
+dev: env
 		@if grep -q "MODE=prod" .backend_env 2>/dev/null; then \
 			echo "⚠️ Switching from PROD → DEV, removing images"; \
 			make clean; \
@@ -45,23 +45,23 @@ dev		: env
 		echo "MODE=dev" >> .backend_env
 		docker compose -f docker-compose.dev.yml up
 
-down	: env
+down: env
 		docker compose -f docker-compose.yml down -v
 		printf "\n$(GREEN)Containers down$(RESET) \n"
 		printf "\n$(GREEN)Env files cleared$(RESET) \n"
 
-clean	: down
+clean: down
 		printf "\n$(RED)Deleting containers images$(RESET) \n"
 		sed -i '/^MODE=/d' .backend_env
 		docker system prune -af --volumes
 		printf "\n$(GREEN)System cleaned$(RESET) \n"
 
-fclean	: clean
+fclean: clean
 		rm -rf ./backups
 
-re		: clean all
+re: clean all
 
-.PHONY	=	all prod dev down clean fclean re env 
+.PHONY:	all prod dev down clean fclean re env 
 
 ifndef VERBOSE
 .SILENT:
