@@ -140,6 +140,7 @@ function manageHistoryPushing(nav: Navigation, user?: string): void {
 }
 
 function navigation(nav: Navigation, user?: string): void {
+	console.log(nav);
 	const navigationSuccessful = navigationSelector(nav, user);
 	if (navigationSuccessful)
 		manageHistoryPushing(nav, user);

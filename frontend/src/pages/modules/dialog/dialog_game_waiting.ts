@@ -52,7 +52,7 @@ interface GameFound {
 }
 
 async function cancelQueue(): Promise<void> {
-	ws?.close();
+	ws?.close(1000);
 	ws = null;
 }
 
@@ -85,6 +85,8 @@ async function waitForGame(): Promise<void> {
 
 	ws.onclose = (event): void => {
 		console.log("Closed:", event.code, event.reason);
+		if (event.code !== 1000)
+			goBack();
 	};
 }
 
