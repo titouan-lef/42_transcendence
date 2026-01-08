@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import path from "path";
 import fs from "fs";
 import util from 'util';
+import sharp from "sharp";
 import { pipeline } from 'stream';
 import { sendReply } from "../utils/HTTP.js";
 import { isValidPassword } from "../utils/hash_string.js";
@@ -15,6 +16,8 @@ import { NewUserBody, ThemeBody } from "#shared/HTTP.js";
 const PUMP = util.promisify(pipeline);
 
 const ALLOWED_EXTENTIONS = [".png", ".jpg", ".jpeg", ".webp", ".gif"];
+
+const IMAGES_SIZE = 150;
 
 async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
 	const { username, password } = req.body;
@@ -55,8 +58,21 @@ async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<
 		return;
 	}
 	const fullPath = `/app/backups/pictures/${user}`;
-	await PUMP(part.file, fs.createWriteStream(fullPath));
-	sendReply(reply, Success.AVATAR_UPDATED);
+	try {
+		if (extention === `.gif`)
+			await PUMP(part.file, fs.createWriteStream(fullPath));
+		else {
+			await PUMP(
+				part.file,
+				sharp().resize(IMAGES_SIZE, IMAGES_SIZE, { fit: "cover", position: "center" }),
+				fs.createWriteStream(fullPath)
+			);
+		}
+		sendReply(reply, Success.AVATAR_UPDATED);
+	} catch (err) {
+		console.error("Error processing avatar:", err);
+		sendReply(reply, Errors.REQUEST_FAILED);
+	}
 }
 
 async function changeTheme(req: FastifyRequest<{ Body:ThemeBody }>, reply: FastifyReply): Promise<void> {
