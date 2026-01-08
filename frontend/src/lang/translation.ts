@@ -41,6 +41,7 @@ const TRANSLATOR = {
 	ball: { en: "ball", fr: "balle" },
 	nothing: { en: "nothing", fr: "rien" },
 	leaderboard: { en: "leaderboard", fr: "classement" },
+	file: { en: "file", fr: "fichier" },
 
 	// STATES | ADJECTIVES
 	logged_in: { en: "logged in", fr: "connecté" },
@@ -176,6 +177,14 @@ const TRANSLATOR = {
 	please_disable_2FA: {
 		en : "Please desactivate {twofa} before clearing your {email}",
 		fr : "Desactivatez la {twofa} avant d'effacer votre {email}"
+	},
+	file_too_big: {
+		en : "{file} too big",
+		fr : "{file} trop volumineux"
+	},
+	invalid_file_type: {
+		en : "{invalid} {file} type",
+		fr : "type du {file} {invalid}"
 	}
 } as const satisfies Record<string, Expression>;
 

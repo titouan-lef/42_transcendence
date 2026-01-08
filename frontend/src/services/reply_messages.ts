@@ -11,6 +11,8 @@ const REPLY_MESSAGES: Partial<Record<ReplyStatus, TranslationKey>> = {
 	[Errors.USERNAME_TAKEN]: "username_taken",
 	[Errors.NO_DATA_TO_UPDATE]: "nothing_updated",
 	[Errors.INVALID_EMAIL]: "invalid_email",
+	[Errors.FILE_TOO_BIG]: "file_too_big",
+	[Errors.INVALID_FILE_TYPE]: "invalid_file_type",
 
 	// 2FA
 	[Errors.INVALID_2FA_CODE]: "invalid_2fa_code",

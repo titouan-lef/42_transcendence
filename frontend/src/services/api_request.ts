@@ -66,6 +66,14 @@ async function sendPostRequestToBack(endpoint: string, content: string) : Promis
 }
 
 async function sendFile(file: FormData) : Promise<ReplyFromBack> {
+	const f = file.get("picture");
+	if (f instanceof File && f.size > 2 * 1024 * 1024) { // 2 Mo
+		return {
+			code: Errors.FILE_TOO_BIG,
+			content: ''
+		};
+	}
+
 	let reply: Response | null = null;
 	try {
 		reply = await fetch(`/api/user/change_picture`, createFileRequest(file));
