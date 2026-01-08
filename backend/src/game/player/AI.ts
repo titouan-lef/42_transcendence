@@ -108,18 +108,15 @@ class AI extends Player {
 
 	setBallToWatch(ball: BallTemplate): void {
 		this.ballToWatch = ball;
-		/** @todo define brain here I think */
+		// Define brain here if there are many brains.
 	}
 
-	update(): void { /** @todo real AI */
+	update(): void {
 		this.brain.refreshView(this.ballToWatch);
 	}
 
-	async send(message: DataMessage): Promise<void> {
-		// if (message.status === Status.POSITIONS) {
-		// 	this.ballPosition = message.ball;
-		// }
-	}
+	/** Ai don't need to send messages. */
+	async send(message: DataMessage): Promise<void> {}
 
 	destroy(): void {
 		super.destroy();
