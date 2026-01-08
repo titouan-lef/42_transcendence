@@ -20,11 +20,13 @@ const LEADERBOARD_THEAD = `
 </thead>
 `;
 
+const SELECT_NAME = `leaderbord-filter`;
+
 function getLeaderboardPage(maxSeason: number ): string {
 	return `
 	<div class='flex flex-col justify-center items-center w-full h-full p-4'>
 		<div class='pb-2'>
-			${getFilterHtml(maxSeason)}
+			${getFilterHtml(SELECT_NAME, maxSeason)}
 		</div>
 		<div id="season-dates" class=''>
 		</div>
@@ -61,7 +63,7 @@ function generateLeaderboardRows(ranking: Ranking[]): void {
 }
 
 async function updateLeaderboardData(): Promise<void> {
-	const filter = getSafeElement('filter', HTMLSelectElement);
+	const filter = getSafeElement(SELECT_NAME, HTMLSelectElement);
 	const targetSeason = Number(filter.value);
 	const reply = await sendGetRequestToBack(`/api/season/${targetSeason}`);
 	if (!isRequestSuccessfull(reply))
@@ -85,7 +87,7 @@ function leaderboardEvents(): void {
 				break;
 		}
 	});
-	const filter = getSafeElement('filter', HTMLSelectElement);
+	const filter = getSafeElement(SELECT_NAME, HTMLSelectElement);
 	filter.addEventListener('change', updateLeaderboardData);
 }
 

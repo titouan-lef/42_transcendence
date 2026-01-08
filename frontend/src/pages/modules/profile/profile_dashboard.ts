@@ -12,6 +12,8 @@ scrollbar-none overflow-y-scroll overflow-hidden
 [mask-image:linear-gradient(to_bottom,transparent,black_2%,black_90%,transparent)]
 `;
 
+const SELECT_NAME = `dashboard-filter`;
+
 let dashboardData: UserDashboardInfos;
 
 /** @todo better select/option with divs ? menue is not personnalisable at this time */
@@ -20,7 +22,7 @@ function getDashboardPage(maxSeason: number ): string {
 	return ( `
 	<div class="px-4 flex flex-col h-full w-full">
 		<div class='pb-2'>
-			${getFilterHtml(maxSeason, true)}
+			${getFilterHtml(SELECT_NAME, maxSeason, true)}
 		</div>
 		<div id="dashboard" class="${DASHBOARD_BOX_STYLE}">
 		</div>
@@ -55,7 +57,7 @@ function getDashboardTable(data: UserDashboardInfos): string {
 async function fetchDashboardData(user: string): Promise<void> {
 	let targetSeason = -1;
 	try {
-		const filter = getSafeElement('filter', HTMLSelectElement);
+		const filter = getSafeElement(SELECT_NAME, HTMLSelectElement);
 		targetSeason = Number(filter.value);
 	} catch {}
 	const body: UserDashboardInfoBody = { user: user, season: targetSeason };
@@ -98,7 +100,7 @@ async function loadDashboard(user: string): Promise<void> {
 	const elem = getSafeElement('profile-content', HTMLElement);
 	elem.innerHTML = getDashboardPage(seasonNumber);
 
-	const filter = getSafeElement('filter', HTMLSelectElement);
+	const filter = getSafeElement(SELECT_NAME, HTMLSelectElement);
 	filter.addEventListener('change', () => updateDashboardData(user));
 	loadDashboardData();
 }
