@@ -79,4 +79,4 @@ async function updateUserInfos(req: FastifyRequest<{ "Body": UpdateUserBody }>, 
 	sendReply(reply, Success.USER_UPDATED);
 }
 
-export { UpdateUserBody, addNewUser, updateUserInfos, GUEST_NAME };
+export { UpdateUserBody, addNewUser, updateUserInfos, isValidName, GUEST_NAME };

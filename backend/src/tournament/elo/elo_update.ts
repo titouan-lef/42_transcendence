@@ -1,3 +1,4 @@
+import { isValidName } from "../../user_management/create_account.js";
 import { insertEloVariation } from "../../database/elo.js";
 import { getDateLastGame, getPlayerGameCountBySeason } from "../../database/game.js";
 import { getPlacementGames, insertPlacementGame, Placement } from "../../database/placement.js";
@@ -15,6 +16,9 @@ interface EloData {
 };
 
 async function updateElo(usernameP1: string, eloP1: Elo, usernameP2: string, eloP2: Elo, outcome: number, gameId: number): Promise<void> {
+	if (!isValidName(usernameP1) && !isValidName(usernameP2))
+		return;
+
 	const currentSeasonId = await getCurrentSeason();
 	if (!currentSeasonId)
 		throw new Error("Error to get current season");
@@ -26,14 +30,20 @@ async function updateElo(usernameP1: string, eloP1: Elo, usernameP2: string, elo
 	if (!eloDataP2)
 		throw new Error("Error to create elo data of player 2");
 
-	await addPlacementGame(eloDataP1, eloDataP2.elo, gameId);
-	await addPlacementGame(eloDataP2, eloDataP1.elo, gameId);
+	if (isValidName(eloDataP1.username))
+		await addPlacementGame(eloDataP1, eloDataP2.elo, gameId);
+	if (isValidName(eloDataP2.username))
+		await addPlacementGame(eloDataP2, eloDataP1.elo, gameId);
 
 	await saveElo(eloDataP1, eloDataP2.oldElo, gameId, currentSeasonId);
 	await saveElo(eloDataP2, eloDataP1.oldElo, gameId, currentSeasonId);
 }
 
 async function createEloData(username: string, eloBeforeInactivity: Elo, seasonId: number, outcome: number): Promise<EloData | null> {
+	if (!isValidName(username)) {
+		eloBeforeInactivity.rd = MAX_RD;
+		return fillEloData(username, 1, eloBeforeInactivity, outcome);
+	}
 	const nbGameInDb = await getPlayerGameCountBySeason(username, seasonId);
 	if (nbGameInDb === undefined)
 		return null;
@@ -41,6 +51,10 @@ async function createEloData(username: string, eloBeforeInactivity: Elo, seasonI
 	const elo = await getEloAfterInactivity(username, nbGame, eloBeforeInactivity, seasonId);
 	if (!elo)
 		return null;
+	return fillEloData(username, nbGame, elo, outcome);
+}
+
+function fillEloData(username: string, nbGame: number, elo: Elo, outcome: number): EloData {
 	return {
 		username: username,
 		nbGame: nbGame,
@@ -81,7 +95,7 @@ async function addPlacementGame(eloData: EloData, eloOpp: Elo, gameId: number): 
 }
 
 async function saveElo(eloData: EloData, eloOpp: Elo, gameId: number, seasonId: number): Promise<void> {
-	if (eloData.nbGame < NB_PLACEMENT_GAME) {
+	if (eloData.nbGame < NB_PLACEMENT_GAME || !isValidName(eloData.username)) {
 		await insertEloVariation(eloData.username, gameId, 0);
 		return;
 	}
