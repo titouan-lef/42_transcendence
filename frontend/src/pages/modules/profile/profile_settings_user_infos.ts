@@ -18,7 +18,7 @@ const BTN_EDIT = createButtonHtml(['edit'], 'btn-edit', { 'class': `${BTN_SAVE_E
 const INPUT_EDITPROFILE_STYLE = `
 bg-dark rounded-xl p-2
 w-full min-w-0 max-w-9/10 truncate
-focus:outline-2 focus:outline-light focus:text-dark
+focus:outline-2 focus:outline-light focus:font-bold
 `;
 
 const SHOW_USERINFORMATION_STYLE = `
