@@ -12,6 +12,7 @@ import { addAuthCookies, removeAuthCookies } from "../security/JWT.js";
 import { wait } from "../utils/time.js";
 import { Errors, Success } from "#shared/status_codes.js";
 import { NewUserBody, ThemeBody } from "#shared/HTTP.js";
+import { resizeGif } from "../utils/images.js";
 
 const PUMP = util.promisify(pipeline);
 
@@ -59,9 +60,13 @@ async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<
 	}
 	const fullPath = `/app/backups/pictures/${user}`;
 	try {
-		if (extention === `.gif`)
-			await PUMP(part.file, fs.createWriteStream(fullPath));
-		else {
+		if (extention === `.gif`) {
+			const tempPath = `/tmp/${user}`;
+			await PUMP(part.file, fs.createWriteStream(tempPath));
+			await resizeGif(tempPath, fullPath, IMAGES_SIZE);
+			if (fs.existsSync(tempPath))
+				fs.unlinkSync(tempPath);
+		} else {
 			await PUMP(
 				part.file,
 				sharp().resize(IMAGES_SIZE, IMAGES_SIZE, { fit: "cover", position: "center" }),
