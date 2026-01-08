@@ -1,4 +1,4 @@
-import { Elo, getRatings } from "../elo/elo.js";
+import { DEFAULT_RATINGS, Elo, getRatings } from "../elo/elo.js";
 import { updateDataAllPlayer, defineEloDistance } from "./update_player_data.js";
 import { getMatchingPairTab } from "./pair_managment.js";
 import { findMatch } from "./match_managment.js";
@@ -7,6 +7,7 @@ import { getElo } from "../../database/web3/contract_service.js";
 import { getCurrentSeason } from "../../database/season.js";
 import { wait } from "../../utils/time.js";
 import { WebSocket } from "ws";
+import { isValidName } from "../../user_management/create_account.js";
 
 interface PlayerData {
 	socket: WebSocket;
@@ -92,8 +93,13 @@ async function addPlayerToMatchmakingSystem(socket: WebSocket, username: string,
 	const currentSeasonId = await getCurrentSeason();
 	if (!currentSeasonId)
 		throw new Error("Error to get current season");
-	const elo = await getElo(username, currentSeasonId);
-	elo.r = getRatings(elo);
+	let elo: Elo;
+	if (!isValidName(username))
+		elo = { r: DEFAULT_RATINGS, rd: 0 };
+	else {
+		elo = await getElo(username, currentSeasonId);
+		elo.r = getRatings(elo);
+	}
 	const player: PlayerData = {
 		socket: socket,
 		username: username,

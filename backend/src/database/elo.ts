@@ -1,3 +1,4 @@
+import { isValidName } from "../user_management/create_account.js";
 import { applyQuery } from "./db_utils.js";
 
 const TABLE_NAME = "Elo";
@@ -17,6 +18,8 @@ async function createEloTable(): Promise<void> {
 }
 
 async function insertEloVariation(username: string, gameId: number, variation: number): Promise<void> {
+	if (!isValidName(username))
+		username = "guest";
 	await applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (username, gameId, variation) VALUES (? ,? ,?)`,
