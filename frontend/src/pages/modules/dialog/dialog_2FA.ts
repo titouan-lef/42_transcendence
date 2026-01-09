@@ -2,10 +2,10 @@ import { goBack, navigateTo } from "../../../routes/navigate";
 import { createButtonHtml } from "../../../components/button";
 import { createInputHtml } from "../../../components/input";
 import { loadDialog } from "./dialog";
-import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_SEPARATOR_STYLE, DIALOG_FORM_STYLE } from "./dialog_style";
+import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_FORM_STYLE } from "./dialog_style";
 import { Modals } from "../../../routes/navigate_types";
 import { getSafeElement } from "../../../utils/getSafeElement";
-import { isRequestSuccessfull, printReplyInDiv, ReplyFromBack, sendPostRequestToBack } from "../../../services/api_request";
+import { isRequestSuccessfull, printReplyInDiv, sendPostRequestToBack } from "../../../services/api_request";
 import { getCurrentUserInfos } from "../../../services/user_management/user_state";
 import { Content2FA } from "#shared/HTTP";
 
