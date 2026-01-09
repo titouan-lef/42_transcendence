@@ -129,7 +129,7 @@ function initProfileEvents(): void {
 				elem.addEventListener('click', async () => {
 					const result = await addFriend(userProfile);
 					if (!result)
-						return
+						return;
 					await updateFriendList();
 					openProfile(userProfile);
 				});
