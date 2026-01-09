@@ -90,7 +90,7 @@ function configureChart(labels: string[], dataset: number[]): ChartConfiguration
 							size: 10
 						}
 					},
-					beginAtZero: true
+					beginAtZero: false
 				}
 			}
 		}
