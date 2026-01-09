@@ -7,6 +7,7 @@ import { Modals, GameTypes } from "../../../routes/navigate_types";
 import { getGameOptions } from "../../../game/settings/GameRules";
 import { gamePageEvents } from "../../../pages/events/game_page_event";
 import { wait } from "../../../utils/time";
+import { Status, Waiting } from "#shared/types_transfert";
 
 const GIF_STYLE = `
 rounded-2xl
@@ -47,10 +48,6 @@ async function gameWaitingHandler(): Promise<void> {
 	waitForGame();
 }
 
-interface GameFound {
-	id: number;
-}
-
 async function cancelQueue(): Promise<void> {
 	ws?.close(1000);
 	ws = null;
@@ -62,20 +59,24 @@ async function waitForGame(): Promise<void> {
 
 	const options = getGameOptions(GameTypes.RANKED);
 
-	ws.onopen = (): void => {
-		console.log("Looking for a game");
-		wait(100);
-		ws?.send(JSON.stringify(options));
-	};
-
 	ws.onmessage = (event): void => {
 		try {
-			const game: GameFound = JSON.parse(event.data); /** @todo check number ?? */
-			launchGame(game.id);
+			const message: Waiting = JSON.parse(event.data); /** @todo check number ?? */
+			switch (message.status) {
+				case (Status.START):
+					ws?.send(JSON.stringify(options));
+					break;
+				case (Status.OPTIONS):
+					if (message.id !== undefined) {
+						launchGame(message.id);
+						cancelQueue();
+					}
+					break;
+				default:
+					throw new Error("No such waiting status");
+			}
 		} catch {
 			goBack();
-		} finally {
-			ws?.close();
 		}
 	};
 

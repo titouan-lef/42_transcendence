@@ -8,6 +8,7 @@ import { GameOptions } from "../settings/GameSettings.js";
 import { GameType, getGameOptions, identifyGame, isUserPlaying, registerGameOptions } from "../game_manager.js";
 import { Success } from "#shared/status_codes.js";
 import { GUEST_NAME } from "../../user_management/create_account.js";
+import { Status, Waiting } from "#shared/types_transfert.js";
 
 declare module 'fastify' {
 	interface FastifyRequest {
@@ -71,6 +72,10 @@ async function waitForGame(socket: WebSocket, req: FastifyRequest): Promise<void
 		addPlayerToMatchmakingSystem(socket, playerId, options);
 	});
 	startHeartbeat(socket);
+	const start: Waiting = {
+		status: Status.START
+	};
+	socket.send(JSON.stringify(start));
 	socket.on("close", () => removePlayerFromMatchmakingSystem(playerId));
 }
 
