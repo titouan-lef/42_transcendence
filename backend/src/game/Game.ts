@@ -120,6 +120,14 @@ class Game {
 		this.engine.dispose();
 	}
 
+	isUserPlaying(user: string): boolean {
+		if (this.settings.player1.username === user)
+			return true;
+		if (this.settings.player2?.username === user)
+			return true;
+		return false;
+	}
+
 	private async updateElos(): Promise<void> {
 		const player1 = this.sceneManager.getPlayer(1)?.getName();
 		const player2 = this.sceneManager.getPlayer(2)?.getName();
