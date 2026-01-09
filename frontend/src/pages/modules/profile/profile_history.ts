@@ -9,6 +9,32 @@ import { GUEST_NAME } from "#shared/constant";
 
 let historyData: GameHistoryWithAvatar[];
 
+/** @todo remove tests */
+const TEST: GameHistoryWithAvatar = {
+	isAvatarSet: false,
+	date: '12/12/12',
+	duration: 490,
+	season: 2,
+	opponentUsername: 'user',
+	opponentNickname: 'niki',
+	eloVariation: 45,
+	myScore: 11,
+	opponentScore: 5
+};
+
+/** @todo remove tests */
+const TESTE: GameHistoryWithAvatar = {
+	isAvatarSet: false,
+	date: '12/12/12',
+	duration: 490,
+	season: 2,
+	opponentUsername: 'user',
+	opponentNickname: 'niki',
+	eloVariation: 45,
+	myScore: 5,
+	opponentScore: 11
+};
+
 const HISTORY_STYLE = `
 flex flex-col justify-start items-center gap-4
 h-full w-full px-4 py-10
@@ -31,6 +57,11 @@ async function fetchHistoryData(user: string): Promise<void> {
 		return;
 
 	historyData = JSON.parse(reply.content);
+
+	/** @todo remove tests */
+	historyData.push(TEST);
+	/** @todo remove tests */
+	historyData.push(TESTE);
 }
 
 async function getHistoryData(): Promise<GameHistoryWithAvatar[]> {
