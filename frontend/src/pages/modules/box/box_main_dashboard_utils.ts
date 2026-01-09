@@ -23,11 +23,15 @@ function formatScore(stats: GameStats): string {
 
 function formatPoint(point: Point, goaler: string): string {
 	return `
-	<div>[${formatTime(point.timer, false)}] ${goaler} scored! (</div>
-	${createSvgBoxByBall(point.ball)}
-	<div>,</div>
-	${createSvgBoxByMap(point.map)}
-	<div>)</div>
+	<div class='shrink-0'>[${formatTime(point.timer, false)}]</div>
+	<div class='max-w-[200px] truncate' title='${goaler}'> ${goaler}</div>
+	<div class='shrink-0 flex flex-row'>
+		<div>scored! (</div>
+		${createSvgBoxByBall(point.ball)}
+		<div>,</div>
+		${createSvgBoxByMap(point.map)}
+		<div>)</div>
+	</div>
 	`;
 }
 

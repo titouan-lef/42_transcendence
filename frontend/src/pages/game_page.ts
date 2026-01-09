@@ -98,4 +98,8 @@ function loadRankedGamePage(): void {
 	loadGamePage(GameTypes.RANKED);
 }
 
-export { loadLocalGamePage, loadSoloGamePage, loadRankedGamePage, openGamePage };
+function getGameType(): GameTypes | null {
+	return gameType;
+}
+
+export { loadLocalGamePage, loadSoloGamePage, loadRankedGamePage, openGamePage, getGameType };

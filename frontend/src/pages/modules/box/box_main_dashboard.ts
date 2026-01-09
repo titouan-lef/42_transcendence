@@ -4,10 +4,12 @@ import { loadMainBox, MAIN_BOX_BTN_STYLE, MAIN_BOX_SEPARATOR_STYLE } from "../bo
 import { formatScore, formatTime, getGameStats, setGameStats } from "./box_main_dashboard_utils";
 import { generatePointList, generateRules } from "./box_main_dashboard_generators";
 import { navigateTo } from "../../../routes/navigate";
-import { Pages } from "../../../routes/navigate_types";
+import { GameTypes, Pages } from "../../../routes/navigate_types";
+import { getGameType } from "src/pages/game_page";
+import { applyColor } from "src/utils/applyColor";
 
 const COLUMNS_STYLE = `
-flex flex-col flex-1 gap-4 h-full min-w-0
+flex flex-col flex-1 gap-4 h-full min-w-0 min-h-0 scrollbar-none overflow-scroll
 `;
 
 const GAME_DASHBOARD_BUTTONS = `
@@ -22,35 +24,62 @@ function generateGameDashboard(): string {
 
 	return `
 		<div class='flex flex-col h-full max-h-screen w-full justify-center items-center'>
-			<div class='flex flex-row gap-4 w-full p-4 pb-2 flex-1 min-h-0'>
+			<div class='flex flex-row gap-4 w-full p-4 flex-1 min-h-0'>
 				<div class='${COLUMNS_STYLE}'>
-					<div class='flex flex-row'>
-						<div>Game duration :</div>
-						<div>${formatTime(stats.gameTimer)}</div>
-					</div>
-					<div class='flex flex-row'>
-						<div>Score :</div>
-						<div>${formatScore(stats)}</div>
-					</div>
-					<div class='flex flex-row'>
-						<p>Opponent :</p>
-						<div class='overflow-hidden text-ellipsis'>${stats.player2.name}</div>
-						${stats.player2.name !== 'guest'? `<button id='btn-oppo-profile' class='${MAIN_BOX_BTN_STYLE}'>show his profile</button>`:""}
-					</div>
-				</div>
-				<div class='${COLUMNS_STYLE}'>
-					<p class=''>points details :</p>
-					${generatePointList()}
-					<hr class="${MAIN_BOX_SEPARATOR_STYLE}">
+					${showGameResults(stats)}
 					${generateRules()}
+					<div class='shrink-0 h-fit w-full p-2'>
+						${GAME_DASHBOARD_BUTTONS}
+					</div>
 				</div>
-			</div>
-			<div class='shrink-0 h-fit w-full p-4 pt-2'>
-				<hr class="${MAIN_BOX_SEPARATOR_STYLE}">
-				${GAME_DASHBOARD_BUTTONS}
+				<div class='${COLUMNS_STYLE}'>
+					<p class='text-2xl font-bold p-8'>points details</p>
+					${generatePointList()}
+				</div>
 			</div>
 		</div>
 	`;
+}
+
+const BTN_SHOW_OPPO_PROFILE = `
+<button id='btn-oppo-profile' class='font-park font-bold rounded-[10px] text-[20px] w-[200px] h-[40px] ${applyColor()}'>
+	show profile
+</button>
+`;
+
+const GAME_RESULTS_TITLE_STYLE = `
+text-2xl font-bold p-8 max-w-[300px] truncate
+`;
+
+function showGameResults(stats: GameStats): string {
+	const gameType = getGameType();
+	const victory = stats.player1.score > stats.player2.score ? 'win' : 'lose';
+
+	const gameResults = `
+	<div class='${applyColor(victory)} px-8 py-4 flex flex-col rounded-2xl bg-grad-l from-dark'>
+		${victory === 'win' ? `<p class='text-[35px] text-${victory}'>Victory</p>` : `<p class='text-[35px] text-${victory}'>Defeat</p>`}
+		<div class='flex flex-row w-full h-fit justify-between items-center'>
+			<div class='text-[80px] font-bold w-fit mr-20 text-balance'>${formatScore(stats)}</div>
+			<div class='text-[35px] text-variant'>${formatTime(stats.gameTimer)}</div>
+		</div>
+	</div>
+	`;
+
+	if (gameType === GameTypes.RANKED && stats.player2.name !== 'guest') {
+		return `
+		<div class='flex flex-row gap-4 justify-between items-center'>
+			<div class='${GAME_RESULTS_TITLE_STYLE}'>ranked game result against ${stats.player2.name}</div>
+			${BTN_SHOW_OPPO_PROFILE}
+		</div>
+		${gameResults}
+		`;
+	} else if (gameType === GameTypes.AI || gameType === GameTypes.LOCAL) {
+		return `
+		<div class='${GAME_RESULTS_TITLE_STYLE}'>${gameType} game result</div>
+		${gameResults}
+		`;
+	}
+	return '';
 }
 
 function gameDashboardEvents(): void {
