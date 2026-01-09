@@ -71,12 +71,12 @@ const TRANSLATOR = {
 		fr: "{twofa} {required}",
 	},
 	not_connected: {
-		en: "You are {not} {logged_in}",
-		fr: "Vous n'êtes {not} {logged_in}"
+		en: "you are {not} {logged_in}",
+		fr: "vous n'êtes {not} {logged_in}"
 	},
 	no_such_user: {
-		en: "No such {user}",
-		fr: "Aucun {user} de ce nom",
+		en: "no such {user}",
+		fr: "aucun {user} de ce nom",
 	},
 	invalid_username: {
 		en: "{invalid} {user_name}",
@@ -103,12 +103,12 @@ const TRANSLATOR = {
 		fr: "{email} {required} pour {enable} la {twofa}",
 	},
 	friend_himself: {
-		en: "You cannot {add} yousefl as a {friend}",
-		fr: "Vous ne pouvez pas vous {add} en {friend}",
+		en: "you cannot {add} yoursefl as a {friend}",
+		fr: "vous ne pouvez pas vous {add} en {friend}",
 	},
 	already_friend_with: {
-		en: "This {user} is {already} your {friend}",
-		fr: "Cet {user}, est {already} votre {friend}",
+		en: "this {user} is {already} your {friend}",
+		fr: "cet {user}, est {already} votre {friend}",
 	},
 
 	// FRONT | NAVIGATION
@@ -175,8 +175,8 @@ const TRANSLATOR = {
 		fr: "{email} {invalid}"
 	},
 	please_disable_2FA: {
-		en : "Please desactivate {twofa} before clearing your {email}",
-		fr : "Desactivatez la {twofa} avant d'effacer votre {email}"
+		en : "please desactivate {twofa} before clearing your {email}",
+		fr : "désactivatez la {twofa} avant d'effacer votre {email}"
 	},
 	file_too_big: {
 		en : "{file} too big",

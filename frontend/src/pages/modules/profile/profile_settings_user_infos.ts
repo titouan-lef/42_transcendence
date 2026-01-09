@@ -30,14 +30,17 @@ const BOX_USERINFORMATION_STYLE = `
 flex flex-col justify-start gap-4 w-full pb-4
 `;
 
-/** @todo print-content front to do */
+const PRINT_CONTENT_STYLE = `
+w-full h-[20px] text-[12px] text-warning text-center
+`;
+
 const BOX_EDITPROFILE = `
 <div class="${BOX_USERINFORMATION_STYLE}">
 	${createInputHtml(["nickname"], "text", "publicID", { "class": `${INPUT_EDITPROFILE_STYLE}` })}
 	${createInputHtml(["new_password"], "password", "newPassword", { "class": `${INPUT_EDITPROFILE_STYLE}` })}
 	${createInputHtml(["confirm_password"], "password", "confirmPassword", { "class": `${INPUT_EDITPROFILE_STYLE}` })}
 	${createInputHtml(["tfa_mail"], "email", "user-email", { "class": `${INPUT_EDITPROFILE_STYLE}` })}
-	<div id="print-uinfo-reply"></div>
+	<div id="print-uinfo-reply" class='${PRINT_CONTENT_STYLE}'></div>
 </div>
 `;
 

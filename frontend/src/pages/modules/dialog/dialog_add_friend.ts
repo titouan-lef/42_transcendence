@@ -10,14 +10,17 @@ import { Modals } from "../../../routes/navigate_types.js";
 import { UserBody } from "#shared/HTTP.js";
 import { updateFriendList } from "../box/box_aside_friendlist.js";
 
-/** @todo better print-content */
+const PRINT_CONTENT_STYLE = `
+w-full h-[20px] text-[12px] text-warning text-center
+`;
+
 const ADD_FRIEND = `
 	<p class='text-[18px] font-bold'>find your friend</p>
 	<form name="Login" class="${DIALOG_FORM_STYLE}">
 		${createInputHtml(["user_name"], "text", "find-friend", { "autofocus": "true", "class": `${DIALOG_INPUT_STYLE}` })}
 	</form>
 	${createButtonHtml(["add_friend"], `btn-add-friend`, { "class": `${DIALOG_BTN_STYLE}` })}
-	<p id="print-content"></p>
+	<p id="print-content" class='${PRINT_CONTENT_STYLE}'></p>
 `;
 
 function addFriendHandler(modal: HTMLDialogElement): void {
