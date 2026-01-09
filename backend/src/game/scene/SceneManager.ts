@@ -65,7 +65,7 @@ class SceneManager {
 			if (time <= 0) {
 				let startingDirection;
 				if (!settings.options.rotatingPlayer && !settings.options.spin)
-					startingDirection = new babylon.Vector3((Math.random() - 0.5) * 2, 0, (Math.random() - 0.5));
+					startingDirection = new babylon.Vector3(Math.random() < 0.5 ? -1 : 1, 0, Math.random() * 2 - 1);
 				this.ball?.launchBall(undefined, startingDirection);
 				this.ball?.start();
 				if (this.map) {
