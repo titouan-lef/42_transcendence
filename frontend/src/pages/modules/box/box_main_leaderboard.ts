@@ -1,7 +1,7 @@
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { MAIN_BOX_BTN_STYLE } from "../box/box_main_utils";
 import { createButtonHtml } from "../../../components/button";
-import { goBack, navigateTo } from "../../../routes/navigate";
+import { navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
 import { isRequestSuccessfull, sendGetRequestToBack } from "../../../services/api_request";
 import { LeaderboardInfos, Ranking } from "#shared/HTTP.js";
@@ -64,6 +64,7 @@ function getLeaderboardPage(maxSeason: number ): string {
 function generateLeaderboardRows(ranking: Ranking[]): void {
 	const leaderboard = getSafeElement('leaderboard', HTMLElement);
 	let rank = 1;
+	leaderboard.innerHTML = "";
 	ranking.forEach(user => {
 		leaderboard.insertAdjacentHTML('beforeend',`
 			<tr class="${TABLE_DATA_STYLE}">
