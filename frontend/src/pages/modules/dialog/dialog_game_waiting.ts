@@ -6,7 +6,6 @@ import { goBack, navigateTo } from "../../../routes/navigate";
 import { Modals, GameTypes } from "../../../routes/navigate_types";
 import { getGameOptions } from "../../../game/settings/GameRules";
 import { gamePageEvents } from "../../../pages/events/game_page_event";
-import { wait } from "../../../utils/time";
 import { Status, Waiting } from "#shared/types_transfert";
 
 const GIF_STYLE = `
@@ -61,7 +60,7 @@ async function waitForGame(): Promise<void> {
 
 	ws.onmessage = (event): void => {
 		try {
-			const message: Waiting = JSON.parse(event.data); /** @todo check number ?? */
+			const message: Waiting = JSON.parse(event.data);
 			switch (message.status) {
 				case (Status.START):
 					ws?.send(JSON.stringify(options));
