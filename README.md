@@ -582,3 +582,7 @@ Other | `WIP`<br>`DOCS`<br>`TEST` | Work In Progress.<br>Add or update documenta
 - Glicko rating system : https://en.wikipedia.org/wiki/Glicko_rating_system
 - Elo rating system : https://fr.wikipedia.org/wiki/Classement_Elo
 - Glicko (1 & 2) documentation : https://www.glicko.net/glicko.html
+
+### Images
+- Cropping and Resizing Animated Gifs with Gifsicle : https://stevegrunwell.com/blog/cropping-resizing-gifsicle
+- High performance Node.js image processing : https://sharp.pixelplumbing.com/
