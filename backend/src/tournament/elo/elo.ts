@@ -6,6 +6,7 @@
  * Abbreviation : sq for squared value.
  */
 
+import { NB_PLACEMENT_GAME } from "#shared/constant.js";
 import { POINTS_TO_WIN } from "../../game/settings/values.js";
 import { clamp, round } from "../../utils/math.js";
 
@@ -35,7 +36,6 @@ const MAX_RD = 350;
 const SEASON_DURATION = 2; // Time in day.
 const NB_SEASON_TO_RESET = 30;
 const RD_REF = 50;
-const NB_PLACEMENT_GAME = 3;
 
 // Constant to increase in uncertainty between rating periods.
 const C = Math.sqrt((MAX_RD * MAX_RD - RD_REF * RD_REF) / NB_SEASON_TO_RESET);
@@ -175,5 +175,5 @@ function rdCalculation(newRdSq: number): number {
 	return clamp(newRdRound, MIN_RD, MAX_RD);
 }
 
-export { Elo, DEFAULT_RATINGS, MAX_RD, NB_PLACEMENT_GAME };
+export { Elo, DEFAULT_RATINGS, MAX_RD };
 export { calculateOutcome, getRatings, eloIsDefine, applyTimeOnRd, updateEloAfterGame, updateEloAfterGamePlacement };

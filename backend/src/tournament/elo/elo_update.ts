@@ -5,7 +5,8 @@ import { getPlacementGames, insertPlacementGame, Placement } from "../../databas
 import { getCurrentSeason } from "../../database/season.js";
 import { setElo, setRatingDeviation } from "../../database/web3/contract_service.js";
 import { nbDayBetween } from "../../utils/time.js";
-import { MAX_RD, NB_PLACEMENT_GAME, Elo, applyTimeOnRd, eloIsDefine, updateEloAfterGame, updateEloAfterGamePlacement } from "./elo.js";
+import { MAX_RD, Elo, applyTimeOnRd, eloIsDefine, updateEloAfterGame, updateEloAfterGamePlacement } from "./elo.js";
+import { NB_PLACEMENT_GAME } from "#shared/constant.js";
 
 interface EloData {
 	username: string;
