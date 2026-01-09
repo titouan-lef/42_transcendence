@@ -6,7 +6,7 @@ import { generatePointList, generateRules } from "./box_main_dashboard_generator
 import { navigateTo } from "../../../routes/navigate";
 import { GameTypes, Pages } from "../../../routes/navigate_types";
 import { applyColor } from "../../../utils/applyColor";
-import { getGameType } from "src/game/gameType";
+import { getGameType } from "../../../game/gameType";
 
 const COLUMNS_STYLE = `
 flex flex-col flex-1 gap-4 h-full min-w-0 min-h-0 scrollbar-none overflow-scroll
@@ -24,7 +24,7 @@ function generateGameDashboard(): string {
 
 	return `
 		<div class='flex flex-col h-full max-h-screen w-full justify-center items-center'>
-			<div class='flex flex-row gap-4 w-full p-4 flex-1 min-h-0'>
+			<div class='flex flex-row gap-4 w-full p-4 flex-1 min-h-0 h-full'>
 				<div class='${COLUMNS_STYLE}'>
 					${showGameResults(stats)}
 					${generateRules()}
@@ -48,7 +48,7 @@ const BTN_SHOW_OPPO_PROFILE = `
 `;
 
 const GAME_RESULTS_TITLE_STYLE = `
-text-2xl font-bold p-8 max-w-[300px] truncate
+text-2xl font-bold p-8 max-w-[550px] truncate
 `;
 
 function showGameResults(stats: GameStats): string {
@@ -68,7 +68,7 @@ function showGameResults(stats: GameStats): string {
 	if (gameType === GameTypes.RANKED && stats.player2.name !== 'guest') {
 		return `
 		<div class='flex flex-row gap-4 justify-between items-center'>
-			<div class='${GAME_RESULTS_TITLE_STYLE}'>ranked game result against ${stats.player2.name}</div>
+			<div class='${GAME_RESULTS_TITLE_STYLE}'>ranked game result VS ${stats.player2.name}</div>
 			${BTN_SHOW_OPPO_PROFILE}
 		</div>
 		${gameResults}

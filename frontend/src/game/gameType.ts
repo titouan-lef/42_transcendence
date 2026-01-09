@@ -1,4 +1,4 @@
-import { GameTypes } from "src/routes/navigate_types";
+import { GameTypes } from "../routes/navigate_types";
 
 let gameType: GameTypes | null = null;
 

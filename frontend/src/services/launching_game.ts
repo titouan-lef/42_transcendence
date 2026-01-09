@@ -4,7 +4,7 @@ import { getReplyMessage, isRequestSuccessfull, sendPostRequestToBack } from "./
 import { getGameOptions } from "../game/settings/GameRules.js";
 import { GameTypes } from "../routes/navigate_types.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
-import { getGameType } from "src/game/gameType.js";
+import { getGameType } from "../game/gameType.js";
 
 const GAME_INFOS_STYLE = `
 flex-1 min-w-0

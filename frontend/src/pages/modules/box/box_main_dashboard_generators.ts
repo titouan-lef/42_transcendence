@@ -4,7 +4,7 @@ import { createSvgBox, createSvgBoxByBall, createSvgBoxByMap } from "../../../as
 import { formatPoint, getGameStats } from "./box_main_dashboard_utils";
 
 const POINT_BOX_STYLE = `
-flex flex-col justify-start items-start gap-2 min-h-0 w-full bg-dark/20 rounded-2xl scrollbar-none overflow-scroll p-2
+flex flex-col justify-start items-start gap-2 min-h-0 w-full h-full bg-dark/20 rounded-2xl scrollbar-none overflow-scroll p-2
 `;
 
 const POINT_STYLE = `
