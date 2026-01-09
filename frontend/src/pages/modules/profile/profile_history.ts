@@ -40,8 +40,16 @@ function generateHistory(history: GameHistoryWithAvatar[], numberDisplay: number
 	let histBoxes = ``;
 	const size = history.length;
 
-	for (let i = 0; i < size && i < numberDisplay; i++)
-		histBoxes += createHistoryBox(history[i], size - i);
+	let i = 0;
+	while (i < size && i < numberDisplay) {
+		const season = history[i].season;
+		let nbGameInSeason = 1;
+		while (i + nbGameInSeason < size && season === history[i + nbGameInSeason].season)
+			++nbGameInSeason;
+		for (let j = i; j < numberDisplay && j < i + nbGameInSeason; ++j)
+			histBoxes += createHistoryBox(history[j], i + nbGameInSeason - j);
+		i += nbGameInSeason;
+	}
 	return histBoxes;
 }
 
