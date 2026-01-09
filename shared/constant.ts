@@ -1,3 +1,4 @@
+const GUEST_NAME = 'guest';
 const NB_PLACEMENT_GAME = 3;
 
-export { NB_PLACEMENT_GAME };
+export { GUEST_NAME, NB_PLACEMENT_GAME };

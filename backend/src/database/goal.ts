@@ -1,3 +1,4 @@
+import { GUEST_NAME } from "#shared/constant.js";
 import { isValidName } from "../user_management/create_account.js";
 import { applyQuery } from "./db_utils.js";
 
@@ -28,7 +29,7 @@ async function createGoalTable(): Promise<void> {
 
 async function insertGoal(mapId: number, ballId: number, username: string, timer: number, gameId: number): Promise<void> {
 	if (!isValidName(username))
-		username = "guest";
+		username = GUEST_NAME;
 	await applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (mapId, ballId, gameId, scoredAt, by) VALUES (?, ?, ?, ?, ?)`,

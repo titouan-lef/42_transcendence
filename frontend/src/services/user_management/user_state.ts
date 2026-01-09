@@ -1,3 +1,4 @@
+import { GUEST_NAME } from "#shared/constant.js";
 import { Themes } from "../../assets/themes/themes.js";
 import { isRequestSuccessfull, sendGetRequestToBack } from "../api_request.js";
 
@@ -20,8 +21,8 @@ function getCurrentUserInfos(): InfoList | null {
 
 function guestConnection(): void {
 	currentUser = {
-		username: 'guest',
-		nickname: 'guest',
+		username: GUEST_NAME,
+		nickname: GUEST_NAME,
 		email: null,
 		is2FAEnabled: false,
 		isAvatarSet: false,
@@ -30,7 +31,7 @@ function guestConnection(): void {
 }
 
 function isGuest(): boolean {
-	return currentUser?.username === `guest`;
+	return currentUser?.username === GUEST_NAME;
 }
 
 function isUserConnected(): boolean {

@@ -7,7 +7,7 @@ import { sendReply } from "../../utils/HTTP.js";
 import { GameOptions } from "../settings/GameSettings.js";
 import { GameType, getGameOptions, identifyGame, isUserPlaying, registerGameOptions } from "../game_manager.js";
 import { Success } from "#shared/status_codes.js";
-import { GUEST_NAME } from "../../user_management/create_account.js";
+import { GUEST_NAME } from "#shared/constant.js";
 import { Status, Waiting } from "#shared/types_transfert.js";
 
 declare module 'fastify' {

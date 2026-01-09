@@ -6,8 +6,6 @@ import { request2FA } from "../security/2FA.js";
 import { Errors, Success } from "#shared/status_codes.js";
 import { NewUserBody } from "#shared/HTTP.js";
 
-const GUEST_NAME = 'guest';
-
 interface UpdateUserBody {
 	nickname: string;
 	password: string;
@@ -79,4 +77,4 @@ async function updateUserInfos(req: FastifyRequest<{ "Body": UpdateUserBody }>, 
 	sendReply(reply, Success.USER_UPDATED);
 }
 
-export { UpdateUserBody, addNewUser, updateUserInfos, isValidName, GUEST_NAME };
+export { UpdateUserBody, addNewUser, updateUserInfos, isValidName };

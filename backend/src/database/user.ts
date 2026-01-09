@@ -1,3 +1,4 @@
+import { GUEST_NAME } from "#shared/constant.js";
 import { hashString } from "../utils/hash_string.js";
 import { applyQuery } from "./db_utils.js";
 
@@ -39,7 +40,7 @@ async function insertUser(username: string, nickname: string, hashedPassword: st
 }
 
 async function insertGuest(): Promise<void> {
-	await insertUser('guest', 'guest', hashString(''));
+	await insertUser(GUEST_NAME, GUEST_NAME, hashString(''));
 }
 
 async function getUserByUsername(username: string): Promise<User | undefined> {

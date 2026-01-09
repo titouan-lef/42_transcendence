@@ -1,3 +1,4 @@
+import { GUEST_NAME } from "#shared/constant.js";
 import { LeaderboardInfos } from "#shared/HTTP.js";
 import { applyQuery } from "./db_utils.js";
 import { getGamesWinsBySeason } from "./fetchGame.js";
@@ -21,7 +22,7 @@ async function getSeasonInfosBySeason(season: number): Promise<LeaderboardInfos>
 			FROM User AS U
 			JOIN Elo AS E ON E.username = U.username
 			JOIN Game AS G ON E.gameId = G.id
-			WHERE G.seasonId = ?
+			WHERE G.seasonId = ? AND E.username != '${GUEST_NAME}'
 			GROUP BY U.username, U.nickname
 			HAVING nbGame > 0;`,
 			[season]
