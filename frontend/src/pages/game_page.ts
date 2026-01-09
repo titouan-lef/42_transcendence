@@ -37,12 +37,12 @@ const GAME_PAGE = `
 <dialog id='modal'></dialog>
 <div class='${GAME_PAGE_STYLE}'>
 	<div id='game-infos' class='flex flex-row w-4/5 justify-stretch items-center gap-8'>
-		<div class='text-[40px] font-jaro flex-2 min-w-0'>PONG</div>
-		<div class='flex flex-row flex-2 min-w-0'>
-			game type :
+		<div class='text-[40px] font-jaro w-fit shrink-0'>PONG</div>
+		<div class='flex flex-row w-fit gap-2 shrink-0 text-variant text-[20px] font-bold'>
 			<p id='game-type'></p>
+			<p>game</p>
 		</div>
-		<div id="players-infos" class='grow flex flex-row gap-2 flex-2 min-w-0'>
+		<div id="players-infos" class='grow flex flex-row gap-2 w-full justify-center items-center'>
 		</div>
 		<div id='btn-quit' class='${GAME_QUIT_BTN_STYLE}'>
 			${GAME_QUIT_BTN_SVG}
