@@ -3,7 +3,7 @@ import { getSafeElement } from "../../../utils/getSafeElement";
 import { closeDialogID, loadDialog } from "./dialog";
 import { DIALOG_BTN_STYLE } from "./dialog_style";
 import { goBack, navigateTo } from "../../../routes/navigate";
-import { Modals, GameTypes, Pages } from "../../../routes/navigate_types";
+import { Modals, GameTypes } from "../../../routes/navigate_types";
 import { getGameOptions } from "../../../game/settings/GameRules";
 import { gamePageEvents } from "../../../pages/events/game_page_event";
 import { wait } from "../../../utils/time";

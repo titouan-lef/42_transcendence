@@ -4,6 +4,7 @@ import { getReplyMessage, isRequestSuccessfull, sendPostRequestToBack } from "./
 import { getGameOptions } from "../game/settings/GameRules.js";
 import { GameTypes } from "../routes/navigate_types.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
+import { getGameType } from "src/game/gameType.js";
 
 const GAME_INFOS_STYLE = `
 flex-1 min-w-0
@@ -106,8 +107,7 @@ async function newLocalGame(): Promise<void> {
 }
 
 function loadGameHeader(infos: StartMessage): void {
-
-	const gameType = getSafeElement('game-type', HTMLElement).innerHTML;
+	const gameType = getGameType();
 
 	const elem = getSafeElement(`players-infos`, HTMLElement);
 	switch (gameType) {
