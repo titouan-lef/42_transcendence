@@ -5,7 +5,7 @@ import { identifyUser, UserIdentity } from "../../security/JWT.js";
 import { addPlayerToMatchmakingSystem, isUserWaiting, removePlayerFromMatchmakingSystem } from "../../tournament/matchmaking/matchmaking.js";
 import { sendReply } from "../../utils/HTTP.js";
 import { GameOptions } from "../settings/GameSettings.js";
-import { GameType, getGameOptions, identifyGame, registerGameOptions } from "../game_manager.js";
+import { GameType, getGameOptions, identifyGame, isUserPlaying, registerGameOptions } from "../game_manager.js";
 import { Success } from "#shared/status_codes.js";
 import { GUEST_NAME } from "../../user_management/create_account.js";
 
@@ -53,6 +53,10 @@ async function waitForGame(socket: WebSocket, req: FastifyRequest): Promise<void
 	}
 	if (isUserWaiting(playerId)) {
 		socket.close(1003, "You are already looking for a game");
+		return;
+	}
+	if (isUserPlaying(playerId)) {
+		socket.close(1003, "You are already in a game");
 		return;
 	}
 	console.log(`${playerId} is wating for a game`);

@@ -9,6 +9,14 @@ import { WebSocket } from "ws";
 
 const GAMES = new Map<number, Game>();
 
+function isUserPlaying(user: string): boolean {
+	for (const game of GAMES.values()) {
+		if (game.isUserPlaying(user))
+			return true;
+	}
+	return false;
+}
+
 function getNewGameId(): number {
 	let id = 0;
 	while (GAMES.has(id))
@@ -116,4 +124,4 @@ async function identifyGame(socket: WebSocket, gameId: number, gameData: GameDat
 	}
 }
 
-export { GameType, GameData, registerGameOptions, getGameOptions, identifyGame, stopGame, getNewGameId };
+export { GameType, GameData, registerGameOptions, getGameOptions, identifyGame, stopGame, getNewGameId, isUserPlaying };
