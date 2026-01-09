@@ -37,13 +37,13 @@ const GAME_QUIT_BTN_SVG = `
 const GAME_PAGE = `
 <dialog id='modal'></dialog>
 <div class='${GAME_PAGE_STYLE}'>
-	<div id='game-infos' class='flex flex-row w-4/5 justify-between gap-8 min-w-0'>
-		<div class='text-20 font-jaro'>PONG</div>
-		<div class='flex flex-row'>
+	<div id='game-infos' class='flex flex-row w-4/5 justify-stretch items-center gap-8'>
+		<div class='text-[40px] font-jaro flex-2 min-w-0'>PONG</div>
+		<div class='flex flex-row flex-2 min-w-0'>
 			game type :
 			<p id='game-type'></p>
 		</div>
-		<div id="players-infos" class='grow flex flex-row gap-2 flex-1 min-w-0'>
+		<div id="players-infos" class='grow flex flex-row gap-2 flex-2 min-w-0'>
 		</div>
 		<div id='btn-quit' class='${GAME_QUIT_BTN_STYLE}'>
 			${GAME_QUIT_BTN_SVG}
