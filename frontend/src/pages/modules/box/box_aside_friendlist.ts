@@ -53,6 +53,14 @@ const SEPARATOR_STYLE = `
 	border-1 border-variant
 `;
 
+function isFriendWith(user: string): boolean {
+	for (const friend of FRIENDLIST) {
+		if (friend.username === user)
+			return true;
+	}
+	return false;
+}
+
 async function getFriendList(): Promise<void> {
 	const currentUser = getCurrentUserInfos();
 	if (!currentUser)
@@ -130,4 +138,4 @@ function friendsHandler(): void {
 	});
 }
 
-export { FRIENDLIST, updateFriendList };
+export { FRIENDLIST, updateFriendList, isFriendWith };

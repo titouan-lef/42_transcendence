@@ -1,4 +1,7 @@
+import { createButtonHtml } from "../../../components/button";
 import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
+import { MAIN_BOX_BTN_STYLE } from "../box/box_main_utils";
+import { isFriendWith } from "../box/box_aside_friendlist";
 
 const TITLE_STYLE = `
 font-bold text-[48px]
@@ -43,6 +46,7 @@ async function getDrawerHeader(ownProfile: boolean, user: string): Promise<strin
 		<div class='flex flex-col flex-1 min-w-0 truncate'>
 			<p title='${ownProfile ? "" : user + "'s"}' class='${TITLE_STYLE}'>
 				${ownProfile ? "Your" : user + "'s"} profile
+				${!ownProfile && !isFriendWith(user) ? createButtonHtml(["add_friend"], `btn-add-friend-profile`, { "class": `${MAIN_BOX_BTN_STYLE}` }): ""}
 			</p>
 			<p title='${nickname}' class='text-[12px]'>nickname : ${nickname}</p>
 		</div>

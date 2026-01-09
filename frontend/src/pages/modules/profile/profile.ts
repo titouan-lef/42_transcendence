@@ -10,6 +10,7 @@ import { goToLastPage, navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
 import { getCurrentUserInfos, getUserInfos, isUserConnected } from "../../../services/user_management/user_state";
 import { updateFriendList } from "../box/box_aside_friendlist";
+import { addFriend } from "../dialog/dialog_add_friend";
 
 const DRAWER_MAIN_STYLE = `
 fixed z-10 inset-y-0 inset-x-0
@@ -123,6 +124,15 @@ function initProfileEvents(): void {
 		switch (elem.id) {
 			case 'btn-return':
 				elem.addEventListener('click', goToLastPage);
+				break;
+			case 'btn-add-friend-profile':
+				elem.addEventListener('click', async () => {
+					const result = await addFriend(userProfile);
+					if (!result)
+						return
+					await updateFriendList();
+					openProfile(userProfile);
+				});
 				break;
 			case 'btn-summary':
 				elem.addEventListener('click', () => changeTab(ProfileTab.SUMMARY));
