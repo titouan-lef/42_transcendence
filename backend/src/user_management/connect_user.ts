@@ -18,7 +18,8 @@ const PUMP = util.promisify(pipeline);
 
 const ALLOWED_EXTENTIONS = [".png", ".jpg", ".jpeg", ".webp", ".gif"];
 
-const IMAGES_SIZE = 150;
+const IMAGE_LENGTH = 150;
+const IMAGE_WIDTH = IMAGE_LENGTH;
 
 async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
 	const { username, password } = req.body;
@@ -63,13 +64,13 @@ async function changePicture(req: FastifyRequest, reply: FastifyReply): Promise<
 		if (extention === `.gif`) {
 			const tempPath = `/tmp/${user}`;
 			await PUMP(part.file, fs.createWriteStream(tempPath));
-			await resizeGif(tempPath, fullPath, IMAGES_SIZE);
+			await resizeGif(tempPath, fullPath, IMAGE_LENGTH);
 			if (fs.existsSync(tempPath))
 				fs.unlinkSync(tempPath);
 		} else {
 			await PUMP(
 				part.file,
-				sharp().resize(IMAGES_SIZE, IMAGES_SIZE, { fit: "cover", position: "center" }),
+				sharp().resize(IMAGE_LENGTH, IMAGE_WIDTH, { fit: "cover", position: "center" }),
 				fs.createWriteStream(fullPath)
 			);
 		}
