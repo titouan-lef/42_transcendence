@@ -33,6 +33,7 @@
     "@tailwindcss/cli": "4.1.14",
     "tailwind-scrollbar": "4.0.2",
     "chart.js": "4.5.1",
+    "chartjs-adapter-date-fns": "3.0.0",
     "@types/chart.js": "2.9.41"
   },
   "imports": {

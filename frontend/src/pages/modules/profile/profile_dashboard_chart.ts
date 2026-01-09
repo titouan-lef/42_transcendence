@@ -1,9 +1,11 @@
 import { Chart, ChartConfiguration } from "chart.js/auto";
+import 'chartjs-adapter-date-fns';
 import { createParagraphHtml } from "../../../components/paragraph";
 import { TranslationKey } from "../../../lang/lang";
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { loadThemeColors } from "../../../utils/applyColor";
 import { getCSSVariable } from "../../../utils/getCSSVariable";
+import { DataChartType } from "#shared/HTTP";
 
 const DASHBOARD_CHART_TITLE_STYLE = `
 text-[20px] text-secondary w-full
@@ -41,13 +43,27 @@ function createDashboardChart(title: TranslationKey, config: ChartConfiguration)
 	new Chart(canvas, config);
 }
 
-function configureChart(labels: string[], dataset: number[]): ChartConfiguration {
+function configureChart(dataset: DataChartType[], enforceYAxis = false): ChartConfiguration {
 	const tColors = loadThemeColors();
+	
+	let lower: number = dataset.at(0)?.y ?? 0;
+	let upper: number = dataset.at(0)?.y ?? 0;
+
+	if (enforceYAxis) {
+		lower = 0;
+		upper = 100;
+	} else {
+		for (const data of dataset) {
+			if (data.y < lower)
+				lower = data.y;
+			if (data.y > upper)
+				upper = data.y;
+		}
+	}
 
 	return {
 		type: 'line',
 		data: {
-			labels: labels,
 			datasets: [{
 				label: 'elo',
 				data: dataset,
@@ -68,10 +84,20 @@ function configureChart(labels: string[], dataset: number[]): ChartConfiguration
 			},
 			scales: {
 				x: {
+					type: 'time',
+					time: {
+						tooltipFormat: 'yyyy-MM-dd HH:mm:ss',
+						displayFormats: {
+							minute: 'HH:mm',
+							hour: 'HH:mm',
+							day: 'MMM d'
+						}
+					},
 					grid: {
-						color: tColors.darker + 70,
+						color: tColors.darker + 70
 					},
 					ticks: {
+						maxTicksLimit: 10,
 						color: tColors.secondary,
 						font: {
 							family: getCSSVariable('--font-jbm'),
@@ -81,7 +107,7 @@ function configureChart(labels: string[], dataset: number[]): ChartConfiguration
 				},
 				y: {
 					grid: {
-						color: tColors.darker + 70,
+						color: tColors.darker + 70
 					},
 					ticks: {
 						color: tColors.secondary,
@@ -90,11 +116,12 @@ function configureChart(labels: string[], dataset: number[]): ChartConfiguration
 							size: 10
 						}
 					},
-					beginAtZero: true
+					min: lower,
+					max: upper
 				}
 			}
 		}
 	};
 }
 
-export { createDashboardChartBox, createDashboardChart, configureChart };
+export { DataChartType,createDashboardChartBox, createDashboardChart, configureChart };

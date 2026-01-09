@@ -1,8 +1,7 @@
-import { WinrateChart } from "../user_management/dashboard.js";
 import { applyQuery } from "./db_utils.js";
 import { BallOption, MapOption } from "#shared/types_transfert.js";
 import { getGamesPlayedCountBySeason, getGamesPlayedCountGlobal } from "./fetchGame.js";
-import { getPlayedGameAtDate, getPlayedGameAtDateByseason } from "./game.js";
+import { DataChartType } from "#shared/HTTP.js";
 import { POINTS_TO_WIN } from "../game/settings/values.js";
 
 async function getGoalAverageBySeason(seasonId: number, username: string): Promise<number> {
@@ -184,73 +183,46 @@ function dateToString(date: Date): string {
 	return date.toISOString().slice(0, 19).replace("T", " ");
 }
 
-async function getWinrateBySeasonAndDate(seasonId: number, username: string, dates: string[]): Promise<WinrateChart> {
-	const dateTab: string[] = [];
-	const winrateTab: number[] = [];
+async function getWinrateOverPeriod(username: string, startDate: string, endDate: string): Promise<DataChartType[]> {
+	const games = await applyQuery(
+		async (db) => await db.all(
+			`SELECT G.id, G.beganAt,
+					CASE WHEN SUM(CASE WHEN GO.by = ? THEN 1 ELSE 0 END) = ${POINTS_TO_WIN} THEN 1 ELSE 0 END AS win
+			FROM Game AS G
+			LEFT JOIN Goal AS GO ON G.id = GO.gameId
+			WHERE G.beganAt BETWEEN ? AND ?
+			GROUP BY G.id
+			ORDER BY G.beganAt ASC;`,
+			[username, startDate, endDate]
+		),
+		"getWinrateOverPeriod"
+	);
 
-	for (const date of dates) {
-		const gamePlayed = await getPlayedGameAtDateByseason(username,seasonId, date);
-		const gameWin = await applyQuery(
-			async (db) => await db.get(
-				`SELECT COUNT(*) AS total_wins
-				FROM (
-					SELECT G.id
-					FROM Game G
-					JOIN Goal GO ON G.id = GO.gameId
-					WHERE GO.by = ? AND G.seasonId = ? AND G.beganAt <= ?
-					GROUP BY G.id
-					HAVING COUNT(GO.id) = ${POINTS_TO_WIN}
-				) AS games;`, [username, seasonId, date]
-			), "getWinrateGlobalAndDate"
-		);
-		const wins = gameWin?.total_wins || 0;
-		const winrate = gamePlayed > 0 ? (wins / gamePlayed) * 100 : 0;
+	if (!games)
+		return [];
 
-		dateTab.push(date);
-		winrateTab.push(Math.round(winrate));
+	const result: DataChartType[] = [];
+	let totalGames = 0;
+	let totalWins = 0;
+
+	for (let i = 0; i < games.length; i++) {
+		const game = games[i];
+		totalGames += 1;
+		totalWins += game.win ? 1 : 0;
+
+		const winrate = Math.round((totalWins / totalGames) * 100);
+		const timestamp = new Date(game.beganAt).getTime();
+
+		result.push({ x: timestamp, y: winrate });
 	}
 
-	const history: WinrateChart = { dateList: dateTab, winrateList: winrateTab };
-	return history;
-}
-
-async function getWinrateGlobalAndDate(username: string, dates: string[]): Promise<WinrateChart> {
-
-	const dateTab: string[] = [];
-	const winrateTab: number[] = [];
-
-	for (const date of dates) {
-		const gamePlayed = await getPlayedGameAtDate(username, date);
-
-		const gameWin = await applyQuery(
-			async (db) => await db.get(
-				`SELECT COUNT(*) AS total_wins
-				FROM (
-					SELECT G.id
-					FROM Game AS G
-					JOIN Goal AS GO ON G.id = GO.gameId
-					WHERE GO.by = ? AND G.beganAt <= ?
-					GROUP BY G.id
-					HAVING COUNT(GO.id) = ${POINTS_TO_WIN}
-				) AS games;`, [username, date]
-			), "getWinrateGlobalAndDate"
-		);
-
-		const wins = gameWin?.total_wins || 0;
-		const winrate = gamePlayed > 0 ? (wins / gamePlayed) * 100 : 0;
-		dateTab.push(date);
-		winrateTab.push(Math.round(winrate));
-	}
-
-	const history: WinrateChart = { dateList: dateTab, winrateList: winrateTab };
-	return history;
+	return result;
 }
 
 export { EloHistory,
 	getGoalAverageBySeason, getGoalAverageGlobal,
 	getGameTimeAverageBySeason, getGameTimeAverageGlobal,
-	getWinrateBySeasonAndDate, getWinrateGlobalAndDate,
 	getPreferedBallBySeason, getPreferedBallGlobal,
 	getPreferedMapBySeason, getPreferedMapGlobal,
 	getEloVariatonGlobal, getEloVariatonBySeason,
-	dateToString };
+	dateToString, getWinrateOverPeriod };
