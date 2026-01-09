@@ -7,8 +7,7 @@ import { getSafeElement } from "../utils/getSafeElement.js";
 import { getGameType } from "../game/gameType.js";
 
 const GAME_INFOS_STYLE = `
-flex-1 min-w-0
-truncate
+max-w-[200px] text-[30px] truncate
 `;
 
 //////////////////////////////////////////
@@ -114,25 +113,25 @@ function loadGameHeader(infos: StartMessage): void {
 		case (GameTypes.LOCAL):
 			elem.innerHTML = `
 			<div class='${GAME_INFOS_STYLE}'>Player 1</div>
-			<div class='${GAME_INFOS_STYLE}'>-</div>
+			<div class='text-[12px]'>VS</div>
 			<div class='${GAME_INFOS_STYLE}'>Player 2</div>
 			`;
 			break;
 		case (GameTypes.AI):
 			elem.innerHTML = `
 			<div class='${GAME_INFOS_STYLE}'>${infos.playerNickname}</div>
-			<div class='${GAME_INFOS_STYLE}'>${infos.playerRating}</div>
-			<div class='${GAME_INFOS_STYLE}'>-</div>
+			<div class='text-[12px] text-variant h-full align-bottom'>${infos.playerRating} elo</div>
+			<div class='text-[12px]'>VS</div>
 			<div class='${GAME_INFOS_STYLE}'>IA</div>
 			`;
 			break;
 		case (GameTypes.RANKED):
 			elem.innerHTML = `
 			<div class='${GAME_INFOS_STYLE}'>${infos.playerNickname}</div>
-			<div class='${GAME_INFOS_STYLE}'>${infos.playerRating}</div>
-			<div class='${GAME_INFOS_STYLE}'>-</div>
+			<div class='text-[12px] text-variant h-full align-bottom'>${infos.playerRating} elo</div>
+			<div class='text-[12px]'>VS</div>
+			<div class='text-[12px] text-variant h-full align-bottom'>${infos.enemyRating} elo</div>
 			<div class='${GAME_INFOS_STYLE}'>${infos.enemyNickname}</div>
-			<div class='${GAME_INFOS_STYLE}'>${infos.enemyRating}</div>
 			`;
 			break;
 		default:
