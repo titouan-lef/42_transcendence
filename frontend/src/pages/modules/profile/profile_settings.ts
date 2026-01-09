@@ -33,15 +33,15 @@ file:bg-dark file:text-variant
 cursor-pointer
 `;
 
-/** @todo print content -- is this reply possible ? seems like input type file already handle bad files */
-const FEEDBACK_STYLE = `
+const PRINT_CONTENT_STYLE = `
+w-full h-[20px] text-[12px] text-warning text-center
 `;
 
 const SETTINGS_AVATAR = `
 <div class="flex flex-row w-full items-start">
 	<label class="mr-2 font-bold w-[70px]">avatar: </label>
 	<input type="file" id="change-avatar" accept="image/*" class="${FILE_INPUT_STYLE}"/>
-	<p id='print-avatar-reply' class="${FEEDBACK_STYLE}"></p>
+	<p id='print-avatar-reply' class="${PRINT_CONTENT_STYLE}"></p>
 </div>
 `;
 

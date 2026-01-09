@@ -9,29 +9,30 @@ import { isRequestSuccessfull, printReplyInDiv, ReplyFromBack, sendPostRequestTo
 import { getCurrentUserInfos } from "../../../services/user_management/user_state";
 import { Content2FA } from "#shared/HTTP";
 
-/** @todo make print-content great. again? */
+const PRINT_CONTENT_STYLE = `
+w-full h-[20px] text-[12px] text-warning text-center
+`;
+
 /** @todo use TRANSLATOR */
 const TWOFA = `
-	<p> 2FA required </p>
+	<p class='font-bold text-[20px]'> 2FA required </p>
 	<form name="Register" class="${DIALOG_FORM_STYLE}">
 		${createInputHtml(["code"], "password", "password", { "class": `${DIALOG_INPUT_STYLE}` })}
 	</form>
-	${createButtonHtml(["cancel"], `btn-cancel`, { "class": `${DIALOG_BTN_STYLE}` })}
 	${createButtonHtml(["confirm"], `btn-confirm`, { "class": `${DIALOG_BTN_STYLE}` })}
-	<hr class="${DIALOG_SEPARATOR_STYLE}">
-	<p id="print-content"></p>
+	${createButtonHtml(["cancel"], `btn-cancel`, { "class": `${DIALOG_BTN_STYLE}` })}
+	<p class='${PRINT_CONTENT_STYLE}' id="print-content"></p>
 `;
 
 /** @todo better solution than having another dialog */
 const EMAIL_CONFIRMATION = `
-	<p> 2FA required </p>
+	<p class='font-bold text-[20px]'> 2FA required </p>
 	<form name="Register" class="${DIALOG_FORM_STYLE}">
 		${createInputHtml(["password"], "password", "password", { "class": `${DIALOG_INPUT_STYLE}` })}
 	</form>
-	${createButtonHtml(["cancel"], `btn-cancel`, { "class": `${DIALOG_BTN_STYLE}` })}
 	${createButtonHtml(["refify_email"], `btn-verify-email`, { "class": `${DIALOG_BTN_STYLE}` })}
-	<hr class="${DIALOG_SEPARATOR_STYLE}">
-	<p id="print-content"></p>
+	${createButtonHtml(["cancel"], `btn-cancel`, { "class": `${DIALOG_BTN_STYLE}` })}
+	<p class='${PRINT_CONTENT_STYLE}' id="print-content"></p>
 `;
 
 let username = '';
@@ -40,7 +41,7 @@ async function sendSecureCode(): Promise<boolean> {
 	const code = getSafeElement('password', HTMLInputElement).value;
 	const container: HTMLElement = getSafeElement("print-content", HTMLElement);
 	if (!code) {
-		container.innerHTML = `<p>Please enter a 4 digit code.</p>`; /**@todo use translate tool */
+		container.innerHTML = `Please enter a 4 digit code.`; /**@todo use translate tool */
 		return false;
 	}
 	let body : Content2FA;
