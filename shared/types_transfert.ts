@@ -1,5 +1,10 @@
 import * as babylon from "@babylonjs/core";
 
+interface Waiting {
+	status: Status,
+	id?: number
+}
+
 type MapOption = "default" | "volcano" | "sky" | "desert";
 type BallOption = "default" | "invisible" | "tricky" | "pulse" | "snake" | "canon";
 
@@ -174,6 +179,6 @@ interface PlayerControls {
 	dash: boolean;
 }
 
-export { Position, PlanePosition, Rotation, DataMessage, PlayerControls, ParticlesType, Status, Object, EmoteChoice, ObjectSpawner };
+export { Waiting, Position, PlanePosition, Rotation, DataMessage, PlayerControls, ParticlesType, Status, Object, EmoteChoice, ObjectSpawner };
 export { StartMessage, StopMessage, TimingMessage, RenderMessage, GoalMessage, OptionMessage, PositionsMessage, ObjectMessage, EventMessage, EmoteMessage, ObjectSpawnerMessage };
 export { BallOption, MapOption, GameStats, Point, Rules };

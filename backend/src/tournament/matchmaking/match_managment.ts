@@ -3,6 +3,7 @@ import { getPlage, lerp } from "../../utils/math.js";
 import { WaitingPlayer, Pair } from "./matchmaking.js";
 import { GameOptions } from "../../game/settings/GameSettings.js";
 import { WebSocket } from "ws";
+import { Status, Waiting } from "#shared/types_transfert.js";
 
 const RATE_ELO_DIST_MAX = 0.5;
 
@@ -88,7 +89,11 @@ function getRandomOptions(optionP1: GameOptions, optionP2: GameOptions): GameOpt
 }
 
 function manageSocketValidation(socket: WebSocket, gameId: number): void {
-	socket.send(JSON.stringify({ id: gameId }));
+	const id: Waiting = {
+		status: Status.OPTIONS,
+		id: gameId
+	};
+	socket.send(JSON.stringify(id));
 	socket.close(1000, "Game found");
 }
 
