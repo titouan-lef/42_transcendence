@@ -74,6 +74,21 @@ async function getFriendList(): Promise<void> {
 	friendList.forEach(element => {
 		FRIENDLIST.add(element);
 	});
+
+	/** @todo remove tests */
+	const offtest: Friend = {
+		username: 'francis',
+		nickname: 'frr',
+		onlineStatus: false,
+	};
+	const ontest: Friend = {
+		username: 'marcopolo',
+		nickname: 'markowp',
+		onlineStatus: true,
+	};
+	FRIENDLIST.add(offtest);
+	FRIENDLIST.add(ontest);
+	/** @todo end */
 }
 
 /** @todo keep same generating logic to generate button ids (events) */

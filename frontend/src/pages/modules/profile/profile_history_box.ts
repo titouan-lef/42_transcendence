@@ -6,7 +6,7 @@ const HISTORY_BOX_STYLE = `
 flex-1 min-h-[80px] max-h-[120px]
 p-4 w-full rounded-2xl
 flex flex-row gap-4 justify-between
-font-jbm text-3xl text-variant
+font-jbm text-3xl
 bg-grad-l from-dark
 shadow-xs shadow-dark
 `;

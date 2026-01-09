@@ -10,8 +10,6 @@ interface ThemeColors {
 	darker: string,
 	variant: string,
 	secondary: string,
-	txprim: string,
-	txsec: string,
 	warning: string,
 	shadow: string,
 	win: string,
@@ -26,10 +24,10 @@ const VARIANTS = {
 	'var': 'bg-variant text-secondary',
 	'warning': 'bg-primary text-warning',
 	'input' : 'bg-lighter text-variant focus:outline-2 focus:text-dark',
-	'win' : 'bg-win text-light',
+	'win' : 'bg-win/40 text-win font-bold',
 	'lose' : 'bg-lose text-light',
-	'online' : 'bg-online',
-	'offline' : 'bg-offline',
+	'online' : 'bg-online text-primary font-bold',
+	'offline' : 'bg-offline/40 text-offline',
 };
 
 function applyColor(variant: Color = 'base'): string {
@@ -45,8 +43,6 @@ function loadThemeColors(): ThemeColors {
 		darker: getCSSVariable('--color-darker'),
 		variant: getCSSVariable('--color-variant'),
 		secondary: getCSSVariable('--color-secondary'),
-		txprim: getCSSVariable('--color-tx-prim'),
-		txsec: getCSSVariable('--color-tx-sec'),
 		warning: getCSSVariable('--color-warning'),
 		shadow: getCSSVariable('--color-shadow'),
 		win: getCSSVariable('--color-win'),
