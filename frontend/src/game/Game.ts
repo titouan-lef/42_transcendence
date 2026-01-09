@@ -6,6 +6,8 @@ import { DataMessage, OptionMessage, Status } from "#shared/types_transfert.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
 import { loadMainDashboard } from "../pages/modules/box/box_main_dashboard.js";
 
+let webglExtensionPatched = false;
+
 class Game {
 	private readonly engine: babylon.Engine;
 	private readonly scene: babylon.Scene;
@@ -43,9 +45,34 @@ class Game {
 		});
 	}
 
+	// eslint-disable-next-line
+	static disableWebglDebugRendererInfoExtension(prototype: any) {
+		const blockName = "WEBGL_debug_renderer_info"; // extention we want to block
+
+		if (!prototype || !prototype.getExtension) 
+			return;
+		const original = prototype.getExtension;
+
+		// eslint-disable-next-line
+		prototype.getExtension = function (name: string): any { // change the original function to ours, which return null if the extention asked is "WEBGL_debug_renderer_info"
+			if (name === blockName) // if babylon ask for "WEBGL_debug_renderer_info", we return null
+				return null;
+			return original.call(this, name); // else we behave normally
+		};
+	}
+
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
 	static async create(settings: PointSettings): Promise<Game> {
 		const canvas = getSafeElement('game-canvas', HTMLCanvasElement);
+		if (!webglExtensionPatched) {
+			if (typeof WebGL2RenderingContext !== "undefined") { // if we can use WEBGL2, we patch it
+				Game.disableWebglDebugRendererInfoExtension(WebGL2RenderingContext.prototype);
+			}
+			if (typeof WebGLRenderingContext !== "undefined") { // if we can use WEBGL, we patch it
+				Game.disableWebglDebugRendererInfoExtension(WebGLRenderingContext.prototype);
+			}
+			webglExtensionPatched = true;
+		}
 		const engine = new babylon.Engine(canvas);
 		const scene = await Game.initScene(engine);
 		return new Game(canvas, settings, scene, engine);
