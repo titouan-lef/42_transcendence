@@ -3,11 +3,26 @@ import { ABI } from "./EloStorageAbi.js";
 import * as dotenv from 'dotenv';
 import { Elo } from '../../tournament/elo/elo.js';
 import { getSeasonLastGame } from '../game.js';
+import { wait } from '../../utils/time.js';
 
-dotenv.config();
+interface EloInfo {
+	username: string,
+	season: number,
+	elo: Elo,
+};
+
+interface RdInfo {
+	username: string,
+	season: number,
+	rd: number,
+};
 
 const DECIMALS = 10**6;
 const DECIMALS_COUNT = 6;
+const QUEUE_ELO: EloInfo[] = [];
+const QUEUE_RD: RdInfo[] = [];
+
+dotenv.config();
 
 const RPC_URL = process.env.RPC_URL;
 if (!RPC_URL) {
@@ -33,7 +48,6 @@ if (!CONTRACT_ADDRESS)
  * @function resetAll() public onlyOwner;
  * @function setEloData(string memory username, uint256 season, uint256 rating, uint256 ratingDeviation) public onlyOwner;
  * @function setRatingDeviation(string memory username, uint256 season, uint256 ratingDeviation) public onlyOwner;
- * @function setRating(string memory username, uint256 season, uint256 rating) public onlyOwner;
  * @function getEloData(string memory username, uint256 season) public view returns (uint256 rating, uint256 ratingDeviation);
  * @function getAllRatingBySeason(string[] memory usernames, uint256 season) public view returns (uint256[] memory);
  */
@@ -49,7 +63,6 @@ async function sendTransactionSafe(contractCall: (...args: unknown[]) => Promise
 		} catch (error) {
 			console.error("Error during serial transmission of the transaction. The nonce should have been correct.");
 			console.error(error);
-			throw error;
 		}
 	});
 	await transactionLock; 
@@ -62,27 +75,46 @@ async function resetEloStorage(): Promise<void> {
 	);
 }
 
-async function setElo(username: string, season: number, elo: Elo): Promise<void> {
-	const scaledRatingDeviation = parseUnits(elo.rd.toString(), DECIMALS_COUNT);
+/**
+ * Manage Blockchain.
+ * @warning Must be run when the server starts up and must not be awaited.
+ */
+async function blockchainManagement(): Promise<void> {
+	while (true) {
+		while (QUEUE_ELO.length !== 0) {
+			await writeEloInBlockchain(QUEUE_ELO[0]);
+			QUEUE_ELO.shift();
+		}
+		while (QUEUE_RD.length !== 0) {
+			await writeRdInBlockchain(QUEUE_RD[0]);
+			QUEUE_RD.shift();
+		}
+		await wait(100);
+	}
+}
+
+async function writeEloInBlockchain(eloInfo: EloInfo): Promise<void> {
+	const scaledRatingDeviation = parseUnits(eloInfo.elo.rd.toString(), DECIMALS_COUNT);
 	await sendTransactionSafe(
 		CONTRACT.setEloData.bind(CONTRACT),
-		[username, season, elo.r, scaledRatingDeviation]
+		[eloInfo.username, eloInfo.season, eloInfo.elo.r, scaledRatingDeviation]
 	);
 }
 
-async function setRating(username: string, season: number, rating: number): Promise<void> {
-	await sendTransactionSafe(
-		CONTRACT.setRating.bind(CONTRACT),
-		[username, season, rating]
-	);
-}
-
-async function setRatingDeviation(username: string, season: number, ratingDeviation: number): Promise<void> {
-	const scaledRatingDeviation = parseUnits(ratingDeviation.toString(), DECIMALS_COUNT);
+async function writeRdInBlockchain(rdInfo: RdInfo): Promise<void> {
+	const scaledRatingDeviation = parseUnits(rdInfo.rd.toString(), DECIMALS_COUNT);
 	await sendTransactionSafe(
 		CONTRACT.setRatingDeviation.bind(CONTRACT),
-		[username, season, scaledRatingDeviation]
+		[rdInfo.username, rdInfo.season, scaledRatingDeviation]
 	);
+}
+
+function setElo(username: string, season: number, elo: Elo): void {
+	QUEUE_ELO.push({ username: username, season: season, elo: elo });
+}
+
+function setRatingDeviation(username: string, season: number, rd: number): void {
+	QUEUE_RD.push({ username: username, season: season, rd: rd });
 }
 
 async function getElo(username: string, season?: number): Promise<Elo> {
@@ -110,4 +142,4 @@ async function getAllRatingBySeason(usernames: string[], season: number): Promis
 	return (allRatingInNumber);
 }
 
-export { setElo, setRating, setRatingDeviation, getElo, resetEloStorage, getAllRatingBySeason };
+export { setElo, setRatingDeviation, getElo, resetEloStorage, getAllRatingBySeason, blockchainManagement };
