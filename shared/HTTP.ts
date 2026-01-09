@@ -1,5 +1,4 @@
 import { BallOption, MapOption } from "./types_transfert";
-import { EloChart, WinrateChart } from "./types_dashboard";
 import { ReplyStatus } from "./status_codes";
 
 // FRONT to BACK
@@ -39,6 +38,11 @@ interface Friend {
 	onlineStatus: boolean
 }
 
+interface DataChartType {
+	x: number,
+	y: number
+}
+
 interface UserDashboardInfos {
 	gamesPlayed: number;
 	gamesWins: number;
@@ -48,8 +52,8 @@ interface UserDashboardInfos {
 	durationAverage: number;//(in seconds)
 	preferedBall: BallOption;
 	preferedMap: MapOption;
-	eloChart: EloChart;
-	winrateChart: WinrateChart;
+	eloChart: DataChartType[];
+	winrateChart: DataChartType[];
 }
 
 interface GameHistory {
@@ -82,4 +86,4 @@ interface LeaderboardInfos {
 }
 
 export { UserBody, ThemeBody, NewUserBody, Content2FA, UserDashboardInfoBody };
-export { ReplyFromBack, Friend, UserDashboardInfos, Ranking, GameHistory, GameHistoryWithAvatar, LeaderboardInfos };
+export { ReplyFromBack, Friend, DataChartType, UserDashboardInfos, Ranking, GameHistory, GameHistoryWithAvatar, LeaderboardInfos };

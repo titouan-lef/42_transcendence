@@ -76,8 +76,8 @@ async function loadDashboardData(): Promise<void> {
 	const elem = getSafeElement('dashboard', HTMLElement);
 	elem.innerHTML = getDashboardTable(dashboardData);
 
-	createDashboardChart('elo_chart', configureChart(dashboardData.eloChart.dateList, dashboardData.eloChart.eloList));
-	createDashboardChart('win_rate_chart', configureChart(dashboardData.winrateChart.dateList, dashboardData.winrateChart.winrateList));
+	createDashboardChart('elo_chart', configureChart(dashboardData.eloChart));
+	createDashboardChart('win_rate_chart', configureChart(dashboardData.winrateChart, true));
 }
 
 async function updateDashboardData(user: string): Promise<void> {

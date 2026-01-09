@@ -1,10 +1,9 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { Errors, Success } from "#shared/status_codes.js";
-import { UserDashboardInfoBody, UserDashboardInfos } from "#shared/HTTP.js";
-import { EloChart, WinrateChart } from "#shared/types_dashboard.js";
+import { DataChartType, UserDashboardInfoBody, UserDashboardInfos } from "#shared/HTTP.js";
 import { getGamesPlayedCountBySeason, getGamesPlayedCountGlobal, getGamesWinsBySeason, getGamesWinsGlobal } from "../database/fetchGame.js";
 import { sendReply } from "../utils/HTTP.js";
-import { dateToString, getEloVariatonBySeason, getEloVariatonGlobal, getGameTimeAverageBySeason, getGameTimeAverageGlobal, getGoalAverageBySeason, getGoalAverageGlobal, getPreferedBallBySeason, getPreferedBallGlobal, getPreferedMapBySeason, getPreferedMapGlobal, getWinrateBySeasonAndDate, getWinrateGlobalAndDate } from "../database/fetchStats.js";
+import { dateToString, EloHistory, getEloVariatonBySeason, getEloVariatonGlobal, getGameTimeAverageBySeason, getGameTimeAverageGlobal, getGoalAverageBySeason, getGoalAverageGlobal, getPreferedBallBySeason, getPreferedBallGlobal, getPreferedMapBySeason, getPreferedMapGlobal, getWinrateOverPeriod } from "../database/fetchStats.js";
 import { getElo } from "../database/web3/contract_service.js";
 import { Elo } from '../tournament/elo/elo.js';
 import { getCurrentSeason, getEndSeason, getFirstSeason, getSeasonStartedAtById } from "../database/season.js";
@@ -13,34 +12,48 @@ import { getActualDate } from "../database/db_utils.js";
 
 const NB_CHART_POINT = 7;
 
-async function getEloChartBySeason(season: number, user: string):Promise <EloChart> {
+function toTimeSeries(dateList: string[], data: number[]): DataChartType[] {
+	const result: DataChartType[] = dateList.map((date, i) => ({
+		x: new Date(date).getTime(),
+		y: data[i]
+	}));
+	return result;
+}
+
+function structureEloData(lastSeasonElo: number, eloVariaton: EloHistory[]): DataChartType[] {
+	const dateList: string[] = [];
+	const eloList: number[] = [];
+	for (const eloHistory of eloVariaton) {
+		dateList.push(eloHistory.date);
+		eloList.push(lastSeasonElo);
+		lastSeasonElo -= eloHistory.variation;
+	}
+	dateList.reverse();
+	eloList.reverse();
+
+	return toTimeSeries(dateList, eloList);
+}
+
+async function getEloChartBySeason(season: number, user: string):Promise <DataChartType[]> {
 
 	const eloVariaton = await getEloVariatonBySeason(season, user);
 	if (eloVariaton.length === 0)
-		return { dateList: [], eloList: [] };
+		return [];
 
 	let lastSeasonElo = DEFAULT_RATINGS;
 	const currentElo = await getRatingEloBySeason(user, season);
 	if (currentElo > 0)
 		lastSeasonElo = currentElo;
 
-	const eloChart: EloChart = { dateList: [], eloList: [] };
-	for (const eloHistory of eloVariaton) {
-		eloChart.dateList.push(eloHistory.date);
-		eloChart.eloList.push(lastSeasonElo);
-		lastSeasonElo -= eloHistory.variation;
-	}
-	eloChart.dateList.reverse();
-	eloChart.eloList.reverse();
-
-	return eloChart;
+	const data = structureEloData(lastSeasonElo, eloVariaton);
+	return data;
 }
 
-async function getEloChartGlobal(user: string):Promise <EloChart> {
+async function getEloChartGlobal(user: string):Promise <DataChartType[]> {
 
 	const eloVariaton = await getEloVariatonGlobal(user);
 	if (eloVariaton.length === 0)
-		return { dateList: [], eloList: [] };
+		return [];
 
 	let lastSeasonElo = DEFAULT_RATINGS;
 	const season = await getCurrentSeason();
@@ -48,15 +61,8 @@ async function getEloChartGlobal(user: string):Promise <EloChart> {
 	if (currentElo > 0)
 		lastSeasonElo = currentElo;
 
-	const eloChart: EloChart = { dateList: [], eloList: [] };
-	for (const eloHistory of eloVariaton) {
-		eloChart.dateList.push(eloHistory.date);
-		eloChart.eloList.push(lastSeasonElo);
-		lastSeasonElo -= eloHistory.variation;
-	}
-	eloChart.dateList.reverse();
-	eloChart.eloList.reverse();
-	return eloChart;
+	const data = structureEloData(lastSeasonElo, eloVariaton);
+	return data;
 }
 
 async function getTabDateBySeason(season: number): Promise <string[]> {
@@ -105,14 +111,18 @@ async function getTabDateGlobal(): Promise <string[]> {
 	return dates;
 }
 
-async function getWinrateChartBySeason(season: number, user: string): Promise <WinrateChart> {
-	const dates: string[] = await getTabDateBySeason(season);
-	return await getWinrateBySeasonAndDate(season, user, dates);
+async function getWinrateChartBySeason(season: number, user: string): Promise <DataChartType[]> {
+	const start = dateToString(await getSeasonStartedAtById(season));
+	const end = dateToString(await getEndSeason(season));
+	const data = await getWinrateOverPeriod(user, start, end);
+	return data;
 }
 
-async function getWinrateChartGlobal(user: string): Promise <WinrateChart> {
-	const dates: string[] = await getTabDateGlobal();
-	return await getWinrateGlobalAndDate(user, dates);
+async function getWinrateChartGlobal(user: string): Promise <DataChartType[]> {
+	const start = dateToString(await getSeasonStartedAtById(1));
+	const end = dateToString(await getEndSeason(await getCurrentSeason()));
+	const data = await getWinrateOverPeriod(user, start, end);
+	return data;
 }
 
 async function getRatingEloBySeason(user: string, season: number): Promise<number> {
@@ -187,4 +197,4 @@ async function geCurrentSeasonInfo(req: FastifyRequest, reply: FastifyReply): Pr
 	sendReply(reply, Success.CURRENT_SEASON, JSON.stringify(numberSeason));
 }
 
-export { WinrateChart, UserDashboardInfoBody, getPlayerStats, getRatingLastElo, geCurrentSeasonInfo };
+export { UserDashboardInfoBody, getPlayerStats, getRatingLastElo, geCurrentSeasonInfo };
