@@ -23,20 +23,24 @@ const ADD_FRIEND = `
 	<p id="print-content" class='${PRINT_CONTENT_STYLE}'></p>
 `;
 
+async function addFriend(user: string): Promise<boolean> {
+	const body: UserBody = { user: user };
+	const reply = await sendPostRequestToBack('/api/friends/add', JSON.stringify(body));
+	if (!isRequestSuccessfull(reply)) {
+		printReplyInDiv(reply, "print-content");
+		return false;
+	}
+	return true;
+}
+
 function addFriendHandler(modal: HTMLDialogElement): void {
 	const addFriendElem = getSafeElement('btn-add-friend', HTMLElement);
 	const newFriendElem = getSafeElement('find-friend', HTMLInputElement);
 
 	addFriendElem.addEventListener('click', async () => {
-		const body: UserBody = { user: newFriendElem.value };
-		const reply = await sendPostRequestToBack('/api/friends/add', JSON.stringify(body));
-		if (reply.code === Errors.AUTH_REQUIRED) {
-			/** @todo go to login page */
+		const result = addFriend(newFriendElem.value);
+		if (!result)
 			return;
-		} else if (!isRequestSuccessfull(reply)) {
-			printReplyInDiv(reply, "print-content");
-			return;
-		}
 		goBack();
 		updateFriendList();
 	});
@@ -50,4 +54,4 @@ function loadDialogAddFriend(): void {
 	navigateTo(Modals.ADD_FRIEND);
 }
 
-export { loadDialogAddFriend, openDialogAddFriend };
+export { loadDialogAddFriend, openDialogAddFriend, addFriend };
