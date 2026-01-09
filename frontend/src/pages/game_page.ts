@@ -7,7 +7,7 @@ import { newGameVsAI, newLocalGame } from "../services/launching_game";
 import { registerGameOptions } from "../game/settings/GameRules";
 import { loadDialogWaiting } from "./modules/dialog/dialog_game_waiting";
 import { gamePageEvents } from "./events/game_page_event";
-import { getGameType, setGameType } from "src/game/gameType";
+import { getGameType, setGameType } from "../game/gameType";
 
 const GAME_PAGE_STYLE = `
 flex flex-col gap-[10px]
