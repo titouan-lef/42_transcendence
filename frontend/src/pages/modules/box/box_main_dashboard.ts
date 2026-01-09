@@ -5,8 +5,8 @@ import { formatScore, formatTime, getGameStats, setGameStats } from "./box_main_
 import { generatePointList, generateRules } from "./box_main_dashboard_generators";
 import { navigateTo } from "../../../routes/navigate";
 import { GameTypes, Pages } from "../../../routes/navigate_types";
-import { getGameType } from "../../../pages/game_page";
 import { applyColor } from "../../../utils/applyColor";
+import { getGameType } from "src/game/gameType";
 
 const COLUMNS_STYLE = `
 flex flex-col flex-1 gap-4 h-full min-w-0 min-h-0 scrollbar-none overflow-scroll

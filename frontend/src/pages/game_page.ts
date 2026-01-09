@@ -7,6 +7,7 @@ import { newGameVsAI, newLocalGame } from "../services/launching_game";
 import { registerGameOptions } from "../game/settings/GameRules";
 import { loadDialogWaiting } from "./modules/dialog/dialog_game_waiting";
 import { gamePageEvents } from "./events/game_page_event";
+import { getGameType, setGameType } from "src/game/gameType";
 
 const GAME_PAGE_STYLE = `
 flex flex-col gap-[10px]
@@ -52,9 +53,9 @@ const GAME_PAGE = `
 </div>
 `;
 
-let gameType: GameTypes | null = null;
-
 function openGamePage(): void {
+	const gameType = getGameType();
+
 	if (!gameType)
 		return ;
 
@@ -79,7 +80,7 @@ function openGamePage(): void {
 }
 
 function loadGamePage(type: GameTypes): void {
-	gameType = type;
+	setGameType(type);
 	navigateTo(Pages.GAME);
 }
 
@@ -98,8 +99,4 @@ function loadRankedGamePage(): void {
 	loadGamePage(GameTypes.RANKED);
 }
 
-function getGameType(): GameTypes | null {
-	return gameType;
-}
-
-export { loadLocalGamePage, loadSoloGamePage, loadRankedGamePage, openGamePage, getGameType };
+export { loadLocalGamePage, loadSoloGamePage, loadRankedGamePage, openGamePage };
