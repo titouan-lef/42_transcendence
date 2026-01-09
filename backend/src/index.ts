@@ -19,6 +19,7 @@ import { getHistory } from "./user_management/history.js";
 import { getSeasonStats } from "./tournament/seasons.js";
 import { ThemeBody, UserBody } from "#shared/HTTP.js";
 import { matchmaking } from "./tournament/matchmaking/matchmaking.js";
+import { blockchainManagement } from "./database/web3/contract_service.js";
 
 const APP = fastify({
 	bodyLimit: 2 * 1024 * 1024 // 2 MB
@@ -100,6 +101,7 @@ APP.register(() => {
 async function start(): Promise<void> {
 	try {
 		console.log(`Backend running !`);
+		blockchainManagement();
 		matchmaking();
 		await initDB(); // initialize DB before server
 		await APP.listen({ port: 3000, host: "0.0.0.0" });
