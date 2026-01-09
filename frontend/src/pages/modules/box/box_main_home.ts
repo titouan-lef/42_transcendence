@@ -7,7 +7,6 @@ import { loadLeaderboard } from "./box_main_leaderboard";
 import { loadDialogGameSelector } from "../dialog/dialog_game_selector";
 import { navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
-import { ELEM } from "../../page";
 
 const MAIN_HOME_STYLE = `
 flex flex-col items-center gap-[10px]

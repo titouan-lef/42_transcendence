@@ -1,4 +1,3 @@
-
 import { WaitingPlayer } from "./matchmaking.js";
 
 const OFFSET_H = 18;			// Offset height (number).

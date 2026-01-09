@@ -1,5 +1,6 @@
 import { BallOption, MapOption } from "./types_transfert";
 import { EloChart, WinrateChart } from "./types_dashboard";
+import { ReplyStatus } from "./status_codes";
 
 // FRONT to BACK
 interface UserBody {
@@ -27,6 +28,11 @@ interface UserDashboardInfoBody {
 }
 
 // BACK to FRONT
+interface ReplyFromBack {
+	code: ReplyStatus
+	content: string
+}
+
 interface Friend {
 	username: string,
 	nickname: string,
@@ -76,4 +82,4 @@ interface LeaderboardInfos {
 }
 
 export { UserBody, ThemeBody, NewUserBody, Content2FA, UserDashboardInfoBody };
-export { Friend, UserDashboardInfos, Ranking, GameHistory, GameHistoryWithAvatar, LeaderboardInfos };
+export { ReplyFromBack, Friend, UserDashboardInfos, Ranking, GameHistory, GameHistoryWithAvatar, LeaderboardInfos };
