@@ -1,5 +1,5 @@
 import { isOneStringEmtpy } from "../../utils/strings.js";
-import { sendPostRequestToBack, printReplyInDiv, isRequestSuccessfull, ReplyFromBack } from "../api_request.js";
+import { sendPostRequestToBack, printReplyInDiv, isRequestSuccessfull } from "../api_request.js";
 import { getSafeElement } from "../../utils/getSafeElement.js";
 import { Errors } from '#shared/status_codes';
 import { getUserInfos } from "./user_state.js";

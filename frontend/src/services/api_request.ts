@@ -1,12 +1,8 @@
 import { translateTab } from "../lang/lang.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
-import { Errors, ReplyStatus } from '#shared/status_codes';
+import { Errors } from '#shared/status_codes';
 import { REPLY_MESSAGES } from "./reply_messages.js";
-
-interface ReplyFromBack {
-	code: ReplyStatus
-	content: string
-}
+import { ReplyFromBack } from "#shared/HTTP.js";
 
 /**
  * Inside a try/catch in case the div is not more present in the page
@@ -103,4 +99,4 @@ function getReplyMessage(reply: ReplyFromBack): string {
 	return traductions.join(" ");
 }
 
-export { ReplyFromBack, getReplyMessage, sendPostRequestToBack, sendGetRequestToBack, sendFile, printReplyInDiv, isRequestSuccessfull };
+export { getReplyMessage, sendPostRequestToBack, sendGetRequestToBack, sendFile, printReplyInDiv, isRequestSuccessfull };
