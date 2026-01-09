@@ -1,5 +1,6 @@
 import { applyColor } from "../../../utils/applyColor";
 import { GameHistoryWithAvatar } from "#shared/HTTP";
+import { NB_PLACEMENT_GAME } from "#shared/constant";
 
 const HISTORY_BOX_STYLE = `
 flex-1 min-h-[80px] max-h-[120px]
@@ -36,13 +37,21 @@ overflow-hidden
 shrink-0
 `;
 
-function createHistoryBox(game: GameHistoryWithAvatar): string {
+function createHistoryBox(game: GameHistoryWithAvatar, gameNum: number): string {
 	const victory = (game.myScore > game.opponentScore) ? 'win': 'lose';
 	let avatar: string;
 	if (!game.isAvatarSet)
 		avatar = "./images/avatar.png";
 	else
 		avatar = `/pictures/${game.opponentUsername}?t=${Date.now()}`;
+	let eloVariation = "";
+	if (gameNum < NB_PLACEMENT_GAME)
+		eloVariation = "-";
+	else {
+		if (game.eloVariation > 0)
+			eloVariation = '+';
+		eloVariation += game.eloVariation.toString();
+	}
 	const htmlContent = `
 	<div class="${applyColor(victory)} ${HISTORY_BOX_STYLE}">
 		<div class="${HISTORY_TEXT_BOX_STYLE} justify-start">
@@ -64,7 +73,7 @@ function createHistoryBox(game: GameHistoryWithAvatar): string {
 			</div>
 			<div id="print-elo" class="${HISTORY_ELO_BOX_STYLE}
 			${victory === 'win' ? 'bg-win/50 shadow-win/50' : 'bg-lose/50 shadow-lose/50'}">
-				${game.eloVariation > 0 ? '+' + game.eloVariation.toString() : game.eloVariation.toString()}
+				${eloVariation}
 			</div>
 		</div>
 	</div>

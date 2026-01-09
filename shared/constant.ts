@@ -1,0 +1,3 @@
+const NB_PLACEMENT_GAME = 3;
+
+export { NB_PLACEMENT_GAME };
