@@ -81,28 +81,6 @@ function generateLeaderboardRows(ranking: Ranking[]): void {
 		elem.addEventListener('click', () => navigateTo(Pages.PROFILE, user.username));
 		rank += 1;
 	});
-	leaderboard.insertAdjacentHTML('beforeend', `
-		<tr class="${TABLE_DATA_STYLE}">
-			<td class="${TABLE_DATA_CELL_STYLE}">2</td>
-			<td id="btn-profile-x" class="${TABLE_DATA_CELL_STYLE} cursor-pointer" title='test'>
-				test
-			</td>
-			<td class="${TABLE_DATA_CELL_STYLE}">1954</td>
-			<td class="${TABLE_DATA_CELL_STYLE}">98</td>
-			<td class="${TABLE_DATA_CELL_STYLE}">12</td>
-		</tr>
-	`);
-	leaderboard.insertAdjacentHTML('beforeend', `
-		<tr class="${TABLE_DATA_STYLE}">
-			<td class="${TABLE_DATA_CELL_STYLE}">2</td>
-			<td id="btn-profile-x" class="${TABLE_DATA_CELL_STYLE} cursor-pointer" title='test'>
-				test
-			</td>
-			<td class="${TABLE_DATA_CELL_STYLE}">1954</td>
-			<td class="${TABLE_DATA_CELL_STYLE}">98</td>
-			<td class="${TABLE_DATA_CELL_STYLE}">12</td>
-		</tr>
-	`);
 }
 
 async function updateLeaderboardData(): Promise<void> {
