@@ -70,7 +70,7 @@ class Game {
 		this.gameIdDb = await insertGame(currentSeason, this.gameTimer);
 		if (!this.gameIdDb)
 			return ;
-		
+
 		const spinRuleId = await getRuleId("spin");
 		const rotateRuleId = await getRuleId("rotate");
 		const windRuleId = await getRuleId("wind");
@@ -165,7 +165,7 @@ class Game {
 		if (!ballIdDb || !mapIdDb || !goalerName || !this.gameIdDb)
 			return;
 		insertGoal(mapIdDb, ballIdDb, goalerName, point.timer, this.gameIdDb);
-	}	
+	}
 
 	/**check collision for each balls */
 	async checkEndOfPoint(): Promise<void> {
@@ -254,9 +254,9 @@ class Game {
 			player1.send(startP1);
 			const startP2: StartMessage = {
 				status: Status.START,
-				enemyNickname: user2 ? user2.nickname : "",
+				playerNickname: user2 ? user2.nickname : "",
 				playerRating: rating2,
-				playerNickname: user1 ? user1.nickname : "",
+				enemyNickname: user1 ? user1.nickname : "",
 				enemyRating: rating1
 			};
 			player2.send(startP2);
@@ -355,7 +355,7 @@ class Game {
 			if (physics)
 				physics._step(this.physicStepsInterval / 1000 * this.scene.metadata.gameSpeed);
 		}, this.physicStepsInterval);
-		
+
 		this.gameStepsIntervalId = setInterval(() => {
 			this.scene.render();
 			const player1 = this.sceneManager.getPlayer(1);
