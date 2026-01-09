@@ -1,12 +1,12 @@
 import { getSafeElement } from "../../../utils/getSafeElement";
 import { GameStats } from "#shared/types_transfert.js";
-import { loadMainBox, MAIN_BOX_BTN_STYLE, MAIN_BOX_SEPARATOR_STYLE } from "../box/box_main_utils";
+import { loadMainBox, MAIN_BOX_BTN_STYLE } from "../box/box_main_utils";
 import { formatScore, formatTime, getGameStats, setGameStats } from "./box_main_dashboard_utils";
 import { generatePointList, generateRules } from "./box_main_dashboard_generators";
 import { navigateTo } from "../../../routes/navigate";
 import { GameTypes, Pages } from "../../../routes/navigate_types";
-import { getGameType } from "src/pages/game_page";
-import { applyColor } from "src/utils/applyColor";
+import { getGameType } from "../../../pages/game_page";
+import { applyColor } from "../../../utils/applyColor";
 
 const COLUMNS_STYLE = `
 flex flex-col flex-1 gap-4 h-full min-w-0 min-h-0 scrollbar-none overflow-scroll
