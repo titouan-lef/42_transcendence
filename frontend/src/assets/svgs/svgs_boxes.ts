@@ -44,7 +44,7 @@ function createCheckbox(id: string, svg: string, value?: string): string {
 
 function createSvgBox(svg: string): string {
 	const svgBoxStyle = `
-	w-6 h-6 rounded-2xl
+	w-8 h-8 rounded-2xl
 	bg-dark border-2 border-variant text-variant
 	flex items-center justify-center
 	`;

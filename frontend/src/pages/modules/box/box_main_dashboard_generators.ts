@@ -1,14 +1,14 @@
 import { MapOption, BallOption, Rules } from "#shared/types_transfert.js";
-import { SVG_RULE_DASH, SVG_RULE_PROT, SVG_RULE_SPIN, SVG_RULE_WIND } from "../../../assets/svgs/svgs";
+import { SVG_CANON, SVG_RULE_DASH, SVG_RULE_PROT, SVG_RULE_SPIN, SVG_RULE_WIND } from "../../../assets/svgs/svgs";
 import { createSvgBox, createSvgBoxByBall, createSvgBoxByMap } from "../../../assets/svgs/svgs_boxes";
 import { formatPoint, getGameStats } from "./box_main_dashboard_utils";
 
 const POINT_BOX_STYLE = `
-flex flex-col justify-start items-center gap-1 flex-1 min-h-0 bg-dark rounded-2xl scrollbar-none overflow-scroll
+flex flex-col justify-start items-start gap-2 min-h-0 w-full bg-dark/20 rounded-2xl scrollbar-none overflow-scroll p-2
 `;
 
 const POINT_STYLE = `
-flex flex-row gap-1
+flex flex-row gap-2 w-full text-[20px] h-full
 `;
 
 function generatePointList(): string {
@@ -35,18 +35,23 @@ function generateRules(): string {
 	const stats = getGameStats();
 
 	return `
-		<div class='flex flex-row gap-4'>
-			maps : ${generateMapList(stats.rules.mapOptions)}
+	<div class='flex flex-col h-full gap-2 w-full'>
+		<div class='text-2xl font-bold p-8'>game's ruleset</div>
+		<div class='bg-dark/20 rounded-2xl p-4 flex flex-col h-full gap-2 w-full'>
+			<div class='flex flex-row gap-4 min-h-8'>
+				${generateMapList(stats.rules.mapOptions)}
+			</div>
+			<div class='flex flex-row gap-4 min-h-8'>
+				${generateBallList(stats.rules.ballOptions)}
+			</div>
+			<div class='flex flex-row gap-4 min-h-8'>
+				${generateRulesList(stats.rules)}
+			</div>
+			<div class='flex flex-row gap-4 text-variant w-fit min-h-8'>
+				${SVG_CANON} : ${stats.rules.canonCount}
+			</div>
 		</div>
-		<div class='flex flex-row gap-4'>
-			balls : ${generateBallList(stats.rules.ballOptions)}
-		</div>
-		<div class='flex flex-row gap-4'>
-			rules : ${generateRulesList(stats.rules)}
-		</div>
-		<div class=''>
-			canon number : ${stats.rules.canonCount}
-		</div>
+	</div>
 	`;
 }
 
