@@ -3,12 +3,13 @@ import { isRequestSuccessfull, printReplyInDiv, sendPostRequestToBack } from "..
 import { guestConnection } from "./user_state";
 import { Pages } from "../../routes/navigate_types";
 import { NewUserBody } from "#shared/HTTP";
+import { GUEST_NAME } from "#shared/constant";
 
 async function guestUser(): Promise<void> {
 
 	const data: NewUserBody = {
-		username: 'guest',
-		nickname: '', //  will not be used
+		username: GUEST_NAME,
+		nickname: '', // will not be used
 		password: ''
 	};
 

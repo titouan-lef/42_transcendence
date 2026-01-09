@@ -1,3 +1,4 @@
+import { GUEST_NAME } from "#shared/constant.js";
 import { isValidName } from "../user_management/create_account.js";
 import { applyQuery } from "./db_utils.js";
 
@@ -19,7 +20,7 @@ async function createEloTable(): Promise<void> {
 
 async function insertEloVariation(username: string, gameId: number, variation: number): Promise<void> {
 	if (!isValidName(username))
-		username = "guest";
+		username = GUEST_NAME;
 	await applyQuery(
 		async (db) => await db.run(
 			`INSERT INTO ${TABLE_NAME} (username, gameId, variation) VALUES (? ,? ,?)`,

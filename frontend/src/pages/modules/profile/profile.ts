@@ -11,6 +11,7 @@ import { Pages } from "../../../routes/navigate_types";
 import { getCurrentUserInfos, getUserInfos, isUserConnected } from "../../../services/user_management/user_state";
 import { updateFriendList } from "../box/box_aside_friendlist";
 import { addFriend } from "../dialog/dialog_add_friend";
+import { GUEST_NAME } from "#shared/constant";
 
 const DRAWER_MAIN_STYLE = `
 fixed z-10 inset-y-0 inset-x-0
@@ -68,7 +69,7 @@ async function openProfile(user: string): Promise<void> {
 	const drawer = getSafeElement("modal", HTMLDialogElement);
 	drawer.close();
 
-	if (user === 'guest')
+	if (user === GUEST_NAME)
 		return;
 
 	userProfile = user;

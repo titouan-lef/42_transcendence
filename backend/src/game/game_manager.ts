@@ -1,9 +1,9 @@
-import { GUEST_NAME } from "../user_management/create_account.js";
 import { Elo } from "../tournament/elo/elo.js";
 import { Game } from "./Game.js";
 import { GameOptions, GameSettings } from "./settings/GameSettings.js";
 import { WebSocket } from "ws";
 import { getUserByUsername } from "../database/user.js";
+import { GUEST_NAME } from "#shared/constant.js";
 
 //////////////////////////////////////////
 //			Game management				//
@@ -105,8 +105,8 @@ async function rankedGame(socket: WebSocket, gameId: number, gameData: GameData)
 	GAME_SETTINGS.delete(gameId);
 	const player2 = RANKED_WAITING.get(gameId);
 	RANKED_WAITING.delete(gameId);
-	const name1 = (await getUserByUsername(gameData.players[0]))?.nickname?? GUEST_NAME;
-	const name2 = (await getUserByUsername(gameData.players[1]))?.nickname?? GUEST_NAME;
+	const name1 = (await getUserByUsername(gameData.players[0]))?.nickname ?? GUEST_NAME;
+	const name2 = (await getUserByUsername(gameData.players[1]))?.nickname ?? GUEST_NAME;
 	const settings = new GameSettings(true, gameData.options, socket, name1, gameData.elos[0], player2, name2, gameData.elos[1]);
 	startGame(gameId, settings);
 }

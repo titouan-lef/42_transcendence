@@ -7,6 +7,7 @@ import { navigateTo } from "../../../routes/navigate";
 import { GameTypes, Pages } from "../../../routes/navigate_types";
 import { applyColor } from "../../../utils/applyColor";
 import { getGameType } from "../../../game/gameType";
+import { GUEST_NAME } from "#shared/constant";
 
 const COLUMNS_STYLE = `
 flex flex-col flex-1 gap-4 h-full min-w-0 min-h-0 scrollbar-none overflow-scroll
@@ -65,7 +66,7 @@ function showGameResults(stats: GameStats): string {
 	</div>
 	`;
 
-	if (gameType === GameTypes.RANKED && stats.player2.name !== 'guest') {
+	if (gameType === GameTypes.RANKED && stats.player2.name !== GUEST_NAME) {
 		return `
 		<div class='flex flex-row gap-4 justify-between items-center'>
 			<div class='${GAME_RESULTS_TITLE_STYLE}'>ranked game result VS ${stats.player2.name}</div>
