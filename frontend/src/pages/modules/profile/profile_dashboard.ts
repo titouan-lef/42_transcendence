@@ -59,6 +59,8 @@ async function fetchDashboardData(user: string): Promise<void> {
 	try {
 		const filter = getSafeElement(SELECT_NAME, HTMLSelectElement);
 		targetSeason = Number(filter.value);
+		if (Number.isNaN(targetSeason))
+			targetSeason = -1;
 	} catch {}
 	const body: UserDashboardInfoBody = { user: user, season: targetSeason };
 	const reply = await sendPostRequestToBack('/api/user/dashboard', JSON.stringify(body));
