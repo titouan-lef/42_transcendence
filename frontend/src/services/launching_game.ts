@@ -122,7 +122,7 @@ function loadGameHeader(infos: StartMessage): void {
 			<div class='${GAME_INFOS_STYLE}'>${infos.playerNickname}</div>
 			<div class='text-[12px] text-variant h-full align-bottom'>${infos.playerRating} elo</div>
 			<div class='text-[12px]'>VS</div>
-			<div class='${GAME_INFOS_STYLE}'>IA</div>
+			<div class='${GAME_INFOS_STYLE}'>AI</div>
 			`;
 			break;
 		case (GameTypes.RANKED):
