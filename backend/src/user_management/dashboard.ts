@@ -6,11 +6,8 @@ import { sendReply } from "../utils/HTTP.js";
 import { dateToString, EloHistory, getEloVariatonBySeason, getEloVariatonGlobal, getGameTimeAverageBySeason, getGameTimeAverageGlobal, getGoalAverageBySeason, getGoalAverageGlobal, getPreferedBallBySeason, getPreferedBallGlobal, getPreferedMapBySeason, getPreferedMapGlobal, getWinrateOverPeriod } from "../database/fetchStats.js";
 import { getElo } from "../database/web3/contract_service.js";
 import { Elo } from '../tournament/elo/elo.js';
-import { getCurrentSeason, getEndSeason, getFirstSeason, getSeasonStartedAtById } from "../database/season.js";
+import { getCurrentSeason, getEndSeason, getSeasonStartedAtById } from "../database/season.js";
 import { DEFAULT_RATINGS } from "../tournament/elo/elo.js";
-import { getActualDate } from "../database/db_utils.js";
-
-const NB_CHART_POINT = 7;
 
 function toTimeSeries(dateList: string[], data: number[]): DataChartType[] {
 	const result: DataChartType[] = dateList.map((date, i) => ({
@@ -63,52 +60,6 @@ async function getEloChartGlobal(user: string):Promise <DataChartType[]> {
 
 	const data = structureEloData(lastSeasonElo, eloVariaton);
 	return data;
-}
-
-async function getTabDateBySeason(season: number): Promise <string[]> {
-
-	const beginDate: Date = await getSeasonStartedAtById(season);
-
-	let endDate: Date;
-	if (season !== await getCurrentSeason()) {
-		endDate = await getEndSeason(season);
-	} else
-		endDate = await getActualDate();
-
-	const beginDateInMs:number = beginDate.getTime();
-	const endDateInMs:number = endDate.getTime();
-
-	const intervaleDateInMs: number = (endDateInMs - beginDateInMs) / (NB_CHART_POINT - 1);
-
-	const dates: string[] = [];
-
-	for (let i = 0; i < NB_CHART_POINT; i++) {
-		const pointDate = new Date(beginDateInMs + (intervaleDateInMs * i));
-		dates.push(dateToString(pointDate));
-	}
-
-	return dates;
-}
-
-async function getTabDateGlobal(): Promise <string[]> {
-
-	const season: number = await getFirstSeason();
-	const beginDate: Date = await getSeasonStartedAtById(season);
-	const actualDate: Date = await getActualDate();
-
-	const beginDateInMs:number = beginDate.getTime();
-	const actualDateInMs:number = actualDate.getTime();
-
-	const intervaleDateInMs: number = (actualDateInMs - beginDateInMs) / (NB_CHART_POINT - 1);
-
-	const dates: string[] = [];
-
-	for (let i = 0; i < NB_CHART_POINT; i++) {
-		const pointDate = new Date(beginDateInMs + (intervaleDateInMs * i));
-		dates.push(dateToString(pointDate));
-	}
-
-	return dates;
 }
 
 async function getWinrateChartBySeason(season: number, user: string): Promise <DataChartType[]> {
