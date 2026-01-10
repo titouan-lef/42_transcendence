@@ -59,6 +59,11 @@ function configureChart(dataset: DataChartType[], enforceYAxis = false): ChartCo
 			if (data.y > upper)
 				upper = data.y;
 		}
+		let diff = upper - lower;
+		if (diff === 0)
+			diff = 100;
+		lower = Math.round(lower - diff / 10);
+		upper = Math.round(upper + diff / 10);;
 	}
 
 	return {
@@ -86,18 +91,21 @@ function configureChart(dataset: DataChartType[], enforceYAxis = false): ChartCo
 				x: {
 					type: 'time',
 					time: {
-						tooltipFormat: 'yyyy-MM-dd HH:mm:ss',
+						tooltipFormat: 'yyyy-MM-dd HH:mm',
+						unit: 'second',
 						displayFormats: {
+							second: 'HH:mm',
 							minute: 'HH:mm',
-							hour: 'HH:mm',
-							day: 'MMM d'
+							hour: 'HH:mm'
 						}
 					},
 					grid: {
 						color: tColors.darker + 70
 					},
 					ticks: {
+						source: 'auto',
 						maxTicksLimit: 10,
+						autoSkip: true,
 						color: tColors.secondary,
 						font: {
 							family: getCSSVariable('--font-jbm'),
