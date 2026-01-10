@@ -59,7 +59,7 @@ function createHistoryBox(game: GameHistoryWithAvatar, gameNum: number): string 
 				<img src="${avatar}" alt="Avatar" width="50px" height="50px">
 			</div>
 			<div class="${HISTORY_GAME_INFO_STYLE}">
-				<div id="${game.opponentUsername}-nickname" class="font-park truncate w-full text-ellipsis">
+				<div id="${game.date}-${game.opponentUsername}-nickname" class="font-park truncate w-full text-ellipsis">
 					${game.opponentNickname}
 				</div>
 				<div id="print-date" class="text-[15px] truncate">

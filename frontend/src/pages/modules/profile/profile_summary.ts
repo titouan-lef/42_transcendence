@@ -57,7 +57,7 @@ async function loadSummary(): Promise<void> {
 
 	element.innerHTML = getSummaryTable(dataHist, dataDash);
 	dataHist.slice(0, HISTORY_DEEP).forEach((game) => {
-		const element = getSafeElement(`${game.opponentUsername}-nickname`, HTMLElement);
+		const element = getSafeElement(`${game.date}-${game.opponentUsername}-nickname`, HTMLElement);
 		element.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
 	});
 
