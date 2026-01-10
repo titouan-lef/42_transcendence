@@ -1,6 +1,6 @@
 import * as babylon from "@babylonjs/core";
 import { SceneManager } from "./scene/SceneManager.js";
-import { GameSettings } from "./settings/GameSettings.js";
+import { GameSettings, PlayerSettings } from "./settings/GameSettings.js";
 import { HavokPlugin } from "@babylonjs/core/Physics/index.js";
 import havokPhysics from "@babylonjs/havok";
 import { GAME_STEP_INTERVAL, PHYSIC_STEP_INTERVAL, POINTS_TO_WIN } from "./settings/values.js";
@@ -20,6 +20,7 @@ import { calculateOutcome } from "../tournament/elo/elo.js";
 import { updateElo } from "../tournament/elo/elo_update.js";
 import { getAllRatingBySeason } from "../database/web3/contract_service.js";
 import { getUserByUsername } from "../database/user.js";
+import { GUEST_NAME } from "../user_management/create_account.js";
 
 class Game {
 	private readonly id: number;
@@ -112,7 +113,7 @@ class Game {
 			await this.updateElos();
 		}
 		clearInterval(this.gameTimerIntervalId);
-		this.stopSendingPositions();
+		await this.stopSendingPositions();
 		this.sceneManager.destroyScene();
 		this.scene.onAfterRenderObservable.clear();
 		this.camera.dispose();
@@ -246,17 +247,17 @@ class Game {
 
 			const startP1: StartMessage = {
 				status: Status.START,
-				playerNickname: user1 ? user1.nickname : "",
+				playerNickname: user1 ? user1.nickname : GUEST_NAME,
 				playerRating: rating1,
-				enemyNickname: user2 ? user2.nickname : "",
+				enemyNickname: user2 ? user2.nickname : GUEST_NAME,
 				enemyRating: rating2
 			};
 			player1.send(startP1);
 			const startP2: StartMessage = {
 				status: Status.START,
-				playerNickname: user2 ? user2.nickname : "",
+				playerNickname: user2 ? user2.nickname : GUEST_NAME,
 				playerRating: rating2,
-				enemyNickname: user1 ? user1.nickname : "",
+				enemyNickname: user1 ? user1.nickname : GUEST_NAME,
 				enemyRating: rating1
 			};
 			player2.send(startP2);
@@ -265,24 +266,58 @@ class Game {
 		}
 	}
 
-	private sendStop(player1: Player, player2: Player) : void {
-		const stop: StopMessage = {
-			status: Status.STOP,
-			gameStats: this.createStats()
-		};
-		player1.send(stop);
-		player2.send(stop);
+	private async sendStop(player1: Player, player2: Player) : Promise<void> {
+		const stats1 = await this.createStats(player1);
+		if (stats1 !== null) {
+			const stop: StopMessage = {
+				status: Status.STOP,
+				gameStats: stats1
+			};
+			player1.send(stop);
+		}
+		const stats2 = await this.createStats(player2);
+		if (stats2 !== null) {
+			const stop: StopMessage = {
+				status: Status.STOP,
+				gameStats: stats2
+			};
+			player2.send(stop);
+		}
 	}
 
-	private createStats(): GameStats {
+	private async createStats(receiver: Player): Promise<GameStats | null> {
+		let player: PlayerSettings;
+		let enemy: PlayerSettings | undefined;
+		const isPlayer1 = this.settings.player1.username === receiver.getName();
+		if (isPlayer1) {
+			player = this.settings.player1;
+			enemy = this.settings.player2;
+		} else if (this.settings.player2) {
+			player = this.settings.player2;
+			enemy = this.settings.player1;
+		} else
+			return null;
+
+		const points: Point[] = [];
+		for (const point of this.points) {
+			const newPoint = point;
+			newPoint.goaler = isPlayer1 ? point.goaler: (point.goaler === 1 ? 2: 1);
+			points.push(newPoint);
+		}
+
 		const player1 = {
-			name: this.settings.player1.username,
-			score: this.score.x
+			name: (await getUserByUsername(player.username))?.nickname ?? GUEST_NAME,
+			score: isPlayer1? this.score.x: this.score.y
 		};
-		const player2name = this.settings.player2 ? this.settings.player2.username : "IA";
+		let player2name: string;
+		if (enemy) {
+			player2name = (await getUserByUsername(enemy.username))?.nickname ?? GUEST_NAME;
+		} else {
+			player2name = "AI";
+		}
 		const player2 = {
 			name: player2name,
-			score: this.score.y
+			score: isPlayer1? this.score.y: this.score.x
 		};
 		const rules = {
 			ballOptions: this.settings.options.ball,
@@ -293,11 +328,11 @@ class Game {
 			windAffectsBall: this.settings.options.windAffectsBall,
 			canonCount: this.settings.options.canonCount
 		};
-		const gameStats = {
+		const gameStats: GameStats = {
 			player1: player1,
 			player2: player2,
 			gameTimer: this.gameTimer,
-			points: this.points,
+			points: points,
 			rules: rules
 		};
 		return gameStats;
@@ -406,7 +441,7 @@ class Game {
 		this.defineCloseAction(player2, player1);
 	}
 
-	stopSendingPositions(): void {
+	async stopSendingPositions(): Promise<void> {
 		if (!this.gameStepsIntervalId)
 			return;
 		clearInterval(this.physicStepsIntervalId);
@@ -417,7 +452,7 @@ class Game {
 		const player2 = this.sceneManager.getPlayer(2);
 		if (!player1 || !player2)
 			return;
-		this.sendStop(player1, player2);
+		await this.sendStop(player1, player2);
 	}
 }
 
