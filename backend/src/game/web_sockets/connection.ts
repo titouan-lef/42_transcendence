@@ -130,15 +130,16 @@ async function newGame(socket: WebSocket, req: FastifyRequest<{ Params: GamePara
 		socket.close(1003, "Not a valid game id");
 		return;
 	}
+	let user: string | null = "";
 	if (gameData.type === GameType.RANKED) {
-		const user = await verifyAuthWS(socket, req);
+		user = await verifyAuthWS(socket, req);
 		if (!user || !gameData.players.includes(user)) {
 			socket.close(1003, "You do not belong in this game");
 			return;
 		}
 	}
 	startHeartbeat(socket);
-	identifyGame(socket, gameId, gameData);
+	identifyGame(user, socket, gameId, gameData);
 }
 
 export { GameType, waitForGame, newGame, newLocalGame, newAIGame, verifyAuthWS };
