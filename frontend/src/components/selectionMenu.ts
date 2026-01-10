@@ -15,10 +15,10 @@ function generateSeasonOptions(maxSeason: number, allOption: boolean): string {
 
 	let options = "";
 	if (allOption)
-		options += `<option value="all">${createParagraphHtml(['all'], 'p-all')}</option>`;
+		options += `<option value="all"selected>${createParagraphHtml(['all'], 'p-all')}</option>`;
 
 	for (let i: number = maxSeason; i >= 1; i--) {
-		const selected = i === maxSeason ? ' selected' : '';
+		const selected = i === maxSeason && !allOption ? ' selected' : '';
 		options += `<option value="${i}"${selected}>${i}</option>`;
 	}
 
