@@ -60,7 +60,9 @@ async function loadHistory(): Promise<void> {
 	elem.innerHTML = getHistoryTable(historyData);
 
 	historyData.forEach((game) => {
-		const element = getSafeElement(`${game.opponentUsername}-nickname`, HTMLElement);
+		if (game.opponentUsername === 'guest')
+			return;
+		const element = getSafeElement(`${game.date}-${game.opponentUsername}-nickname`, HTMLElement);
 		element.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
 	});
 }
