@@ -14,7 +14,7 @@ CYAN			:=	\e[36m
 all: prod
 
 env:
-		touch .frontend_env .backend_env
+		touch .backend_env
 		echo "Checking required variables in .backend_env..."
 		grep -q "EMAIL=" .backend_env || (echo "❌ Missing EMAIL in .backend_env" && exit 1)
 		grep -q "EMAIL_PASSWORD=" .backend_env || (echo "❌ Missing EMAIL_PASSWORD in .backend_env" && exit 1)
@@ -60,8 +60,9 @@ fclean: clean
 		rm -rf ./backups
 
 re: clean all
+retry: clean dev
 
-.PHONY:	all prod dev down clean fclean re env 
+.PHONY:	all prod dev down clean fclean re retry env
 
 ifndef VERBOSE
 .SILENT:
