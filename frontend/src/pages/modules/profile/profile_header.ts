@@ -46,7 +46,9 @@ async function getDrawerHeader(ownProfile: boolean, user: string): Promise<strin
 		<div class='flex flex-col flex-1 min-w-0 truncate'>
 			<p title='${ownProfile ? "" : user + "'s"}' class='${TITLE_STYLE}'>
 				${ownProfile ? "Your" : user + "'s"} profile
-				${!ownProfile && !isFriendWith(user) ? createButtonHtml(["add_friend"], `btn-add-friend-profile`, { "class": `${MAIN_BOX_BTN_STYLE}` }): ""}
+				<span id="btn-add-friend-profile-wrapper">
+					${!ownProfile && !isFriendWith(user) ? createButtonHtml(["add_friend"], `btn-add-friend-profile`, { "class": `${MAIN_BOX_BTN_STYLE}` }): ""}
+				</span>
 			</p>
 			<p title='${nickname}' class='text-[12px]'>nickname : ${nickname}</p>
 		</div>

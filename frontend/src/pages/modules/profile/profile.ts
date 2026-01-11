@@ -131,7 +131,8 @@ function initProfileEvents(): void {
 					if (!result)
 						return;
 					await updateFriendList();
-					openProfile(userProfile);
+					const btn = getSafeElement('btn-add-friend-profile-wrapper', HTMLElement);
+					btn.innerHTML = "";
 				});
 				break;
 			case 'btn-summary':
