@@ -2,6 +2,8 @@ import { MapOption, BallOption, Rules } from "#shared/types_transfert.js";
 import { SVG_CANON, SVG_RULE_DASH, SVG_RULE_PROT, SVG_RULE_SPIN, SVG_RULE_WIND } from "../../../assets/svgs/svgs";
 import { createSvgBox, createSvgBoxByBall, createSvgBoxByMap } from "../../../assets/svgs/svgs_boxes";
 import { formatPoint, getGameStats } from "./box_main_dashboard_utils";
+import { GameTypes } from "../../../routes/navigate_types";
+import { getGameType } from "../../../game/gameType";
 
 const POINT_BOX_STYLE = `
 flex flex-col justify-start items-start gap-2 min-h-0 w-full h-full bg-dark/20 rounded-2xl scrollbar-none overflow-scroll p-2
@@ -13,14 +15,20 @@ flex flex-row gap-2 w-full text-[20px] h-full
 
 function generatePointList(): string {
 	const stats = getGameStats();
+	const gameType = getGameType();
 	const points = stats.points;
 
 	let pointList = `<div class='${POINT_BOX_STYLE}'>`;
 
 	points.forEach(point => {
+		let goaler: string;
+		if (gameType === GameTypes.RANKED || gameType === GameTypes.AI)
+			goaler = point.goaler === 1 ? stats.player1.name : stats.player2.name;
+		else
+			goaler = point.goaler === 1 ? "Player 1" : "Player 2";
 		pointList += `
 		<div class='${POINT_STYLE}'>
-			${formatPoint(point, point.goaler === 1 ? stats.player1.name : stats.player2.name)}
+			${formatPoint(point, goaler)}
 		</div>
 		`;
 	});

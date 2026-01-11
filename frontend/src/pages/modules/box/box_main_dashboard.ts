@@ -5,7 +5,7 @@ import { formatScore, formatTime, getGameStats, setGameStats } from "./box_main_
 import { generatePointList, generateRules } from "./box_main_dashboard_generators";
 import { navigateTo } from "../../../routes/navigate";
 import { GameTypes, Pages } from "../../../routes/navigate_types";
-import { applyColor } from "../../../utils/applyColor";
+import { applyColor, Color } from "../../../utils/applyColor";
 import { getGameType } from "../../../game/gameType";
 import { GUEST_NAME } from "#shared/constant";
 
@@ -54,11 +54,22 @@ text-2xl font-bold p-8 max-w-[550px] truncate
 
 function showGameResults(stats: GameStats): string {
 	const gameType = getGameType();
-	const victory = stats.player1.score > stats.player2.score ? 'win' : 'lose';
+	const victory = stats.player1.score > stats.player2.score ? 1 : 2;
+	let color: Color = 'win';
+	let winner: string;
+	if (gameType === GameTypes.RANKED || gameType === GameTypes.AI) {
+		if (victory === 1)
+			winner = `<p class='text-[35px]'>Victory</p>`;
+		else {
+			winner = `<p class='text-[35px]'>Defeat</p>`;
+			color = 'lose';
+		}
+	} else
+		winner = `<p class='text-[35px]'>Winner: Player${victory}</p>`;
 
 	const gameResults = `
-	<div class='${applyColor(victory)} px-8 py-4 flex flex-col rounded-2xl bg-grad-l from-dark'>
-		${victory === 'win' ? `<p class='text-[35px] text-${victory}'>Victory</p>` : `<p class='text-[35px] text-${victory}'>Defeat</p>`}
+	<div class='${applyColor(color)} px-8 py-4 flex flex-col rounded-2xl bg-grad-l from-dark'>
+		${winner}
 		<div class='flex flex-row w-full h-fit justify-between items-center'>
 			<div class='text-[80px] font-bold w-fit mr-20 text-balance'>${formatScore(stats)}</div>
 			<div class='text-[35px] text-variant'>${formatTime(stats.gameTimer)}</div>
