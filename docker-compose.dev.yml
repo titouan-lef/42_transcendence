@@ -11,15 +11,13 @@ services:
     volumes: # mount local source code for dev
     - ./shared:/app/shared
     - ./backend/src:/app/backend/src
-    restart: "no"   # dev: fail fast, do not restart
+    restart: "no" # dev: fail fast, do not restart
 
   frontend:
     build:
       context: ./frontend
       target: dev
     container_name: pong-frontend
-    env_file:
-      - .frontend_env
     depends_on:
       - backend
     networks:
@@ -28,13 +26,13 @@ services:
     - ./shared:/app/shared
     - ./frontend/src:/app/frontend/src
     - ./frontend/public:/app/frontend/public
-    restart: "no"   # dev: fail fast, do not restart
+    restart: "no" # dev: fail fast, do not restart
 
   nginx:
     build: ./nginx
     container_name: pong-nginx
     ports:
-      - "8888:443"  # Using 8888 because 42 computer are not allowed to bind 443. But with 443 on another computer or a VM will work
+      - "8888:443" # Using 8888 because 42 computer are not allowed to bind 443. But with 443 on another computer or a VM will work
     depends_on:
       - backend
       - frontend
