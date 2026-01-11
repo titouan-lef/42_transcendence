@@ -44,9 +44,28 @@ class Game {
 	}
 
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
-	static async create(settings: PointSettings): Promise<Game> {
+	static async create(settings: PointSettings): Promise<Game | null> {
 		const canvas = getSafeElement('game-canvas', HTMLCanvasElement);
-		const engine = new babylon.Engine(canvas);
+		let engine: babylon.Engine | null = null;
+		try {
+			engine = new babylon.Engine(canvas);
+		} catch {
+			const parent = canvas.parentElement;
+			if (parent) {
+				parent.innerHTML = `
+					<div class="flex flex-col items-center gap-2 text-center text-lose">
+						<p class="font-semibold">
+							WebGL failed: we are sorry for the inconvenience
+						</p>
+						<p class="opacity-80">
+							Please restart your browser
+						</p>
+					</div>
+				`;
+			}
+		}
+		if (!engine)
+			return null;
 		const scene = await Game.initScene(engine);
 		return new Game(canvas, settings, scene, engine);
 	}
