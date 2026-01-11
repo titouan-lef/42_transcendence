@@ -5,6 +5,7 @@ import { setActiveBtn } from "./profile_navbar";
 import { isRequestSuccessfull, sendPostRequestToBack } from "../../../services/api_request";
 import { navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
+import { GUEST_NAME } from "#shared/constant";
 
 let historyData: GameHistoryWithAvatar[];
 
@@ -60,7 +61,7 @@ async function loadHistory(): Promise<void> {
 	elem.innerHTML = getHistoryTable(historyData);
 
 	historyData.forEach((game) => {
-		if (game.opponentUsername === 'guest')
+		if (game.opponentUsername === GUEST_NAME)
 			return;
 		const element = getSafeElement(`${game.date}-${game.opponentUsername}-nickname`, HTMLElement);
 		element.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
