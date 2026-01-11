@@ -3,6 +3,7 @@ import { applyQuery } from "./db_utils.js";
 import { BallOption, MapOption } from "#shared/types_transfert.js";
 import { getGamesPlayedCountBySeason, getGamesPlayedCountGlobal } from "./fetchGame.js";
 import { getPlayedGameAtDate, getPlayedGameAtDateByseason } from "./game.js";
+import { POINTS_TO_WIN } from "../game/settings/values.js";
 
 async function getGoalAverageBySeason(seasonId: number, username: string): Promise<number> {
 	const nbGame: number = await getGamesPlayedCountBySeason(seasonId, username);
@@ -198,7 +199,7 @@ async function getWinrateBySeasonAndDate(seasonId: number, username: string, dat
 					JOIN Goal GO ON G.id = GO.gameId
 					WHERE GO.by = ? AND G.seasonId = ? AND G.beganAt <= ?
 					GROUP BY G.id
-					HAVING COUNT(GO.id) = 11
+					HAVING COUNT(GO.id) = ${POINTS_TO_WIN}
 				) AS games;`, [username, seasonId, date]
 			), "getWinrateGlobalAndDate"
 		);
@@ -230,7 +231,7 @@ async function getWinrateGlobalAndDate(username: string, dates: string[]): Promi
 					JOIN Goal AS GO ON G.id = GO.gameId
 					WHERE GO.by = ? AND G.beganAt <= ?
 					GROUP BY G.id
-					HAVING COUNT(GO.id) = 11
+					HAVING COUNT(GO.id) = ${POINTS_TO_WIN}
 				) AS games;`, [username, date]
 			), "getWinrateGlobalAndDate"
 		);
