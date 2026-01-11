@@ -20,7 +20,7 @@ import { calculateOutcome } from "../tournament/elo/elo.js";
 import { updateElo } from "../tournament/elo/elo_update.js";
 import { getAllRatingBySeason } from "../database/web3/contract_service.js";
 import { getUserByUsername } from "../database/user.js";
-import { GUEST_NAME } from "../user_management/create_account.js";
+import { GUEST_NAME } from "#shared/constant.js";
 
 class Game {
 	private readonly id: number;
