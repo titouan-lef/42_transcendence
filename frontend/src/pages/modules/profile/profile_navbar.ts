@@ -10,7 +10,7 @@ const NAV_BTN_STYLE = `
 p-2 rounded-l-[10px]
 w-[200px] h-[50px] bg-darker text-variant
 data-[active=true]:bg-variant
-data-[active=true]:text-dark
+data-[active=true]:text-darker
 `;
 
 function getDrawerNav(withSettings: boolean): string {
