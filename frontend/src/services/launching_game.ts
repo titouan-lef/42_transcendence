@@ -7,7 +7,7 @@ import { getSafeElement } from "../utils/getSafeElement.js";
 import { getGameType } from "../game/gameType.js";
 
 const GAME_INFOS_STYLE = `
-max-w-[200px] text-[30px] truncate
+max-w-[200px] text-[30px] truncate shrink-0
 `;
 
 //////////////////////////////////////////

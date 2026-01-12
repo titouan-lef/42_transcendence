@@ -28,7 +28,7 @@ even:bg-primary/10 bg-dark/30 w-full h-[50px] text-light
 `;
 
 const TABLE_DATA_CELL_STYLE = `
-p-4 max-w-0 truncate
+p-4 max-w-0 truncate shrink-0
 `;
 
 const SEASON_DATES_STYLE = `

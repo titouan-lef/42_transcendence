@@ -25,7 +25,7 @@ flex flex-col w-full
 `;
 
 const FILE_INPUT_STYLE = `
-w-full text-[12px] text-dark truncate
+w-full text-[12px] text-dark truncate shrink-0
 file:py-1 file:px-4 file:mr-4
 file:rounded-xl file:border-0
 file:text-[14px] file:font-bold file:font-jbm

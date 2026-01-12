@@ -43,7 +43,7 @@ async function getDrawerHeader(ownProfile: boolean, user: string): Promise<strin
 
 	return `
 	<div class='${DRAWER_HEADER_STYLE}'>
-		<div class='flex flex-col flex-1 min-w-0 truncate'>
+		<div class='flex flex-col flex-1 min-w-0 truncate shrink-0'>
 			<p title='${ownProfile ? "" : user + "'s"}' class='${TITLE_STYLE}'>
 				${ownProfile ? "Your" : user + "'s"} profile
 				<span id="btn-add-friend-profile-wrapper">

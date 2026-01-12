@@ -76,7 +76,7 @@ function generateKeybindsButtons(keys: PlayerKeys): void {
 
 	for (const [keyName, keyCode] of Object.entries(keys)) {
 		keybindButtons.innerHTML += `
-			<p id='btn-${keyName}' title='${keyCode ? keyCode : 'no key bind'}' class='align-middle text-left flex-1 m-2 truncate'>
+			<p id='btn-${keyName}' title='${keyCode ? keyCode : 'no key bind'}' class='align-middle text-left flex-1 m-2 truncate shrink-0'>
 				${changeName(keyName)} : ${keyCode ? keyCode : ''}
 			</p>
 			`;
