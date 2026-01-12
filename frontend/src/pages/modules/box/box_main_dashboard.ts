@@ -65,7 +65,7 @@ function showGameResults(stats: GameStats): string {
 			color = 'lose';
 		}
 	} else
-		winner = `<p class='text-[35px]'>Winner: Player${victory}</p>`;
+		winner = `<p class='text-[35px]'>Player${victory} won!</p>`;
 
 	const gameResults = `
 	<div class='${applyColor(color)} px-8 py-4 flex flex-col rounded-2xl bg-grad-l from-dark'>
