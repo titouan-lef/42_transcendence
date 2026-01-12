@@ -402,6 +402,8 @@ class Game {
 	}
 
 	private incrementPointsToMax(leaverId: 1 | 2): void {
+		if (this.score.x === POINTS_TO_WIN || this.score.y === POINTS_TO_WIN)
+			return;
 		if (leaverId === 1) {
 			while(this.score.y < POINTS_TO_WIN) {
 				this.score.y++;
@@ -420,8 +422,8 @@ class Game {
 			leaver.defineCloseAction(async () => {
 				const leaverId = leaver.getId();
 				this.incrementPointsToMax(leaverId);
-				await stopGame(this.id);
-				if (stayer instanceof Human) {
+				const result = await stopGame(this.id);
+				if (result && stayer instanceof Human) {
 					stayer.closeSocket();
 				}
 			});

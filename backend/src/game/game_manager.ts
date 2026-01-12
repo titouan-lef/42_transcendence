@@ -39,12 +39,13 @@ async function startGame(id: number, settings: GameSettings): Promise<number> {
 	}
 }
 
-async function stopGame(id: number): Promise<void> {
+async function stopGame(id: number): Promise<boolean> {
 	const game = GAMES.get(id);
 	if (!game)
-		return;
+		return false;
 	await game.stop();
 	GAMES.delete(id);
+	return true;
 }
 
 //////////////////////////////////////////
