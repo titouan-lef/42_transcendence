@@ -18,7 +18,6 @@ overflow-hidden
 
 let ws: WebSocket | null = null;
 
-/** @todo front */
 function getGameWaiting(): string {
 	return `
 	<div class='flex flex-col gap-4 justify-center items-center w-full h-full'>
@@ -79,12 +78,7 @@ async function waitForGame(): Promise<void> {
 		}
 	};
 
-	ws.onerror = (err): void => {
-		console.error("WebSocket error:", err);
-	};
-
 	ws.onclose = (event): void => {
-		console.log("Closed:", event.code, event.reason);
 		if (event.code !== 1000)
 			goBack();
 	};

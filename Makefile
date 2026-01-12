@@ -22,7 +22,6 @@ env:
 		grep -q "CONTRACT_ADDRESS=" .backend_env || (echo "❌ Missing CONTRACT_ADDRESS in .backend_env" && exit 1)
 		grep -q "PRIVATE_KEY=" .backend_env || (echo "❌ Missing PRIVATE_KEY in .backend_env" && exit 1)
 		grep -q "RPC_URL=" .backend_env || (echo "❌ Missing RPC_URL in .backend_env" && exit 1)
-		# @todo Add everything necessary
 		echo "✅Env files are valid"
 
 prod: env

@@ -86,7 +86,6 @@ function sortWaitingPlayerByRatings(): void {
 }
 
 async function addPlayerToMatchmakingSystem(socket: WebSocket, username: string, option: GameOptions): Promise<void> {
-	console.log("Player", username, "is in the queue");
 	const currentSeasonId = await getCurrentSeason();
 	if (!currentSeasonId)
 		throw new Error("Error to get current season");
@@ -104,6 +103,7 @@ async function addPlayerToMatchmakingSystem(socket: WebSocket, username: string,
 		option: option
 	};
 	NEW_PLAYER_LIST.push(player);
+	console.log("Add", username, "in the queue", NEW_PLAYER_LIST);
 }
 
 function isUserWaiting(username: string) : boolean {

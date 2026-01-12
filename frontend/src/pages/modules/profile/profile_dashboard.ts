@@ -27,7 +27,6 @@ let dashboardData: UserDashboardInfos = {
 	winrateChart: []
 };
 
-/** @todo better select/option with divs ? menue is not personnalisable at this time */
 function getDashboardPage(maxSeason: number ): string {
 
 	return ( `

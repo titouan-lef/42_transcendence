@@ -10,12 +10,12 @@ function isUserConnected(username: string): boolean {
 
 function addUserToConnectedList(username: string): void {
 	CONNETED_USERS.add(username);
-	console.log(CONNETED_USERS);
+	console.log("Players currently connected :", CONNETED_USERS);
 }
 
 function removeUserToConnectedList(username: string): void {
 	CONNETED_USERS.delete(username);
-	console.log(CONNETED_USERS);
+	console.log("Players currently connected :", CONNETED_USERS);
 }
 
 async function manageOnlineStatus(socket: WebSocket, req: FastifyRequest): Promise<void> {

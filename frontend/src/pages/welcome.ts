@@ -2,7 +2,6 @@ import { ELEM, loadPage } from "./page";
 import { applyColor } from "../utils/applyColor";
 import { loadHomePage } from "./modules/box/box_main_home";
 
-/** @todo clamp : better responsivity (not working well here) */
 const WELCOME_STYLE = `
 flex items-center justify-center h-screen
 text-[clamp(100px,50vmin,500px)] text-balance

@@ -10,8 +10,6 @@ import { isUserConnected } from "../../../services/user_management/user_state";
 import { showUserInfos } from "../../../services/user_management/update_user";
 import { update2FAButton } from "../../../services/security/2FA";
 
-/** @todo real front with selector to enable / disable 2FA */
-/** @todo ask for email only if 2FA is enable */
 const SETTINGS_MAIN_STYLE = `
 grid grid-rows-1 grid-cols-2 justify-start items-center gap-4 h-full w-full p-4
 `;
@@ -74,7 +72,7 @@ const SETTINGS = `
 `;
 
 function loadSettings(): void {
-	if (!isUserConnected()) /** @todo maybe not necessary anymore */
+	if (!isUserConnected())
 		return;
 
 	setActiveBtn('btn-settings');
@@ -93,7 +91,7 @@ function loadSettings(): void {
 
 	showUserInfos();
 	generateThemeEvents();
-	generateKeybindsButtons(AI_RANKED_PLAYER_KEYS); /** @todo le param doit correspondre a celui charger en premier quand tu vas dans settings */
+	generateKeybindsButtons(AI_RANKED_PLAYER_KEYS);
 	keybindsNavbarEvents();
 	update2FAButton();
 }

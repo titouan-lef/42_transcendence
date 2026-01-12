@@ -48,7 +48,7 @@ async function getUserInfos(): Promise<void> {
 		return;
 	if (!ws)
 		ws = new WebSocket(`ws/online`);
-	const data: InfoList = JSON.parse(reply.content); /** @todo verify if try/ctach needed */
+	const data: InfoList = JSON.parse(reply.content);
 	currentUser = {
 		username: data.username,
 		nickname: data.nickname,

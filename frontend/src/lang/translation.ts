@@ -4,7 +4,6 @@ type Expression = Record<CodeLang, string>;
 
 // 'as const' allows you to make fields read-only and avoid adding/removing fields.
 // 'satisfies ...' allows you to detect errors if a field doesn't exist (or is badly written).
-/** @todo revoir toutes les traduction lors d'une future PR langues car plein d'erreurs */
 const TRANSLATOR = {
 	// VERBS
 	play: { en: "play", fr: "jouer" },

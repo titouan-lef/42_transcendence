@@ -13,7 +13,6 @@ const PRINT_CONTENT_STYLE = `
 w-full h-[20px] text-[12px] text-warning text-center
 `;
 
-/** @todo use TRANSLATOR */
 const TWOFA = `
 	<p class='font-bold text-[20px]'> 2FA required </p>
 	<form name="Register" class="${DIALOG_FORM_STYLE}">
@@ -24,7 +23,6 @@ const TWOFA = `
 	<p class='${PRINT_CONTENT_STYLE}' id="print-content"></p>
 `;
 
-/** @todo better solution than having another dialog */
 const EMAIL_CONFIRMATION = `
 	<p class='font-bold text-[20px]'> 2FA required </p>
 	<form name="Register" class="${DIALOG_FORM_STYLE}">
@@ -41,7 +39,7 @@ async function sendSecureCode(): Promise<boolean> {
 	const code = getSafeElement('password', HTMLInputElement).value;
 	const container: HTMLElement = getSafeElement("print-content", HTMLElement);
 	if (!code) {
-		container.innerHTML = `Please enter a 4 digit code.`; /**@todo use translate tool */
+		container.innerHTML = `Please enter a 4 digit code.`;
 		return false;
 	}
 	let body : Content2FA;

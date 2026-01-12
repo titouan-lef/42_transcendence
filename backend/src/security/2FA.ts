@@ -50,7 +50,6 @@ function sendEmailCode(email: string, code: number): boolean {
 		});
 		return true;
 	} catch (err) {
-		console.log(`invalid email`, email); /** @todo remove */
 		return false;
 	}
 }

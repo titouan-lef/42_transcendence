@@ -17,7 +17,6 @@ data-[active=true]:border-variant
 data-[active=true]:text-variant
 `;
 
-/** @todo translation :) */
 const SETTINGS_KEYBINDS_SELECTOR = `
 <div class='text-[14px] w-full h-full bg-light/10 rounded-2xl'>
 	<div class="p-8 pl-10 text-[20px] font-bold">keybinds selector</div>
@@ -127,7 +126,6 @@ function keyboardHandler(keyName: string, keys: PlayerKeys): void {
 	pendingKeyAction = { action: keyName, keySet: keys };
 }
 
-/**@todo voir si y a pas une meilleure solution qu'écouter tout le temps sur tout le document' */
 document.addEventListener("keydown", (event) => {
 	if (!pendingKeyAction)
 		return;

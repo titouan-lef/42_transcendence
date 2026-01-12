@@ -76,13 +76,11 @@ async function getFriendList(): Promise<void> {
 	});
 }
 
-/** @todo keep same generating logic to generate button ids (events) */
 async function updateFriendList(): Promise<void> {
 	const elem = getSafeElement("friendlist", HTMLElement);
 	elem.innerHTML = '';
 	await getFriendList();
 
-	/** @todo red or green dot for online status */
 	FRIENDLIST.forEach(friend => {
 		const style = friend.onlineStatus ? ONLINE_STYLE: OFFLINE_STYLE;
 
