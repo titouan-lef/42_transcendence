@@ -103,9 +103,6 @@ class SceneManager {
 
 	private createMap(scene: babylon.Scene, map: MapOption, wind: PlanePosition): void {
 		switch (map) {
-			case "default":
-				this.map = new DefaultMap(scene, this.textures.stars, wind);
-				break;
 			case "volcano":
 				this.map = new VolcanoMap(scene, this.textures, wind);
 				break;
@@ -116,7 +113,8 @@ class SceneManager {
 				this.map = new DesertMap(scene, this.textures, wind);
 				break;
 			default:
-				throw new Error("switch map fail");
+				this.map = new DefaultMap(scene, this.textures.stars, wind);
+				break;
 		}
 	}
 

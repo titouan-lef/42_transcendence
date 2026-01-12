@@ -74,7 +74,7 @@ function openGamePage(): void {
 			loadDialogWaiting();
 			break;
 		default:
-			throw new Error("No such game type.");
+			return;
 	}
 	getSafeElement('game-type', HTMLElement).innerHTML = gameType;
 }

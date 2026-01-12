@@ -65,7 +65,7 @@ function getAssociatedPage(modal: Modals): Pages {
 		if (PAGES_MODALS[page].includes(modal))
 			return page;
 	}
-	throw new Error(`Modal ${modal} has no page`);
+	return Pages.HOME;
 }
 
 function needToBeConnected(nav: Navigation): boolean {

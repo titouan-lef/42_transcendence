@@ -55,7 +55,7 @@ function removeAuthCookies(reply: FastifyReply): void {
 
 function identifyUser(token: string): UserIdentity {
 	// eslint-disable-next-line
-	const payload: UserIdentity = jwt.verify(token, SECRET) as UserIdentity;  // payload will always be this format because it's how it is created.
+	const payload: UserIdentity = jwt.verify(token, SECRET) as UserIdentity; // payload will always be this format because it's how it is created.
 	if (payload.username === GUEST_NAME && payload.guestId > nbGuestUsers)
 		throw new Error("Too old guest token, needs to reconnect");
 	return payload;

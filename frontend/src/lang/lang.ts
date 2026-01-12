@@ -48,7 +48,7 @@ function regexAllPlaceholder(): RegExp {
 function getTranslation(key: TranslationKey): string {
 	const translation = TRANSLATOR[key]?.[lang];
 	if (!translation)
-		throw new Error("No translation");
+		return "";
 	return translation;
 }
 

@@ -109,7 +109,7 @@ function changeName(name: string): string {
 		case "dash":
 			return "Dash";
 		default:
-			throw new Error("Error: unknown KeyName.");
+			return "";
 	}
 }
 

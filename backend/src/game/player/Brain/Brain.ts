@@ -111,7 +111,7 @@ abstract class Brain {
 				this.applyActionDestReaching(action);
 				break;
 			default:
-				throw new Error("AI switch destination");
+				break;
 		}
 		return action;
 	}
@@ -147,7 +147,7 @@ abstract class Brain {
 			case AttackAi.WAIT:
 				break;
 			default:
-				throw new Error("AI switch destination");
+				break;
 		}
 	}
 }

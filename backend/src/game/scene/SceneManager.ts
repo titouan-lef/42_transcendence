@@ -147,9 +147,6 @@ class SceneManager {
 		else
 			ball = "default";
 		switch (ball) {
-			case "default":
-				this.ball = new DefaultBall(scene, this.sockets, settings);
-				break;
 			case "invisible":
 				this.ball = new InvisibleBall(scene, this.sockets, settings);
 				break;
@@ -163,7 +160,8 @@ class SceneManager {
 				this.ball = new SnakeBall(scene, this.sockets, settings);
 				break;
 			default: 
-				throw new Error("switch ball fail");
+				this.ball = new DefaultBall(scene, this.sockets, settings);
+				break;
 		}
 	}
 
@@ -174,9 +172,6 @@ class SceneManager {
 		else
 			map = "default";
 		switch (map) {
-			case "default":
-				this.map = new DefaultMap(scene, settings.options.canonCount);
-				break;
 			case "volcano":
 				this.map = new VolcanoMap(scene, settings.options.canonCount);
 				break;
@@ -187,7 +182,8 @@ class SceneManager {
 				this.map = new DesertMap(scene, settings.options.canonCount);
 				break;
 			default:
-				throw new Error("switch map fail");
+				this.map = new DefaultMap(scene, settings.options.canonCount);
+				break;
 		}
 	}
 

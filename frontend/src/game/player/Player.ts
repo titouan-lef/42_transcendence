@@ -181,11 +181,9 @@ class Player {
 			case (EmoteChoice.LOL):
 				texture = textures.emoteLol;
 				break;
-			case (EmoteChoice.ANGRY):
+			default:
 				texture = textures.emoteAngry;
 				break;
-			default:
-				throw new Error("Invalid emote");
 		}
 		this.emote = new Emote(scene, texture, this.player);
 	}

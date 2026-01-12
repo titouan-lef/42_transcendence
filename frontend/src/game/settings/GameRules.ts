@@ -32,10 +32,8 @@ function getGameOptions(gameType: GameTypes): GameOptions {
 			return LOCAL_RULES ;
 		case GameTypes.AI:
 			return AI_RULES;
-		case GameTypes.RANKED:
-			return RANKED_RULES;
 		default:
-			throw new Error("No such game type");
+			return RANKED_RULES;
 	}
 }
 
@@ -56,10 +54,8 @@ function registerGameOptions(gameType: GameTypes): void {
 				balls.push(ball.value);
 		}
 	});
-	if (maps.length === 0)
-		throw new Error("Empty maps options");
-	if (balls.length === 0)
-		throw new Error("Empty balls options");
+	if (maps.length === 0 || balls.length === 0)
+		return;
 
 	const rules = getGameOptions(gameType);
 	rules.map = maps;

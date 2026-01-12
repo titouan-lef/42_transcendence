@@ -78,7 +78,7 @@ class Game {
 		const dashRuleId = await getRuleId("dash");
 		const canonCountRuleId = await getRuleId("canonCount");
 		if (!spinRuleId || !rotateRuleId || !windRuleId || !dashRuleId || !canonCountRuleId)
-			throw new Error("Error while creating rules");
+			return ;
 		await insertGameRule(this.gameIdDb, spinRuleId, this.settings.options.spin);
 		await insertGameRule(this.gameIdDb, rotateRuleId, this.settings.options.rotatingPlayer);
 		await insertGameRule(this.gameIdDb, windRuleId, this.settings.options.windAffectsBall);

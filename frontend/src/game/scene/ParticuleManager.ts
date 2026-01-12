@@ -77,9 +77,6 @@ class ParticuleManager {
 			return;
 		let particle: babylon.ParticleSystem;
 		switch (message.type) {
-			case "collision":
-				particle = this.createCollisionParticles(scene, position, message.color);
-				break;
 			case "explosion":
 				particle = this.createExplosionParticles(scene, position, message.size);
 				break;
@@ -87,7 +84,8 @@ class ParticuleManager {
 				particle = this.createImpulseParticles(scene, position, message.color);
 				break;
 			default:
-				throw new Error("Particle not known") ;
+				particle = this.createCollisionParticles(scene, position, message.color);
+				break;
 		}
 		this.particles.push(particle);
 		particle.start();

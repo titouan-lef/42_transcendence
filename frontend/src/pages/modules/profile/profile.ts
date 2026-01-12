@@ -114,7 +114,7 @@ function loadTab(tab?: ProfileTab): void {
 				loadSettings();
 			break;
 		default:
-			throw new Error("No such profile tab");
+			return;
 	}
 }
 
