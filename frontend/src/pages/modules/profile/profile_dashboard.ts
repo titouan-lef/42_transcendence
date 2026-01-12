@@ -14,7 +14,18 @@ scrollbar-none overflow-y-scroll overflow-hidden
 
 const SELECT_NAME = `dashboard-filter`;
 
-let dashboardData: UserDashboardInfos;
+let dashboardData: UserDashboardInfos = {
+	gamesPlayed: 0,
+	gamesWins: 0,
+	gamesLooses: 0,
+	elo: 0,
+	goalAverage: 0,
+	durationAverage: 0,
+	preferedBall: "default",
+	preferedMap: "default",
+	eloChart: [],
+	winrateChart: []
+};
 
 /** @todo better select/option with divs ? menue is not personnalisable at this time */
 function getDashboardPage(maxSeason: number ): string {

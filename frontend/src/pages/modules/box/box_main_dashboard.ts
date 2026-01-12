@@ -22,6 +22,8 @@ const GAME_DASHBOARD_BUTTONS = `
 
 function generateGameDashboard(): string {
 	const stats = getGameStats();
+	if (stats === undefined)
+		return "";
 
 	return `
 		<div class='flex flex-col h-full max-h-screen w-full justify-center items-center'>
@@ -105,7 +107,7 @@ function gameDashboardEvents(): void {
 				elem.addEventListener('click', () => navigateTo(Pages.HOME));
 				break;
 			case 'btn-oppo-profile':
-				elem.addEventListener('click', () => navigateTo(Pages.PROFILE, getGameStats().player2.name));
+				elem.addEventListener('click', () => navigateTo(Pages.PROFILE, getGameStats()?.player2.name));
 				break;
 			default:
 				break;
