@@ -1,6 +1,8 @@
 import { AttackAi, Brain, Movement } from "../Brain.js";
 import * as babylon from "@babylonjs/core";
 
+const ITERATION_MAX = 100;
+
 class DefaultBrain extends Brain {
 	protected intersectionTop(movement: Movement): number {
 		if (movement.dir.x >= 0)
@@ -23,14 +25,16 @@ class DefaultBrain extends Brain {
 	}
 
 	private intersectionTopNoEffect(movement: Movement): number {
-		const sideEquation = (movement.dir.y > 0) ? Brain.EQ_RIGHT_SIDE : Brain.EQ_LEFT_SIDE;
-		const ballTrajectory = this.getLineEquation(movement);
-		const intersectSide = this.intersection(ballTrajectory, sideEquation);
-		if (intersectSide === null)
-			return this.calulateTopIntersection(movement, ballTrajectory);
-		movement.pos = intersectSide;
-		movement.dir.y *= -1;
-		return this.intersectionTopNoEffect(movement);
+		for (let i = 0; i < ITERATION_MAX; i++) {
+			const sideEquation = (movement.dir.y > 0) ? Brain.EQ_RIGHT_SIDE : Brain.EQ_LEFT_SIDE;
+			const ballTrajectory = this.getLineEquation(movement);
+			const intersectSide = this.intersection(ballTrajectory, sideEquation);
+			if (intersectSide === null)
+				return this.calulateTopIntersection(movement, ballTrajectory);
+			movement.pos = intersectSide;
+			movement.dir.y *= -1;
+		}
+		return 0;
 	}
 
 	private getLineEquation(movement: Movement): babylon.Vector3 {
@@ -62,7 +66,8 @@ class DefaultBrain extends Brain {
 	}
 
 	private chooseAtkDirection(moveDirY: number): void {
-		if (moveDirY === 0)
+		const margin = 0.5;
+		if (-margin <= moveDirY && moveDirY <= margin)
 			return;
 		this.atkDirection = (moveDirY > 0 ) ? AttackAi.RIGHT : AttackAi.LEFT;
 	}
