@@ -21,9 +21,9 @@ interface ThemeColors {
 const VARIANTS = {
 	'base': 'bg-secondary text-primary',
 	'alt': 'bg-primary text-secondary',
-	'var': 'bg-variant text-secondary',
+	'var': 'bg-variant text-warning',
 	'warning': 'bg-primary text-warning',
-	'input' : 'bg-lighter text-variant focus:outline-2 focus:text-dark',
+	'input' : 'bg-lighter text-primary focus:outline-2 focus:text-dark',
 	'win' : 'bg-win/40 text-win font-bold',
 	'lose' : 'bg-lose text-light',
 	'online' : 'bg-online text-primary font-bold',

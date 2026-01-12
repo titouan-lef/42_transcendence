@@ -12,7 +12,7 @@ p-4 max-w-0 uppercase
 `;
 
 const LEADERBOARD_THEAD = `
-<thead class="bg-light text-variant w-full">
+<thead class="bg-light text-dark w-full">
 	<tr class="w-full">
 		<th class="${TABLE_HEAD_CELL_STYLE}">#</th>
 		<th class="${TABLE_HEAD_CELL_STYLE}">nickname</th>

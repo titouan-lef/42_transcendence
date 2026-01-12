@@ -8,7 +8,7 @@ bg-dark text-secondary p-1 rounded-xl font-bold w-[80px]
 
 const BTN_SAVE = `
 <div class='flex flex-row justify-between w-full'>
-	${createButtonHtml(['cancel'], 'btn-cancel', { 'class': `${BTN_SAVE_EDIT_STYLE} text-warning` })}
+	${createButtonHtml(['cancel'], 'btn-cancel', { 'class': `${BTN_SAVE_EDIT_STYLE}` })}
 	${createButtonHtml(['save'], 'btn-save', { 'class': `${BTN_SAVE_EDIT_STYLE}` })}
 </div>
 `;

@@ -22,7 +22,7 @@
 	--color-darker:		#1f0202;
 	--color-variant:	#ff7b00;
 	--color-secondary:	#FEE203;
-	--color-warning:	#cc4aff;
+	--color-warning:	#000000;
 	--color-shadow:		#9A0103;
 	--color-win:		#ffd000;
 	--color-lose:		#660c0c;
@@ -84,9 +84,9 @@
 	--color-lighter:	#f7fdfd;
 	--color-dark:		#34B84A;
 	--color-darker:		#165e22;
-	--color-variant:	#8edf38;
+	--color-variant:	#494949;
 	--color-secondary:	#CFE454;
-	--color-warning:	#ff9946;
+	--color-warning:	#b35000;
 	--color-shadow:		#354737;
 	--color-win:		#22aa22;
 	--color-lose:		#aa2222;

@@ -51,7 +51,7 @@ const BTN_SHOW_OPPO_PROFILE = `
 `;
 
 const GAME_RESULTS_TITLE_STYLE = `
-text-2xl font-bold p-8 max-w-[550px] truncate
+text-2xl font-bold p-8 max-w-[550px] truncate shrink-0
 `;
 
 function showGameResults(stats: GameStats): string {
@@ -67,7 +67,7 @@ function showGameResults(stats: GameStats): string {
 			color = 'lose';
 		}
 	} else
-		winner = `<p class='text-[35px]'>Player${victory} won!</p>`;
+		winner = `<p class='text-[35px]'>Player ${victory} won!</p>`;
 
 	const gameResults = `
 	<div class='${applyColor(color)} px-8 py-4 flex flex-col rounded-2xl bg-grad-l from-dark'>
