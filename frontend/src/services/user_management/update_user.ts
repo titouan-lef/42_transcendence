@@ -21,7 +21,7 @@ async function updateUser(): Promise<void> {
 	const container = getSafeElement('print-uinfo-reply', HTMLElement);
 
 	if (pass.value && pass.value !== confirmPass.value) {
-		container.innerHTML = `<p>The password and confirm password differs</p>`; /**@todo use translate tool */
+		container.innerHTML = `<p>The password and confirm password differs</p>`;
 		pass.value = "";
 		confirmPass.value = "";
 		pass.focus();

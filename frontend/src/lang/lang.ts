@@ -34,7 +34,7 @@ function translate(key: TranslationKey): string {
  */
 function formatMessage(message: string): string {
 	const regex = regexAllPlaceholder();
-	return message.replace(regex, (ignored, key) => getTranslation(key));/** @todo change name of ignored */
+	return message.replace(regex, (ignored, key) => getTranslation(key));
 }
 
 /**

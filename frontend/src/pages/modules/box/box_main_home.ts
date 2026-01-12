@@ -17,8 +17,6 @@ font-jaro
 text-[clamp(100px,40vmin,400px)] text-balance leading-none
 `;
 
-/** @todo animation is not working with z-index, see later */
-// animate-pulse
 const PLAY_BTN_STYLE = `
 ${MAIN_BOX_BTN_STYLE}
 `;
@@ -37,7 +35,7 @@ function openGameOption(): void {
 	if (getCurrentUserInfos())
 		loadDialogGameSelector();
 	else
-		loadDialogSignIn(); /** @todo (optionnal) QOL: when sign in or continue as guest -> open play directly */
+		loadDialogSignIn();
 }
 
 function mainBoxEvents(): void {

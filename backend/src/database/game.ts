@@ -65,7 +65,6 @@ async function getSeasonLastGame(username: string):Promise<number | undefined> {
 	return (row?.seasonId);
 }
 
-/** @todo faire un point avec titoutan */
 async function getPlayerGameCountBySeason(username: string, seasonId: number):Promise<number | undefined> {
 	const row = await applyQuery(
 		async (db) => await db.get(

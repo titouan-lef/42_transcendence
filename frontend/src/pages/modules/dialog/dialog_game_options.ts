@@ -117,7 +117,6 @@ function lockLastCheckbox(containerId: string): void {
 	updateState();
 }
 
-/** @todo better? cound not get a function with two args to loadDialog */
 function openDialogGameOption(): void {
 	loadDialog(GAME_OPTIONS, () => {});
 	loadCheckboxes(currentGameType);

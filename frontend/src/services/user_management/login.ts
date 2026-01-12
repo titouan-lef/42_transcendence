@@ -16,7 +16,7 @@ async function connectUser(): Promise<void> {
 	const container: HTMLElement = getSafeElement("print-content", HTMLElement);
 
 	if (isOneStringEmtpy(userId.value, userPassword.value)) {
-		container.innerHTML = `<p>Form is incomplete.</p>`; /**@todo use translate tool */
+		container.innerHTML = `<p>Form is incomplete.</p>`;
 		return;
 	}
 

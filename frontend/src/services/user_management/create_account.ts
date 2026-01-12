@@ -3,6 +3,7 @@ import { getSafeElement } from "../../utils/getSafeElement.js";
 import { printReplyInDiv, sendPostRequestToBack } from "../api_request.js";
 import { connectUser } from "./login.js";
 import { Success } from '#shared/status_codes';
+import { NewUserBody } from "#shared/HTTP.js";
 
 async function newUser(): Promise<void> {
 
@@ -13,23 +14,22 @@ async function newUser(): Promise<void> {
 	const container: HTMLElement = getSafeElement("print-content", HTMLElement);
 
 	if (isOneStringEmtpy(userId.value, userPseudo.value, userPassword.value, confPassword.value)) {
-		container.innerHTML = `<p>Form is incomplete.</p>`; /**@todo use translate tool */
+		container.innerHTML = `<p>Form is incomplete.</p>`;
 		return;
 	}
 
 	if (userPassword.value !== confPassword.value) {
-		container.innerHTML = `<p>The password and confirm password differs</p>`; /**@todo use translate tool */
+		container.innerHTML = `<p>The password and confirm password differs</p>`;
 		userPassword.value = "";
 		confPassword.value = "";
 		userPassword.focus();
 		return;
 	}
 
-	const data = {
+	const data: NewUserBody = {
 		username: userId.value,
 		nickname: userPseudo.value,
-		password: userPassword.value,
-		ppLink: "/pictures/users/avatar.jpg" /** @TODO */
+		password: userPassword.value
 	};
 
 	const reply = await sendPostRequestToBack("api/user/new_user", JSON.stringify(data));

@@ -12,7 +12,6 @@ class Meteor {
 	private readonly size;
 	private readonly trail: babylon.ParticleSystem;
 
-	/** send position each frame too ? then assosiate an id to each meteor ? */
 	constructor(scene: babylon.Scene, texture: Record<string, babylon.Texture>, position: Position, size: number) {
 		this.size = size;
 		const start = new babylon.Vector3(position.x, MAP_SIZE.y, position.z);

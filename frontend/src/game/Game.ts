@@ -38,7 +38,7 @@ class Game {
 					this.setDeltaTime(message.deltaMultiplicator);
 					break;
 				default:
-					return; /** do nothing / not an error*/
+					return;
 			}
 		});
 	}
@@ -117,10 +117,8 @@ class Game {
 		this.sceneManager.setEnvironnement(this.scene, this.settings);
 
 		const player = this.sceneManager.getPlayer(this.settings.player1.playerId);
-		if (!player) {
-			console.error(`Player ${this.settings.player1.playerId} not found`);
+		if (!player)
 			return;
-		}
 	}
 
 	private createCamera(): babylon.ArcRotateCamera {
@@ -133,7 +131,7 @@ class Game {
 		const camera = new babylon.ArcRotateCamera("camera",
 			cameraAxeLong, cameraAxeLat,
 			CAMERA_POS_X, babylon.Vector3.Zero(), this.scene);
-		if (MOVE_CAMERA_ONCLICK) { /** @todo debug function */
+		if (MOVE_CAMERA_ONCLICK) {
 			camera.attachControl(this.canvas, true);
 			camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
 		}

@@ -60,7 +60,7 @@ class SceneManager {
 					this.sendEmote(settings, scene, message);
 					break;
 				default:
-					return; /** do nothing / not an error*/
+					return;
 			}
 		});
 	}

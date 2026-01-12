@@ -10,7 +10,6 @@ interface User {
 	is2FAEnabled: boolean;
 	themeId: number | null;
 	email: string | null;
-	/**@todo ADD keybind */
 }
 
 const TABLE_NAME = "User";

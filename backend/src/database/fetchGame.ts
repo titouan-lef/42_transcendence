@@ -1,7 +1,6 @@
 import { POINTS_TO_WIN } from "../game/settings/values.js";
 import { applyQuery } from "./db_utils.js";
 
-/** @todo warning both with titouan branch*/
 async function getGamesPlayedCountBySeason(seasonId: number, username: string): Promise<number> {
 	const row = await applyQuery(
 		async (db) => await db.get(
