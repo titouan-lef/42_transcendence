@@ -69,8 +69,8 @@ class SkyMap extends MapTemplate {
 		particles.maxSize = 1;
 		particles.minLifeTime = 1.1;
 		particles.maxLifeTime = 1.3;
-		particles.direction1 = new babylon.Vector3(0, -5, 0).addInPlace(planePosToVec3(this.wind).scale(0.5));
-		particles.direction2 = new babylon.Vector3(0, -5, 0).addInPlace(planePosToVec3(this.wind).scale(0.5));
+		particles.direction1 = new babylon.Vector3(0, -5, 0).addInPlace(planePosToVec3(this.wind));
+		particles.direction2 = new babylon.Vector3(0, -5, 0).addInPlace(planePosToVec3(this.wind));
 		particles.updateSpeed = 0.008;
 		particles.start();
 		return particles;
