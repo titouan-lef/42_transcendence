@@ -79,11 +79,11 @@ function showGameResults(stats: GameStats): string {
 	</div>
 	`;
 
-	if (gameType === GameTypes.RANKED && stats.player2.name !== GUEST_NAME) {
+	if (gameType === GameTypes.RANKED) {
 		return `
 		<div class='flex flex-row gap-4 justify-between items-center'>
 			<div class='${GAME_RESULTS_TITLE_STYLE}'>ranked game result VS ${stats.player2.name}</div>
-			${BTN_SHOW_OPPO_PROFILE}
+			${stats.player2.name !== GUEST_NAME? BTN_SHOW_OPPO_PROFILE: ""}
 		</div>
 		${gameResults}
 		`;
