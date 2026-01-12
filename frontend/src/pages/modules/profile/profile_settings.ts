@@ -25,7 +25,7 @@ flex flex-col w-full
 `;
 
 const FILE_INPUT_STYLE = `
-w-full text-[12px] text-dark truncate shrink-0
+w-full flex-1 text-[12px] text-dark truncate shrink-0
 file:py-1 file:px-4 file:mr-4
 file:rounded-xl file:border-0
 file:text-[14px] file:font-bold file:font-jbm
@@ -34,11 +34,11 @@ cursor-pointer
 `;
 
 const PRINT_CONTENT_STYLE = `
-w-full h-[20px] text-[12px] text-warning text-center
+w-full flex-1 shrink-0 h-[20px] text-[12px] text-warning text-center
 `;
 
 const SETTINGS_AVATAR = `
-<div class="flex flex-row w-full items-start">
+<div class="flex flex-row w-full items-center">
 	<label class="mr-2 font-bold w-[70px]">avatar: </label>
 	<input type="file" id="change-avatar" accept="image/*" class="${FILE_INPUT_STYLE}"/>
 	<p id='print-avatar-reply' class="${PRINT_CONTENT_STYLE}"></p>
