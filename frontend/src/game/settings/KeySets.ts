@@ -3,8 +3,8 @@ import { PlayerKeys } from "./PointSettings";
 const LOCAL_PLAYER1_KEYS: PlayerKeys = {
 	mov_right: "KeyS",
 	mov_left: "KeyW",
-	rot_right: "KeyL",
-	rot_left: "KeyJ",
+	rot_right: "KeyJ",
+	rot_left: "KeyL",
 	normalMode: "KeyI",
 	spinMode: "KeyK",
 	emoteStrong: "KeyT",
@@ -17,15 +17,15 @@ const LOCAL_PLAYER1_KEYS: PlayerKeys = {
 const LOCAL_PLAYER2_KEYS: PlayerKeys = {
 	mov_right: "ArrowUp",
 	mov_left: "ArrowDown",
-	rot_right: "Numpad6",
-	rot_left: "Numpad4",
+	rot_right: "Numpad4",
+	rot_left: "Numpad6",
 	normalMode: "Numpad8",
 	spinMode: "Numpad5",
 	emoteStrong: "Numpad9",
 	emoteSad: undefined,
 	emoteLol: undefined,
 	emoteAngry: undefined,
-	dash: undefined
+	dash: "Numpad0"
 };
 
 const AI_RANKED_PLAYER_KEYS: PlayerKeys = {
