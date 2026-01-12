@@ -20,7 +20,7 @@ flex flex-col justify-start items-start
 
 const DASHBOARD_CHART_BOX_STYLE = `
 w-full h-full items-center
-text-[48px] text-center truncate text-ellipsis
+text-[48px] text-center truncate shrink-0 text-ellipsis
 `;
 
 function createDashboardChartBox(title: TranslationKey): string {

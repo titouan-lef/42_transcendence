@@ -24,7 +24,7 @@ function formatScore(stats: GameStats): string {
 function formatPoint(point: Point, goaler: string): string {
 	return `
 	<div class='shrink-0'>[${formatTime(point.timer, false)}]</div>
-	<div class='max-w-[200px] truncate' title='${goaler}'> ${goaler}</div>
+	<div class='max-w-[200px] shrink-0 truncate' title='${goaler}'> ${goaler}</div>
 	<div class='shrink-0 flex flex-row'>
 		<div>scored! (</div>
 		${createSvgBoxByBall(point.ball)}
