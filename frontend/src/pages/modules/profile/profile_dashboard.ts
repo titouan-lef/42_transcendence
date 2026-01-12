@@ -44,7 +44,7 @@ function getDashboardTable(data: UserDashboardInfos): string {
 		${data.elo > 0 ? createDashboardCard('elo', data.elo) : createDashboardCard('elo', '-')}
 		${createDashboardCard('games_played', data.gamesPlayed)}
 		${createDashboardCard('goals_avg', data.goalAverage)}
-		${createDashboardCard('games_time', data.durationAverage)}
+		${createDashboardCard('time_avg', `${Math.round(data.durationAverage / 60)}m ${data.durationAverage % 60}s`)}
 		${createDashboardCard('prefered_ball', data.preferedBall)}
 		${createDashboardCard('prefered_map', data.preferedMap)}
 	</div>

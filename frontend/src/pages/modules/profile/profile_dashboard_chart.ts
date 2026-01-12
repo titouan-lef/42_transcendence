@@ -132,4 +132,4 @@ function configureChart(dataset: DataChartType[], enforceYAxis = false): ChartCo
 	};
 }
 
-export { DataChartType,createDashboardChartBox, createDashboardChart, configureChart };
+export { createDashboardChartBox, createDashboardChart, configureChart };
