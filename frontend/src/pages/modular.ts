@@ -1,5 +1,5 @@
 import { applyColor } from "../utils/applyColor";
-import { loadPage } from "./page";
+import { ELEM } from "./page";
 import { getSafeElement } from "../utils/getSafeElement";
 import { ASIDE_BOX, loadAside } from "./modules/box/box_aside";
 import { goBack } from "../routes/navigate";
@@ -31,8 +31,8 @@ const MODULAR = `
 </div>
 `;
 
-function modularEvents(): void {
-	loadAside();
+async function modularEvents(): Promise<void> {
+	await loadAside();
 	const modal = getSafeElement('modal', HTMLDialogElement);
 	modal.addEventListener('click', (e) => {
 		if (e.target === modal)
@@ -40,8 +40,9 @@ function modularEvents(): void {
 	});
 }
 
-function openModularPage(): void {
-	loadPage(MODULAR, modularEvents);
+async function openModularPage(): Promise<void> {
+	ELEM.innerHTML = MODULAR;
+	await modularEvents();
 }
 
 export { openModularPage };
