@@ -48,10 +48,8 @@ class EnvironmentManager {
 				return this.meteorSpawner.bind(this);
 			case (Object.TORNADO):
 				return this.tornadoSpawner.bind(this);
-			case (Object.CANON_BALL):
-				return this.canonBallSpawner.bind(this);
 			default:
-				throw new Error("Invalid object type");
+				return this.canonBallSpawner.bind(this);
 		}
 	}
 

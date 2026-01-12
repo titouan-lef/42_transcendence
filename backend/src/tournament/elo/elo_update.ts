@@ -22,14 +22,14 @@ async function updateElo(usernameP1: string, eloP1: Elo, usernameP2: string, elo
 
 	const currentSeasonId = await getCurrentSeason();
 	if (!currentSeasonId)
-		throw new Error("Error to get current season");
+		return;
 
 	const eloDataP1 = await createEloData(usernameP1, eloP1, currentSeasonId, outcome);
 	if (!eloDataP1)
-		throw new Error("Error to create elo data of player 1");
+		return;
 	const eloDataP2 = await createEloData(usernameP2, eloP2, currentSeasonId, 1 - outcome);
 	if (!eloDataP2)
-		throw new Error("Error to create elo data of player 2");
+		return;
 
 	if (isValidName(eloDataP1.username))
 		await addPlacementGame(eloDataP1, eloDataP2.elo, gameId);
@@ -115,7 +115,7 @@ async function manageUpdateElo(eloData: EloData, eloOpp: Elo, seasonId: number):
 async function defineEloWithPlacementGames(eloData: EloData, seasonId: number): Promise<void> {
 	const tabPlacement = await getPlacementGames(eloData.username, seasonId);
 	if (tabPlacement.length !== NB_PLACEMENT_GAME)
-		throw new Error("Invalid number of placement games");
+		return;
 	const tabEloOpp = getTabElo(tabPlacement);
 	const tabOutcome = getTabOutcome(tabPlacement);
 	updateEloAfterGamePlacement(eloData.elo, tabEloOpp, tabOutcome);

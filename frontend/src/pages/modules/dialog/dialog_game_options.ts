@@ -132,7 +132,7 @@ function openDialogGameOption(): void {
 			optionSelectorHandler(modal, loadRankedGamePage);
 			break;
 		default:
-			throw new Error("No such game type");
+			return;
 	}
 }
 

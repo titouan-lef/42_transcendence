@@ -97,7 +97,7 @@ function loadGameHeader(infos: StartMessage): void {
 			<div class='${GAME_INFOS_STYLE}'>AI</div>
 			`;
 			break;
-		case (GameTypes.RANKED):
+		default:
 			elem.innerHTML = `
 			<div class='${GAME_INFOS_STYLE}'>${infos.playerNickname}</div>
 			<div class='text-[12px] text-variant h-full align-bottom'>${infos.playerRating} elo</div>
@@ -106,8 +106,6 @@ function loadGameHeader(infos: StartMessage): void {
 			<div class='${GAME_INFOS_STYLE}'>${infos.enemyNickname}</div>
 			`;
 			break;
-		default:
-			throw new Error("No such game type.");
 	}
 }
 
