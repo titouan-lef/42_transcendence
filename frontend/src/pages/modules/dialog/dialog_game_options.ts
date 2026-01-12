@@ -77,7 +77,7 @@ const GAME_OPTIONS = `
 
 let currentGameType: GameTypes = GameTypes.RANKED;
 
-function optionSelectorHandler(modal: HTMLDialogElement,  startGame: () => void): void {
+function optionSelectorHandler(modal: HTMLDialogElement, startGame: () => void): void {
 	const allElements = modal.querySelectorAll('*[id]');
 	allElements.forEach(elem => {
 		switch (elem.id) {

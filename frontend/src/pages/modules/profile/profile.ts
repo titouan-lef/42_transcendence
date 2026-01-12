@@ -88,30 +88,30 @@ async function openProfile(user: string): Promise<void> {
 	await fetchHistoryData(userProfile);
 
 	if (getCurrentUserInfos()?.username === userProfile) {
-		updateFriendList();
+		await updateFriendList();
 		await getUserInfos();
-		loadTab();
+		await loadTab();
 	} else
-		loadTab(ProfileTab.SUMMARY);
+		await loadTab(ProfileTab.SUMMARY);
 	initProfileEvents();
 }
 
-function loadTab(tab?: ProfileTab): void {
+async function loadTab(tab?: ProfileTab): Promise<void> {
 	if (!tab)
 		tab = currentTab;
 	switch (tab) {
 		case (ProfileTab.SUMMARY):
-			loadSummary();
+			await loadSummary();
 			break;
 		case (ProfileTab.HISTORY):
-			loadHistory();
+			await loadHistory();
 			break;
 		case (ProfileTab.DASHBOARD):
-			loadDashboard(userProfile);
+			await loadDashboard(userProfile);
 			break;
 		case (ProfileTab.SETTINGS):
 			if (isUserConnected())
-				loadSettings();
+				await loadSettings();
 			break;
 		default:
 			return;

@@ -123,13 +123,13 @@ async function loadAside(): Promise<void> {
 	if (isUserConnected()) {
 		aside.innerHTML = ASIDE_CONNECTED;
 		asideConnectedEvents();
-		updateFriendList();
+		await updateFriendList();
 	} else {
 		aside.innerHTML = ASIDE_NOT_CONNECTED;
 		asideDisconnectedEvents();
 	}
 	setTheme();
-	updateAvatar();
+	await updateAvatar();
 }
 
 export { ASIDE_BOX, loadAside };
