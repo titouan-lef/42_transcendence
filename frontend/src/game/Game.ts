@@ -53,7 +53,7 @@ class Game {
 			const parent = canvas.parentElement;
 			if (parent) {
 				parent.innerHTML = `
-					<div class="flex flex-col items-center gap-2 text-center text-lose">
+					<div class="flex flex-col items-center gap-2 text-center text-warning">
 						<p class="font-semibold">
 							WebGL failed: we are sorry for the inconvenience
 						</p>
