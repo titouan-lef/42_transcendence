@@ -173,7 +173,6 @@ window.addEventListener("popstate", (event: PopStateEvent) => {
 	const nav = event.state?.nav;
 	const user = event.state?.user;
 
-	console.log("pop", nav, user);
 	if (nav !== undefined)
 		if (navigationSelector(nav, user))
 			currentNav = nav;
