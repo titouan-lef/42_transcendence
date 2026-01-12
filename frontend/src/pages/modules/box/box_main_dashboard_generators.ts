@@ -15,6 +15,8 @@ flex flex-row gap-2 w-full text-[20px] h-full
 
 function generatePointList(): string {
 	const stats = getGameStats();
+	if (stats === undefined)
+		return "";
 	const gameType = getGameType();
 	const points = stats.points;
 
@@ -41,6 +43,8 @@ function generatePointList(): string {
 
 function generateRules(): string {
 	const stats = getGameStats();
+	if (stats === undefined)
+		return "";
 
 	return `
 	<div class='flex flex-col h-full gap-2 w-full'>

@@ -7,7 +7,7 @@ import { navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
 import { GUEST_NAME } from "#shared/constant";
 
-let historyData: GameHistoryWithAvatar[];
+let historyData: GameHistoryWithAvatar[] = [];
 
 const HISTORY_STYLE = `
 flex flex-col justify-start items-center gap-4
