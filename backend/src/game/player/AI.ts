@@ -5,6 +5,7 @@ import { Player } from "./Player.js";
 import { BallTemplate } from "../ball/BallTemplate.js";
 import { ActionAi, Brain } from "./Brain/Brain.js";
 import { DefaultBrain } from "./Brain/concrete_brain/DefaultBrain.js";
+import { randomInt } from "../../utils/math.js";
 
 const REFRESH_VIEW = 1000;
 
@@ -20,7 +21,7 @@ class AI extends Player {
 
 	constructor(scene: babylon.Scene, position: babylon.Vector2, options: GameOptions) {
 		super(scene, position, options, 2, "AI");
-		this.brain = new DefaultBrain(options.dashingPlayer, options.spin);
+		this.brain = new DefaultBrain(options.dashingPlayer, options.spin, options.rotatingPlayer);
 		this.controls = this.getInitControl();
 		this.makeActionIntervalId = this.makeActionInterval();
 		this.updateIntervalId = setInterval(() => this.update(), REFRESH_VIEW);
@@ -47,12 +48,17 @@ class AI extends Player {
 
 	private manageEndShoot(): void {
 		this.shootAnimationFrame++;
+		if (this.shootAnimationFrame === 1) {
+			this.controls.rot_left = false;
+			this.controls.rot_right = false;
+		}
 		if (this.shootAnimationFrame !== 4)
 			return;
 		this.isEndingShoot = false;
 		this.shootAnimationFrame = 0;
 		this.resetRotation();
-		this.controls.emoteAngry = true;
+		if (randomInt(1, 5) <= 1)
+			this.controls.emoteAngry = true;
 	}
 
 	private getInitControl(): PlayerControls {

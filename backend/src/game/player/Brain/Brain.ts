@@ -37,16 +37,18 @@ abstract class Brain {
 	private ballZPredict: number;
 	private dashOptionEnable: boolean;
 	private spinOptionEnable: boolean;
+	private rotationOptionEnable: boolean;
 	private changeMode: boolean;
 
 	protected abstract intersectionTop(movement: Movement): number;
 
-	constructor(dashIsEnable: boolean, spinIsEnable: boolean) {
+	constructor(dashIsEnable: boolean, spinIsEnable: boolean, rotationIsEnable: boolean) {
 		this.destination = DestinationAi.REACHING;
 		this.atkDirection = AttackAi.WAIT;
 		this.ballZPredict = 0;
 		this.dashOptionEnable = dashIsEnable;
 		this.spinOptionEnable = spinIsEnable;
+		this.rotationOptionEnable = rotationIsEnable;
 		this.changeMode = false;
 	}
 
@@ -57,7 +59,11 @@ abstract class Brain {
 			return;
 		}
 		const mouvement = this.getBallMovement(ball);
-		const zPos = this.intersectionTop(mouvement);
+		let zPos = this.intersectionTop(mouvement);
+		if (this.rotationOptionEnable) {
+			const offset = PLAYER_DIMENSION.z / 8;
+			zPos += offset * (mouvement.dir.y >= 0 ? -1 : 1);
+		}
 		this.ballZPredict = round(zPos, 1);
 		if (this.spinOptionEnable && randomInt(1, 5) <= 1)
 			this.changeMode = true;
