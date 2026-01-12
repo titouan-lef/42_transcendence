@@ -63,7 +63,7 @@
 }
 
 [data-theme="neon_hearts"] {
-	--color-primary:	#6E007B;
+	--color-primary:	#53185a;
 	--color-light:		#A5017A;
 	--color-lighter:	#d846b1;
 	--color-dark:		#33037A;
@@ -79,35 +79,35 @@
 }
 
 [data-theme="lazer_tim"] {
-	--color-primary:	#354737;
-	--color-light:		#c8f1f3;
-	--color-lighter:	#f7fdfd;
-	--color-dark:		#34B84A;
-	--color-darker:		#165e22;
-	--color-variant:	#494949;
-	--color-secondary:	#CFE454;
-	--color-warning:	#b35000;
-	--color-shadow:		#354737;
-	--color-win:		#22aa22;
-	--color-lose:		#aa2222;
-	--color-online:		#2c2c7c;
-	--color-offline:	#3d3a4e;
+	--color-primary:	#367e3f;
+	--color-light:		#8cb491;
+	--color-lighter:	#bfcfc0;
+	--color-dark:		#233325;
+	--color-darker:		#202421;
+	--color-variant:	#dcff5d;
+	--color-secondary:	#cfd397;
+	--color-warning:	#df81b0;
+	--color-shadow:		#36633b;
+	--color-win:		#d8ff49;
+	--color-lose:		#8a4545;
+	--color-online:		#cfd397;
+	--color-offline:	#241313;
 }
 
 [data-theme="claw_machine"] {
 	--color-primary:	#30C3C3;
 	--color-light:		#b0f0f3;
 	--color-lighter:	#E6FCFD;
-	--color-dark:		#4556FC;
-	--color-darker:		#253199;
-	--color-variant:	#C174FB;
-	--color-secondary:	#3A3440;
-	--color-warning:	#ff0000;
+	--color-dark:		#1c7ca1;
+	--color-darker:		#3e457e;
+	--color-variant:	#e9fffb;
+	--color-secondary:	#343440;
+	--color-warning:	#b1587a;
 	--color-shadow:		#30C3C3;
-	--color-win:		#22aa22;
-	--color-lose:		#aa2222;
-	--color-online:		#2c2c7c;
-	--color-offline:	#3d3a4e;
+	--color-win:		#e9fffb;
+	--color-lose:		#3e457e;
+	--color-online:		#3e457e;
+	--color-offline:	#31313a;
 }
 
 [data-theme="electronic_eclypse"] {
@@ -118,28 +118,28 @@
 	--color-darker:		#190531;
 	--color-variant:	#EBCA41;
 	--color-secondary:	#FDFED3;
-	--color-warning:	#ff0000;
+	--color-warning:	#eb3a34;
 	--color-shadow:		#6922AD;
-	--color-win:		#00a2ff;
-	--color-lose:		#520c0c;
-	--color-online:		#2c2c7c;
-	--color-offline:	#3d3a4e;
+	--color-win:		#EBCA41;
+	--color-lose:		#382b3a;
+	--color-online:		#d6b5f8;
+	--color-offline:	#212022;
 }
 
 [data-theme="please_insert_25c"] {
-	--color-primary:	#73504C;
-	--color-light:		#B88E8F;
-	--color-lighter:	#eec8c9;
-	--color-dark:		#572421;
-	--color-darker:		#250f0d;
-	--color-variant:	#756A68;
-	--color-secondary:	#969696;
-	--color-warning:	#ff0000;
-	--color-shadow:		#73504C;
-	--color-win:		#22aa22;
-	--color-lose:		#aa2222;
-	--color-online:		#2c2c7c;
-	--color-offline:	#3d3a4e;
+	--color-primary:	#fff1c4;
+	--color-light:		#fff7df;
+	--color-lighter:	#ffffff;
+	--color-dark:		#b8aa7b;
+	--color-darker:		#3d3827;
+	--color-variant:	#518bad;
+	--color-secondary:	#4e2926;
+	--color-warning:	#ac3939;
+	--color-shadow:		#fff1c4;
+	--color-win:		#518bad;
+	--color-lose:		#38352a;
+	--color-online:		#1e8ac9;
+	--color-offline:	#38352a;
 }
 
 [data-theme="ticket_muncher"] {
@@ -150,42 +150,42 @@
 	--color-darker:		#1d0c2c;
 	--color-variant:	#FB4F58;
 	--color-secondary:	#EB9C75;
-	--color-warning:	#ff0000;
+	--color-warning:	#ff9e0c;
 	--color-shadow:		#A42483;
-	--color-win:		#22aa22;
-	--color-lose:		#aa2222;
-	--color-online:		#2c2c7c;
-	--color-offline:	#3d3a4e;
+	--color-win:		#ff5962;
+	--color-lose:		#2c2135;
+	--color-online:		#411e5f;
+	--color-offline:	#232125;
 }
 
 [data-theme="electric_pl"] {
-	--color-primary:	#4a7aff;
-	--color-light:		#84a4fc;
-	--color-lighter:	#c2d1fc;
-	--color-dark:		#375bbd;
-	--color-darker:		#152a63;
-	--color-variant:	#ffcf32;
-	--color-secondary:	#e6b04e;
-	--color-warning:	#ff0000;
-	--color-shadow:		#4a7aff;
-	--color-win:		#22aa22;
-	--color-lose:		#aa2222;
-	--color-online:		#2c2c7c;
-	--color-offline:	#3d3a4e;
+	--color-primary:	#0d5aff;
+	--color-light:		#6395ff;
+	--color-lighter:	#d0dfff;
+	--color-dark:		#0f41ac;
+	--color-darker:		#091e4d;
+	--color-variant:	#d9ff00;
+	--color-secondary:	#ffe5b6;
+	--color-warning:	#ff7b00;
+	--color-shadow:		#0d5aff;
+	--color-win:		#d9ff00;
+	--color-lose:		#302822;
+	--color-online:		#d9ff00;
+	--color-offline:	#31394b;
 }
 
 [data-theme="monq"] {
-	--color-primary:	#ffe5b5;
-	--color-light:		#fff8ec;
-	--color-lighter:	#f8d7d5;
-	--color-dark:		#eec882;
-	--color-darker:		#f1b94f;
-	--color-variant:	#eea113;
-	--color-secondary:	#60267a;
-	--color-warning:	#ff0000;
-	--color-shadow:		#eec882;
-	--color-win:		#22aa22;
-	--color-lose:		#aa2222;
-	--color-online:		#2c2c7c;
+	--color-primary:	#ffe0a7;
+	--color-light:		#ffedd0;
+	--color-lighter:	#fff5e5;
+	--color-dark:		#daae5d;
+	--color-darker:		#472f45;
+	--color-variant:	#bc7cda;
+	--color-secondary:	#773b92;
+	--color-warning:	#c53b3b;
+	--color-shadow:		#ffd78b;
+	--color-win:		#5900ff;
+	--color-lose:		#472f45;
+	--color-online:		#773b92;
 	--color-offline:	#3d3a4e;
 }
