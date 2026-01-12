@@ -1,7 +1,6 @@
 import { createButtonHtml } from "../../../components/button.js";
 import { createInputHtml } from "../../../components/input.js";
 import { isRequestSuccessfull, printReplyInDiv, sendPostRequestToBack } from "../../../services/api_request.js";
-import { Errors } from '#shared/status_codes';
 import { getSafeElement } from "../../../utils/getSafeElement.js";
 import { DIALOG_BTN_STYLE, DIALOG_INPUT_STYLE, DIALOG_FORM_STYLE } from "./dialog_style.js";
 import { loadDialog } from "./dialog.js";
@@ -38,7 +37,7 @@ function addFriendHandler(modal: HTMLDialogElement): void {
 	const newFriendElem = getSafeElement('find-friend', HTMLInputElement);
 
 	addFriendElem.addEventListener('click', async () => {
-		const result = addFriend(newFriendElem.value);
+		const result = await addFriend(newFriendElem.value);
 		if (!result)
 			return;
 		goBack();
