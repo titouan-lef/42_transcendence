@@ -147,7 +147,7 @@ const TRANSLATOR = {
 	win_rate_chart: { en: "{win_rate} {graph}", fr: "{graph} du {win_rate}" },
 	games_played: { en: "games played", fr: "parties jouées" },
 	goals_avg: { en: "goals average", fr: "moyenne des buts" },
-	games_time: { en: "games time", fr: "temps des parties" },
+	time_avg: { en: "game average time", fr: "temps moyen d'une partie" },
 	elo_chart: { en: "{elo} {graph}", fr: "{graph} du {elo}" },
 	diff_goals_chart: {
 		en: "goals difference {graph}",

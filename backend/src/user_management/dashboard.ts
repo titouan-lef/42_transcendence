@@ -31,7 +31,7 @@ function structureEloData(lastSeasonElo: number, eloVariaton: EloHistory[]): Dat
 	return toTimeSeries(dateList, eloList);
 }
 
-async function getEloChartBySeason(season: number, user: string):Promise <DataChartType[]> {
+async function getEloChartBySeason(season: number, user: string): Promise <DataChartType[]> {
 
 	const eloVariaton = await getEloVariatonBySeason(season, user);
 	if (eloVariaton.length === 0)
