@@ -74,7 +74,7 @@ function showGameResults(stats: GameStats): string {
 		${winner}
 		<div class='flex flex-row w-full h-fit justify-between items-center'>
 			<div class='text-[80px] font-bold w-fit mr-20 text-balance'>${formatScore(stats)}</div>
-			<div class='text-[35px] text-variant'>${formatTime(stats.gameTimer)}</div>
+			<div class='text-[35px]'>${formatTime(stats.gameTimer)}</div>
 		</div>
 	</div>
 	`;
