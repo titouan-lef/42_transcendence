@@ -149,7 +149,7 @@ class Player {
 				changed = true;
 			}
 		}
-		if (changed)
+		if (changed && this.socket?.readyState === WebSocket.OPEN)
 			this.socket?.send(JSON.stringify(this.getPressedKeys()));
 	};
 
@@ -164,7 +164,7 @@ class Player {
 				changed = true;
 			}
 		}
-		if (changed)
+		if (changed && this.socket?.readyState === WebSocket.OPEN)
 			this.socket?.send(JSON.stringify(this.getPressedKeys()));
 	};
 
