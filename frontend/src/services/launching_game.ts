@@ -92,7 +92,7 @@ function loadGameHeader(infos: StartMessage): void {
 		case (GameTypes.AI):
 			elem.innerHTML = `
 			<div class='${GAME_INFOS_STYLE}'>${infos.playerNickname}</div>
-			<div class='text-[12px] text-variant h-full align-bottom'>${infos.playerRating} elo</div>
+			<div class='text-[12px] text-variant h-full align-bottom'>${infos.playerRating > 0 ? `${infos.playerRating} elo` : '-'}</div>
 			<div class='text-[12px]'>VS</div>
 			<div class='${GAME_INFOS_STYLE}'>AI</div>
 			`;
@@ -100,9 +100,9 @@ function loadGameHeader(infos: StartMessage): void {
 		default:
 			elem.innerHTML = `
 			<div class='${GAME_INFOS_STYLE}'>${infos.playerNickname}</div>
-			<div class='text-[12px] text-variant h-full align-bottom'>${infos.playerRating} elo</div>
+			<div class='text-[12px] text-variant h-full align-bottom'>${infos.playerRating > 0 ? `${infos.playerRating} elo` : '-'}</div>
 			<div class='text-[12px]'>VS</div>
-			<div class='text-[12px] text-variant h-full align-bottom'>${infos.enemyRating} elo</div>
+			<div class='text-[12px] text-variant h-full align-bottom'>${infos.enemyRating > 0 ? `${infos.enemyRating} elo` : '-'}</div>
 			<div class='${GAME_INFOS_STYLE}'>${infos.enemyNickname}</div>
 			`;
 			break;

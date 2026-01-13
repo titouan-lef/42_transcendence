@@ -45,7 +45,7 @@ function createDashboardChart(title: TranslationKey, config: ChartConfiguration)
 
 function configureChart(dataset: DataChartType[], enforceYAxis = false): ChartConfiguration {
 	const tColors = loadThemeColors();
-	
+
 	let lower: number = dataset.at(0)?.y ?? 0;
 	let upper: number = dataset.at(0)?.y ?? 0;
 
@@ -70,7 +70,7 @@ function configureChart(dataset: DataChartType[], enforceYAxis = false): ChartCo
 		type: 'line',
 		data: {
 			datasets: [{
-				label: 'elo',
+				label: 'data',
 				data: dataset,
 				borderColor: tColors.primary,
 				backgroundColor: tColors.darker + 55,
