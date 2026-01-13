@@ -20,16 +20,16 @@ async function updateElo(usernameP1: string, eloP1: Elo, usernameP2: string, elo
 	if (!isValidName(usernameP1) && !isValidName(usernameP2))
 		return;
 
+	const ratingsP1 = (await getElo(usernameP1)).r;
+	if (ratingsP1 > 0)
+		eloP1.r = ratingsP1;
+	const ratingsP2 = (await getElo(usernameP2)).r;
+	if (ratingsP2 > 0)
+		eloP2.r = ratingsP2;
+
 	const currentSeasonId = await getCurrentSeason();
 	if (!currentSeasonId)
 		return;
-
-	const ratingsP1 = (await getElo(usernameP1, currentSeasonId)).r;
-	if (ratingsP1 > 0)
-		eloP1.r = ratingsP1;
-	const ratingsP2 = (await getElo(usernameP2, currentSeasonId)).r;
-	if (ratingsP2 > 0)
-		eloP2.r = ratingsP2;
 
 	const eloDataP1 = await createEloData(usernameP1, eloP1, currentSeasonId, outcome);
 	if (!eloDataP1)
