@@ -14,8 +14,7 @@ COPY	./config/default.conf /etc/nginx/conf.d
 #	Copy html contents
 COPY	./pages /usr/share/nginx/html
 
-#	Set port 80 and 443 for internet
-EXPOSE	80
+#	Set port 443 for internet
 EXPOSE	443
 
 #	Launch NGINX in the foreground (necessary in containers)
