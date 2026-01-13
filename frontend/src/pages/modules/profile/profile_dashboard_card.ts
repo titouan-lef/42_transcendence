@@ -13,10 +13,12 @@ text-[20px] text-secondary w-full
 `;
 
 function createDashboardCard(title: TranslationKey, print: number | string): string {
+	const newPrint = typeof print === 'number' ? print.toFixed(0) : print;
+
 	const dashboardCard = `
 	<div class="${DASHBOARD_CARD_STYLE}">
 		${createParagraphHtml([title], 'p-' + title.toString(), { 'class': `${DASHBOARD_CARD_TITLE_STYLE}` })}
-		<div class="w-full h-full items-center text-[48px] text-center truncate shrink-0 text-ellipsis">${print}</div>
+		<div class="w-full h-full items-center text-[48px] text-center truncate shrink-0 text-ellipsis">${newPrint}</div>
 	</div>
 	`;
 

@@ -72,7 +72,7 @@ function generateLeaderboardRows(ranking: Ranking[]): void {
 				<td id="btn-profile-${user.username}" class="${TABLE_DATA_CELL_STYLE} cursor-pointer" title='${user.nickname}'>
 					${user.nickname}
 				</td>
-				<td class="${TABLE_DATA_CELL_STYLE}">${user.rating}</td>
+				<td class="${TABLE_DATA_CELL_STYLE}">${user.rating > 0 ? user.rating : '-'}</td>
 				<td class="${TABLE_DATA_CELL_STYLE}">${user.winrate * 100}</td>
 				<td class="${TABLE_DATA_CELL_STYLE}">${user.nbGamePlayed}</td>
 			</tr>
