@@ -27,8 +27,12 @@ async function startOrUpdateGame(options: OptionMessage, player1: WebSocket, pla
 		game.updateOptions(options);
 	} else {
 		game = await Game.create(settings);
-		if (game)
-			game.show();
+		if (!game) {
+			player1.close();
+			player2?.close();
+			return;
+		}
+		game.show();
 	}
 }
 
