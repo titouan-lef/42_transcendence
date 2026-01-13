@@ -15,7 +15,7 @@ w-full h-[20px] text-[12px] text-warning text-center
 
 const ADD_FRIEND = `
 	<p class='text-[18px] font-bold'>find your friend</p>
-	<form name="Login" class="${DIALOG_FORM_STYLE}">
+	<form name="Login" class="${DIALOG_FORM_STYLE}" onsubmit='return false;'>
 		${createInputHtml(["user_name"], "text", "find-friend", { "autofocus": "true", "class": `${DIALOG_INPUT_STYLE}` })}
 	</form>
 	${createButtonHtml(["add_friend"], `btn-add-friend`, { "class": `${DIALOG_BTN_STYLE}` })}
