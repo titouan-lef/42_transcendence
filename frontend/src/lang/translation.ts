@@ -81,6 +81,18 @@ const TRANSLATOR = {
 		en: "{invalid} {user_name}",
 		fr: "{user_name} {invalid}",
 	},
+	invalid_nickname: {
+		en: "{invalid} {nickname}",
+		fr: "{nickname} {invalid}",
+	},
+	too_long_username: {
+		en: "{user_name} too long",
+		fr: "{user_name} trop long",
+	},
+	too_long_nickname: {
+		en: "{nickname} too long",
+		fr: "{nickname} trop long",
+	},
 	username_taken: {
 		en: "{user_name} {already} {taken}",
 		fr: "{user_name} {already} {taken}",

@@ -12,17 +12,36 @@ interface UpdateUserBody {
 	email: string;
 }
 
+const NB_CHAR_MAX = 10;
+
 function isValidName(username: string): boolean {
 	return (
-		!/[\r\n]/.test(username) &&			// prevent CR/LF injection
-		/^(?!\d+$).+$/.test(username)		// not only numbers
+		!/[\r\n]/.test(username) &&		// prevent CR/LF injection
+		!/\\s/.test(username) &&		// no whitespaces
+		/^(?!\d+$).+$/.test(username)	// not only numbers
 	);
+}
+
+function isTooLongName(username: string) {
+	return username.length > NB_CHAR_MAX;	// max 10 characters
 }
 
 async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
 	const { username, nickname, password } = req.body;
 	if (!isValidName(username)) {
 		sendReply(reply, Errors.INVALID_USERNAME);
+		return;
+	}
+	if (isTooLongName(username)) {
+		sendReply(reply, Errors.TOO_LONG_USERNAME);
+		return;
+	}
+	if (!isValidName(nickname)) {
+		sendReply(reply, Errors.INVALID_NICKNAME);
+		return;
+	}
+	if (isTooLongName(nickname)) {
+		sendReply(reply, Errors.TOO_LONG_NICKNAME);
 		return;
 	}
 	if (await doesUserExist(username)) {
@@ -46,6 +65,14 @@ async function updateUserInfos(req: FastifyRequest<{ "Body": UpdateUserBody }>, 
 	const { nickname, password, email } = req.body;
 
 	if (nickname && (nickname !== user.nickname)) {
+		if (!isValidName(nickname)) {
+			sendReply(reply, Errors.INVALID_NICKNAME);
+			return;
+		}
+		if (isTooLongName(nickname)) {
+			sendReply(reply, Errors.TOO_LONG_NICKNAME);
+			return;
+		}
 		await updatePseudo(username, nickname);
 		userModified = true;
 	}
