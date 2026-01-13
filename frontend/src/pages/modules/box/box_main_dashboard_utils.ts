@@ -13,8 +13,8 @@ function getGameStats(): GameStats {
 
 function formatTime(time: number, verbose = true): string {
 	if (!verbose)
-		return `${~~(time / 60)}:${(time % 60).toString().padStart(2, '0')}`;
-	return `${~~(time / 60)} min ${(time % 60).toString().padStart(2, '0')} sec`;
+		return `${~~(time / 60)}:${(~~(time % 60)).toString().padStart(2, '0')}`;
+	return `${~~(time / 60)} min ${(~~(time % 60)).toString().padStart(2, '0')} sec`;
 }
 
 function formatScore(stats: GameStats): string {

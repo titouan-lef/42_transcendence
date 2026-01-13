@@ -63,7 +63,7 @@ function createHistoryBox(game: GameHistoryWithAvatar, gameNum: number): string 
 					${game.opponentNickname}
 				</div>
 				<div id="print-date" class="text-[15px] truncate shrink-0">
-					Season ${game.season} - ${game.date} - duration : ${~~(game.duration / 60)} min ${(game.duration % 60)} sec
+					Season ${game.season} - ${game.date} - duration : ${~~(game.duration / 60)} min ${~~(game.duration % 60)} sec
 				</div>
 			</div>
 		</div>
