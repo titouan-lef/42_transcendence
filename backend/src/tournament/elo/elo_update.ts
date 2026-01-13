@@ -3,9 +3,9 @@ import { insertEloVariation } from "../../database/elo.js";
 import { getDateLastGame, getPlayerGameCountBySeason } from "../../database/game.js";
 import { getPlacementGames, insertPlacementGame, Placement } from "../../database/placement.js";
 import { getCurrentSeason } from "../../database/season.js";
-import { setElo, setRatingDeviation } from "../../database/web3/contract_service.js";
+import { getElo, setElo, setRatingDeviation } from "../../database/web3/contract_service.js";
 import { nbDayBetween } from "../../utils/time.js";
-import { MAX_RD, Elo, applyTimeOnRd, eloIsDefine, updateEloAfterGame, updateEloAfterGamePlacement } from "./elo.js";
+import { MAX_RD, Elo, applyTimeOnRd, eloIsDefine, updateEloAfterGame, updateEloAfterGamePlacement, MULT_FACTOR } from "./elo.js";
 import { NB_PLACEMENT_GAME } from "#shared/constant.js";
 
 interface EloData {
@@ -23,6 +23,13 @@ async function updateElo(usernameP1: string, eloP1: Elo, usernameP2: string, elo
 	const currentSeasonId = await getCurrentSeason();
 	if (!currentSeasonId)
 		return;
+
+	const ratingsP1 = (await getElo(usernameP1, currentSeasonId)).r;
+	if (ratingsP1 > 0)
+		eloP1.r = ratingsP1;
+	const ratingsP2 = (await getElo(usernameP2, currentSeasonId)).r;
+	if (ratingsP2 > 0)
+		eloP2.r = ratingsP2;
 
 	const eloDataP1 = await createEloData(usernameP1, eloP1, currentSeasonId, outcome);
 	if (!eloDataP1)
@@ -91,7 +98,9 @@ async function updateRdPlayer(username: string, nbGame: number, elo: Elo, season
 async function addPlacementGame(eloData: EloData, eloOpp: Elo, gameId: number): Promise<void> {
 	if (eloData.nbGame > NB_PLACEMENT_GAME)
 		return;
-	const placementGame: Placement = { rOpp: eloOpp.r, rdOpp: eloOpp.rd, outcome: eloData.outcome };
+	const placementGame: Placement = (Math.abs(eloData.elo.r - eloOpp.r) >= MULT_FACTOR) ?
+		{ rOpp: eloData.elo.r, rdOpp: eloData.elo.rd, outcome: 0.5 } : // If match is unequaled, no update.
+		{ rOpp: eloOpp.r, rdOpp: eloOpp.rd, outcome: eloData.outcome };
 	await insertPlacementGame(eloData.username, gameId, placementGame);
 }
 

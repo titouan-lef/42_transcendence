@@ -75,6 +75,8 @@ function applyTimeOnRd(rd: number, t: number = SEASON_DURATION): number {
  * @param outcome Outcome of the match (defined on [0, 1]).
  */
 function updateEloAfterGame(elo: Elo, eloOpp: Elo, outcome: number): void {
+	if (Math.abs(elo.r - eloOpp.r) >= MULT_FACTOR)// If match is unequaled, no update.
+		return;
 	const rdDistance = Math.sqrt(elo.rd * elo.rd + eloOpp.rd * eloOpp.rd);
 	const resultData = getResultData(elo.r, eloOpp.r, rdDistance, outcome);
 	updateEloData(elo, resultData.accuracy, resultData.deviation);
@@ -175,5 +177,5 @@ function rdCalculation(newRdSq: number): number {
 	return clamp(newRdRound, MIN_RD, MAX_RD);
 }
 
-export { Elo, DEFAULT_RATINGS, MAX_RD };
+export { Elo, DEFAULT_RATINGS, MAX_RD, MULT_FACTOR };
 export { calculateOutcome, getRatings, eloIsDefine, applyTimeOnRd, updateEloAfterGame, updateEloAfterGamePlacement };
