@@ -79,8 +79,8 @@ APP.post<{ Body: GameOptions }>("/api/game/local_game", { preHandler: verifyAuth
 APP.post<{ Body: GameOptions }>("/api/game/ai_game", { preHandler: verifyAuth }, newAIGame);
 
 // --- Dashboards ---
-APP.post<{ Body: UserDashboardInfoBody }>("/api/user/dashboard", { preHandler: verifyAuth }, getPlayerStats);
-APP.post<{ Body: UserBody }>("/api/user/history", { preHandler: verifyAuth }, getHistory);
+APP.post<{ Body: UserDashboardInfoBody }>("/api/user/dashboard", getPlayerStats);
+APP.post<{ Body: UserBody }>("/api/user/history", getHistory);
 APP.get("/api/season", geCurrentSeasonInfo);
 APP.get("/api/season/:id", getSeasonStats);
 
