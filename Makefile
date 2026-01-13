@@ -55,7 +55,15 @@ clean: down
 		docker system prune -af --volumes
 		printf "\n$(GREEN)System cleaned$(RESET) \n"
 
-fclean: clean
+fclean:
+		printf "\n$(RED)CAREFUL: You are about to delete the entire database$(RESET) \n"
+		printf "\n$(RED)Press Ctrl+C to cancel$(RESET) \n"
+		for i in 10 9 8 7 6 5 4 3 2 1; do \
+			printf "$(RED)Deleting in %d...$(RESET)\r" $$i; \
+			sleep 1; \
+		done; \
+		make clean
+		printf "\n$(RED)Deleting database...$(RESET) \n"
 		rm -rf ./backups
 
 re: clean all
