@@ -152,8 +152,8 @@ function manageHistoryPushing(nav: Navigation, user?: string): void {
 }
 
 async function navigation(nav: Navigation, user?: string): Promise<void> {
-	const navigationSuccessful = navigationSelector(nav, user);
-	if (await navigationSuccessful)
+	const navigationSuccessful = await navigationSelector(nav, user);
+	if (navigationSuccessful)
 		manageHistoryPushing(nav, user);
 }
 

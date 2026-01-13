@@ -128,11 +128,9 @@ function openDialogGameOption(): void {
 		case GameTypes.AI:
 			optionSelectorHandler(modal, loadSoloGamePage);
 			break;
-		case GameTypes.RANKED:
+		default:
 			optionSelectorHandler(modal, loadRankedGamePage);
 			break;
-		default:
-			return;
 	}
 }
 
