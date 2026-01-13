@@ -186,14 +186,15 @@ function dateToString(date: Date): string {
 async function getWinrateOverPeriod(username: string, startDate: string, endDate: string): Promise<DataChartType[]> {
 	const games = await applyQuery(
 		async (db) => await db.all(
-			`SELECT G.id, G.beganAt,
-					CASE WHEN SUM(CASE WHEN GO.by = ? THEN 1 ELSE 0 END) = ${POINTS_TO_WIN} THEN 1 ELSE 0 END AS win
-			FROM Game AS G
-			LEFT JOIN Goal AS GO ON G.id = GO.gameId
-			WHERE G.beganAt BETWEEN ? AND ?
+			`SELECT G.id, G.beganAt, CASE WHEN COUNT(GO.id) = ${POINTS_TO_WIN} THEN 1 ELSE 0 END AS win
+			FROM Game G
+				LEFT JOIN Goal GO ON G.id = GO.gameId AND GO.by = ?
+				INNER JOIN Elo E ON E.gameId = G.id
+			WHERE E.username = ?
+				AND G.beganAt BETWEEN ? AND ?
 			GROUP BY G.id
 			ORDER BY G.beganAt ASC;`,
-			[username, startDate, endDate]
+			[username, username, startDate, endDate]
 		),
 		"getWinrateOverPeriod"
 	);
