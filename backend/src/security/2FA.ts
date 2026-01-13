@@ -38,11 +38,11 @@ function isValidEmail(email: string): boolean {
 	);
 }
 
-function sendEmailCode(email: string, code: number): boolean {
+async function sendEmailCode(email: string, code: number): Promise<boolean> {
 	if (!isValidEmail(email))
 		return false;
 	try {
-		EMAIL.sendMail({
+		await EMAIL.sendMail({
 			from: process.env.EMAIL,
 			to: email,
 			subject: "Your 2FA Code",
