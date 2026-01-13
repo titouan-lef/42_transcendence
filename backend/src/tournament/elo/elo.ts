@@ -52,7 +52,7 @@ function calculateOutcome(scoreP1: number, scoreP2: number): number {
 }
 
 function getRatings(elo: Elo): number {
-	if (eloIsDefine(elo))
+	if (eloIsDefine(elo) && elo.r > 0)
 		return elo.r;
 	else
 		return DEFAULT_RATINGS;

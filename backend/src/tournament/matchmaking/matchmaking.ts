@@ -86,14 +86,11 @@ function sortWaitingPlayerByRatings(): void {
 }
 
 async function addPlayerToMatchmakingSystem(socket: WebSocket, username: string, option: GameOptions): Promise<void> {
-	const currentSeasonId = await getCurrentSeason();
-	if (!currentSeasonId)
-		return;
 	let elo: Elo;
 	if (!isValidName(username))
 		elo = { r: DEFAULT_RATINGS, rd: 0 };
 	else {
-		elo = await getElo(username, currentSeasonId);
+		elo = await getElo(username);
 		elo.r = getRatings(elo);
 	}
 	const player: PlayerData = {
