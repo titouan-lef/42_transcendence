@@ -22,7 +22,7 @@ function isValidName(username: string): boolean {
 	);
 }
 
-function isTooLongName(username: string) {
+function isTooLongName(username: string): boolean {
 	return username.length > NB_CHAR_MAX;	// max 10 characters
 }
 
