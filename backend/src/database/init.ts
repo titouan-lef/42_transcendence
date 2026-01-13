@@ -18,7 +18,7 @@ import { resetEloStorage } from "./web3/contract_service.js";
 const DB_FILE = "Database.db";
 const DB_PATH_FILE = "/app/backups/" + DB_FILE;
 
-const SEASON_DURATION = 60 * 60 * 1000; // 1 h in ms
+const SEASON_DURATION = 24 * 60 * 60 * 1000; // 1 day in ms
 
 async function getDB(): Promise<Database> {
 	return open({
