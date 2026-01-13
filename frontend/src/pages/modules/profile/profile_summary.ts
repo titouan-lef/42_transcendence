@@ -8,6 +8,7 @@ import { setActiveBtn } from "./profile_navbar";
 import { GameHistoryWithAvatar, UserDashboardInfos } from "#shared/HTTP";
 import { navigateTo } from "../../../routes/navigate";
 import { Pages } from "../../../routes/navigate_types";
+import { GUEST_NAME } from "#shared/constant";
 
 const SEE_MORE_BTN_STYLE = `
 w-9/10 h-[30px] bg-dark/30 text-[20px] text-variant bg-grad-l-300 from-primary
@@ -57,6 +58,8 @@ async function loadSummary(): Promise<void> {
 
 	element.innerHTML = getSummaryTable(dataHist, dataDash);
 	dataHist.slice(0, HISTORY_DEEP).forEach((game) => {
+		if (game.opponentUsername === GUEST_NAME)
+			return;
 		const element = getSafeElement(`${game.date}-${game.opponentUsername}-nickname`, HTMLElement);
 		element.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
 	});
