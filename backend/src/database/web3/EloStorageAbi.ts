@@ -164,29 +164,6 @@ const ABI = [
         },
         {
           "internalType": "uint256",
-          "name": "rating",
-          "type": "uint256"
-        }
-      ],
-      "name": "setRating",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "string",
-          "name": "username",
-          "type": "string"
-        },
-        {
-          "internalType": "uint256",
-          "name": "season",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
           "name": "ratingDeviation",
           "type": "uint256"
         }
