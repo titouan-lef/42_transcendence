@@ -23,7 +23,7 @@ function hashString(input: string): string {
  * @param hash hashed true password
  * @returns true if encrypted input is exactly the same as the hashed password
  */
-function isValidPassword(input: string, hash: string): boolean {
+function isValidHashedPassword(input: string, hash: string): boolean {
 	const saltPos = 64;
 
 	const toVerify = encrypt(input, hash.slice(saltPos));
@@ -37,4 +37,4 @@ function isValidPassword(input: string, hash: string): boolean {
 	return timingSafeEqual(hashBuffer, verifyBuffer);
 }
 
-export { hashString, isValidPassword };
+export { hashString, isValidHashedPassword };

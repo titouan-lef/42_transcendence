@@ -5,6 +5,8 @@ import { getUserInfos } from "./login.js";
 import { loadDialogEmail } from "../../pages/modules/dialog/dialog_2FA.js";
 import { BOX_EDITPROFILE, BOX_SHOWPROFILE, BTN_EDIT, BTN_SAVE } from "../../pages/modules/profile/profile_settings_user_infos.js";
 import { getCurrentUserInfos } from "./user_state.js";
+import { isValidEmail, isValidName, isValidPassword } from "#shared/verifications.js";
+import { translate } from "src/lang/lang.js";
 
 interface UserInfos {
 	nickname: string,
@@ -22,7 +24,7 @@ async function updateUser(): Promise<void> {
 		return;
 
 	if (pass.value && pass.value !== confirmPass.value) {
-		container.innerHTML = `<p>The password and confirm password differs</p>`;
+		container.innerHTML = translate("diff_password");
 		pass.value = "";
 		confirmPass.value = "";
 		pass.focus();
@@ -33,6 +35,22 @@ async function updateUser(): Promise<void> {
 		password: pass.value,
 		email: email.value,
 	};
+
+	if (nickname.value && !isValidName(nickname.value)) {
+		container.innerHTML = translate("invalid_nickname");
+		return;
+	}
+	if (pass.value && !isValidPassword(pass.value)) {
+		container.innerHTML = translate("invalid_password");
+		pass.value = "";
+		confirmPass.value = "";
+		pass.focus();
+		return;
+	}
+	if (email.value && !isValidEmail(email.value)) {
+		container.innerHTML = translate("invalid_email");
+		return;
+	}
 
 	const reply = await sendPostRequestToBack('/api/user/update_user', JSON.stringify(data));
 	if (reply.code === Errors.TWOFA_REQUIRED) {

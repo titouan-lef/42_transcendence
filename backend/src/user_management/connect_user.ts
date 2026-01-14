@@ -5,7 +5,7 @@ import util from 'util';
 import sharp from "sharp";
 import { pipeline } from 'stream';
 import { sendReply } from "../utils/HTTP.js";
-import { isValidPassword } from "../utils/hash_string.js";
+import { isValidHashedPassword } from "../utils/hash_string.js";
 import { getUserPassword, is2FAEnabled, updateTheme } from "../database/user.js";
 import { request2FA } from "../security/2FA.js";
 import { addAuthCookies, removeAuthCookies } from "../security/JWT.js";
@@ -26,7 +26,7 @@ async function connectUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: 
 
 	const hashPassword: string = await getUserPassword(username);
 
-	if (!isValidPassword(password, hashPassword)) {
+	if (!isValidHashedPassword(password, hashPassword)) {
 		await wait(1000); // wait 1 sec against brutforce
 		sendReply(reply, Errors.WRONG_CREDENTIALS);
 		return;

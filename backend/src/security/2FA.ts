@@ -7,6 +7,7 @@ import { addAuthCookies } from "./JWT.js";
 import { wait } from "../utils/time.js";
 import { Errors, Success } from "#shared/status_codes.js";
 import { Content2FA } from "#shared/HTTP.js";
+import { isValidEmail } from "#shared/verifications.js";
 
 /** https://dev.to/veektor_v/send-emails-using-nodemailer-typescript-4763 */
 
@@ -22,21 +23,6 @@ const EMAIL = nodemailer.createTransport({
 
 const CODES_EMAIL = new Map<string, string>();
 const CODES_2FA = new Map<string, number>();
-
-/**************************************************************************
- *		REGEX Explanations
- * ^ 				— Start of string
- * [...]			— Character class
- * ^ inside [...]	— Negation -> match any character EXCEPT those listed
- * \s 				— Whitespace
- * $				— End of string anchor
- **************************************************************************/
-function isValidEmail(email: string): boolean {
-	return (
-		!/[\r\n]/.test(email) &&					// Protection again sevral emails injection
-		/^[^\s@+]+@[^\s@]+\.[^\s@]+$/.test(email)	// Format validation
-	);
-}
 
 async function sendEmailCode(email: string, code: number): Promise<boolean> {
 	if (!isValidEmail(email))

@@ -1,29 +1,16 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { hashString, isValidPassword } from "../utils/hash_string.js";
+import { hashString, isValidHashedPassword } from "../utils/hash_string.js";
 import { sendReply } from "../utils/HTTP.js";
 import { doesUserExist, getUserByUsername, insertUser, is2FAEnabled, updateEmail, updatePassword, updatePseudo } from "../database/user.js";
 import { request2FA } from "../security/2FA.js";
 import { Errors, Success } from "#shared/status_codes.js";
 import { NewUserBody } from "#shared/HTTP.js";
+import { isValidEmail, isValidName, isValidPassword } from "#shared/verifications.js";
 
 interface UpdateUserBody {
 	nickname: string;
 	password: string;
 	email: string;
-}
-
-const NB_CHAR_MAX = 10;
-
-function isValidName(username: string): boolean {
-	return (
-		!/[\r\n]/.test(username) &&		// prevent CR/LF injection
-		!/\\s/.test(username) &&		// no whitespaces
-		/^(?!\d+$).+$/.test(username)	// not only numbers
-	);
-}
-
-function isTooLongName(username: string): boolean {
-	return username.length > NB_CHAR_MAX;	// max 10 characters
 }
 
 async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: FastifyReply): Promise<void> {
@@ -32,20 +19,16 @@ async function addNewUser(req: FastifyRequest<{ "Body": NewUserBody }>, reply: F
 		sendReply(reply, Errors.INVALID_USERNAME);
 		return;
 	}
-	if (isTooLongName(username)) {
-		sendReply(reply, Errors.TOO_LONG_USERNAME);
-		return;
-	}
 	if (!isValidName(nickname)) {
 		sendReply(reply, Errors.INVALID_NICKNAME);
 		return;
 	}
-	if (isTooLongName(nickname)) {
-		sendReply(reply, Errors.TOO_LONG_NICKNAME);
-		return;
-	}
 	if (await doesUserExist(username)) {
 		sendReply(reply, Errors.USERNAME_TAKEN);
+		return;
+	}
+	if (!isValidPassword(password)) {
+		sendReply(reply, Errors.INVALID_PASSWORD);
 		return;
 	}
 	await insertUser(username, nickname, hashString(password));
@@ -69,20 +52,20 @@ async function updateUserInfos(req: FastifyRequest<{ "Body": UpdateUserBody }>, 
 			sendReply(reply, Errors.INVALID_NICKNAME);
 			return;
 		}
-		if (isTooLongName(nickname)) {
-			sendReply(reply, Errors.TOO_LONG_NICKNAME);
-			return;
-		}
 		await updatePseudo(username, nickname);
 		userModified = true;
 	}
-	if (password && !isValidPassword(password, user.hashedPassword)) {
+	if (password && !isValidHashedPassword(password, user.hashedPassword)) {
 		await updatePassword(username, hashString(password));
 		userModified = true;
 	}
 	if (!email && user.email) {
 		if (await is2FAEnabled(username)) {
 			sendReply(reply, Errors.DISABLE_2FA);
+			return;
+		}
+		if (!isValidEmail(email)) {
+			sendReply(reply, Errors.INVALID_EMAIL);
 			return;
 		}
 		await updateEmail(username, email);

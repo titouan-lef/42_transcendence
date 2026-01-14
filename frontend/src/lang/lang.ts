@@ -52,4 +52,4 @@ function getTranslation(key: TranslationKey): string {
 	return translation;
 }
 
-export { TranslationKey, translateTab, setLang };
+export { TranslationKey, translate, translateTab, setLang };
