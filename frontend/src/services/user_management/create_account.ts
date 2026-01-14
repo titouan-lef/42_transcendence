@@ -7,11 +7,13 @@ import { NewUserBody } from "#shared/HTTP.js";
 
 async function newUser(): Promise<void> {
 
-	const userId: HTMLInputElement = getSafeElement("userID", HTMLInputElement);
-	const userPseudo: HTMLInputElement = getSafeElement("publicID", HTMLInputElement);
-	const userPassword: HTMLInputElement = getSafeElement("password", HTMLInputElement);
-	const confPassword: HTMLInputElement = getSafeElement("confirmPassword", HTMLInputElement);
-	const container: HTMLElement = getSafeElement("print-content", HTMLElement);
+	const userId = getSafeElement("userID", HTMLInputElement);
+	const userPseudo = getSafeElement("publicID", HTMLInputElement);
+	const userPassword = getSafeElement("password", HTMLInputElement);
+	const confPassword = getSafeElement("confirmPassword", HTMLInputElement);
+	const container = getSafeElement("print-content", HTMLElement);
+	if (!userId || !userPseudo || !userPassword || !confPassword || !container)
+		return;
 
 	if (isOneStringEmtpy(userId.value, userPseudo.value, userPassword.value, confPassword.value)) {
 		container.innerHTML = `<p>Form is incomplete.</p>`;

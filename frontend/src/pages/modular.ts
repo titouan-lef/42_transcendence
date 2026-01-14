@@ -34,6 +34,8 @@ const MODULAR = `
 async function modularEvents(): Promise<void> {
 	await loadAside();
 	const modal = getSafeElement('modal', HTMLDialogElement);
+	if (!modal)
+		return;
 	modal.addEventListener('click', (e) => {
 		if (e.target === modal)
 			goBack();
@@ -41,6 +43,8 @@ async function modularEvents(): Promise<void> {
 }
 
 async function openModularPage(): Promise<void> {
+	if (!ELEM)
+		return;
 	ELEM.innerHTML = MODULAR;
 	await modularEvents();
 }

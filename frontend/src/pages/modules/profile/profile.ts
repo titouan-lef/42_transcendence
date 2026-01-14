@@ -67,6 +67,8 @@ let userProfile: string;
 
 async function openProfile(user: string): Promise<void> {
 	const drawer = getSafeElement("modal", HTMLDialogElement);
+	if (!drawer)
+		return;
 	drawer.close();
 
 	if (user === GUEST_NAME)
@@ -120,6 +122,8 @@ async function loadTab(tab?: ProfileTab): Promise<void> {
 
 function initProfileEvents(): void {
 	const drawer = getSafeElement("modal", HTMLDialogElement);
+	if (!drawer)
+		return;
 
 	drawer.querySelectorAll('*[id]').forEach(elem => {
 		switch (elem.id) {
@@ -133,7 +137,8 @@ function initProfileEvents(): void {
 						return;
 					await updateFriendList();
 					const btn = getSafeElement('btn-add-friend-profile-wrapper', HTMLElement);
-					btn.innerHTML = "";
+					if (btn)
+						btn.innerHTML = "";
 				});
 				break;
 			case 'btn-summary':

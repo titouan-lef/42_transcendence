@@ -81,7 +81,10 @@ const ASIDE_BOX = `
 `;
 
 function asideConnectedEvents(): void {
-	const allElements = getSafeElement('aside', HTMLElement).querySelectorAll('*[id]');
+	const elemAside = getSafeElement('aside', HTMLElement);
+	if (!elemAside)
+		return;
+	const allElements = elemAside.querySelectorAll('*[id]');
 
 	allElements.forEach(elem => {
 		switch (elem.id) {
@@ -101,7 +104,10 @@ function asideConnectedEvents(): void {
 }
 
 function asideDisconnectedEvents(): void {
-	const allElements = getSafeElement('aside', HTMLElement).querySelectorAll('*[id]');
+	const elemAside = getSafeElement('aside', HTMLElement);
+	if (!elemAside)
+		return;
+	const allElements = elemAside.querySelectorAll('*[id]');
 
 	allElements.forEach(elem => {
 		switch (elem.id) {
@@ -119,6 +125,8 @@ function asideDisconnectedEvents(): void {
 
 async function loadAside(): Promise<void> {
 	const aside = getSafeElement('aside-status', HTMLElement);
+	if (!aside)
+		return;
 	await getUserInfos();
 	if (isUserConnected()) {
 		aside.innerHTML = ASIDE_CONNECTED;

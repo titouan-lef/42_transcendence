@@ -16,7 +16,7 @@ const WELCOME = `
 `;
 
 function welcomeEvents(): void {
-	ELEM.addEventListener('click', loadHomePage);
+	ELEM?.addEventListener('click', loadHomePage);
 }
 
 function openWelcomePage(): void {

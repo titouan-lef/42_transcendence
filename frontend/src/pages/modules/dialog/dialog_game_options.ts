@@ -97,6 +97,8 @@ function optionSelectorHandler(modal: HTMLDialogElement, startGame: () => void):
 
 function lockLastCheckbox(containerId: string): void {
 	const container = getSafeElement(containerId, HTMLElement);
+	if (!container)
+		return;
 
 	const checkboxes = Array.from(
 		container.querySelectorAll<HTMLInputElement>("input[type='checkbox']")
@@ -121,6 +123,8 @@ function openDialogGameOption(): void {
 	loadDialog(GAME_OPTIONS, () => {});
 	loadCheckboxes(currentGameType);
 	const modal = getSafeElement("modal", HTMLDialogElement);
+	if (!modal)
+		return;
 	switch (currentGameType) {
 		case GameTypes.LOCAL:
 			optionSelectorHandler(modal, loadLocalGamePage);

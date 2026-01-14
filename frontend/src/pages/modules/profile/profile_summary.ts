@@ -55,20 +55,23 @@ async function loadSummary(): Promise<void> {
 	const dataHist = await getHistoryData();
 	const dataDash = await getDashboardData();
 	const element = getSafeElement('profile-content', HTMLElement);
+	if (element)
+		element.innerHTML = getSummaryTable(dataHist, dataDash);
 
-	element.innerHTML = getSummaryTable(dataHist, dataDash);
 	dataHist.slice(0, HISTORY_DEEP).forEach((game) => {
 		if (game.opponentUsername === GUEST_NAME)
 			return;
 		const element = getSafeElement(`${game.date}-${game.opponentUsername}-nickname`, HTMLElement);
-		element.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
+		if (element)
+			element.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
 	});
 
 	const dashboardButton = getSafeElement('btn-sum-dashboard', HTMLButtonElement);
+	if (dashboardButton)
+		dashboardButton.addEventListener('click', () => document.dispatchEvent(new Event('dashboard')));
 	const historyButton = getSafeElement('btn-sum-history', HTMLButtonElement);
-
-	dashboardButton.addEventListener('click', () => document.dispatchEvent(new Event('dashboard')));
-	historyButton.addEventListener('click', () => document.dispatchEvent(new Event('history')));
+	if (historyButton)
+		historyButton.addEventListener('click', () => document.dispatchEvent(new Event('history')));
 }
 
 export { loadSummary };

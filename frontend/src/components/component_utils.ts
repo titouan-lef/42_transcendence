@@ -26,6 +26,8 @@ function createTranslatableElement<T extends HTMLElement>(htmlData: HtmlData, se
 	const element = createElement(htmlData, setContent, tagType);
 	onLangChange(() => {
 		const el = getSafeElement<T>(htmlData.id, tagType);// Get element because its ref is destroyed when it is converted to a string.
+		if (!el)
+			return;
 		setContent(el, translateTab(htmlData.keyTab));
 	});
 	return element;

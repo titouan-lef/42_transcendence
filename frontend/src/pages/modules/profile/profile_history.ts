@@ -58,13 +58,15 @@ async function loadHistory(): Promise<void> {
 	setActiveBtn('btn-history');
 
 	const elem = getSafeElement('profile-content', HTMLElement);
-	elem.innerHTML = getHistoryTable(historyData);
+	if (elem)
+		elem.innerHTML = getHistoryTable(historyData);
 
 	historyData.forEach((game) => {
 		if (game.opponentUsername === GUEST_NAME)
 			return;
 		const element = getSafeElement(`${game.date}-${game.opponentUsername}-nickname`, HTMLElement);
-		element.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
+		if (element)
+			element.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
 	});
 }
 

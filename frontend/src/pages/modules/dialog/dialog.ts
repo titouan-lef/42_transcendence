@@ -22,6 +22,8 @@ const DIALOG_INNER_STYLE = `
 
 function loadDialog(content: string, handler: (modal: HTMLDialogElement) => void): void {
 	const modal = getSafeElement("modal", HTMLDialogElement);
+	if (!modal)
+		return;
 	modal.close();
 
 	modal.className = DIALOG_MAIN_STYLE;
@@ -39,6 +41,8 @@ function loadDialog(content: string, handler: (modal: HTMLDialogElement) => void
 
 function closeDialogID(id: string): void {
 	const dialog = getSafeElement(id, HTMLDialogElement);
+	if (!dialog)
+		return;
 	dialog.close();
 }
 

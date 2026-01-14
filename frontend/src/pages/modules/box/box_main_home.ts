@@ -41,9 +41,10 @@ function openGameOption(): void {
 function mainBoxEvents(): void {
 	const play = getSafeElement('btn-play', HTMLElement);
 	const leaderboard = getSafeElement('btn-leaderboard', HTMLElement);
-
-	play.addEventListener('click', openGameOption);
-	leaderboard.addEventListener('click', loadLeaderboard);
+	if (play)
+		play.addEventListener('click', openGameOption);
+	if (leaderboard)
+		leaderboard.addEventListener('click', loadLeaderboard);
 }
 
 function openMainHome(): void {

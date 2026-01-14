@@ -41,45 +41,73 @@ function registerGameOptions(gameType: GameTypes): void {
 	const balls: BallOption[] = [];
 	const maps: MapOption[] = [];
 
-	getSafeElement('chk-map', HTMLElement).querySelectorAll('*[id]').forEach(map => {
+	const elemMap = getSafeElement('chk-map', HTMLElement);
+	if (!elemMap)
+		return;
+	elemMap.querySelectorAll('*[id]').forEach(map => {
 		if (map instanceof HTMLInputElement && map.checked) {
 			if (map.value === 'default' || map.value === 'sky' || map.value === 'volcano' || map.value === 'desert') {
 				maps.push(map.value);
 			}
 		}
 	});
-	getSafeElement('chk-ball', HTMLElement).querySelectorAll('*[id]').forEach(ball => {
+	const elemBall = getSafeElement('chk-ball', HTMLElement);
+	if (!elemBall)
+		return;
+	elemBall.querySelectorAll('*[id]').forEach(ball => {
 		if (ball instanceof HTMLInputElement && ball.checked) {
 			if (ball.value === 'default' || ball.value === 'snake' || ball.value === 'invisible' || ball.value === 'tricky' || ball.value === 'pulse')
 				balls.push(ball.value);
 		}
 	});
-	if (maps.length === 0 || balls.length === 0)
+
+	const elemSpin = getSafeElement(`chk-rule-spin`, HTMLInputElement);
+	const elemWind = getSafeElement(`chk-rule-wind`, HTMLInputElement);
+	const elemRotation = getSafeElement(`chk-rule-prot`, HTMLInputElement);
+	const elemDash = getSafeElement(`chk-rule-dash`, HTMLInputElement);
+	const elemCanon = getSafeElement(`canon-nbr`, HTMLInputElement);
+	if (maps.length === 0 || balls.length === 0 || !elemSpin || !elemWind || !elemRotation || !elemDash || !elemCanon)
 		return;
 
 	const rules = getGameOptions(gameType);
 	rules.map = maps;
 	rules.ball = balls;
-	rules.spin = getSafeElement(`chk-rule-spin`, HTMLInputElement).checked;
-	rules.windAffectsBall = getSafeElement(`chk-rule-wind`, HTMLInputElement).checked;
-	rules.rotatingPlayer = getSafeElement(`chk-rule-prot`, HTMLInputElement).checked;
-	rules.dashingPlayer = getSafeElement(`chk-rule-dash`, HTMLInputElement).checked;
-	rules.canonCount = Number(getSafeElement(`canon-nbr`, HTMLInputElement).value);
+	rules.spin = elemSpin.checked;
+	rules.windAffectsBall = elemWind.checked;
+	rules.rotatingPlayer = elemRotation.checked;
+	rules.dashingPlayer = elemDash.checked;
+	rules.canonCount = Number(elemCanon.value);
 }
 
 function loadCheckboxes(gameType: GameTypes): void {
 	const rules = getGameOptions(gameType);
 	rules.map.forEach(map => {
-		getSafeElement(`chk-map-${map}`, HTMLInputElement).checked = true;
+		const elem = getSafeElement(`chk-map-${map}`, HTMLInputElement);
+		if (elem)
+			elem.checked = true;
 	});
 	rules.ball.forEach(ball => {
-		getSafeElement(`chk-ball-${ball}`, HTMLInputElement).checked = true;
+		const elem = getSafeElement(`chk-ball-${ball}`, HTMLInputElement);
+		if (elem)
+			elem.checked = true;
 	});
-	getSafeElement(`chk-rule-spin`, HTMLInputElement).checked = rules.spin;
-	getSafeElement(`chk-rule-wind`, HTMLInputElement).checked = rules.windAffectsBall;
-	getSafeElement(`chk-rule-prot`, HTMLInputElement).checked = rules.rotatingPlayer;
-	getSafeElement(`chk-rule-dash`, HTMLInputElement).checked = rules.dashingPlayer;
-	getSafeElement(`canon-nbr`, HTMLInputElement).value = rules.canonCount.toString();
+
+	const elemSpin = getSafeElement(`chk-rule-spin`, HTMLInputElement);
+	const elemWind = getSafeElement(`chk-rule-wind`, HTMLInputElement);
+	const elemRotation = getSafeElement(`chk-rule-prot`, HTMLInputElement);
+	const elemDash = getSafeElement(`chk-rule-dash`, HTMLInputElement);
+	const elemCanon = getSafeElement(`canon-nbr`, HTMLInputElement);
+	
+	if (elemSpin)
+		elemSpin.checked = rules.spin;
+	if (elemWind)
+		elemWind.checked = rules.windAffectsBall;
+	if (elemRotation)
+		elemRotation.checked = rules.rotatingPlayer;
+	if (elemDash)
+		elemDash.checked = rules.dashingPlayer;
+	if (elemCanon)
+		elemCanon.value = rules.canonCount.toString();
 }
 
 export { registerGameOptions, getGameOptions, loadCheckboxes };

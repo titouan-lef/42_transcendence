@@ -11,9 +11,11 @@ import { NewUserBody } from "#shared/HTTP.js";
 let user = "";
 
 async function connectUser(): Promise<void> {
-	const userId: HTMLInputElement = getSafeElement("userID", HTMLInputElement);
-	const userPassword: HTMLInputElement = getSafeElement("password", HTMLInputElement);
-	const container: HTMLElement = getSafeElement("print-content", HTMLElement);
+	const userId = getSafeElement("userID", HTMLInputElement);
+	const userPassword = getSafeElement("password", HTMLInputElement);
+	const container = getSafeElement("print-content", HTMLElement);
+	if (!userId || !userPassword || !container)
+		return;
 
 	if (isOneStringEmtpy(userId.value, userPassword.value)) {
 		container.innerHTML = `<p>Form is incomplete.</p>`;

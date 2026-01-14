@@ -11,7 +11,8 @@ async function printReplyInDiv(reply: ReplyFromBack, targetDivId: string): Promi
 	try {
 		const message = getReplyMessage(reply);
 		const container = getSafeElement(targetDivId, HTMLElement);
-		container.innerHTML = `<p>${message}</p>`;
+		if (container)
+			container.innerHTML = `<p>${message}</p>`;
 	} catch {};
 }
 

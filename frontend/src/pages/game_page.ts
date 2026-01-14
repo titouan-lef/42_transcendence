@@ -76,7 +76,10 @@ function openGamePage(): void {
 		default:
 			return;
 	}
-	getSafeElement('game-type', HTMLElement).innerHTML = gameType;
+	const elem = getSafeElement('game-type', HTMLElement);
+	if (!elem)
+		return;
+	elem.innerHTML = gameType;
 }
 
 function loadGamePage(type: GameTypes): void {

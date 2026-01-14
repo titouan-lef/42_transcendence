@@ -78,6 +78,8 @@ async function getFriendList(): Promise<void> {
 
 async function updateFriendList(): Promise<void> {
 	const elem = getSafeElement("friendlist", HTMLElement);
+	if (!elem)
+		return;
 	elem.innerHTML = '';
 	await getFriendList();
 
@@ -103,7 +105,7 @@ async function updateFriendList(): Promise<void> {
 function closeAllDetails(): void {
 	FRIENDLIST.forEach(friend => {
 		const elem = getSafeElement(friend.username, HTMLDetailsElement);
-		if (elem.open)
+		if (elem && elem.open)
 			elem.open = false;
 	});
 }
@@ -116,23 +118,26 @@ async function deleteFriend(friend: string): Promise<void> {
 
 function friendsHandler(): void {
 	FRIENDLIST.forEach(friend => {
-		const allElements = getSafeElement('friendlist', HTMLElement).querySelectorAll('*[id]');
+		const elemFriend = getSafeElement('friendlist', HTMLElement);
+		if (elemFriend) {
+			const allElements = elemFriend.querySelectorAll('*[id]');
 
-		allElements.forEach(elem => {
-			switch (elem.id) {
-				case `${friend.username}`:
-					elem.addEventListener('click', closeAllDetails);
-					break;
-				case `btn-profile-${friend.username}`:
-					elem.addEventListener('click', () => navigateTo(Pages.PROFILE, friend.username));
-					break;
-				case `btn-delete-${friend.username}`:
-					elem.addEventListener('click', () => deleteFriend(friend.username));
-					break;
-				default:
-					break;
-			}
-		});
+			allElements.forEach(elem => {
+				switch (elem.id) {
+					case `${friend.username}`:
+						elem.addEventListener('click', closeAllDetails);
+						break;
+					case `btn-profile-${friend.username}`:
+						elem.addEventListener('click', () => navigateTo(Pages.PROFILE, friend.username));
+						break;
+					case `btn-delete-${friend.username}`:
+						elem.addEventListener('click', () => deleteFriend(friend.username));
+						break;
+					default:
+						break;
+				}
+			});
+		}
 	});
 }
 
