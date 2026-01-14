@@ -9,8 +9,8 @@ import { Modals } from "../../../routes/navigate_types.js";
 import { UserBody } from "#shared/HTTP.js";
 import { updateFriendList } from "../box/box_aside_friendlist.js";
 import { isValidName } from "#shared/verifications.js";
-import { translate } from "src/lang/lang.js";
-import { getCurrentUserInfos } from "src/services/user_management/user_state.js";
+import { translate } from "../../../lang/lang.js";
+import { getCurrentUserInfos } from "../../../services/user_management/user_state.js";
 
 const PRINT_CONTENT_STYLE = `
 w-full h-[20px] text-[12px] text-warning text-center

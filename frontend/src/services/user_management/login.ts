@@ -8,7 +8,7 @@ import { navigateTo } from "../../routes/navigate.js";
 import { Pages } from "../../routes/navigate_types.js";
 import { NewUserBody } from "#shared/HTTP.js";
 import { isValidName, isValidPassword } from "#shared/verifications.js";
-import { translate } from "src/lang/lang.js";
+import { translate } from "../../lang/lang.js";
 
 let user = "";
 
