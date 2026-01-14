@@ -5,7 +5,7 @@ import { connectUser } from "./login.js";
 import { Success } from '#shared/status_codes';
 import { NewUserBody } from "#shared/HTTP.js";
 import { isValidName, isValidPassword } from "#shared/verifications.js";
-import { translate } from "src/lang/lang.js";
+import { translate } from "../../lang/lang.js";
 
 async function newUser(): Promise<void> {
 

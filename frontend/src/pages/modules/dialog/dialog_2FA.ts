@@ -8,7 +8,7 @@ import { getSafeElement } from "../../../utils/getSafeElement";
 import { isRequestSuccessfull, printReplyInDiv, sendPostRequestToBack } from "../../../services/api_request";
 import { getCurrentUserInfos } from "../../../services/user_management/user_state";
 import { Content2FA } from "#shared/HTTP";
-import { translate } from "src/lang/lang";
+import { translate } from "../../../lang/lang";
 
 const PRINT_CONTENT_STYLE = `
 w-full h-[20px] text-[12px] text-warning text-center

@@ -6,7 +6,7 @@ import { loadDialogEmail } from "../../pages/modules/dialog/dialog_2FA.js";
 import { BOX_EDITPROFILE, BOX_SHOWPROFILE, BTN_EDIT, BTN_SAVE } from "../../pages/modules/profile/profile_settings_user_infos.js";
 import { getCurrentUserInfos } from "./user_state.js";
 import { isValidEmail, isValidName, isValidPassword } from "#shared/verifications.js";
-import { translate } from "src/lang/lang.js";
+import { translate } from "../../lang/lang.js";
 
 interface UserInfos {
 	nickname: string,

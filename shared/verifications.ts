@@ -69,6 +69,7 @@ function isValidPassword(password: string): boolean {
 		return false;
 	if (!isSafe(password))
 		return false;
+	let hasLower = false;
 	let hasUpper = false;
 	let hasNumber = false;
 	let hasSpecial = false;
@@ -76,6 +77,8 @@ function isValidPassword(password: string): boolean {
 	for (let i = 0; i < password.length; i++) {
 		const c = password[i];
 
+		if (c >= 'a' && c <= 'z')
+			hasLower = true;
 		if (c >= 'A' && c <= 'Z')
 			hasUpper = true;
 		else if (c >= '0' && c <= '9')
@@ -84,7 +87,7 @@ function isValidPassword(password: string): boolean {
 			hasSpecial = true;
 	}
 
-	return hasUpper && hasNumber && hasSpecial;
+	return hasLower && hasUpper && hasNumber && hasSpecial;
 }
 
 export { isValidName, isValidPassword, isValidEmail };
