@@ -22,26 +22,26 @@ let lastPage: Pages | null = null;
 let currentPage: Pages | null = null;
 let currentNav: Navigation | null = null;
 
-async function manageParticularPages(page: Pages): Promise<void> {
+function manageParticularPages(page: Pages): void {
 	if (currentPage !== Pages.HOME && (page === Pages.GAME_OPTIONS || page === Pages.GAME_SELECTION)) // Assure GAME_OPTIONS and GAME_SELECTION got HOME in the back
-		await pageSelector(Pages.HOME);
+		pageSelector(Pages.HOME);
 	if (page === Pages.PROFILE && currentPage && !isModularPage(currentPage) && currentPage !== Pages.PROFILE) // Assure PROFILE got modular page in the back (does not reload HOME if current page is already PROFILE)
-		await pageSelector(Pages.HOME);
+		pageSelector(Pages.HOME);
 }
 
-async function navigationSelector(nav: Navigation, user?: string): Promise<boolean> {
+function navigationSelector(nav: Navigation, user?: string): boolean {
 	try {
-		return await tryNavigationSelector(nav, user);
+		return tryNavigationSelector(nav, user);
 	} catch {
 		try {
-			if (await tryNavigationSelector(Pages.HOME))
+			if (tryNavigationSelector(Pages.HOME))
 				manageHistoryPushing(Pages.HOME);
 		} catch {}
 		return false;
 	}
 }
 
-async function tryNavigationSelector(nav: Navigation, user?: string): Promise<boolean> {
+function tryNavigationSelector(nav: Navigation, user?: string): boolean {
 	if (needToBeConnected(nav) && !getCurrentUserInfos())
 		return false;
 	if (isGuest() && needToRejectGuest(nav))
@@ -51,25 +51,25 @@ async function tryNavigationSelector(nav: Navigation, user?: string): Promise<bo
 	if (nav !== Modals.WAITING)
 		cancelQueue();
 	if (isPage(nav)) {
-		await manageParticularPages(nav);
-		await pageSelector(nav, user);
+		manageParticularPages(nav);
+		pageSelector(nav, user);
 		return true;
 	}
 	if (!isModal(nav))
 		return false;
 	if (currentPage && !isAssociatedPage(nav, currentPage)) {
 		const page = getAssociatedPage(nav);
-		await navigation(page);
+		navigation(page);
 	}
 	modalSelector(nav);
 	return true;
 }
 
-async function pageSelector(page: Pages, user?: string): Promise<void> {
+function pageSelector(page: Pages, user?: string): void {
 	if (currentPage === Pages.GAME && page !== Pages.GAME)
 		closeGame();
 	if (isModularPage(page))
-		await openModularPage();
+		openModularPage();
 	if (page !== currentPage)
 		lastPage = currentPage;
 	currentPage = page;
@@ -81,14 +81,14 @@ async function pageSelector(page: Pages, user?: string): Promise<void> {
 			openMainHome();
 			break;
 		case Pages.LEADERBOARD:
-			await openLeaderboard();
+			openLeaderboard();
 			break;
 		case Pages.DASHBOARD:
 			openMainDashboard();
 			break;
 		case Pages.PROFILE:
 			if (user)
-				await openProfile(user);
+				openProfile(user);
 			break;
 		case Pages.GAME_SELECTION:
 			openDialogGameSelector();
@@ -151,8 +151,8 @@ function manageHistoryPushing(nav: Navigation, user?: string): void {
 	history.pushState({ nav: nav, user: user }, "");
 }
 
-async function navigation(nav: Navigation, user?: string): Promise<void> {
-	const navigationSuccessful = await navigationSelector(nav, user);
+function navigation(nav: Navigation, user?: string): void {
+	const navigationSuccessful = navigationSelector(nav, user);
 	if (navigationSuccessful)
 		manageHistoryPushing(nav, user);
 }
@@ -181,12 +181,12 @@ function initPage(nav: Navigation): void {
 /**
  * manage navigation for back and forward button
  */
-window.addEventListener("popstate", async (event: PopStateEvent) => {
+window.addEventListener("popstate", (event: PopStateEvent) => {
 	const nav = event.state?.nav;
 	const user = event.state?.user;
 
 	if (nav !== undefined)
-		if (await navigationSelector(nav, user))
+		if (navigationSelector(nav, user))
 			currentNav = nav;
 });
 
