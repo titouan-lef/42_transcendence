@@ -7,7 +7,7 @@ w-full h-[20px] text-[12px] text-warning text-center
 `;
 
 const SIGN_UP = `
-	<form name="Register" class="${DIALOG_FORM_STYLE}">
+	<form name="Register" class="${DIALOG_FORM_STYLE}" onsubmit='return false;'>
 		${createInputHtml(["user_name"], "text", "userID", { "autofocus": "true", "class": `${DIALOG_INPUT_STYLE}` })}
 		${createInputHtml(["nickname"], "text", "publicID", { "class": `${DIALOG_INPUT_STYLE}` })}
 		${createInputHtml(["password"], "password", "password", { "class": `${DIALOG_INPUT_STYLE}` })}
