@@ -31,8 +31,8 @@ const MODULAR = `
 </div>
 `;
 
-async function modularEvents(): Promise<void> {
-	await loadAside();
+function modularEvents(): void {
+	loadAside();
 	const modal = getSafeElement('modal', HTMLDialogElement);
 	if (!modal)
 		return;
@@ -42,11 +42,11 @@ async function modularEvents(): Promise<void> {
 	});
 }
 
-async function openModularPage(): Promise<void> {
+function openModularPage(): void {
 	if (!ELEM)
 		return;
 	ELEM.innerHTML = MODULAR;
-	await modularEvents();
+	modularEvents();
 }
 
 export { openModularPage };
