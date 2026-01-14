@@ -131,13 +131,13 @@ async function loadAside(): Promise<void> {
 	if (isUserConnected()) {
 		aside.innerHTML = ASIDE_CONNECTED;
 		asideConnectedEvents();
-		await updateFriendList();
+		updateFriendList();
 	} else {
 		aside.innerHTML = ASIDE_NOT_CONNECTED;
 		asideDisconnectedEvents();
 	}
 	setTheme();
-	await updateAvatar();
+	updateAvatar();
 }
 
 export { ASIDE_BOX, loadAside };
