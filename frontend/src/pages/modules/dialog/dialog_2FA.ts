@@ -8,6 +8,7 @@ import { getSafeElement } from "../../../utils/getSafeElement";
 import { isRequestSuccessfull, printReplyInDiv, sendPostRequestToBack } from "../../../services/api_request";
 import { getCurrentUserInfos } from "../../../services/user_management/user_state";
 import { Content2FA } from "#shared/HTTP";
+import { translate } from "src/lang/lang";
 
 const PRINT_CONTENT_STYLE = `
 w-full h-[20px] text-[12px] text-warning text-center
@@ -43,8 +44,8 @@ async function sendSecureCode(): Promise<boolean> {
 	const container = getSafeElement("print-content", HTMLElement);
 	if (!container)
 		return false;
-	if (!code) {
-		container.innerHTML = `Please enter a 4 digit code.`;
+	if (!code || code.length !== 4 || Number.isNaN(Number(code))) {
+		container.innerHTML = translate("invalid_code");
 		return false;
 	}
 	let body : Content2FA;

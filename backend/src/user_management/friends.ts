@@ -5,6 +5,7 @@ import { doesUserExist } from "../database/user.js";
 import { Errors, Success } from "#shared/status_codes.js";
 import { isUserConnected } from "./online_status.js";
 import { Friend, UserBody } from "#shared/HTTP.js";
+import { isValidName } from "#shared/verifications.js";
 
 async function getFriendList(req: FastifyRequest<{ "Body": UserBody }>, reply: FastifyReply): Promise<void> {
 	const user = req.body?.user;
@@ -35,6 +36,10 @@ async function newFriend(req: FastifyRequest<{ "Body": UserBody }>, reply: Fasti
 	const friend = req.body?.user;
 	if(!friend) {
 		sendReply(reply, Errors.NO_FRIEND_GIVEN);
+		return;
+	}
+	if(!isValidName(user)) {
+		sendReply(reply, Errors.INVALID_USERNAME);
 		return;
 	}
 	if (user === friend) {

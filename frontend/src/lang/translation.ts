@@ -189,6 +189,10 @@ const TRANSLATOR = {
 		en: "{invalid} {email}",
 		fr: "{email} {invalid}"
 	},
+	invalid_code: {
+		en: "please enter a 4 digits code",
+		fr: "entrez un code a 4 chiffres"
+	},
 	please_disable_2FA: {
 		en : "please desactivate {twofa} before clearing your {email}",
 		fr : "désactivatez la {twofa} avant d'effacer votre {email}"

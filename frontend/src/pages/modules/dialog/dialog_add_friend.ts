@@ -8,6 +8,9 @@ import { goBack, navigateTo } from "../../../routes/navigate.js";
 import { Modals } from "../../../routes/navigate_types.js";
 import { UserBody } from "#shared/HTTP.js";
 import { updateFriendList } from "../box/box_aside_friendlist.js";
+import { isValidName } from "#shared/verifications.js";
+import { translate } from "src/lang/lang.js";
+import { getCurrentUserInfos } from "src/services/user_management/user_state.js";
 
 const PRINT_CONTENT_STYLE = `
 w-full h-[20px] text-[12px] text-warning text-center
@@ -23,6 +26,18 @@ const ADD_FRIEND = `
 `;
 
 async function addFriend(user: string): Promise<boolean> {
+	const elem = getSafeElement('print-content', HTMLElement);
+	if (!elem)
+		return false;
+	if (!isValidName(user)) {
+		elem.innerHTML = translate("invalid_username");
+		return false;
+	}
+	if (user === getCurrentUserInfos()?.username) {
+		elem.innerHTML = translate("friend_himself");
+		return false;
+	}
+
 	const body: UserBody = { user: user };
 	const reply = await sendPostRequestToBack('/api/friends/add', JSON.stringify(body));
 	if (!isRequestSuccessfull(reply)) {
