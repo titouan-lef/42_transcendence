@@ -17,7 +17,7 @@ const LEADERBOARD_THEAD = `
 		<th class="${TABLE_HEAD_CELL_STYLE}">#</th>
 		<th class="${TABLE_HEAD_CELL_STYLE}">nickname</th>
 		<th class="${TABLE_HEAD_CELL_STYLE}">elo</th>
-		<th class="${TABLE_HEAD_CELL_STYLE}">winrate</th>
+		<th class="${TABLE_HEAD_CELL_STYLE}">winrate (%)</th>
 		<th class="${TABLE_HEAD_CELL_STYLE}">games played</th>
 	</tr>
 </thead>
@@ -66,6 +66,8 @@ function generateLeaderboardRows(ranking: Ranking[]): void {
 	let rank = 1;
 	leaderboard.innerHTML = "";
 	ranking.forEach(user => {
+		if (rank > 1000)
+			return ;
 		leaderboard.insertAdjacentHTML('beforeend',`
 			<tr class="${TABLE_DATA_STYLE}">
 				<td class="${TABLE_DATA_CELL_STYLE}">${rank}</td>
@@ -73,7 +75,7 @@ function generateLeaderboardRows(ranking: Ranking[]): void {
 					${user.nickname}
 				</td>
 				<td class="${TABLE_DATA_CELL_STYLE}">${user.rating > 0 ? user.rating : '-'}</td>
-				<td class="${TABLE_DATA_CELL_STYLE}">${user.winrate * 100}</td>
+				<td class="${TABLE_DATA_CELL_STYLE}">${~~(user.winrate * 100)}</td>
 				<td class="${TABLE_DATA_CELL_STYLE}">${user.nbGamePlayed}</td>
 			</tr>
 			`

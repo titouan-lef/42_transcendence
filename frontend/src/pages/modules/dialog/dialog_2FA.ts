@@ -25,8 +25,8 @@ const TWOFA = `
 
 const EMAIL_CONFIRMATION = `
 	<p class='font-bold text-[20px]'> 2FA required </p>
-	<form name="Register" class="${DIALOG_FORM_STYLE}">
-		${createInputHtml(["password"], "password", "password", { "class": `${DIALOG_INPUT_STYLE}` })}
+	<form name="Register" class="${DIALOG_FORM_STYLE}" onsubmit='return false;'>
+		${createInputHtml(["code"], "password", "password", { "class": `${DIALOG_INPUT_STYLE}` })}
 	</form>
 	${createButtonHtml(["refify_email"], `btn-verify-email`, { "class": `${DIALOG_BTN_STYLE}` })}
 	${createButtonHtml(["cancel"], `btn-cancel`, { "class": `${DIALOG_BTN_STYLE}` })}
