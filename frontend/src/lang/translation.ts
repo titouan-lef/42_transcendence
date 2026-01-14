@@ -85,13 +85,9 @@ const TRANSLATOR = {
 		en: "{invalid} {nickname}",
 		fr: "{nickname} {invalid}",
 	},
-	too_long_username: {
-		en: "{user_name} too long",
-		fr: "{user_name} trop long",
-	},
-	too_long_nickname: {
-		en: "{nickname} too long",
-		fr: "{nickname} trop long",
+	invalid_password: {
+		en: "{invalid} {password}",
+		fr: "{password} {invalid}",
 	},
 	username_taken: {
 		en: "{user_name} {already} {taken}",
@@ -120,6 +116,14 @@ const TRANSLATOR = {
 	already_friend_with: {
 		en: "this {user} is {already} your {friend}",
 		fr: "cet {user}, est {already} votre {friend}",
+	},
+	incomplete_form: {
+		en: "form is incomplete",
+		fr: "le formulaire n'est pas complet",
+	},
+	diff_password: {
+		en: "the {password} and confirm {password} differs",
+		fr: "le {password} et le {password} de confirmation dont differents",
 	},
 
 	// FRONT | NAVIGATION

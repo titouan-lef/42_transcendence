@@ -7,6 +7,8 @@ import { loadDialog2FA } from "../../pages/modules/dialog/dialog_2FA.js";
 import { navigateTo } from "../../routes/navigate.js";
 import { Pages } from "../../routes/navigate_types.js";
 import { NewUserBody } from "#shared/HTTP.js";
+import { isValidName, isValidPassword } from "#shared/verifications.js";
+import { translate } from "src/lang/lang.js";
 
 let user = "";
 
@@ -19,6 +21,15 @@ async function connectUser(): Promise<void> {
 
 	if (isOneStringEmtpy(userId.value, userPassword.value)) {
 		container.innerHTML = `<p>Form is incomplete.</p>`;
+		return;
+	}
+
+	if (!isValidName(userId.value)) {
+		container.innerHTML = translate("invalid_username");
+		return;
+	}
+	if (!isValidPassword(userPassword.value)) {
+		container.innerHTML = translate("invalid_username");
 		return;
 	}
 
