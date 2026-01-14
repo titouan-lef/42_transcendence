@@ -32,6 +32,8 @@ const SETTINGS_KEYBINDS_SELECTOR = `
 
 function keybindsNavbarEvents(): void {
 	const navbar = getSafeElement('btn-navbar-keybinds', HTMLElement);
+	if (!navbar)
+		return;
 
 	navbar.querySelectorAll('*[id]').forEach(elem => {
 		switch (elem.id) {
@@ -60,7 +62,10 @@ function keybindsNavbarEvents(): void {
 }
 
 function setActiveTab(id: string): void {
-	getSafeElement('btn-navbar-keybinds', HTMLElement).querySelectorAll('*[id]').forEach(elem => {
+	const elemNavBar = getSafeElement('btn-navbar-keybinds', HTMLElement);
+	if (!elemNavBar)
+		return;
+	elemNavBar.querySelectorAll('*[id]').forEach(elem => {
 		if (elem.id === id) {
 			elem.setAttribute('data-active', 'true');
 		} else {
@@ -71,6 +76,8 @@ function setActiveTab(id: string): void {
 
 function generateKeybindsButtons(keys: PlayerKeys): void {
 	const keybindButtons = getSafeElement('keybind-buttons', HTMLElement);
+	if (!keybindButtons)
+		return;
 	keybindButtons.innerHTML = ``;
 
 	for (const [keyName, keyCode] of Object.entries(keys)) {
@@ -116,7 +123,8 @@ function changeName(name: string): string {
 function generateKeybindsEvents(keys: PlayerKeys): void {
 	for (const [keyName, keyCode] of Object.entries(keys)) {
 		const elem = getSafeElement(`btn-${keyName}`, HTMLElement);
-		elem.addEventListener('click', () => keyboardHandler(keyName, keys));
+		if (elem)
+			elem.addEventListener('click', () => keyboardHandler(keyName, keys));
 	}
 }
 
@@ -130,7 +138,9 @@ document.addEventListener("keydown", (event) => {
 	if (!pendingKeyAction)
 		return;
 	try {
-		getSafeElement('keybind-buttons', HTMLElement);
+		const elem = getSafeElement('keybind-buttons', HTMLElement);
+		if (!elem)
+			return;
 
 		changeKey(pendingKeyAction.action, event.code, pendingKeyAction.keySet);
 		generateKeybindsButtons(pendingKeyAction.keySet);

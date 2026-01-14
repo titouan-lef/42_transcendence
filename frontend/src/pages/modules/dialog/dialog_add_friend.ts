@@ -35,6 +35,8 @@ async function addFriend(user: string): Promise<boolean> {
 function addFriendHandler(modal: HTMLDialogElement): void {
 	const addFriendElem = getSafeElement('btn-add-friend', HTMLElement);
 	const newFriendElem = getSafeElement('find-friend', HTMLInputElement);
+	if (!addFriendElem || !newFriendElem)
+		return;
 
 	addFriendElem.addEventListener('click', async () => {
 		const result = await addFriend(newFriendElem.value);

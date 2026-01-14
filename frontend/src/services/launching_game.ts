@@ -1,6 +1,6 @@
 import { startOrUpdateGame } from "../game/canvas_creation.js";
 import { DataMessage, StartMessage, Status } from "#shared/types_transfert.js";
-import { getReplyMessage, isRequestSuccessfull, sendPostRequestToBack } from "./api_request.js";
+import { isRequestSuccessfull, sendPostRequestToBack } from "./api_request.js";
 import { getGameOptions } from "../game/settings/GameRules.js";
 import { GameTypes } from "../routes/navigate_types.js";
 import { getSafeElement } from "../utils/getSafeElement.js";
@@ -81,6 +81,8 @@ function loadGameHeader(infos: StartMessage): void {
 	const gameType = getGameType();
 
 	const elem = getSafeElement(`players-infos`, HTMLElement);
+	if (!elem)
+		return;
 	switch (gameType) {
 		case (GameTypes.LOCAL):
 			elem.innerHTML = `

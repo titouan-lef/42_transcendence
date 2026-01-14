@@ -47,7 +47,7 @@ async function tryNavigationSelector(nav: Navigation, user?: string): Promise<bo
 	if (isGuest() && needToRejectGuest(nav))
 		return false;
 	if (currentNav === Pages.WELCOME && nav !== Pages.WELCOME)
-		ELEM.removeEventListener('click', loadHomePage);
+		ELEM?.removeEventListener('click', loadHomePage);
 	if (nav !== Modals.WAITING)
 		cancelQueue();
 	if (isPage(nav)) {

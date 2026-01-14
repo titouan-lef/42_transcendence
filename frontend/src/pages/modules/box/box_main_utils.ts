@@ -17,6 +17,8 @@ const MAIN_BOX_SEPARATOR_STYLE = `
 
 function loadMainBox(content: string, handler: () => void): void {
 	const mainBox = getSafeElement('main-box', HTMLElement);
+	if (!mainBox)
+		return;
 
 	mainBox.innerHTML = content;
 	handler();

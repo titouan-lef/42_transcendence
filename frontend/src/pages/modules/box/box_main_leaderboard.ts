@@ -63,6 +63,8 @@ function getLeaderboardPage(maxSeason: number ): string {
 
 function generateLeaderboardRows(ranking: Ranking[]): void {
 	const leaderboard = getSafeElement('leaderboard', HTMLElement);
+	if (!leaderboard)
+		return;
 	let rank = 1;
 	leaderboard.innerHTML = "";
 	ranking.forEach(user => {
@@ -81,13 +83,16 @@ function generateLeaderboardRows(ranking: Ranking[]): void {
 			`
 		);
 		const elem = getSafeElement(`btn-profile-${user.username}`, HTMLElement);
-		elem.addEventListener('click', () => navigateTo(Pages.PROFILE, user.username));
+		if (elem)
+			elem.addEventListener('click', () => navigateTo(Pages.PROFILE, user.username));
 		rank += 1;
 	});
 }
 
 async function updateLeaderboardData(): Promise<void> {
 	const filter = getSafeElement(SELECT_NAME, HTMLSelectElement);
+	if (!filter)
+		return;
 	const targetSeason = Number(filter.value);
 	const reply = await sendGetRequestToBack(`/api/season/${targetSeason}`);
 	if (!isRequestSuccessfull(reply))
@@ -97,21 +102,28 @@ async function updateLeaderboardData(): Promise<void> {
 	generateLeaderboardRows(infos.ranking);
 
 	const elem = getSafeElement('season-dates', HTMLElement);
+	if (!elem)
+		return;
 	elem.innerHTML = `season date : ${infos.beginDate} to ${infos.endDate}`;
 }
 
 function leaderboardEvents(): void {
-	const allElements = getSafeElement('main-box', HTMLElement).querySelectorAll('*[id]');
-	allElements.forEach(elem => {
-		switch (elem.id) {
-			case 'btn-back-home':
-				elem.addEventListener('click', () => navigateTo(Pages.HOME));
-				break;
-			default:
-				break;
-		}
-	});
+	const elemBox = getSafeElement('main-box', HTMLElement);
+	if (elemBox) {
+		const allElements = elemBox.querySelectorAll('*[id]');
+		allElements.forEach(elem => {
+			switch (elem.id) {
+				case 'btn-back-home':
+					elem.addEventListener('click', () => navigateTo(Pages.HOME));
+					break;
+				default:
+					break;
+			}
+		});
+	}
 	const filter = getSafeElement(SELECT_NAME, HTMLSelectElement);
+	if (!filter)
+		return;
 	filter.addEventListener('change', updateLeaderboardData);
 }
 
@@ -122,6 +134,8 @@ async function openLeaderboard(): Promise<void> {
 	const seasonNumber: number = JSON.parse(seasonReply.content);
 
 	const elem = getSafeElement('main-box', HTMLElement);
+	if (!elem)
+		return;
 	elem.innerHTML = getLeaderboardPage(seasonNumber);
 	await updateLeaderboardData();
 	leaderboardEvents();

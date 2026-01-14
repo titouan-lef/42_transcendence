@@ -29,12 +29,15 @@ async function update2FAButton(): Promise<void> {
 		return;
 
 	const switch2fa = getSafeElement('switch-2fa', HTMLElement);
-	switch2fa.innerHTML = (currentUser.is2FAEnabled) ? SETTINGS_2FA_DISABLE : SETTINGS_2FA_ENABLE;
+	if (switch2fa)
+		switch2fa.innerHTML = (currentUser.is2FAEnabled) ? SETTINGS_2FA_DISABLE : SETTINGS_2FA_ENABLE;
 	twoFactorAuthEvents();
 }
 
 function twoFactorAuthEvents(): void {
 	const s2fa = getSafeElement('switch-2fa', HTMLElement);
+	if (!s2fa)
+		return; 
 
 	s2fa.querySelectorAll('*[id]').forEach(elem => {
 		switch (elem.id) {

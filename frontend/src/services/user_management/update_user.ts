@@ -17,8 +17,9 @@ async function updateUser(): Promise<void> {
 	const pass = getSafeElement('newPassword', HTMLInputElement);
 	const confirmPass = getSafeElement('confirmPassword', HTMLInputElement);
 	const email = getSafeElement('user-email', HTMLInputElement);
-
 	const container = getSafeElement('print-uinfo-reply', HTMLElement);
+	if (!nickname || !pass || !confirmPass || !email || !container)
+		return;
 
 	if (pass.value && pass.value !== confirmPass.value) {
 		container.innerHTML = `<p>The password and confirm password differs</p>`;
@@ -49,6 +50,8 @@ async function updateUser(): Promise<void> {
 
 function userInformationsBtnEvents(): void {
 	const btns = getSafeElement('btn-switch-edit-save', HTMLElement);
+	if (!btns)
+		return;
 
 	btns.querySelectorAll('*[id]').forEach(elem => {
 		switch (elem.id) {
@@ -74,17 +77,19 @@ function editUserInfos(): void {
 
 	const elem = getSafeElement('switch-edit-save', HTMLElement);
 	const btn = getSafeElement('btn-switch-edit-save', HTMLElement);
-
-	elem.innerHTML = BOX_EDITPROFILE;
-	btn.innerHTML = BTN_SAVE;
+	if (elem)
+		elem.innerHTML = BOX_EDITPROFILE;
+	if (btn)
+		btn.innerHTML = BTN_SAVE;
 
 	userInformationsBtnEvents();
 
 	const nickname = getSafeElement('publicID', HTMLInputElement);
 	const email = getSafeElement('user-email', HTMLInputElement);
 
-	nickname.value = currentUser.nickname;
-	if (currentUser.email)
+	if (nickname)
+		nickname.value = currentUser.nickname;
+	if (email && currentUser.email)
 		email.value = currentUser.email;
 }
 
@@ -96,16 +101,20 @@ function showUserInfos(): void {
 	const elem = getSafeElement('switch-edit-save', HTMLElement);
 	const btn = getSafeElement('btn-switch-edit-save', HTMLElement);
 
-	btn.innerHTML = BTN_EDIT;
-	elem.innerHTML = BOX_SHOWPROFILE;
+	if (btn)
+		btn.innerHTML = BTN_EDIT;
+	if (elem)
+		elem.innerHTML = BOX_SHOWPROFILE;
 
 	userInformationsBtnEvents();
 
 	const nickname = getSafeElement('show-user-nickname', HTMLElement);
 	const email = getSafeElement('show-user-email', HTMLElement);
 
-	nickname.innerHTML = currentUser.nickname;
-	email.innerHTML = currentUser.email ? currentUser.email : 'no email set';
+	if (nickname)
+		nickname.innerHTML = currentUser.nickname;
+	if (email)
+		email.innerHTML = currentUser.email ? currentUser.email : 'no email set';
 }
 
 export { updateUser, showUserInfos };

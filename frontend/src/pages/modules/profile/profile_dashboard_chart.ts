@@ -39,6 +39,8 @@ function createDashboardChartBox(title: TranslationKey): string {
 
 function createDashboardChart(title: TranslationKey, config: ChartConfiguration): void {
 	const canvas = getSafeElement('chart-' + title, HTMLCanvasElement);
+	if (!canvas)
+		return;
 
 	new Chart(canvas, config);
 }

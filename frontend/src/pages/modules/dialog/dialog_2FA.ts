@@ -36,8 +36,13 @@ const EMAIL_CONFIRMATION = `
 let username = '';
 
 async function sendSecureCode(): Promise<boolean> {
-	const code = getSafeElement('password', HTMLInputElement).value;
-	const container: HTMLElement = getSafeElement("print-content", HTMLElement);
+	const elemCode = getSafeElement('password', HTMLInputElement);
+	if (!elemCode)
+		return false;
+	const code = elemCode.value;
+	const container = getSafeElement("print-content", HTMLElement);
+	if (!container)
+		return false;
 	if (!code) {
 		container.innerHTML = `Please enter a 4 digit code.`;
 		return false;

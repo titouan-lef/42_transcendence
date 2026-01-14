@@ -77,17 +77,20 @@ function loadSettings(): void {
 
 	setActiveBtn('btn-settings');
 	const elem = getSafeElement('profile-content', HTMLElement);
-	elem.innerHTML = SETTINGS;
+	if (elem)
+		elem.innerHTML = SETTINGS;
 
 	const avatar = getSafeElement('change-avatar', HTMLElement);
-	avatar.addEventListener('change', (event) => {
-		if (!(event.target instanceof HTMLInputElement))
-			return;
-		const file = event.target.files?.[0];
-		if (!file)
-			return;
-		uploadProfilePicture(file);
-	});
+	if (avatar) {
+		avatar.addEventListener('change', (event) => {
+			if (!(event.target instanceof HTMLInputElement))
+				return;
+			const file = event.target.files?.[0];
+			if (!file)
+				return;
+			uploadProfilePicture(file);
+		});
+	}
 
 	showUserInfos();
 	generateThemeEvents();

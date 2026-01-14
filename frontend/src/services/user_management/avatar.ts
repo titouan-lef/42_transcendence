@@ -16,6 +16,8 @@ async function uploadProfilePicture(file: File): Promise<void> {
 
 async function updateAvatar(): Promise<void> {
 	const avatar = getSafeElement("avatar-img", HTMLImageElement);
+	if (!avatar)
+		return;
 
 	const currentUser = getCurrentUserInfos();
 	if (!currentUser?.isAvatarSet)

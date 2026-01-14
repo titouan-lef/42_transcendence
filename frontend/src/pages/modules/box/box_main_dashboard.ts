@@ -97,7 +97,10 @@ function showGameResults(stats: GameStats): string {
 }
 
 function gameDashboardEvents(): void {
-	const allElements = getSafeElement('main-box', HTMLElement).querySelectorAll('*[id]');
+	const elemBox = getSafeElement('main-box', HTMLElement);
+	if (!elemBox)
+		return;
+	const allElements = elemBox.querySelectorAll('*[id]');
 	allElements.forEach(elem => {
 		switch (elem.id) {
 			case 'btn-replay':

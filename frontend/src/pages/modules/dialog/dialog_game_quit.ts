@@ -18,7 +18,10 @@ const GAME_QUIT = `
 `;
 
 function gameQuitHandler(): void {
-	const allElements = getSafeElement('modal', HTMLDialogElement).querySelectorAll('*[id]');
+	const elemModal = getSafeElement('modal', HTMLDialogElement);
+	if (!elemModal)
+		return;
+	const allElements = elemModal.querySelectorAll('*[id]');
 	allElements.forEach(elem => {
 		switch (elem.id) {
 			case 'btn-yes':

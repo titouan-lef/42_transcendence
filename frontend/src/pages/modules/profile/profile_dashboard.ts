@@ -68,9 +68,11 @@ async function fetchDashboardData(user: string): Promise<void> {
 	let targetSeason = -1;
 	try {
 		const filter = getSafeElement(SELECT_NAME, HTMLSelectElement);
-		targetSeason = Number(filter.value);
-		if (Number.isNaN(targetSeason))
-			targetSeason = -1;
+		if (filter) {
+			targetSeason = Number(filter.value);
+			if (Number.isNaN(targetSeason))
+				targetSeason = -1;
+		}
 	} catch {}
 	const body: UserDashboardInfoBody = { user: user, season: targetSeason };
 	const reply = await sendPostRequestToBack('/api/user/dashboard', JSON.stringify(body));
@@ -86,7 +88,8 @@ async function getDashboardData(): Promise<UserDashboardInfos> {
 
 async function loadDashboardData(): Promise<void> {
 	const elem = getSafeElement('dashboard', HTMLElement);
-	elem.innerHTML = getDashboardTable(dashboardData);
+	if (elem)
+		elem.innerHTML = getDashboardTable(dashboardData);
 
 	createDashboardChart('elo_chart', configureChart(dashboardData.eloChart));
 	createDashboardChart('win_rate_chart', configureChart(dashboardData.winrateChart, true));
@@ -110,10 +113,12 @@ async function loadDashboard(user: string): Promise<void> {
 	setActiveBtn('btn-dashboard');
 
 	const elem = getSafeElement('profile-content', HTMLElement);
-	elem.innerHTML = getDashboardPage(seasonNumber);
+	if (elem)
+		elem.innerHTML = getDashboardPage(seasonNumber);
 
 	const filter = getSafeElement(SELECT_NAME, HTMLSelectElement);
-	filter.addEventListener('change', () => updateDashboardData(user));
+	if (filter)
+		filter.addEventListener('change', () => updateDashboardData(user));
 	loadDashboardData();
 }
 

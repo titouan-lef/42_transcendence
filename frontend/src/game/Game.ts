@@ -46,6 +46,8 @@ class Game {
 	/** returning the constructor because we cant do an async constructor and create() will have to wait for havok.engine to start */
 	static async create(settings: PointSettings): Promise<Game | null> {
 		const canvas = getSafeElement('game-canvas', HTMLCanvasElement);
+		if (!canvas)
+			return null;
 		let engine: babylon.Engine | null = null;
 		try {
 			engine = new babylon.Engine(canvas);
