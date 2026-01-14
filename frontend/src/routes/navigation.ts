@@ -30,18 +30,6 @@ function manageParticularPages(page: Pages): void {
 }
 
 function navigationSelector(nav: Navigation, user?: string): boolean {
-	try {
-		return tryNavigationSelector(nav, user);
-	} catch {
-		try {
-			if (tryNavigationSelector(Pages.HOME))
-				manageHistoryPushing(Pages.HOME);
-		} catch {}
-		return false;
-	}
-}
-
-function tryNavigationSelector(nav: Navigation, user?: string): boolean {
 	if (needToBeConnected(nav) && !getCurrentUserInfos())
 		return false;
 	if (isGuest() && needToRejectGuest(nav))
