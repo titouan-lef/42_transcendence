@@ -29,7 +29,7 @@ async function connectUser(): Promise<void> {
 		return;
 	}
 	if (!isValidPassword(userPassword.value)) {
-		container.innerHTML = translate("invalid_username");
+		container.innerHTML = translate("invalid_password");
 		return;
 	}
 
