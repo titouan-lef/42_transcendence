@@ -25,7 +25,7 @@ const ADD_FRIEND = `
 	<p id="print-content" class='${PRINT_CONTENT_STYLE}'></p>
 `;
 
-async function addFriend(user: string): Promise<boolean> {
+async function addSecureFriend(user: string): Promise<boolean> {
 	const elem = getSafeElement('print-content', HTMLElement);
 	if (!elem)
 		return false;
@@ -38,6 +38,10 @@ async function addFriend(user: string): Promise<boolean> {
 		return false;
 	}
 
+	return await addFriend(user);
+}
+
+async function addFriend(user: string): Promise<boolean> {
 	const body: UserBody = { user: user };
 	const reply = await sendPostRequestToBack('/api/friends/add', JSON.stringify(body));
 	if (!isRequestSuccessfull(reply)) {
@@ -54,7 +58,7 @@ function addFriendHandler(modal: HTMLDialogElement): void {
 		return;
 
 	addFriendElem.addEventListener('click', async () => {
-		const result = await addFriend(newFriendElem.value);
+		const result = await addSecureFriend(newFriendElem.value);
 		if (!result)
 			return;
 		goBack();
