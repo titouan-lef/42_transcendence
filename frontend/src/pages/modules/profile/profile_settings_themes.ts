@@ -28,8 +28,7 @@ function generateThemeButtons(): string {
 function generateThemeEvents(): void {
 	THEMES_LIST.forEach(theme => {
 		const elem = getSafeElement(`btn-${theme}`, HTMLElement);
-		if (elem)
-			elem.addEventListener('click', () => updateTheme(theme));
+		elem?.addEventListener('click', () => updateTheme(theme));
 	});
 }
 

@@ -65,8 +65,7 @@ async function loadHistory(): Promise<void> {
 		if (game.opponentUsername === GUEST_NAME)
 			return;
 		const element = getSafeElement(`${game.date}-${game.opponentUsername}-nickname`, HTMLElement);
-		if (element)
-			element.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
+		element?.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
 	});
 }
 

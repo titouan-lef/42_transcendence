@@ -6,14 +6,11 @@ function gamePageEvents(): void {
 	const modal = getSafeElement('modal', HTMLDialogElement);
 	const ragequit = getSafeElement('btn-quit', HTMLElement);
 
-	if (modal) {
-		modal.addEventListener('click', (e) => {
-			if (e.target === modal)
-				closeDialogID(`modal`);
-		});
-	}
-	if (ragequit)
-		ragequit.addEventListener('click', openDialogGameQuit);
+	modal?.addEventListener('click', (e) => {
+		if (e.target === modal)
+			closeDialogID(`modal`);
+	});
+	ragequit?.addEventListener('click', openDialogGameQuit);
 }
 
 export { gamePageEvents };

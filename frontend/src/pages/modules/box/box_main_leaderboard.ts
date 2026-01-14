@@ -81,8 +81,7 @@ function generateLeaderboardRows(ranking: Ranking[]): void {
 			`
 		);
 		const elem = getSafeElement(`btn-profile-${user.username}`, HTMLElement);
-		if (elem)
-			elem.addEventListener('click', () => navigateTo(Pages.PROFILE, user.username));
+		elem?.addEventListener('click', () => navigateTo(Pages.PROFILE, user.username));
 		rank += 1;
 	});
 }

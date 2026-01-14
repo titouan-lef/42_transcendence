@@ -62,16 +62,13 @@ async function loadSummary(): Promise<void> {
 		if (game.opponentUsername === GUEST_NAME)
 			return;
 		const element = getSafeElement(`${game.date}-${game.opponentUsername}-nickname`, HTMLElement);
-		if (element)
-			element.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
+		element?.addEventListener('click', () => navigateTo(Pages.PROFILE, game.opponentUsername));
 	});
 
 	const dashboardButton = getSafeElement('btn-sum-dashboard', HTMLButtonElement);
-	if (dashboardButton)
-		dashboardButton.addEventListener('click', () => document.dispatchEvent(new Event('dashboard')));
+	dashboardButton?.addEventListener('click', () => document.dispatchEvent(new Event('dashboard')));
 	const historyButton = getSafeElement('btn-sum-history', HTMLButtonElement);
-	if (historyButton)
-		historyButton.addEventListener('click', () => document.dispatchEvent(new Event('history')));
+	historyButton?.addEventListener('click', () => document.dispatchEvent(new Event('history')));
 }
 
 export { loadSummary };

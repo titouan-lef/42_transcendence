@@ -66,14 +66,12 @@ function getDashboardTable(data: UserDashboardInfos): string {
 
 async function fetchDashboardData(user: string): Promise<void> {
 	let targetSeason = -1;
-	try {
-		const filter = getSafeElement(SELECT_NAME, HTMLSelectElement);
-		if (filter) {
-			targetSeason = Number(filter.value);
-			if (Number.isNaN(targetSeason))
-				targetSeason = -1;
-		}
-	} catch {}
+	const filter = getSafeElement(SELECT_NAME, HTMLSelectElement);
+	if (filter) {
+		targetSeason = Number(filter.value);
+		if (Number.isNaN(targetSeason))
+			targetSeason = -1;
+	}
 	const body: UserDashboardInfoBody = { user: user, season: targetSeason };
 	const reply = await sendPostRequestToBack('/api/user/dashboard', JSON.stringify(body));
 	if (!isRequestSuccessfull(reply))
@@ -117,8 +115,7 @@ async function loadDashboard(user: string): Promise<void> {
 		elem.innerHTML = getDashboardPage(seasonNumber);
 
 	const filter = getSafeElement(SELECT_NAME, HTMLSelectElement);
-	if (filter)
-		filter.addEventListener('change', () => updateDashboardData(user));
+	filter?.addEventListener('change', () => updateDashboardData(user));
 	loadDashboardData();
 }
 
