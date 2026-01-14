@@ -41,8 +41,7 @@ function getRandomGifPath(): string {
 
 async function gameWaitingHandler(): Promise<void> {
 	const elem = getSafeElement('btn-cancel', HTMLElement);
-	if (elem)
-		elem.addEventListener('click', goBack);
+	elem?.addEventListener('click', goBack);
 
 	waitForGame();
 }
