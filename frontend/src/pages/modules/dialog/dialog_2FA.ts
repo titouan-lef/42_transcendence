@@ -15,7 +15,7 @@ w-full h-[20px] text-[12px] text-warning text-center
 
 const TWOFA = `
 	<p class='font-bold text-[20px]'> 2FA required </p>
-	<form name="Register" class="${DIALOG_FORM_STYLE}">
+	<form name="Register" class="${DIALOG_FORM_STYLE}" onsubmit='return false;'>
 		${createInputHtml(["code"], "password", "password", { "class": `${DIALOG_INPUT_STYLE}` })}
 	</form>
 	${createButtonHtml(["confirm"], `btn-confirm`, { "class": `${DIALOG_BTN_STYLE}` })}

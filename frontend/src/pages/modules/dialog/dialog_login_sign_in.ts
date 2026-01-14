@@ -7,7 +7,7 @@ w-full h-[20px] text-[12px] text-warning text-center
 `;
 
 const SIGN_IN = `
-	<form name="Login" class="${DIALOG_FORM_STYLE}">
+	<form name="Login" class="${DIALOG_FORM_STYLE}" onsubmit='return false;'>
 		${createInputHtml(["user_name"], "text", "userID", { "autofocus": "true", "class": `${DIALOG_INPUT_STYLE}` })}
 		${createInputHtml(["password"], "password", "password", { "class": `${DIALOG_INPUT_STYLE}` })}
 	</form>
