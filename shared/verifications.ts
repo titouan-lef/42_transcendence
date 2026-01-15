@@ -65,7 +65,7 @@ function isValidName(username: string): boolean {
 }
 
 function isValidPassword(password: string): boolean {
-	if (password.length < PASSWORD_CHAR_MIN && length > PASSWORD_CHAR_MAX)
+	if (password.length < PASSWORD_CHAR_MIN || password.length > PASSWORD_CHAR_MAX)
 		return false;
 	if (!isSafe(password))
 		return false;
