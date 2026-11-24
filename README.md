@@ -2,6 +2,8 @@
 
 Built by **lguerbig**, **tle-floc**, **pchalmin**, **ael-atmi** and **tilegran** as a 42 school group project.
 
+![Pong welcome](assets/Pong.png)
+
 A full-stack, real-time Pong platform built in a team of five as the final project of the 42 Common Core. Players can sign up, climb a seasonal leaderboard, challenge an AI or a remote opponent, and customize the game — all served over HTTPS/WSS from a three-container Docker stack.
 
 > [!CAUTION]
@@ -18,14 +20,22 @@ A full-stack, real-time Pong platform built in a team of five as the final proje
 - [Subject modules covered](#subject-modules-covered)
 - [Quality checks](#quality-checks)
 - [Documentation and deeper dives](#documentation-and-deeper-dives)
-- [Team](#team)
 - [Sources](#sources)
 
 ## Overview
 
 The goal of the project was to build a complete web application from scratch while learning unfamiliar technologies: a single-page application in TypeScript, a Fastify API, a server-authoritative 3D game, and a smart contract that stores ranked results on a blockchain.
 
-The result is a SPA (Simple Page Appllication) where users can:
+<p align="center">
+  <img src="assets/profile.png" alt="profile" width="500">
+  <img src="assets/lightning-map.png" alt="map 1" width="500">
+</p>
+<p align="center">
+  <img src="assets/desert-map.png" alt="map 2" width="500">
+  <img src="assets/meteor-map.png" alt="map 3" width="500">
+</p>
+
+The result is a SPA (Single Page Application) where users can:
 - create an account (or enter as a guest), manage a profile, upload an avatar and add friends;
 - play Pong locally (same keyboard), against an AI, or against a remote player through skill-based matchmaking;
 - compete in seasonal ranked matches with Glicko ratings, placement games, a leaderboard, stats dashboards and match history;
