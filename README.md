@@ -27,12 +27,7 @@ A full-stack, real-time Pong platform built in a team of five as the final proje
 The goal of the project was to build a complete web application from scratch while learning unfamiliar technologies: a single-page application in TypeScript, a Fastify API, a server-authoritative 3D game, and a smart contract that stores ranked results on a blockchain.
 
 <p align="center">
-  <img src="assets/profile.png" alt="profile" width="500">
-  <img src="assets/lightning-map.png" alt="map 1" width="500">
-</p>
-<p align="center">
-  <img src="assets/desert-map.png" alt="map 2" width="500">
-  <img src="assets/meteor-map.png" alt="map 3" width="500">
+  <img src="assets/general.gif" alt="general" width="800">
 </p>
 
 The result is a SPA (Single Page Application) where users can:
@@ -40,6 +35,11 @@ The result is a SPA (Single Page Application) where users can:
 - play Pong locally (same keyboard), against an AI, or against a remote player through skill-based matchmaking;
 - compete in seasonal ranked matches with Glicko ratings, placement games, a leaderboard, stats dashboards and match history;
 - customize maps, balls, rules, keybinds and visual themes.
+
+<p align="center">
+  <img src="assets/profile.png" alt="profile" width="500">
+  <img src="assets/lightning-map.png" alt="map 1" width="500">
+</p>
 
 Every game runs **on the server**: Babylon.js with the Havok physics engine simulates the match in a `NullEngine`, and the browser receives position/state updates over WebSockets and renders the scene. This keeps the game authoritative and consistent for both remote players.
 
@@ -65,7 +65,7 @@ RPC_URL=<Avalanche Fuji RPC URL>
 ### Build and run (production)
 
 ```bash
-make        # alias for: make prod
+make
 # or
 make prod
 ```
@@ -106,8 +106,27 @@ Uses `docker-compose.dev.yml`: source directories are bind-mounted and TypeScrip
 - **Three game modes**: local 1v1, versus an AI opponent, and ranked remote 1v1 with matchmaking.
 - **Server-side simulation**: collisions, hazards and scoring are computed by the backend; clients render the state they receive.
 - **Customization**: 4 maps, 5 ball behaviors, optional rules (dash, spin, wind, rotating player), cannons, configurable key bindings, themes, emotes and particle effects.
+<table align="center">
+  <tr>
+    <td><img src="assets/options.png" alt="options" width="300"></td>
+    <td>
+      <img src="assets/dash.gif" alt="dash" width="300"><br>
+      <img src="assets/spin.gif" alt="spin" width="300">
+    </td>
+  </tr>
+</table>
+
 - **AI opponent**: a `Brain` observes the ball at a 1-second interval (as required by the subject), predicts the trajectory and emits keyboard-style controls every 80 ms.
+<p align="center">
+  <img src="assets/AI1.gif" alt="ai1" width="500">
+  <img src="assets/AI2.gif" alt="ai2" width="500">
+</p>
+
 - **Ranked seasons**: Glicko-1 rating (rating + deviation), placement games, rating updates persisted on-chain, leaderboard and seasonal stats.
+<p align="center">
+  <img src="assets/leaderbord.png" alt="leaderbord" width="500">
+</p>
+
 - **Game flow protocol**: typed, status-tagged messages shared by client and server. See the [Game Data Flow Overview](https://github.com/titouan-lef/42_transcendence/wiki/Game-Data-Flow-Overview).
 
 ### Accounts, security and UX
