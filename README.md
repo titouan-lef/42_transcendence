@@ -1,588 +1,272 @@
-# Transcendence
+# ft_transcendence — Multiplayer Pong Platform
 
-## Contents
-* [Coding](#coding-%EF%B8%8F)
-   * [Common Rules](#common-rules)
-     * [Organisation rules](#organisation-rules)
-       * [Folder names](#folder-names)
-       * [File names](#file-names)
-       * [File Organisation](#file-organisation)
-       * [File Class Organisation](#file-class-organisation)
-     * [General Rules](#general-rules)
-       * [How and why avoid using getters and setters](#how-and-why-avoid-using-getters-and-setters)
-   * [TypeScript](#typescript)
-     * [Syntax](#syntax)
-     * [Visibility](#visibility)
-     * [Constructors](#constructors)
-     * [Class Members](#class-members)
-     * [Primitive Types](#primitive-types)
-     * [Variables](#variables)
-     * [Exceptions](#exceptions)
-     * [Iterating objects](#iterating-objects)
-     * [Iterating containers](#iterating-containers)
-     * [Control flow statements & blocks](#control-flow-statements--blocks)
-     * [Switch Statements](#switch-statements)
-     * [Equality Checks](#equality-checks)
-     * [Function Declarations](#function-declarations)
-     * [Function Expressions](#function-expressions)
-     * [Semicolon](#semicolon)
-     * [Type and Non-nullability Assertions](#type-and-non-nullability-assertions)
-     * [Member property declarations](#member-property-declarations)
-     * [Enums](#enums)
-     * [Modules](#modules)
-     * [Exports](#exports)
-     * [Imports](#imports)
-     * [Type System](#type-system)
-     * [Example](#example)
-   * [SQLite](#sqlite)
-     * [Syntax](#syntax)
-     * [Create Table](#create-table)
-     * [Insert Table](#insert-table)
-     * [Select Query](#select-query)
-   * [HTML](#html)
-   * [CSS](#css)
-   * [Solidity](#solidity)
-* [Compiling and Running the Project](#compiling-and-running-the-project)
-   * [Build and run containers](#build-and-run-containers)
-   * [Development mode](#development-mode)
-   * [Full rebuild](#full-rebuild)
-   * [Retry running in dev mode](#retry-running-in-dev-mode)
-* [Git Organisation](#git-organisation-)
-   * [Start Project](#start-project)
-   * [Commit Rules](#commit-rules)
-   * [Branch Rules](#branch-rules)
-* [Links](#links)
-   * [Documentation](#documentation)
-   * [Convention](#convention)
-   * [Utils](#utils)
-   * [Elo](#elo)
+Built by **lguerbig**, **tle-floc**, **pchalmin**, **ael-atmi** and **tilegran** as a 42 school group project.
 
-## Coding ⌨️
+![Pong welcome](assets/Pong.png)
 
-### Common Rules
+A full-stack, real-time Pong platform built in a team of five as the final project of the 42 Common Core. Players can sign up, climb a seasonal leaderboard, challenge an AI or a remote opponent, and customize the game — all served over HTTPS/WSS from a three-container Docker stack.
 
-#### Organisation rules
+> [!CAUTION]
+> This repository implements **version 18** of the 42 `ft_transcendence` subject, which is not the latest version available today. The original subject is included in [`ft_transcendance_v18.pdf`](./ft_transcendance_v18.pdf).
 
-##### Folder names
-- Use `snake_case` to name folders.
-- Except if discussed, folder names will be in the singular.
-- Always use shortest folder names possible.
-- Any functionalities must have his folder with a good context name.
+## Table of contents
 
-##### File names
-- Except if discussed, file names will be in the singular.
-- Always name your files with short and context friendly names.
-- In case of too much functions in one file, you can split your file, but never name them with filename_2.ts or equivalent, find a new context and organisation for your functions.
+- [Overview](#overview)
+- [Features](#features)
+- [Engineering highlights](#engineering-highlights)
+- [Technologies used](#technologies-used)
+- [Project architecture](#project-architecture)
+- [Compiling and running the project](#compiling-and-running-the-project)
+- [Subject modules covered](#subject-modules-covered)
+- [Quality checks](#quality-checks)
+- [Documentation and deeper dives](#documentation-and-deeper-dives)
+- [Sources](#sources)
 
-> [!note]
-> - Don't use _utils/string_1_, _utils/string_2_
-> - Use _utils/parsing_, _utils/string_check_
-- Use `snake_case` for **_all files_** except for all <ins>following rules</ins>.
-- Use `PascalCase` for all **_class files_** and **_fonts_**.
-- Always use font name for font files (erasing whitespace).
-- Use `kebab-case` for _docker-compose_ files.
-- Use `Capitalized` for _Makefile_ and _Dockerfile_.
-- Use `flatcase` for all config files (_.json, .config.js_).
+## Overview
 
-##### File Organisation
-1. Import
-2. Interface/Type
-3. Constant/Function call
-4. Function
-5. Export
+The goal of the project was to build a complete web application from scratch while learning unfamiliar technologies: a single-page application in TypeScript, a Fastify API, a server-authoritative 3D game, and a smart contract that stores ranked results on a blockchain.
 
-##### File Class Organisation
-1. public/protected/private types (typedef, using, enum)
-2. protected/private member declaration
-3. Constructor/Destructor
-4. Getters/Setters
-5. Overload operator
-6. Methods (public/protected/private) written in the read direction.
+<p align="center">
+  <img src="assets/general.gif" alt="general" width="800">
+</p>
 
-#### General Rules
-- Names must be descriptive and clear to a new reader (scientific/technical names first, and if none exist, use computer science terms related to the problem).
-- Do not use abbreviations that are ambiguous or unfamiliar to readers outside your project, and do not abbreviate by deleting letters within a word.
-- Choose searchable names.
-- It is a good practice to avoid using getters and mostly setters in general.
-- Use a private/protected function whenever is possible.
-- Never declare variables in public.
-- Try to make functions less than 20 lines long.
-- Line should not exceed 150 characters.
-- Never more than 2 nested loop/conditional structures.
-- Try to use 1 statement per loop (function call).
-- A function must do only one thing and cannot be broken down into sections.
-- Try to use `switch` and `if/else` statements only once, used to create polymorphic objects, and hidden behind an inheritance relationship so that the rest of the system cannot see them.
-- Try to have a maximum of 3 arguments per function.
-- Use classes or structures to reduce the number of arguments.
-- Prefer using function returns over argument modification.
-- Avoid passing a boolean value to a function.
-- Try to write function names that facilitate argument ordering (for example, `assertExpectedEqualsActual(expected, actual)` instead of `assertEquals(expected, actual)` because `expected` and `actual` have the same type and should not be reversed).
-- Separate commands and requests.
-- Prefer exceptions to error code returns.
-- Extract `try/catch` blocks using throws to have a single statement in `try/catch` and so that the function starts with the `try` and ends with the `catch`.
-- Rather than using enums or classes for all error codes, use multiple classes inheriting from the `Exception` class : this will avoid recompilation when adding errors.
+The result is a SPA (Single Page Application) where users can:
+- create an account (or enter as a guest), manage a profile, upload an avatar and add friends;
+- play Pong locally (same keyboard), against an AI, or against a remote player through skill-based matchmaking;
+- compete in seasonal ranked matches with Glicko ratings, placement games, a leaderboard, stats dashboards and match history;
+- customize maps, balls, rules, keybinds and visual themes.
 
-##### How and why avoid using getters and setters
-Two example in pseudo code :
-```ts
-// Don't do
-class Client {
-    private server: Server
+<p align="center">
+  <img src="assets/profile.png" alt="profile" width="500">
+  <img src="assets/lightning-map.png" alt="map 1" width="500">
+</p>
 
-    checkPassword(clientPassword: text) {
-        return (clientPassword == server.getPassword())// Client get the server password.
-    }
-}
+Every game runs **on the server**: Babylon.js with the Havok physics engine simulates the match in a `NullEngine`, and the browser receives position/state updates over WebSockets and renders the scene. This keeps the game authoritative and consistent for both remote players.
 
-class Server {
-    private password: text
+## Compiling and running the project
 
-    getPassword() {
-        return password
-    }
-}
+### Prerequisites
 
-// But do
-class Client {
-    private server: Server
+- Docker with the Compose plugin and GNU Make utility.
+- A local `.backend_env` file at the repository root (it is git-ignored). `make` checks that all required variables are present:
 
-    checkPassword(clientPassword: text) {
-        return server.passwordIs(clientPassword)
-    }
-}
-
-class Server {
-    private password: text
-
-    passwordIs(clientPassword: text) {
-        return (clientPassword == password)
-    }
-}
+```env
+EMAIL=<email used to send 2FA codes>
+EMAIL_PASSWORD=<email app password>
+JWT_SECRET=<random secret>
+CONTRACT_ADDRESS=<deployed EloStorage address>
+PRIVATE_KEY=<wallet private key>
+RPC_URL=<Avalanche Fuji RPC URL>
 ```
 
-```ts
-// Don't do
-class Enemy {
-    private attackDamage: number
+> [!WARNING]
+> Never commit credentials. The blockchain variables are required at startup because the backend builds its `ethers.js` signer immediately. See the [smart contract setup guide](./blockchain/READMEeng.md) (also available in [French](./blockchain/READMEfr.md)) to deploy the contract and obtain its address.
 
-    attack(player: Player) {// Complicates the method.
-        health = player.getHealth()
-        if (health > 0)
-        {
-            newHealth = health - attackDamage
-            if (newHealth < 0)
-                newHealth = 0
-            player.setHealth(newHealth)// Health leave the scope of Player.
-        }
-    }
-}
+### Build and run (production)
 
-class Player {
-    private health: number
-
-    getHealth() {
-        return health
-    }
-
-    setHealth(health: number) {
-        this.health = health
-    }
-}
-
-// But do
-class Enemy {
-    private attackDamage: number
-
-    attack(player: Player) {
-        if (player.isAlive())
-            player.takeDamage(attackDamage)
-	}
-}
-
-class Player {
-    private health: number
-
-    isAlive() {
-        return (health > 0)
-    }
-
-    takeDamage(damage: number) {
-        health = health - damage
-        if (health < 0)
-            health = 0
-    }
-}
-```
-
-### TypeScript
-
-#### Syntax
-
-Style |	Category
---- | ---
-UpperCamelCase | class / interface / type / enum / decorator / type / parameters
-lowerCamelCase | variable / parameter / function / method / property / module alias
-CONSTANT_CASE | global constant values, including enum values and static readonly property of a class
-
-- Add tab size 4 for indentation and never use the spaces.
-- Names must not start or end with `_`.
-- It must contains a last empty line (to avoid auto-save vscode adding newline at the end).
-
-#### Visibility
-- TypeScript symbols are public by default. Never use the public modifier except when declaring non-readonly public parameter properties (in constructors).
-
-#### Constructors
-- Constructor calls must use parentheses, even when no arguments are passed.
-- Empty default constructor must not be define.
-
-#### Class Members
-- Variables mustn't start with `$`.
-- Use `private` to private fields (and not `#`).
-- Mark properties that are never reassigned outside of the constructor with the readonly modifier.
-- If a class member is a constructor parameter, declare it in the constructor.
-- If a class member is not a parameter, initialize it where it's declared, which sometimes lets you drop the constructor entirely.
-- Always use `this` to access to class members.
-
-#### Primitive Types
-- `String`, `Boolean` and `Number` must not use constructor with hard values.
-- Always use bracket notation to initialize `Array`, or `from` to initialize an `Array` with a certain size.
-
-#### Variables
-- Always use `const` or `let` to declare variables. Use `const` by default, unless a variable needs to be reassigned. Never use `var`.
-
-#### Exceptions
-- Always use `throw new Error(<...>)` (and not `throw Error(<...>)`).
-
-#### Iterating objects
-- Always use (`const` not mandatory) `for (const <...> of Object.keys(<...>))` or `for (const [<...>, <...>] of Object.entries(<...>))` (and not `for (<...> in <...>)`).
-
-#### Iterating containers
-- Always use (`const` not mandatory) `for (const <...> of <...>)` or `for (const [<...>, <...>] of <...>.entries()` (and not `for (<...> in <...>)`).
-- Do not use `Array.prototype.forEach`, `Set.prototype.forEach`, and `Map.prototype.forEach`.
-
-#### Control flow statements & blocks
-- Control flow statements spanning one line never use `{}` for the containing code.
-- Control flow statements spanning multiple lines always use `{}` for the containing code.
-- `{` is always on the same line that the control flow statements and `}` is always on a new line.
-
-#### Switch Statements
-- All switch statements must contain a default statement group, even if it contains no code.
-- Non-empty statement groups (case `<...>`) may not fall through (enforced by the compiler).
-- Empty statement groups are allowed to fall through.
-
-#### Equality Checks
-- Always use `===` and `!==` (and not `==` and `!=`).
-- `==` (or `!=`) can be use only with `null` to check if variable is (or is not) `null` or `undefined`.
-
-#### Function Declarations
-- Always use `function <name>(<param>) { <...> }` to declare function, and does not use arrow functions.
-- Never use keyword `function` in class, interface, ... (keyword is deducted by TypeScript).
-
-#### Function Expressions
-- Always use arrow functions to define function parameter in other function, and does not use function expressions (defined with the `function` keyword).
-- Never use function like parameter of other function, always use arrow functions which call the function.
-- Arrow functions spanning one line always use `{}` if return value of the function is not used.
-- Do not use `bind` in the expression that installs an event handler, because it creates a temporary reference that can't be uninstalled.
-
-#### Semicolon
-- Explicitly terminate all statements using a semicolon.
-
-#### Type and Non-nullability Assertions
-- Never use type assertions `(x as SomeType)` and non-nullability `assertions (y!)`.
-
-#### Member property declarations
-- Interface, class and inline object type declarations must use the `;` to separate individual member declarations.
-- Always use `<var>.<property>` to access to properties and not `<var>["<property>"]`.
-
-#### Enums
-- Always use `enum` and not `const enum`.
-
-#### Modules
-- Your code must not use the `namespace Foo { ... }` construct.
-- Code must not use `require` for imports.
-
-#### Exports
-- Do not use `export default`.
-- Always use `export` at the end.
-- `export` variables first, functions after.
-
-> [!TIP]
-> ```ts
-> // Don't do
-> export const var1 = 1;
-> export const var2 = 2;
->
-> export func(): number {
-> 	return 3;
-> }
->
-> // But do
-> const var1 = 1;
-> const var2 = 2;
->
-> func(): number {
-> 	return 3;
-> }
->
-> export { var1, var2, func };
-> ```
-
-#### Imports
-Import type | Example | Use for
---- | --- | ---
-module | `import * as <...> from "<...>";` | TypeScript imports
-destructuring | `import {<...>} from "<...>";` | TypeScript imports
-default | `import <...> from "<...>";` | Only for other external code that requires them
-side-effect | `import "<...>";` | Only to import libraries for their side-effects on load<br>(such as custom elements)
-
-- Code should fix name collisions by using a module import or renaming the exports themselves. Code may rename imports (import {<...> as <...>) if needed.
-- use `import <...> from` or `export <...> from` and not `import type <...> from` or `export type <...> from`.
-
-#### Type System
-- Leave out type annotations for trivially inferred types: variables or parameters initialized to a string, number, boolean, RegExp literal or new expression.
-- Always require return type annotations for functions and methods (except for setter).
-- Type aliases must not include `|null` or `|undefined` in a union type.
-- Use optional fields (`?`) on interfaces, classes and parameters rather than a `|undefined` type (for return function you can not use `?`, so use `|undefined` if necessary).
-- For classes preferably avoid this pattern altogether and initialize as many fields as possible.
-- Use an interface to define objects without functions, rather than using classes or a type annotations or type aliases (`type`).
-- Array types are define with `var_name: type[]` if there is one type and `var_name: Array<type>` if there is multiple types (ex: `const a: string[]` and `const b: Array<string | number>`).
-- Never use `any` type (use `unknown` as a last resort).
-- `String`, `Boolean`, and `Number` have slightly different meaning from the corresponding primitive types `string`, `boolean`, and `number`. Always use the lowercase version.
-
-#### Example
-```ts
-interface Person {
-  name: string;
-  age: number;
-}
-
-function greet(person: Person): string {
-  const start = "Hello ";
-
-  return start + person.name;
-}
-```
-```ts
-class Params {
-  private static readonly MY_SPECIAL_NUMBER = 5;
-  private readonly userList: string[] = [];
-
-  constructor(private readonly x: number, protected y: number, private z: number) {}
-
-  get getX(): number {
-    return this.x;
-  }
-
-  set setY(value: number) {
-    this.y = value;
-  }
-
-  private firstElement(arr: string[]): string | undefined {
-    return arr[0];
-  }
-}
-```
-
-### SQLite
-
-#### Syntax
-- Use `''` for one line query and ` `` ` for multiple lines.
-- Always use a new line for major keyword (SELECT, WHERE, JOIN, GROUP BY, ...) and put minor keyword (ASC, AND, AS, ON, ...) on the same line, except if line become too long.
-- Always write major and minor keyword in UPPERCASE.
-- Always finish a query with `;`.
-- Each queries with data which can be read and write must start with `BEGIN` and finish with `COMMIT` to avoid datarace.
-
-#### Create Table
-```ts
-db.exec(`
-  CREATE TABLE [KEY_WORD] <table_name>(
-    <key_name> <TYPE> PRIMARY KEY [KEY_WORD],
-    [...],
-    <value_name> <TYPE>,
-    [...],
-    FOREIGN KEY (<key_name>) REFERENCES <table_name>(<key_name>),
-    [...]
-  ) [STRICT];
-`);
-```
-
-#### Insert Table
-```ts
-db.exec(`
-  INSERT INTO <table_name> VALUES (<col1>[, <col2>, [...]]),
-                                  (<col1>[, <col2>, [...]]),
-                                  [...];
-`);
-```
-
-#### Select Query
-```ts
-const query = db.prepare(`
-  SELECT <select_data>
-  FROM <table_name>
-  [...];
-`);
-```
-```ts
-query.all();
-query.get();
-```
-
-#### Create a Prepared Statement
-A prepared query enables you to define the query syntax once and execute it multiple times with different values using the `prepare()` and `run()` functions.
-```ts
-const <prepared_statement_cmd> = db.prepare('<PREPARED_STATEMENT_CMD> <CMD_BODY>;');
-```
-
-### HTML
-
-- Extension file is always `.html`.
-- Default filename is always `index.html`.
-- Always declare the document type as the first line in your document (`<!DOCTYPE html>`).
-- Always add `<html>`, `<head>` and `<body>` tags.
-- Always add `<title>` and `<meta>` in `<head>` tags.
-- Always add `name` and `content` attribute in `<meta>` tag.
-- Always define `lang` attribute of `<html>`.
-- Never use CSS and TypeScript in HTML files (always call the file that contains CSS or TypeScript).
-- Use lowercase element and attribute names.
-- Close all HTML elements and use `<tag />` format for self-closing tag.
-- Always quote attribute values (`<attribute>="<value>"`) .
-- Always specify `alt`, `width` and `height` for images.
-- Never spaces before and after equal sign.
-- Avoid long code lines.
-- Add blank lines to separate large or logical code blocks but do not add blank lines, spaces, or indentations without a reason.
-- Add two spaces of indentation and never use the tab key.
-- Short comments should be written on one line (`<!-- ... -->`).
-- Comments that span more than one line, should be written with `<!--` and `-->` without comments.
-
-### CSS
-- Add tab size 4 for indentation and never use the spaces.
-
-```css
-<tag> {
-  <property_name>: <property_value>;
-  [...]
-}
-```
-
-### Solidity
-Style |	Category
---- | ---
-UpperCamelCase | class / interface / type / enum / decorator / type / parameters
-lowerCamelCase | variable / parameter / function / method / property / module alias
-CONSTANT_CASE | global constant values, including enum values
-
-- Names must not start or end with `_`.
-- Braces are alone on their own line for conditions and functions (can be on the same line for the rest).
-
-## Compiling and Running the Project
-
-You can use make commands to build, run, and manage your front-end and back-end containers, as well as to recompile source files during development.
-
-### Build and run containers
 ```bash
 make
+# or
+make prod
 ```
-or,
-```bash
-make up
+
+This builds and starts the three containers in detached mode. Open the URL printed by the Makefile:
+
+```text
+https://<machine-ip>:8888
 ```
-Both commands will build the front-end and back-end containers and start them.
+
+Port 8888 is used because 42 campus machines cannot bind port 443. The TLS certificate is self-signed, so your browser will ask you to accept it. On a personal machine or VM, port 443 can be used.
 
 ### Development mode
-You can also use:
-```bahs
+
+```bash
 make dev
 ```
-Use this during development. It recompiles all TypeScript (`.ts`) and CSS (`.css`) files from `src` (for both front-end and back-end) and `public` (front-end only) directories without rebuilding the containers.
 
-> [!TIP]
-> The containers will stay attached to your terminal. Press `Ctrl+C` to stop them.
+Uses `docker-compose.dev.yml`: source directories are bind-mounted and TypeScript/CSS are rebuilt when the containers start. Unlike production, the containers stay attached to the terminal (`Ctrl+C` to stop).
 
-### Full rebuild
-```bahs
-make re
+### Other commands
+
+| Command | Effect |
+| --- | --- |
+| `make down` | Stop and remove the production containers and their volumes. |
+| `make clean` | `down` + prune Docker images and volumes. |
+| `make re` | `clean` then rebuild and start in production mode. |
+| `make retry` | `clean` then rebuild and start in development mode. |
+| `make fclean` | `clean` then delete the local database and uploaded pictures (10-second cancellation window). |
+
+> [!CAUTION]
+> `make fclean` deletes `./backups`. Back up anything you want to keep first.
+
+## Features
+
+### Game and competition
+
+- **Three game modes**: local 1v1, versus an AI opponent, and ranked remote 1v1 with matchmaking.
+- **Server-side simulation**: collisions, hazards and scoring are computed by the backend; clients render the state they receive.
+- **Customization**: 4 maps, 5 ball behaviors, optional rules (dash, spin, wind, rotating player), cannons, configurable key bindings, themes, emotes and particle effects.
+<table align="center">
+  <tr>
+    <td><img src="assets/options.png" alt="options" width="300"></td>
+    <td>
+      <img src="assets/dash.gif" alt="dash" width="300"><br>
+      <img src="assets/spin.gif" alt="spin" width="300">
+    </td>
+  </tr>
+</table>
+
+- **AI opponent**: a `Brain` observes the ball at a 1-second interval (as required by the subject), predicts the trajectory and emits keyboard-style controls every 80 ms.
+<p align="center">
+  <img src="assets/AI1.gif" alt="ai1" width="500">
+  <img src="assets/AI2.gif" alt="ai2" width="500">
+</p>
+
+- **Ranked seasons**: Glicko-1 rating (rating + deviation), placement games, rating updates persisted on-chain, leaderboard and seasonal stats.
+<p align="center">
+  <img src="assets/leaderbord.png" alt="leaderbord" width="500">
+</p>
+
+- **Game flow protocol**: typed, status-tagged messages shared by client and server. See the [Game Data Flow Overview](https://github.com/titouan-lef/42_transcendence/wiki/Game-Data-Flow-Overview).
+
+### Accounts, security and UX
+
+- Registration/login with unique usernames, guest sessions, avatar upload and profile editing.
+- Friends list with live online status, match history and user/game dashboards with charts.
+- Email-based **two-factor authentication**, JWT stored in `httpOnly` cookies, salted `scrypt` password hashing with constant-time comparison.
+- Shared validation rules for names, emails, passwords and request payloads; parameterized SQL queries; HTTPS and WSS through Nginx.
+- French/English translator (not fully implemented), custom keybinds and themes.
+
+### Infrastructure
+
+- Three Docker services (`nginx`, `frontend`, `backend`) on a dedicated bridge network, with separate production and development build targets.
+- Nginx terminates TLS, serves the SPA, proxies `/api/`, `/pictures/` and WebSocket upgrades, and displays a maintenance page on backend failure.
+- `Makefile` workflow for build, dev, teardown and full rebuild; lint/type checks run at container startup.
+
+## Technologies used
+
+| Area | Stack |
+| --- | --- |
+| Frontend | TypeScript, Tailwind CSS v4, Babylon.js, Chart.js, esbuild |
+| Backend | Node.js 24, TypeScript, Fastify 5 (+ CORS, cookies, multipart, static, WebSocket plugins), SQLite |
+| Game | Babylon.js + Havok physics on the server, Babylon.js/WebGL renderer in the browser |
+| Realtime | WebSockets over WSS, shared typed message protocol, ping/heartbeat handling |
+| Security | JWT cookies, email 2FA (Nodemailer), `scrypt` + salt, shared input validation, HTTPS/WSS via self-signed Nginx TLS |
+| Web3 | Solidity, Hardhat, Avalanche Fuji testnet, `ethers.js`, ABI generated from the contract |
+| DevOps | Docker, Docker Compose, Nginx, Makefile, ESLint, HTMLHint, `madge` circular-dependency check |
+
+## Project architecture
+
+```mermaid
+flowchart LR
+    Browser[Browser SPA] -->|HTTPS / WSS| Nginx[Nginx :443]
+    Nginx -->|HTTP :3030| Frontend[Fastify static server]
+    Nginx -->|REST /api + WS /ws| Backend[Fastify API + game engine]
+    Backend -->|sqlite3| DB[(SQLite DB)]
+    Backend -->|ethers.js| Chain[(Avalanche Fuji<br/>EloStorage.sol)]
+    Shared[shared/<br/>types · codes · validators] -.-> Frontend
+    Shared -.-> Backend
 ```
-This runs:
-	`make fclean` – removes all built containers and compiled files.
-	`make up` – rebuilds and starts the containers from scratch.
 
-### Retry running in dev mode
-```bahs
-make retry
+```text
+.
+├── backend/                  # Fastify API, auth, SQLite, game engine, matchmaking, Web3 bridge
+│   └── src/
+│       ├── database/         # Tables, queries and contract service
+│       ├── game/             # Authoritative game loop, ball/map/hazard templates, AI
+│       ├── security/         # JWT cookies and 2FA
+│       ├── tournament/       # Matchmaking, Glicko rating, seasons
+│       └── user_management/
+├── frontend/                 # SPA, pages/components, Babylon.js renderer, styles
+│   └── src/
+│       ├── game/             # Client-side rendering of server state
+│       ├── pages/            # Home, dashboard, profile, dialogs
+│       └── services/         # API calls, authentication, game launch
+├── shared/                   # Types, HTTP status codes, constants, validation (mounted in both containers)
+├── blockchain/               # EloStorage.sol, Hardhat config, deploy/test scripts, setup guides
+├── nginx/                    # TLS reverse proxy and maintenance page
+├── backups/                  # Persisted SQLite database and uploaded avatars
+├── docker-compose.yml / docker-compose.dev.yml
+├── Makefile
+└── ft_transcendance_v18.pdf
 ```
-This runs:
-	`make down` – stops and removes running containers.
-	`make dev` – restarts the containers in development mode and recompiles source files.
 
-## Git Organisation 📜
+## Subject modules covered
 
-### Start Project
-- Define the rule of branch conflicts :
+This submission addresses the following v18 modules; the complete list of requirements is in the [subject PDF](./ft_transcendance_v18.pdf):
+
+- **Web**: Fastify backend framework, Tailwind CSS frontend toolkit, SQLite database, blockchain score storage.
+- **User management**: accounts, login, profiles, avatars, friends, online status, history across tournaments.
+- **Gameplay**: remote players, customizable games and rules.
+- **AI-Algo**: AI opponent and user/game statistics dashboards.
+- **Cybersecurity**: JWT and email-based 2FA.
+- **Graphics**: advanced 3D techniques with Babylon.js.
+- **Server-side Pong**: authoritative game simulation and API.
+- **Accessibility**: French/English interface (further accessibility work remains possible).
+
+The team's collaboration process is documented in the wiki: [Pull Request](https://github.com/titouan-lef/42_transcendence/wiki/Pull-Request), [Contribution rules](https://github.com/titouan-lef/42_transcendence/wiki/Contribution-rules-for-developpers) and [Git organisation rules](https://github.com/titouan-lef/42_transcendence/wiki/Git-Organisation-Rules-%26%26-Command-helpers), [Milestones](https://github.com/titouan-lef/42_transcendence/wiki/Milestones).
+
+## Quality checks
+
+The container entrypoints run linting, formatting checks and TypeScript compilation before starting the servers:
+
 ```bash
-git config pull.rebase true
+# In backend/ or frontend/
+npm run format:check   # ESLint (0 warnings allowed); HTMLHint + circular-dependency check on frontend
+npm run build          # TypeScript build, Tailwind CSS and browser bundle on frontend
+
+# In blockchain/
+npx hardhat compile
+npx hardhat test      # EloStorage.sol unit tests
 ```
 
-- Initialize graphical log :
-```bash
-git config --global alias.adog "log --all --decorate --oneline --graph"
-```
+At runtime, the frontend bundle is compiled with `esbuild` and the stylesheet with the Tailwind CLI. The `shared/` types are compiled for both services, so protocol changes fail the build on both sides.
 
-### Commit Rules
-- Merge/rebase on the `main` branch as soon as a feature is done.
-- Merge/rebase on `main` must be made during certain time slots. Avoid doing so before lunch break or the end of the day and when no one is present. Above all, do not do so on Friday evenings or weekends.
-- Always let mates know before merging/rebasing on `main` (to avoid multiple merges/rebases at the same time).
-- Follow the commit format :
-```bash
-git commit -m '<KEY_WORD>(<feature>): <title>' [-m '<description>']
-```
+## Documentation and deeper dives
 
-- Commit must relate to one thing. If two `KEY_WORD` are possible, maybe you should do two commits.
+Detailed notes live in the [project wiki](https://github.com/titouan-lef/42_transcendence/wiki):
 
-Type | KEY_WORD | Explain
---- | --- | ---
-Base | `ADD`<br>`REMOVE` | Add new feature.<br>Remove useless feature.
-Update | `UPDATE`<br>`REFACTO`<br>`PERF`<br> | Update an existing feature.<br>Completely change/reorganize an existing feature or the project architecture.<br>Update an existing feature to increase performance whitout change code logic.
-Fix | `FIX`<br>`STYLE` | Fix a mistake.<br>Fix the formatting of the code whitout change code logic (norm).
-Other | `WIP`<br>`DOCS`<br>`TEST` | Work In Progress.<br>Add or update documentation, like readme or comments (code is not changed)<br>Code relate to unit test.
+- [Game Data Flow Overview](https://github.com/titouan-lef/42_transcendence/wiki/Game-Data-Flow-Overview) — WebSocket message sequence from game start to stats.
+- [Blockchain — Use SmartContract](https://github.com/titouan-lef/42_transcendence/wiki/Blockchain-%E2%80%90-Use-SmartContract) — interacting with the deployed contract.
+- [Smart contract deployment guide](./blockchain/READMEeng.md) / [Guide de déploiement](./blockchain/READMEfr.md) — Hardhat, Fuji testnet and ABI retrieval.
+- [Milestones](https://github.com/titouan-lef/42_transcendence/wiki/Milestones), [Pull Request](https://github.com/titouan-lef/42_transcendence/wiki/Pull-Request), [Contribution rules](https://github.com/titouan-lef/42_transcendence/wiki/Contribution-rules-for-developpers), [Git organisation rules](https://github.com/titouan-lef/42_transcendence/wiki/Git-Organisation-Rules-%26%26-Command-helpers) — how the team organized the work.
+- [Subject (v18)](./ft_transcendance_v18.pdf).
 
-- `feature` is the project part (broad or 	precise) relate to the commit (ex: front, back, game) :
-  - in lowercase for a feature.
-  - with the element's name for specific element like class or file.
-  - `*` to refer to the entire project.
-- `title` must be one short sentence (less than one line and ideally a half lines).
-- `description` is optional, but it is recommended to detail the title.
+## Sources
 
-### Branch Rules
-- A branch must be created for each feature.
-- branch is always in lowercase.
-- Assign a pull request for the base branch and create it for the specific branch.
-
-## Links
 ### Documentation
-- TypeScript : https://www.typescriptlang.org/docs/
-- HTMLint : https://htmlhint.com/
-- ESLint : https://eslint.org/docs/latest/
-- ESLint Parser : https://typescript-eslint.io/packages/parser/
-- ESLint Stylistic : https://eslint.style/
 
-### Convention
-- TypeScript : https://ts.dev/style/
-- SQLite : https://nodejs.org/api/sqlite.html
-- HTML : https://www.w3schools.com/htmL/html5_syntax.asp
-- CSS : https://www.w3schools.com/css/css_syntax.asp
+- [TypeScript](https://www.typescriptlang.org/docs/)
+- [Fastify](https://fastify.dev/docs/latest/)
+- [Babylon.js](https://doc.babylonjs.com/)
+- [Havok physics plugin](https://doc.babylonjs.com/features/featuresDeepDive/physics/physicsPlugins)
+- [HTMLHint](https://htmlhint.com/)
+- [ESLint](https://eslint.org/docs/latest/)
+- [ESLint Parser](https://typescript-eslint.io/packages/parser/)
+- [ESLint Stylistic](https://eslint.style/)
+- [Tailwind CSS](https://tailwindcss.com/docs)
 
-### Utils
-- Figma : https://www.figma.com/design/wg7bGU0KpypDmY3oOYij7i/Squelette?node-id=0-1&t=qWQYNu3hxw5eczve-1
-- Excalidraw : https://excalidraw.com/#room=5d70f3e7c32fd3e972c9,rHn_zBCNQYGJspL2u9MZBQ
-- Google Sheets : https://docs.google.com/spreadsheets/d/1ktLkwKtNEt1qTSRgfhirjpgNRBK502MYdi7dMi4ijN4/edit?usp=sharing
+### Conventions
 
-### Elo
-- The Glicko system : https://www.glicko.net/glicko/glicko.pdf
-- Glicko rating system : https://en.wikipedia.org/wiki/Glicko_rating_system
-- Elo rating system : https://fr.wikipedia.org/wiki/Classement_Elo
-- Glicko (1 & 2) documentation : https://www.glicko.net/glicko.html
+- [TypeScript style guide](https://ts.dev/style/)
+- [SQLite / Node.js](https://nodejs.org/api/sqlite.html)
+- [HTML syntax](https://www.w3schools.com/html/html5_syntax.asp)
+- [CSS syntax](https://www.w3schools.com/css/css_syntax.asp)
+
+### Rating system
+
+- [The Glicko system](https://www.glicko.net/glicko/glicko.pdf)
+- [Glicko rating system](https://en.wikipedia.org/wiki/Glicko_rating_system)
+- [Elo rating system](https://fr.wikipedia.org/wiki/Classement_Elo)
+- [Glicko (1 & 2) documentation](https://www.glicko.net/glicko.html)
 
 ### Images
-- Cropping and Resizing Animated Gifs with Gifsicle : https://stevegrunwell.com/blog/cropping-resizing-gifsicle
-- High performance Node.js image processing : https://sharp.pixelplumbing.com/
+
+- [Cropping and resizing animated GIFs with Gifsicle](https://stevegrunwell.com/blog/cropping-resizing-gifsicle)
+- [High-performance Node.js image processing with Sharp](https://sharp.pixelplumbing.com/)
+
+### Design tools (Reserved for contributors)
+
+- [Figma mockups](https://www.figma.com/design/wg7bGU0KpypDmY3oOYij7i/Squelette?node-id=0-1&t=qWQYNu3hxw5eczve-1)
+- [Excalidraw diagrams](https://excalidraw.com/#room=5d70f3e7c32fd3e972c9,rHn_zBCNQYGJspL2u9MZBQ)
+- [Planning spreadsheet](https://docs.google.com/spreadsheets/d/1ktLkwKtNEt1qTSRgfhirjpgNRBK502MYdi7dMi4ijN4/edit?usp=sharing)
